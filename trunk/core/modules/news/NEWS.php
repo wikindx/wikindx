@@ -51,9 +51,11 @@ class NEWS
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "news"));
         $news = $this->grabAll();
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
@@ -157,8 +159,7 @@ class NEWS
             }
         }
 
-        $message = rawurlencode($this->success->text("newsAdd"));
-        header("Location: index.php?action=news_NEWS_CORE&method=init&message=$message");
+        header("Location: index.php?action=news_NEWS_CORE&method=init&success=newsAdd");
         die;
     }
     /**
@@ -215,8 +216,7 @@ class NEWS
             $this->session->delVar("setup_News");
         }
 
-        $message = rawurlencode($this->success->text("newsDelete"));
-        header("Location: index.php?action=news_NEWS_CORE&method=init&message=$message");
+        header("Location: index.php?action=news_NEWS_CORE&method=init&success=newsDelete");
         die;
     }
     /**
@@ -319,8 +319,7 @@ class NEWS
             }
         }
 
-        $message = rawurlencode($this->success->text("newsEdit"));
-        header("Location: index.php?action=news_NEWS_CORE&method=init&message=$message");
+        header("Location: index.php?action=news_NEWS_CORE&method=init&success=newsEdit");
         die;
     }
     /**

@@ -41,9 +41,13 @@ class FRONT
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        if (array_key_exists('message', $this->vars) && $this->vars['message'])
-        {
-            $this->externalMessage = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+        	$success = FACTORY_SUCCESS::getInstance();
+            $this->externalMessage = $success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$errors = FACTORY_ERRORS::getInstance();
+        	$split = explode('_', $this->vars['error']);
+            $this->externalMessage = $errors->text($split[0], $split[1]);
         }
         else
         {

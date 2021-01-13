@@ -253,8 +253,7 @@ class BOOKMARK
         // Any bookmarks left?
         if (count($this->session->getArray("bookmark")) == 2)
         { // Send back to front
-            $message = rawurlencode($this->success->text("bookmarkDelete"));
-            header("Location: index.php?message=$message");
+            header("Location: index.php?success=bookmarkDelete");
             die;
         }
         else

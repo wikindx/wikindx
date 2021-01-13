@@ -44,9 +44,11 @@ class EDITCREATOR
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $formData = [];
-        if (array_key_exists('message', $this->vars))
-        {
-            $pString = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $pString = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $pString = $this->errors->text($split[0], $split[1]);
         }
         elseif (is_array($message))
         { // error has occurred so get get form_data to populate form with
@@ -215,7 +217,7 @@ class EDITCREATOR
         $this->db->deleteCache('cacheMetadataCreators');
         // send back to main script with success message
         $message = rawurlencode($this->success->text("creator"));
-        header("Location: index.php?action=edit_EDITCREATOR_CORE&method=init&message=$message");
+        header("Location: index.php?action=edit_EDITCREATOR_CORE&method=init&success=creator");
     }
     /**
      * write to the database
@@ -259,7 +261,7 @@ class EDITCREATOR
         $this->db->update('resource_creator', ['resourcecreatorCreatorSurname' => $existSurname]);
         // send back to main script with success message
         $message = rawurlencode($this->success->text("creator"));
-        header("Location: index.php?action=edit_EDITCREATOR_CORE&method=init&message=$message");
+        header("Location: index.php?action=edit_EDITCREATOR_CORE&method=init&success=creator");
     }
     /**
      * Fill in form fields

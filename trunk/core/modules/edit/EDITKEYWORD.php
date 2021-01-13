@@ -48,21 +48,22 @@ class EDITKEYWORD
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $formData = [];
         $initialKeywordId = FALSE;
-        if (array_key_exists('message', $this->vars))
-        {
-            $pString = $this->vars['message'];
-            if (array_key_exists('id', $this->vars))
-            {
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $pString = $this->success->text($this->vars['success']);
+            if (array_key_exists('id', $this->vars)) {
                 $initialKeywordId = $this->vars['id'];
             }
-        }
-        elseif (is_array($message))
-        { // error has occurred so get get form_data to populate form with
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $pString = $this->errors->text($split[0], $split[1]);
+            if (array_key_exists('id', $this->vars)) {
+                $initialKeywordId = $this->vars['id'];
+            }
+        } elseif (is_array($message)) { // error has occurred so get get form_data to populate form with
             $error = array_shift($message);
             $pString = \HTML\p($error, "error", "center");
             $formData = array_shift($message);
-        }
-        else
+        } else
         {
             $pString = $message;
         }
@@ -253,7 +254,7 @@ class EDITKEYWORD
         $this->tidy();
         // send back to main script with success message
         $message = rawurlencode($this->success->text("keyword"));
-        header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&message=$message&id=" . $this->vars['editKeywordId']);
+        header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&success=keyword&id=" . $this->vars['editKeywordId']);
         die;
     }
     /**
@@ -275,7 +276,7 @@ class EDITKEYWORD
         $this->tidy();
         // send back to form with success message
         $message = rawurlencode($this->success->text("keyword"));
-        header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&message=$message");
+        header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&success=keyword");
         die;
     }
     /**

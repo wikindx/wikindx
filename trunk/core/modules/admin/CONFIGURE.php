@@ -59,9 +59,15 @@ class CONFIGURE
             $this->messageString = $message[0];
             $item = $message[1];
         }
-        elseif (array_key_exists('message', $this->vars))
-        {
-            $this->messageString = $this->vars['message'];
+        else if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $this->messageString = $this->success->text($this->vars['success']);
+            if (array_key_exists('selectItem', $this->vars))
+            {
+                $item = $this->vars['selectItem'];
+            }
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $this->messageString = $this->errors->text($split[0], $split[1]);
             if (array_key_exists('selectItem', $this->vars))
             {
                 $item = $this->vars['selectItem'];
@@ -391,9 +397,8 @@ class CONFIGURE
         }
         // After a change of configuration, reset the template cache
         FACTORY_TEMPLATE::getInstance()->clearAllCache();
-        $message = rawurlencode($this->success->text("config"));
         $selectItem = $this->vars['selectItem'];
-        header("Location: index.php?action=admin_CONFIGURE_CORE&method=init&message=$message&selectItem=$selectItem");
+        header("Location: index.php?action=admin_CONFIGURE_CORE&method=init&success=config&selectItem=$selectItem");
     }
     /**
      * Open popup for mail transaction report

@@ -62,9 +62,11 @@ class ADMINCATEGORIES
     public function catInit($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "editCategory"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
@@ -153,9 +155,11 @@ class ADMINCATEGORIES
             return;
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "editSubcategory"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
@@ -299,15 +303,14 @@ class ADMINCATEGORIES
         // database match is case insensitive.
         $this->db->formatConditions(['categoryCategory' => $this->formData['categoryAdd']]);
         $categoryId = $this->db->selectFirstField('category', 'categoryId');
-        $message = rawurlencode($this->success->text("categoryAdd"));
         // If category already exists quietly return without error.
         if ($categoryId)
         {
-            header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
+            header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&success=categoryAdd");
             die;
         }
         $this->db->insert('category', 'categoryCategory', $this->formData);
-        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&success=categoryAdd");
         die;
     }
     /**
@@ -320,11 +323,10 @@ class ADMINCATEGORIES
         $this->db->formatConditions(['subcategorySubcategory' => $this->formData['addSubcategory']]);
         $this->db->formatConditions(['subcategoryCategoryId' => $this->formData['categoryId']]);
         $subcategoryId = $this->db->selectFirstField('subcategory', 'subcategoryId');
-        $message = rawurlencode($this->success->text("subcategoryAdd"));
         // If subcategory already exists quietly return without error.
         if ($subcategoryId)
         {
-            header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
+            header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&success=subcategoryAdd");
             die;
         }
         $fields[] = 'subcategorySubcategory';
@@ -332,7 +334,7 @@ class ADMINCATEGORIES
         $fields[] = 'subcategoryCategoryId';
         $values[] = $this->formData['categoryId'];
         $this->db->insert('subcategory', $fields, $values);
-        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&success=subcategoryAdd");
         die;
     }
     /**
@@ -386,8 +388,7 @@ class ADMINCATEGORIES
             unset($this->formData['categoryIds'][$key]);
         }
         $this->deleteSql($this->formData['categoryIds']);
-        $message = rawurlencode($this->success->text("categoryDelete"));
-        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&success=categoryDelete");
         die;
     }
     /**
@@ -400,8 +401,7 @@ class ADMINCATEGORIES
         {
             $this->badInput($this->errors->text("inputError", "invalid"), 'subInit');
         }
-        $message = rawurlencode($this->success->text("subcategoryDelete"));
-        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&success=subcategoryDelete");
         die;
     }
     /**
@@ -419,8 +419,7 @@ class ADMINCATEGORIES
         $update['categoryCategory'] = $this->formData['text'];
         $this->db->formatConditions(['categoryId' => $this->formData['id']]);
         $this->db->update('category', $update);
-        $message = rawurlencode($this->success->text("categoryEdit"));
-        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&success=categoryEdit");
         die;
     }
     /**
@@ -454,8 +453,7 @@ class ADMINCATEGORIES
         $update['subcategoryCategoryId'] = $this->formData['categoryId'];
         $this->db->formatConditions(['subcategoryId' => $this->formData['subcategoryEditId']]);
         $this->db->update('subcategory', $update);
-        $message = rawurlencode($this->success->text("subcategoryEdit"));
-        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&success=subcategoryEdit");
         die;
     }
     /**

@@ -42,9 +42,11 @@ class PREFERENCES
      */
     public function init($message = FALSE)
     {
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
@@ -284,7 +286,7 @@ class PREFERENCES
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes
         $message = rawurlencode($this->success->text("config"));
-        header("Location: index.php?action=usersgroups_PREFERENCES_CORE&method=init&message=$message");
+        header("Location: index.php?action=usersgroups_PREFERENCES_CORE&method=init&success=config");
         die;
     }
     /**

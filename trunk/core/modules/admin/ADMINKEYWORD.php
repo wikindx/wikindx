@@ -60,9 +60,11 @@ class ADMINKEYWORD
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminKeywords"));
         $keywords = $this->keyword->grabAll();
         $pString = \HTML\p($this->messages->text("misc", "keywordMerge"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString .= $message;
         if (is_array($keywords) && !empty($keywords))
@@ -268,8 +270,7 @@ class ADMINKEYWORD
         $this->db->deleteCache('cacheParaphraseKeywords');
         $this->db->deleteCache('cacheMusingKeywords');
         $this->keyword->checkKeywordGroups();
-        $message = rawurlencode($this->success->text("keywordMerge"));
-        header("Location: index.php?action=admin_ADMINKEYWORD_CORE&method=mergeInit&message=$message");
+        header("Location: index.php?action=admin_ADMINKEYWORD_CORE&method=mergeInit&success=keywordMerge");
         die;
     }
     /**
@@ -288,9 +289,11 @@ class ADMINKEYWORD
 
             return;
         }
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \HTML\tableStart('left');
@@ -364,8 +367,7 @@ class ADMINKEYWORD
         }
         $this->keyword->checkKeywordGroups();
         // send back to deleteDisplay with success message
-        $message = rawurlencode($this->success->text("keywordDelete"));
-        header("Location: index.php?action=admin_ADMINKEYWORD_CORE&method=deleteInit&message=$message");
+        header("Location: index.php?action=admin_ADMINKEYWORD_CORE&method=deleteInit&success=keywordDelete");
         die;
     }
     /**

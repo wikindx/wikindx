@@ -60,9 +60,11 @@ class ADMINUSER
         $password = FACTORY_PASSWORD::getInstance();
         list($formText, $jsString) = $password->createElements(TRUE, FALSE, $this->formData);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userAdd"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \FORM\formHeader('admin_ADMINUSER_CORE', 'onsubmit="return checkForm(' . $jsString . ');"');
@@ -206,8 +208,7 @@ class ADMINUSER
             $this->badInput->close($this->success->text("userAdd") .
             $this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'addInit');
         }
-        $message = rawurlencode($this->success->text("userAdd"));
-        header("Location: index.php?action=admin_ADMINUSER_CORE&method=addInit&message=$message");
+        header("Location: index.php?action=admin_ADMINUSER_CORE&method=addInit&success=userAdd");
         die;
     }
     /**
@@ -215,10 +216,16 @@ class ADMINUSER
      *
      * @param false|string $error
      */
-    public function deleteInit($error = FALSE)
+    public function deleteInit($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userDelete"));
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
+        }
+        $pString = $message;
         $this->grabUsers();
         if (empty($this->users))
         {
@@ -296,8 +303,7 @@ class ADMINUSER
         {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'deleteInit');
         }
-        $message = rawurlencode($this->success->text("userDelete"));
-        header("Location: index.php?action=admin_ADMINUSER_CORE&method=addInit&message=$message");
+        header("Location: index.php?action=admin_ADMINUSER_CORE&method=addInit&success=userDelete");
         die;
     }
     /**
@@ -310,9 +316,11 @@ class ADMINUSER
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userBlock"));
         $pString = '<script src="' . WIKINDX_URL_BASE .
             '/core/modules/admin/adminUser.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString .= $message;
         $this->grabUsers();
@@ -373,8 +381,7 @@ class ADMINUSER
             $this->db->formatConditionsOneField($this->vars['blockedUsers'], 'usersId');
             $this->db->update('users', ['usersBlock' => 'Y']);
         }
-        $message = rawurlencode($this->success->text("userBlock"));
-        header("Location: index.php?action=admin_ADMINUSER_CORE&method=blockInit&message=$message");
+        header("Location: index.php?action=admin_ADMINUSER_CORE&method=blockInit&success=userBlock");
         die;
     }
     /**
@@ -382,11 +389,17 @@ class ADMINUSER
      *
      * @param false|string $error
      */
-    public function editInit($error = FALSE)
+    public function editInit($message = FALSE)
     {
         $this->session->clearArray('mywikindx');
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEdit"));
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
+        }
+        $pString = $message;
         $pString .= \FORM\formHeader('admin_ADMINUSER_CORE');
         $pString .= \FORM\hidden('method', 'editDisplay');
         $this->grabUsers();
@@ -419,9 +432,11 @@ class ADMINUSER
     public function editDisplay($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEdit"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $this->userId = FALSE;
@@ -453,9 +468,8 @@ class ADMINUSER
         { // TRUE on error!
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'editDisplay');
         }
-        $message = rawurlencode($this->success->text("userEdit"));
         $userId = $this->formData["userId"];
-        header("Location: index.php?action=admin_ADMINUSER_CORE&method=editDisplay&message=$message&userId=$userId");
+        header("Location: index.php?action=admin_ADMINUSER_CORE&method=editDisplay&success=userEdit&userId=$userId");
         die;
     }
     /**
@@ -466,9 +480,11 @@ class ADMINUSER
     public function registrationInit($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $this->db->formatConditions(['userregisterConfirmed' => 'N']);
@@ -530,8 +546,7 @@ class ADMINUSER
                 $this->db->delete('user_register');
             }
         }
-        $message = rawurlencode($this->success->text("registerRequestManage"));
-        header("Location: index.php?action=admin_ADMINUSER_CORE&method=registrationInit&message=$message");
+        header("Location: index.php?action=admin_ADMINUSER_CORE&method=registrationInit&success=registerRequestManage");
         die;
     }
     /**

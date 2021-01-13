@@ -50,8 +50,7 @@ class ATTACHMENTS
         $this->gatekeep->init();
         if (!array_key_exists('resourceId', $this->vars) || !array_key_exists('function', $this->vars))
         {
-            $message = rawurlencode($this->errors->text("inputError", "missing"));
-            header("Location: index.php?action=front&message=$message");
+            header("Location: index.php?action=front&error=inputError_missing");
             die;
         }
         $this->resourceId = $this->vars['resourceId'];
@@ -60,8 +59,7 @@ class ATTACHMENTS
         {
             if ($_SERVER["CONTENT_LENGTH"] > \FILE\fileMaxSize())
             {
-                $error = rawurlencode($this->errors->text('file', 'uploadSize'));
-                $url = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
+                $url = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_uploadSize';
                 header("Location: $url");
                 die;
             }
@@ -77,8 +75,7 @@ class ATTACHMENTS
         if (!array_key_exists('deleteAll', $this->vars))
         {
             $id = $this->resourceId;
-            $message = rawurlencode($this->errors->text("inputError", "missing"));
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=inputError_missing");
             die;
         }
         $return = \HTML\a(
@@ -180,13 +177,11 @@ class ATTACHMENTS
         $this->getEmbargo();
         if (!$this->storeFile())
         { // FALSE if attachment already exists
-            $message = rawurlencode($this->errors->text("file", "attachmentExists"));
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attchmentExists");
             die;
         }
         // send back to view this resource with success message
-        $message = rawurlencode($this->success->text("attachAdd"));
-        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success=attachAdd");
         die;
     }
     /**
@@ -213,13 +208,12 @@ class ATTACHMENTS
         $id = $this->resourceId;
         if (!$this->storeFile(TRUE))
         { // FALSE if attachment already exists
-            $message = rawurlencode($this->errors->text("file", "attachmentExists"));
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attachmentExists");
             die;
         }
         // send back to view this resource with success message
         $message = rawurlencode($this->success->text("attachAdd"));
-        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success_attachAdd");
         die;
     }
     /**
@@ -299,8 +293,7 @@ class ATTACHMENTS
         {
             if (!$this->storeFile())
             { // FALSE if attachment already exists
-                $message = rawurlencode($this->errors->text("file", "attachmentExists"));
-                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attachmentExists");
                 die;
             }
         }
@@ -311,8 +304,7 @@ class ATTACHMENTS
             return;
         }
         // send back to view this resource with success message (deleteConfirm breaks out before this)
-        $message = rawurlencode($this->success->text("attachEdit"));
-        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success_attachEdit");
         die;
     }
     /**
@@ -461,8 +453,7 @@ class ATTACHMENTS
         }
         // send back to view this resource with success message
         $id = $this->resourceId;
-        $message = rawurlencode($this->success->text("attachDelete"));
-        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success=attachDelete");
         die;
     }
     /**
@@ -481,8 +472,7 @@ class ATTACHMENTS
             $filesArray = FILE\fileUpload($varFileName, $multiple);
             if (empty($filesArray))
             {
-                $message = rawurlencode($this->errors->text("file", "upload"));
-                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload");
                 die;
             }
             foreach ($filesArray as $array)
@@ -494,8 +484,7 @@ class ATTACHMENTS
                 // $array[4] = index of array in $_FILES['file']
                 if (!$array[1])
                 {
-                    $message = rawurlencode($this->errors->text("file", "upload"));
-                    header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+                    header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload");
                     die;
                 }
                 if (!$this->actuallyStoreFile($array[0], $array[1], $array[2], $array[3], $array[4]))
@@ -509,8 +498,7 @@ class ATTACHMENTS
             list($filename, $hash, $type, $size) = FILE\fileUpload($varFileName);
             if (!$hash)
             {
-                $message = rawurlencode($this->errors->text("file", "upload"));
-                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload");
                 die;
             }
             if (!$this->actuallyStoreFile($filename, $hash, $type, $size, FALSE))
@@ -537,8 +525,7 @@ class ATTACHMENTS
         if (!FILE\fileStore(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]), $hash, $index))
         {
             $id = $this->resourceId;
-            $message = rawurlencode($this->errors->text("file", "upload"));
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload");
             die;
         }
         
@@ -678,13 +665,13 @@ class ATTACHMENTS
             WIKINDX_PUBLIC_VERSION . '"></script>');
         GLOBALS::addTplVar('scripts', '<script>var rId = ' . $this->resourceId . '; </script>');
         $error = rawurlencode($this->errors->text("file", "upload"));
-        $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
+        $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_upload';
         GLOBALS::addTplVar('scripts', '<script>var errorUrl = "' . $closeUrl . '"; </script>');
         $error = rawurlencode($this->errors->text("file", "uploadSize", $maxSize));
-        $sizeErrorUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
+        $sizeErrorUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_uploadSize';
         GLOBALS::addTplVar('scripts', '<script>var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
         $success = rawurlencode($this->success->text("attachAdd"));
-        $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $success;
+        $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&success=attachAdd';
         GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
         $td = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
@@ -831,13 +818,13 @@ class ATTACHMENTS
             WIKINDX_PUBLIC_VERSION . '"></script>');
         GLOBALS::addTplVar('scripts', '<script>var rId = ' . $this->resourceId . '; </script>');
         $error = rawurlencode($this->errors->text("file", "upload"));
-        $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
+        $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_upload';
         GLOBALS::addTplVar('scripts', '<script>var errorUrl = "' . $closeUrl . '"; </script>');
         $error = rawurlencode($this->errors->text("file", "uploadSize", $maxSize));
-        $sizeErrorUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
+        $sizeErrorUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_uploadSize';
         GLOBALS::addTplVar('scripts', '<script>var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
         $success = rawurlencode($this->success->text("attachAdd"));
-        $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $success;
+        $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&success=attachAdd';
         GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
         $td1 = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';

@@ -21,6 +21,10 @@ class AUTHORIZE
     private $db;
     /** object */
     private $session;
+    /** object */
+    private $errors;
+    /** object */
+    private $success;
     /** array */
     private $vars;
 
@@ -32,6 +36,8 @@ class AUTHORIZE
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
+        $this->errors = FACTORY_ERRORS::getInstance();
+        $this->success = FACTORY_SUCCESS::getInstance();
         if (!GLOBALS::getUserVar("Language"))
         {
             $fields = $this->db->listFields('config');
@@ -217,18 +223,20 @@ class AUTHORIZE
     /**
      * Display the empty form for logging on
      *
-     * @param string $error Default is FALSE
+     * @param string $message Default is FALSE
      */
-    public function initLogon($error = FALSE)
+    public function initLogon($message = FALSE)
     {
         $this->session->delVar("setup_ReadOnly");
         $messages = FACTORY_MESSAGES::getFreshInstance();
         GLOBALS::setTplVar('heading', $messages->text("heading", "logon"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $error = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
-        $pString = $error;
+        $pString = $message;
         if (!WIKINDX_MULTIUSER)
         {
             $errors = FACTORY_ERRORS::getFreshInstance();
@@ -282,7 +290,7 @@ class AUTHORIZE
         if (!$user->checkPassword($username, $password))
         {
             $error = FACTORY_ERRORS::getInstance();
-            $this->failure($error->text('inputError', 'invalid'));
+            $this->failure("inputError_invalid");
         }
         // Success
         $this->clearEmbargoes();
@@ -534,17 +542,8 @@ class AUTHORIZE
      */
     private function failure($error = FALSE)
     {
-        if ($sessionError = $this->session->getVar("misc_ErrorMessage"))
-        { // Perhaps from USER.php idap functions
-            $error = $sessionError;
-            $this->session->delVar("misc_ErrorMessage");
-        }
-        else
-        {
-            $error = rawurlencode($error);
-        }
-        // Exit back to logon prompt
-        header("Location: index.php?action=initLogon&message=$error");
+		// Exit back to logon prompt
+        header("Location: index.php?action=initLogon&error=$error");
         die;
     }
 }

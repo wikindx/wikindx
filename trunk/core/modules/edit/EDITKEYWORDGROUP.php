@@ -64,9 +64,11 @@ class EDITKEYWORDGROUP
 
             return;
         }
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \HTML\tableStart();
@@ -96,8 +98,7 @@ class EDITKEYWORDGROUP
     {
         if (!array_key_exists('delete_GroupId', $this->vars))
         {
-            $message = rawurlencode($this->errors->text("inputError", "missing"));
-            header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+            header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&error=inputError_missing");
             die;
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete2", " (" .
@@ -121,8 +122,7 @@ class EDITKEYWORDGROUP
     {
         if (!array_key_exists('delete_GroupId', $this->vars) || !$this->vars['delete_GroupId'])
         {
-            $message = rawurlencode($this->errors->text("inputError", "missing"));
-            header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+            header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&error=inputError_missing");
             die;
         }
         foreach (unserialize(base64_decode($this->vars['delete_GroupId'])) as $deleteId)
@@ -135,8 +135,7 @@ class EDITKEYWORDGROUP
             $this->db->delete('user_kg_usergroups');
         }
         // send back to keyword group page with success message
-        $message = rawurlencode($this->success->text("keywordGroupDelete"));
-        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&success=keywordGroupDelete");
         die;
     }
     /**
@@ -273,8 +272,7 @@ class EDITKEYWORDGROUP
                 $this->db->insert('user_kg_usergroups', $fields, $values);
             }
         }
-        $message = rawurlencode($this->success->text('keywordGroupNew'));
-        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&success=keywordGroupNew");
         die;
     }
     /**
@@ -332,8 +330,7 @@ class EDITKEYWORDGROUP
             }
         }
         // send back to keyword group page with success message
-        $message = rawurlencode($this->success->text("keywordGroupEdit"));
-        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&success=keywordGroupEdit");
         die;
     }
     /**

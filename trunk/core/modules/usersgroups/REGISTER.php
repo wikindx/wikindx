@@ -136,8 +136,7 @@ class REGISTER
         $this->db->formatConditions($this->db->dateIntervalCondition(20) . $this->db->greater .
             $this->db->formatFields('userregisterTimestamp'));
         $this->db->delete('user_register');
-        $message = rawurlencode($this->success->text("registerEmail"));
-        header("location: index.php?message=$message");
+        header("location: index.php?success=registerEmail");
         die;
     }
     /**
@@ -257,8 +256,7 @@ class REGISTER
         {
             $this->badInput->close($error, $this, 'registerConfirm');
         }
-        $message = rawurlencode($this->success->text("userAdd"));
-        header("location: index.php?message=$message");
+        header("location: index.php?success=userAdd");
         die;
     }
     /**
@@ -308,8 +306,7 @@ class REGISTER
         $fields[] = 'userregisterTimestamp';
         $values[] = $this->db->formatTimestamp();
         $this->db->insert('user_register', $fields, $values);
-        $message = rawurlencode($this->success->text("registerRequest"));
-        header("location: index.php?message=$message");
+        header("location: index.php?success=registerRequest");
         die;
     }
     /**

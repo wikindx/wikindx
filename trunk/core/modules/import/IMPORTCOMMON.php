@@ -30,6 +30,8 @@ class IMPORTCOMMON
     /** object */
     private $messages;
     /** object */
+    private $success;
+    /** object */
     private $errors;
     /** object */
     private $session;
@@ -60,6 +62,7 @@ class IMPORTCOMMON
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
+        $this->success = FACTORY_SUCCESS::getInstance();
         $this->tag = FACTORY_TAG::getInstance();
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->keyword = FACTORY_KEYWORD::getInstance();
@@ -267,7 +270,7 @@ class IMPORTCOMMON
      */
     public function importSuccess()
     {
-        $pString = $this->vars['message'];
+        $pString = $this->success->text($this->vars['success']);
         $data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']); // FALSE if nothing there (reloading page?), else array
         if (is_array($data))
         {

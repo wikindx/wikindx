@@ -43,9 +43,11 @@ class ADMINLANGUAGES
     {
         $languages = $this->grabAll();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminLanguage"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \HTML\p($this->messages->text("misc", "language"));
@@ -143,8 +145,7 @@ class ADMINLANGUAGES
             }
         }
         $this->db->insert('language', ['languageLanguage'], [$this->formData['languageAdd']]);
-        $message = rawurlencode($this->success->text("languageAdd"));
-        header("Location: index.php?action=admin_ADMINLANGUAGES_CORE&method=init&message=$message");
+        header("Location: index.php?action=admin_ADMINLANGUAGES_CORE&method=init&success=languageAdd");
         die;
     }
     // Ask for confirmation of delete languages
@@ -179,8 +180,7 @@ class ADMINLANGUAGES
         $this->db->delete('language');
         $this->db->formatConditionsOneField($this->formData['ids'], 'resourcelanguageLanguageId');
         $this->db->delete('resource_language');
-        $message = rawurlencode($this->success->text("languageDelete"));
-        header("Location: index.php?action=admin_ADMINLANGUAGES_CORE&method=init&message=$message");
+        header("Location: index.php?action=admin_ADMINLANGUAGES_CORE&method=init&success=languageDelete");
         die;
     }
     // Edit languages
@@ -189,8 +189,7 @@ class ADMINLANGUAGES
         $this->validateInput('edit');
         $this->db->formatConditions(['languageId' => $this->vars['languageEditId']]);
         $this->db->update('language', ['languageLanguage' => \UTF8\mb_trim($this->vars['languageEdit'])]);
-        $message = rawurlencode($this->success->text("languageEdit"));
-        header("Location: index.php?action=admin_ADMINLANGUAGES_CORE&method=init&message=$message");
+        header("Location: index.php?action=admin_ADMINLANGUAGES_CORE&method=init&success=languageEdit");
         die;
     }
     // Grab any languages from config table

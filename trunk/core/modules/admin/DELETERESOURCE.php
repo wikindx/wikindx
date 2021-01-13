@@ -50,10 +50,8 @@ class DELETERESOURCE
     }
     /**
      * check we are allowed to delete and load appropriate method
-     *
-     * @param false|string $message
      */
-    public function init($message = FALSE)
+    public function init()
     {
         $this->gatekeep->requireSuper = FALSE; // only admins can delete resources if set to TRUE
         $this->gatekeep->init();
@@ -112,7 +110,7 @@ class DELETERESOURCE
             $bibStyle = FACTORY_BIBSTYLE::getInstance();
             $bibStyle->output = 'html';
             while ($row = $this->db->fetchRow($recordset))
-            {
+            {print_r($row); print BR . BR;
                 $resourceList[]['resource'] = $bibStyle->process($row);
             }
             // Templates expect list ordered from 0, so we renumber from zero
@@ -188,9 +186,11 @@ class DELETERESOURCE
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "miscellaneous", "TAG.php"]));
         $tag = new TAG();
         $tags = $tag->grabAll();
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \FORM\formHeader('admin_DELETERESOURCE_CORE');
@@ -338,7 +338,6 @@ class DELETERESOURCE
             }
         }
         // Which page do we return to?
-        $message = rawurlencode($this->success->text("resourceDelete"));
         if (GLOBALS::getUserVar('BrowseBibliography'))
         {
             $this->db->formatConditions(['userbibliographyresourceBibliographyId' => GLOBALS::getUserVar('BrowseBibliography')]);
@@ -347,13 +346,13 @@ class DELETERESOURCE
             {
                 $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
                 $this->db->update('users', ['usersBrowseBibliography' => 0]);
-                header("Location: index.php?message=$message");
+                header("Location: index.php?success=resourceDelete");
                 die;
             }
         }
         if ($this->session->getVar("setup_PagingTotal") == 0)
         { // Return to home page
-            header("Location: index.php?message=$message");
+            header("Location: index.php?success=resourceDelete");
             die;
         }
         if ($this->navigate == 'nextResource')
@@ -368,12 +367,12 @@ class DELETERESOURCE
         }
         elseif ($this->navigate == 'front')
         { // Return to home page
-            header("Location: index.php?message=$message");
+            header("Location: index.php?success=resourceDelete");
             die;
         }
         else
         { // return to multiple resource delete page -- $this->navigate == FALSE
-            header("Location: index.php?action=admin_DELETERESOURCE_CORE&method=display&message=$message");
+            header("Location: index.php?action=admin_DELETERESOURCE_CORE&method=display&success=resourceDelete");
             die;
         }
         FACTORY_CLOSE::getInstance();

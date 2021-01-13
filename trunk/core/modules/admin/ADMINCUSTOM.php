@@ -43,9 +43,11 @@ class ADMINCUSTOM
     public function init($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminCustom"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
@@ -175,8 +177,7 @@ class ADMINCUSTOM
             $values[] = 'S';
         }
         $this->db->insert('custom', $fields, $values);
-        $message = rawurlencode($this->success->text("fieldAdd"));
-        header("Location: index.php?action=admin_ADMINCUSTOM_CORE&method=init&message=$message");
+        header("Location: index.php?action=admin_ADMINCUSTOM_CORE&method=init&success=fieldAdd");
         die;
     }
     /**
@@ -189,8 +190,7 @@ class ADMINCUSTOM
         $id = $split[0];
         $this->db->formatConditions(['customId' => $id]);
         $this->db->update('custom', ["customLabel" => $this->formData['label']]);
-        $message = rawurlencode($this->success->text("fieldEdit"));
-        header("Location: index.php?action=admin_ADMINCUSTOM_CORE&method=init&message=$message");
+        header("Location: index.php?action=admin_ADMINCUSTOM_CORE&method=init&success=fieldEdit");
         die;
     }
     /**
@@ -230,8 +230,7 @@ class ADMINCUSTOM
         $this->db->delete('custom');
         $this->db->formatConditionsOneField($this->formData['ids'], 'resourcecustomCustomId');
         $this->db->delete('resource_custom');
-        $message = rawurlencode($this->success->text("fieldDelete"));
-        header("Location: index.php?action=admin_ADMINCUSTOM_CORE&method=init&message=$message");
+        header("Location: index.php?action=admin_ADMINCUSTOM_CORE&method=init&success=fieldDelete");
         die;
     }
     /**

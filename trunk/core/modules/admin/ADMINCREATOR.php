@@ -51,9 +51,11 @@ class ADMINCREATOR
     {
         $creators = $this->creator->grabAll();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "mergeCreators"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         if (is_array($creators) && !empty($creators))
@@ -206,8 +208,7 @@ class ADMINCREATOR
         $this->db->deleteCache('cacheResourceCreators');
         $this->db->deleteCache('cacheMetadataCreators');
 
-        $message = rawurlencode($this->success->text("creatorMerge"));
-        header("Location: index.php?action=admin_ADMINCREATOR_CORE&method=mergeInit&message=$message");
+        header("Location: index.php?action=admin_ADMINCREATOR_CORE&method=mergeInit&success=creatorMerge");
         die;
     }
     /**
@@ -236,9 +237,11 @@ class ADMINCREATOR
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('creatorGroups'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "groupCreators"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $this->potentialMasters = $this->creator->grabGroupAvailableMembers();
@@ -397,8 +400,7 @@ class ADMINCREATOR
         {
             $this->db->formatConditions(['creatorSameAs' => $this->vars['creatorMaster']]);
             $this->db->updateNull('creator', 'creatorSameAs');
-            $message = rawurlencode($this->success->text("creatorUngroup"));
-            header("Location: index.php?action=admin_ADMINCREATOR_CORE&method=groupInit&message=$message");
+            header("Location: index.php?action=admin_ADMINCREATOR_CORE&method=groupInit&success=creatorUngroup");
             die;
         }
         // Otherwise creating or editing a group
@@ -414,8 +416,7 @@ class ADMINCREATOR
         $this->db->formatConditionsOneField($creatorIds, 'creatorId');
         $this->db->update('creator', ['creatorSameAs' => $targetCreatorId]);
         
-        $message = rawurlencode($this->success->text("creatorGroup"));
-        header("Location: index.php?action=admin_ADMINCREATOR_CORE&method=groupInit&message=$message");
+        header("Location: index.php?action=admin_ADMINCREATOR_CORE&method=groupInit&success=creatorGroup");
         die;
     }
     /**

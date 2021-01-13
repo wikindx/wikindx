@@ -29,9 +29,7 @@ class EDITPUBLISHER
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-
         $this->publisher = FACTORY_PUBLISHER::getInstance();
-
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
 
@@ -55,21 +53,23 @@ class EDITPUBLISHER
         {
             $publisherType = FALSE;
         }
-        if (array_key_exists('message', $this->vars))
-        {
-            $pString = $this->vars['message'];
-            if (array_key_exists('id', $this->vars))
-            {
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $pString = $this->success->text($this->vars['success']);
+            if (array_key_exists('id', $this->vars)) {
                 $initialPublisherId = $this->vars['id'];
             }
-        }
-        elseif (is_array($message))
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $pString = $this->errors->text($split[0], $split[1]);
+            if (array_key_exists('id', $this->vars)) {
+                $initialPublisherId = $this->vars['id'];
+            }
+        } elseif (is_array($message))
         { // error has occurred . . .
             $error = array_shift($message);
             $pString = \HTML\p($error, "error", "center");
             $initialPublisherId = array_shift($message);
-        }
-        else
+        }  else
         {
             $pString = $message;
         }
@@ -192,8 +192,7 @@ class EDITPUBLISHER
         $this->db->deleteCache('cacheResourcePublishers');
         $this->db->deleteCache('cacheMetadataPublishers');
         // send back to editDisplay with success message
-        $message = rawurlencode($this->success->text("publisher"));
-        header("Location: index.php?action=edit_EDITPUBLISHER_CORE&method=init&message=$message&id=" . $this->vars['editPublisherId'] .
+        header("Location: index.php?action=edit_EDITPUBLISHER_CORE&method=init&success=publisher&id=" . $this->vars['editPublisherId'] .
             "&PublisherType=" . $this->vars['PublisherType']);
         die;
     }
@@ -247,8 +246,7 @@ class EDITPUBLISHER
                 $this->db->update('resource_misc', $updateArray);
             }
         }
-        $message = rawurlencode($this->success->text("publisher"));
-        header("Location: index.php?action=edit_EDITPUBLISHER_CORE&method=init&message=$message&id=$existId&PublisherType=" .
+        header("Location: index.php?action=edit_EDITPUBLISHER_CORE&method=init&success=publisher&id=$existId&PublisherType=" .
             $this->vars['PublisherType']);
         die;
     }

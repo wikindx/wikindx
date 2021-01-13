@@ -896,8 +896,7 @@ class LISTADDTO
         $success = FACTORY_SUCCESS::getInstance();
         if (empty($basket))
         {
-            $message = rawurlencode($success->text("basketRemove"));
-            header("Location: index.php?message=$message");
+            header("Location: index.php?success=basketRemove");
             die;
         }
         $this->navigate->listView($success->text("basketRemove"));
@@ -976,8 +975,7 @@ class LISTADDTO
         {
             $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
             $this->db->update('users', ['usersBrowseBibliography' => 0]);
-            $message = rawurlencode($success->text("deleteFromBib"));
-            header("Location: index.php?message=$message");
+            header("Location: index.php?success=deleteFromBib");
             die;
         }
         $this->navigate->listView($success->text("deleteFromBib"));
@@ -1018,8 +1016,7 @@ class LISTADDTO
         $resultset = $this->db->select('resource_misc', ['resourcemiscId']);
         if (!$this->db->numRows($resultset))
         {
-            $message = rawurlencode($success->text("unquarantineResource"));
-            header("Location: index.php?message=$message");
+            header("Location: index.php?success=unquarantineResource");
             die;
         }
         $this->navigate->listView($success->text("unquarantineResource"));

@@ -44,21 +44,19 @@ class DELETEIMAGES
     {
         $this->gatekeep->requireSuper = TRUE; // only admins can delete images if set to TRUE
         $this->gatekeep->init();
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
-        }
-        else
-        {
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
+        } else {
             $message = FALSE;
         }
-        if (array_key_exists('function', $this->vars))
-        {
+        if (array_key_exists('function', $this->vars)) {
             $function = $this->vars['function'];
             $this->{$function}();
         }
-        else
-        {
+        else {
             $this->display($message);
         }
     }
@@ -73,8 +71,7 @@ class DELETEIMAGES
     {
         $imageArray = array_keys($this->usedImages);
         $pString = $this->displayImages($imageArray, $initialState);
-        if ($initialState)
-        {
+        if ($initialState) {
             return $pString;
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
@@ -399,8 +396,7 @@ class DELETEIMAGES
                 $this->db->update('config', ['configText' => $text]);
             }
         }
-        $message = rawurlencode($this->success->text("imageDelete"));
-        header("Location: index.php?action=admin_DELETEIMAGES_CORE&method=init&message=$message");
+        header("Location: index.php?action=admin_DELETEIMAGES_CORE&method=init&success=imageDelete");
         die;
     }
     /**

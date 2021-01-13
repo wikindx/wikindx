@@ -19,6 +19,7 @@ class RESOURCEVIEW
     private $vars;
     private $icons;
     private $errors;
+    private $success;
     private $messages;
     private $coins;
     private $gs;
@@ -48,6 +49,7 @@ class RESOURCEVIEW
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
+        $this->success = FACTORY_SUCCESS::getInstance();
         $this->coins = FACTORY_EXPORTCOINS::getInstance();
         $this->gs = FACTORY_EXPORTGOOGLESCHOLAR::getInstance();
         $this->bibStyle = FACTORY_BIBSTYLE::getInstance();
@@ -95,9 +97,11 @@ class RESOURCEVIEW
             $this->vars['id'] = $id;
         }
         // message can come from ATTACHMENTS.php or when deleting a resource
-        if (!$message and array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $qs = $this->session->getArray('QueryStrings');
         if (empty($qs) || (mb_strpos($qs[0], 'RESOURCEFORM_CORE') !== FALSE))

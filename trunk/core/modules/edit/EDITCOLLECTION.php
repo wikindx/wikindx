@@ -93,11 +93,12 @@ class EDITCOLLECTION
         GLOBALS::setTplVar('help', $help->createLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "collection") . ")"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $pString = $this->vars['message'];
-        }
-        elseif (is_array($message))
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $pString = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $pString = $this->errors->text($split[0], $split[1]);
+        } elseif (is_array($message))
         { // error has occurred . . .
             $error = array_shift($message);
             $pString = \HTML\p($error, "error", "center");
@@ -452,8 +453,7 @@ class EDITCOLLECTION
         // Update collection defaults field
         $this->db->formatConditions(['collectionId' => $this->formData['collectionId']]);
         $this->db->update('collection', ['collectionDefault' => base64_encode(serialize($collectionDefaults))]);
-        $message = rawurlencode($this->success->text("collection"));
-        header("Location: index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&message=$message" .
+        header("Location: index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&success=collection" .
             "&collectionType=" . $this->vars['collectionTypeOriginal']);
         die;
     }
@@ -490,7 +490,7 @@ class EDITCOLLECTION
             $this->db->update('resource_misc', ['resourcemiscCollection' => $existId]);
         }
         $message = rawurlencode($this->success->text("collection"));
-        header("Location: index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&message=$message" .
+        header("Location: index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&success=collection" .
             "&collectionType=" . $this->formData['collectionType']);
         die;
     }

@@ -466,7 +466,7 @@ class RESOURCECOMMON
                 FALSE,
                 $this->db->formatFields($fields),
                 $subQuery,
-                FALSE,
+                TRUE,
                 FALSE,
                 TRUE
             ));

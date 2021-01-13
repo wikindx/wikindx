@@ -66,19 +66,25 @@ class MYWIKINDX
         {
             \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         }
-        if (is_array($message))
-        {
+        if (is_array($message)) {
             $this->messageString = $message[0];
             $item = $message[1];
-        }
-        elseif (array_key_exists('message', $this->vars) && array_key_exists('selectItem', $this->vars))
-        {
-            $this->messageString = $this->vars['message'];
-            $item = $this->vars['selectItem'];
-        }
-        elseif (array_key_exists('selectItem', $this->vars))
-        { // e.g. javascript redirect from e.g. tags, groups, bibs operations
-            $item = $this->vars['selectItem'];
+        } elseif (array_key_exists('success', $this->vars) && $this->vars['success']) {
+        	if (strpos($this->vars['success'], '_') !== FALSE) {
+        		$split = explode('_', $this->vars['success']);
+            	$this->messageString = $this->success->text($split[0], $split[1]);
+        	} else {
+	            $this->messageString = $this->success->text($this->vars['success']);
+	        }
+            if (array_key_exists('selectItem', $this->vars)) {
+            	$item = $this->vars['selectItem'];
+            }
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $this->messageString = $this->errors->text($split[0], $split[1]);
+            if (array_key_exists('selectItem', $this->vars)) {
+            	$item = $this->vars['selectItem'];
+            }
         }
         else
         {
@@ -185,9 +191,8 @@ class MYWIKINDX
         {
             $this->badInputLoad($this->errors->text("inputError", "mail", GLOBALS::getError()), 'user');
         }
-        $message = rawurlencode($this->success->text("userEdit"));
         $selectItem = $this->vars['selectItem'];
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&success=userEdit&selectItem=$selectItem");
         die;
     }
     /**
@@ -218,9 +223,8 @@ class MYWIKINDX
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $this->db->update('users', $updateArray);
         }
-        $message = rawurlencode($this->success->text("config"));
         $selectItem = $this->vars['selectItem'];
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&success=config&selectItem=$selectItem");
         die;
     }
     /**
@@ -372,9 +376,8 @@ class MYWIKINDX
             $user = FACTORY_USER::getInstance();
             $user->writePreferences($this->session->getVar("setup_UserId"));
         }
-        $message = rawurlencode($this->success->text("config"));
         $selectItem = $this->vars['selectItem'];
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&success=config&selectItem=$selectItem");
         die;
     }
     /**
@@ -473,9 +476,8 @@ class MYWIKINDX
         }
         $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
         $this->db->update('users', $updateArray);
-        $message = rawurlencode($this->success->text("notify"));
         $selectItem = $this->vars['selectItem'];
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&success=notify&selectItem=$selectItem");
         die;
     }
     /**
@@ -532,13 +534,15 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "createGroup")
         ));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
-        }
         if (array_key_exists('uuid', $this->vars))
         {
             $uuid = $this->vars['uuid'];
+        }
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -644,15 +648,15 @@ class MYWIKINDX
         $error = '';
         if (!$title = \UTF8\mb_trim($this->vars['title']))
         {
-            $error = $this->errors->text("inputError", "missing");
+            $error = "inputError_missing";
         }
         if (empty($this->vars['selectedUsers']))
         {
-            $error = $this->errors->text("inputError", "missing");
+            $error = "inputError_missing";
         }
         if (!$this->checkUserGroupExists($title, FALSE))
         {
-            $error = $this->errors->text("inputError", "groupExists");
+            $error = "inputError_groupExists";
         }
         if (array_key_exists('description', $this->vars) && \UTF8\mb_trim($this->vars['description']))
         {
@@ -671,8 +675,7 @@ class MYWIKINDX
             }
             \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'description' => $description,
                 'selectedUsers' => $this->vars['selectedUsers'], ]);
-            $message = rawurlencode($error);
-            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserGroupInit&message=$message&uuid=$uuid");
+            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserGroupInit&error=$error&uuid=$uuid");
             die;
         }
         $userId = $this->session->getVar("setup_UserId");
@@ -698,9 +701,8 @@ class MYWIKINDX
         {
             $this->db->insert('user_groups_users', ['usergroupsusersUserId', 'usergroupsusersGroupId'], [$id, $groupId]);
         }
-        $message = rawurlencode($this->success->text("groupAdd"));
         $this->formData = [];
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserGroupInit&message=$message");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserGroupInit&success=groupAdd");
         die;
     }
     /**
@@ -716,13 +718,15 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "editGroup")
         ));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
-        }
         if (array_key_exists('uuid', $this->vars))
         {
             $uuid = $this->vars['uuid'];
+        }
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -847,15 +851,15 @@ class MYWIKINDX
         $groupId = FALSE;
         if (!array_key_exists('groupId', $this->vars) || (!$groupId = $this->vars['groupId']))
         {
-            $error = $this->errors->text("inputError", "missing");
+            $error = "inputError_missing";
         }
         if (!$title = \UTF8\mb_trim($this->vars['title']))
         {
-            $error = $this->errors->text("inputError", "missing");
+            $error = "inputError_missing";
         }
         if (empty($this->vars['selectedUsers']))
         {
-            $error = $this->errors->text("inputError", "missing");
+            $error = "inputError_missing";
         }
         $description = \UTF8\mb_trim($this->vars['description']);
         if (!$this->checkValidUserGroup($groupId))
@@ -879,8 +883,7 @@ class MYWIKINDX
             }
             \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'description' => $description, 'groupId' => $groupId,
                 'selectedUsers' => $this->vars['selectedUsers'], ]);
-            $message = rawurlencode($error);
-            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserGroupInit&message=$message&uuid=$uuid");
+            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserGroupInit&error=$error&uuid=$uuid");
             die;
         }
         if (!$description)
@@ -911,8 +914,7 @@ class MYWIKINDX
         {
             \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         }
-        $message = rawurlencode($this->success->text("groupEdit"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserGroupInit&message=$message&groupId=$groupId");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserGroupInit&success=groupEdit&groupId=$groupId");
         die;
     }
     /**
@@ -975,8 +977,7 @@ class MYWIKINDX
         // Delete usergroup
         $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
         $this->db->delete('user_groups');
-        $message = rawurlencode($this->success->text("groupDelete"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=deleteUserGroupSuccess&message=$message");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=deleteUserGroupSuccess&success=groupDelete");
         die;
     }
     /**
@@ -991,9 +992,11 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "deleteGroup")
         ));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1060,9 +1063,16 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "createUserTag")
         ));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+        	if (strpos($this->vars['success'], '_') !== FALSE) {
+        		$split = explode('_', $this->vars['success']);
+        		$message = $this->success->text($split[0], $split[1]);
+        	} else {
+	            $message = $this->success->text($this->vars['success']);
+	        }
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1112,8 +1122,8 @@ class MYWIKINDX
         $fields[] = 'usertagsUserId';
         $values[] = $this->session->getVar("setup_UserId");
         $this->db->insert('user_tags', $fields, $values);
-        $message = rawurlencode($this->success->text("usertagAdd", $title));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserTagInit&message=$message");
+        $message = "usertagAdd_$title";
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserTagInit&success=$message");
         die;
     }
     /**
@@ -1129,13 +1139,15 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "editUserTag")
         ));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
-        }
         if (array_key_exists('uuid', $this->vars))
         {
             $uuid = $this->vars['uuid'];
+        }
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1188,11 +1200,11 @@ class MYWIKINDX
         $error = '';
         if (!$title = \UTF8\mb_trim($this->vars['title']))
         {
-            $error = $this->errors->text("inputError", "missing");
+            $error = "inputError_missing";
         }
         if (!$tagId = $this->vars['tagId'])
         {
-            $error = $this->errors->text("inputError", "missing");
+            $error = "inputError_missing";
         }
         $userTagsObject = FACTORY_USERTAGS::getInstance();
         $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
@@ -1200,7 +1212,7 @@ class MYWIKINDX
         $recordSet = $this->db->select('user_tags', 'usertagsId');
         if (!$this->db->numRows($recordSet))
         {
-            $error = $this->errors->text('inputError', 'invalid');
+            $error = "inputError_invalid";
         }
         if ($error)
         {
@@ -1214,7 +1226,7 @@ class MYWIKINDX
                 \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'tagId' => $tagId]);
             }
             $message = rawurlencode($error);
-            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserTagInit&message=$message&uuid=$uuid");
+            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserTagInit&error=$error&uuid=$uuid");
             die;
         }
         $this->db->formatConditions(['usertagsId' => $tagId]);
@@ -1223,8 +1235,7 @@ class MYWIKINDX
         {
             \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         }
-        $message = rawurlencode($this->success->text("usertagEdit"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserTagInit&message=$message&tagId=$tagId");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserTagInit&success=usertagEdit&tagId=$tagId");
         die;
     }
     /**
@@ -1283,8 +1294,7 @@ class MYWIKINDX
         // Remove user_tag ids from resource_user_tags.TagIds
         $this->db->formatConditions(['resourceusertagsTagId' => $this->vars['tagId']]);
         $this->db->delete('resource_user_tags');
-        $message = rawurlencode($this->success->text("usertagDelete"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=deleteUserTagSuccess&message=$message");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=deleteUserTagSuccess&success=usertagDelete");
         die;
     }
     /**
@@ -1299,9 +1309,11 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "deleteUserTag")
         ));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1411,9 +1423,16 @@ class MYWIKINDX
                 ": " . $this->messages->text("user", "createBib")
             ));
         }
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+        	if (strpos($this->vars['success'], '_') !== FALSE) {
+        		$split = explode('_', $this->vars['success']);
+        		$message = $this->success->text($split[0], $split[1]);
+        	} else {
+	            $message = $this->success->text($this->vars['success']);
+	        }
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1533,9 +1552,9 @@ class MYWIKINDX
         }
         $this->db->insert('user_bibliography', $fields, $values);
         $this->session->setVar("setup_Bibliographies", TRUE);
-        $message = rawurlencode($this->success->text("bibliographyAdd", $title));
+        $message = "bibliographyAdd_$title";
         $this->formData = [];
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserBibInit&message=$message");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserBibInit&success=$message");
         die;
     }
     /**
@@ -1552,13 +1571,15 @@ class MYWIKINDX
             ": " . $this->messages->text("user", "editBib")
         ));
         $groupUsers = [];
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
-        }
         if (array_key_exists('uuid', $this->vars))
         {
             $uuid = $this->vars['uuid'];
+        }
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+	            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1662,19 +1683,19 @@ class MYWIKINDX
         $error = '';
         if (!$bibId = $this->vars['bibId'])
         {
-            $error = $this->errors->text("inputError", "missing");
+            $error = "inputError_missing";
         }
         if (!$this->checkValidBibliography($bibId))
         {
-            $error = $this->errors->text("inputError", "invalid");
+            $error = "inputError_invalid";
         }
         if (!$title = \UTF8\mb_trim($this->vars['title']))
         {
-            $error = $this->errors->text("inputError", "missing");
+            $error = "inputError_missing";
         }
         if (!$this->checkBibliographyExists($title, $bibId))
         {
-            $error = $this->errors->text("inputError", "bibExists");
+            $error = "inputError_bibExists";
         }
         $description = \UTF8\mb_trim($this->vars['description']);
         if (array_key_exists('groupId', $this->vars))
@@ -1700,7 +1721,7 @@ class MYWIKINDX
             }
             \TEMPSTORAGE\store($this->db, $uuid, $tsArray);
             $message = rawurlencode($error);
-            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editBibInit&message=$message&uuid=$uuid");
+            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editBibInit&error=$error&uuid=$uuid");
             die;
         }
         if ($description)
@@ -1721,8 +1742,7 @@ class MYWIKINDX
         {
             \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         }
-        $message = rawurlencode($this->success->text("bibliographyEdit"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editBibInit&message=$message&bibId=$bibId");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editBibInit&success=bibliographyEdit&bibId=$bibId");
         die;
     }
     /**
@@ -1796,8 +1816,7 @@ class MYWIKINDX
         {
             $this->session->delVar("setup_Bibliographies");
         }
-        $message = rawurlencode($this->success->text("bibliographyDelete"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=deleteBibSuccess&message=$message");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=deleteBibSuccess&success=bibliographyDelete");
         die;
     }
     /**
@@ -1812,9 +1831,11 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "deleteBib")
         ));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+	            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1883,9 +1904,8 @@ class MYWIKINDX
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $this->db->update('users', $nulls);
         }
-        $message = rawurlencode($this->success->text("forgetUpdate"));
         $selectItem = $this->vars['selectItem'];
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&success=forgetUpdate&selectItem=$selectItem");
         die;
     }
     /**

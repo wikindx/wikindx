@@ -42,21 +42,21 @@ class CHOOSEBIB
     public function init($message = FALSE)
     {
         $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
-        if ($this->db->queryFetchFirstField($this->db->selectNoExecute('users', ['usersHomeBib'])))
-        {
+        if ($this->db->queryFetchFirstField($this->db->selectNoExecute('users', ['usersHomeBib']))) {
             $this->homeBib = TRUE;
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibs"));
         $bibsArray = $this->common->getBibsArray();
-        if (empty($bibsArray))
-        {
+        if (empty($bibsArray)) {
             GLOBALS::addTplVar('content', \HTML\p($this->messages->text("misc", "noBibliographies")));
 
             return;
         }
-        if (array_key_exists('message', $this->vars) && $this->vars['message'])
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message ? $message : '';
         $pString .= \FORM\formHeader("bibliography_CHOOSEBIB_CORE");
@@ -72,18 +72,14 @@ class CHOOSEBIB
         $js = \AJAX\jActionForm('onchange', $jsonArray);
         $selected = array_key_exists('BibId', $this->vars) ? $this->vars['BibId'] : GLOBALS::getUserVar('BrowseBibliography');
         $size = count($bibsArray);
-        if ($size > 20)
-        {
+        if ($size > 20) {
             $size = 10;
         }
         $pString .= \HTML\tableStart('');
         $pString .= \HTML\trStart();
-        if ($selected)
-        {
+        if ($selected) {
             $pString .= \HTML\td(\FORM\selectedBoxValue(FALSE, "BibId", $bibsArray, $selected, $size, FALSE, $js));
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "BibId", $bibsArray, $size, FALSE, $js));
         }
         $pString .= \HTML\td(\HTML\div('div', $this->displayBib($selected)), 'left top width80percent');
@@ -140,8 +136,7 @@ class CHOOSEBIB
         {
             $pString = '&nbsp;';
         }
-        else
-        {
+        else {
             $this->db->leftJoin(
                 'user_bibliography_resource',
                 $this->db->formatFields('userbibliographyresourceBibliographyId'),
@@ -207,8 +202,7 @@ class CHOOSEBIB
         }
         elseif ($this->vars['BibId'] < 0)
         {
-            $message = rawurlencode($this->errors->text("inputError", "invalid"));
-            header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&message=$message");
+            header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&error=inputError_invalid");
             die;
         }
         else
@@ -222,8 +216,7 @@ class CHOOSEBIB
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("mywikindx_PagingStartAlpha");
         $this->session->delVar("sql_LastMulti");
-        $message = rawurlencode($this->success->text("bibliographySet"));
-        header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&message=$message&BibId=" . $this->vars['BibId']);
+        header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&success=bibliographySet&BibId=" . $this->vars['BibId']);
         die;
     }
 }

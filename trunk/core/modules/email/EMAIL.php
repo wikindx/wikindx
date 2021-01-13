@@ -223,9 +223,11 @@ class EMAIL
             $hyperlink = WIKINDX_URL_BASE . "/index.php?action=resource_RESOURCEVIEW_CORE&id=" . $this->vars['id'];
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "emailFriend"));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
         $pString .= \FORM\formHeader("email_EMAIL_CORE");
@@ -284,9 +286,8 @@ class EMAIL
         {
             $this->badInput->close($this->errors->text('inputError', 'mail2'), $this, 'emailFriendDisplay');
         }
-        $message = rawurlencode($this->success->text('emailFriend'));
         $id = $this->vars['id'];
-        header("Location: index.php?action=email_EMAIL_CORE&method=emailFriendDisplay&message=$message&id=$id");
+        header("Location: index.php?action=email_EMAIL_CORE&method=emailFriendDisplay&success=emailFriend&id=$id");
         die;
     }
     /**

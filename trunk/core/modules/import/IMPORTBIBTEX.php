@@ -458,8 +458,7 @@ class IMPORTBIBTEX
                     'deleteCacheCreators' => $this->deleteCacheCreators, 'deleteCachePublishers' => $this->deleteCachePublishers,
                     'deleteCacheCollections' => $this->deleteCacheCollections, 'deleteCacheKeywords' => $this->deleteCacheKeywords, ]
             );
-            $message = rawurlencode($this->success->text("bibtexImport"));
-            header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importSuccess&message=$message&uuid=$uuid");
+            header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importSuccess&success=bibtexImport&uuid=$uuid");
             die;
         }
         else

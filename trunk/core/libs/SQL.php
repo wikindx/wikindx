@@ -136,15 +136,8 @@ class SQL
      */
     public function getStringEngineVersion()
     {
-        $EngineVersion = $this->queryFetchFirstRow("SELECT version() AS EngineVersion;");
-        if (array_key_exists("EngineVersion", $EngineVersion))
-        {
-            return $EngineVersion["EngineVersion"];
-        }
-        else
-        {
-            return "";
-        }
+        $EngineVersion = $this->queryFetchFirstField("SELECT version() AS EngineVersion;");
+        return $EngineVersion ?? "";
     }
     /**
      * Close SQL database

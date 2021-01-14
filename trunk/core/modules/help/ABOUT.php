@@ -42,10 +42,12 @@ class ABOUT
         $pString = \HTML\p('The ' . \HTML\strong('WIKINDX Virtual Research Environment') .
             ' is brought to you by the following: ');
         $pString .= \HTML\p(\HTML\strong('Mark Grimshaw-Aagaard:') . ' [ADMINSTRATOR/LEAD PROGRAMMER] (UK/New Zealand/Denmark)');
+        
         $pString .= \HTML\p('Co-programmers:');
-        $list = \HTML\li(\HTML\strong('St&eacute;phane Aulery:') . ' (France) ~ ' . \HTML\em('Senior programmer'));
+        $list = \HTML\li(\HTML\strong('Stéphane Aulery:') . ' (France) ~ ' . \HTML\em('Senior programmer'));
         $list .= \HTML\li(\HTML\strong('Dimitri Joukoff:') . ' (Australia)');
         $pString .= \HTML\ul($list);
+        
         $pString .= \HTML\p('Beta-testers and de-buggers:');
         $list = \HTML\li(\HTML\strong('Joachim Trinkwitz:') . ' (University of Bonn, Germany)');
         $list .= \HTML\li(\HTML\strong('Mathis Bicker:') . ' (University of Bonn, Germany)');
@@ -53,8 +55,18 @@ class ABOUT
         $list .= \HTML\li(\HTML\strong('Phil Abel:') . ' (NASA Glen Research Center, USA)');
         $list .= \HTML\li(\HTML\strong('Elie Akl:') . ' (University Saint-Joseph of Beirut, Lebanon)');
         $pString .= \HTML\ul($list);
+        
+        $pString .= \HTML\p('Translators:');
+        $list  = \HTML\li(\HTML\strong('Billy Bob') . ' (Russian)');
+        $list .= \HTML\li(\HTML\strong('Fabrizio Tallarita') . ' (Italian)');
+        $list .= \HTML\li(\HTML\strong('Stephan Matthiesen') . ' (German)');
+        $list .= \HTML\li(\HTML\strong('Simon Côté-Lapointe') . ' (French)');
+        $list .= \HTML\li(\HTML\strong('Stéphane Aulery') . ' (French)');
+        $list .= \HTML\li(\HTML\strong('Yuri Chornoivan') . ' (Ukrainian)');
+        $pString .= \HTML\ul($list);
+        
         $pString .= \HTML\p('Contributors to earlier versions include:');
-        $list = \HTML\li('H&eacute;lio Alvarenga Nunes');
+        $list = \HTML\li('Hélio Alvarenga Nunes');
         $list .= \HTML\li('Amaury de la Pinsonnais');
         $list .= \HTML\li('Geoffrey Rowland');
         $list .= \HTML\li('Fabrizio Tallarita');
@@ -70,9 +82,10 @@ class ABOUT
         $list .= \HTML\li('Frank Goergen');
         $list .= \HTML\li('Brian Koontz');
         $list .= \HTML\li('Benoit Beraud');
-        $list .= \HTML\li('Simon C&ocirct&eacute-Lapointe');
-        $list .= HTML\li('Jean-Saul Gendron');
+        $list .= \HTML\li('Simon Côé-Lapointe');
+        $list .= \HTML\li('Jean-Saul Gendron');
         $pString .= \HTML\ul($list);
+        
         $pString .= \HTML\p("WIKINDX makes use of the $linkSmarty HTML templating system and the $tinyMceLink WYSIWYG editor.");
         $pString .= \HTML\p("All updates, bug reports, forums, news etc. can be found at the $linkSfWikindx");
         $pString .= \HTML\p("Thanks to $linkSf for hosting the project.");

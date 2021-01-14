@@ -1,22 +1,29 @@
-# Ukrainian translations for wordprocessor package.
-# Copyright (C) 2021 THE wordprocessor'S COPYRIGHT HOLDER
+# Wikindx's Translation ressource: Українська.
+# For copyright see the component.json file
 # This file is distributed under the same license as the wordprocessor package.
-# Automatically generated, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Yuri Chornoivan <yurchor@ukr.net>, 2021
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: wordprocessor\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-12-14 23:33+0100\n"
-"PO-Revision-Date: 2020-12-14 23:33+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2019-09-26 21:03+0000\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
+"Language-Team: Ukrainian (https://www.transifex.com/saulery/teams/103557/"
+"uk/)\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 "
+"> 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: components/plugins/wordprocessor/wordprocessorhelp.php:23
 msgid ""
@@ -43,317 +50,347 @@ msgid ""
 "</ul>\n"
 "\t\t"
 msgstr ""
+"\n"
+"<h3>Текстовий процесор</h3>\n"
+"<p>За допомогою візуального текстового процесора ви можете писати ваші статті "
+"і тексти повністю у WIKINDX, а потім експортувати їх до зовнішнього "
+"текстового процесора, зокрема LibreOffice або Word для остаточного верстання, "
+"якщо це потрібно. При експортуванні ви можете вибрати стиль посилань, і усі "
+"посилання, які ви вставили, буде форматовано за цим стилем до доданої до "
+"тексту бібліографії. Текстовий процесор може працювати зі стилями виносок та "
+"кінцевих приміток, а також посиланнями у тексті, які залежать від контексту.</"
+"p>\n"
+"<ul>\n"
+"<li>Ви можете створювати резервні копії текстів та імпортувати їх назад до "
+"текстового процесора за допомогою можливості «Імпортувати текст».</li>\n"
+"<li>Якщо ви зберігаєте наявний текст із новою назвою, типовою поведінкою буде "
+"вилучення попередніх версій із старою назвою, якщо ви не позначите пункт "
+"«Зберегти нову версію».</li>\n"
+"<li>Вставлена горизонтальна лінія у редакторі стане межею нового розділу під "
+"час експортування (наприклад, до формату RTF). Деякі зі стилів посилань "
+"WIKINDX форматують елементи відповідно до розділів.</li>\n"
+"<li><strong>Будьте обережні</strong>: у поточній версії не передбачено "
+"автоматичного зберігання даних, і програма не попереджає, якщо ви полишаєте "
+"редактор без попереднього збереження даних.</li>\n"
+"</ul>\n"
+"\t\t"
 
 #. *
 #. * Menu items
 #.
 #: components/plugins/wordprocessor/wordprocessormessages.php:27
 msgid "Word Processor..."
-msgstr ""
+msgstr "Текстовий процесор…"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:28
 #: components/plugins/wordprocessor/wordprocessormessages.php:38
 msgid "Open Paper"
-msgstr ""
+msgstr "Відкрити текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:29
 #: components/plugins/wordprocessor/wordprocessormessages.php:40
 msgid "List Papers"
-msgstr ""
+msgstr "Список текстів"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:30
 #: components/plugins/wordprocessor/wordprocessormessages.php:39
 msgid "Delete Paper"
-msgstr ""
+msgstr "Вилучити текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:31
 #: components/plugins/wordprocessor/wordprocessormessages.php:37
 msgid "Import Paper"
-msgstr ""
+msgstr "Імпортувати текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:32
 msgid "New Paper"
-msgstr ""
+msgstr "Створити текст"
 
 #. *
 #. * Other messages
 #.
 #: components/plugins/wordprocessor/wordprocessormessages.php:36
 msgid "Word Processor"
-msgstr ""
+msgstr "Текстовий процесор"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:41
 msgid "Save Paper"
-msgstr ""
+msgstr "Зберегти текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:42
 msgid "Export & Save Paper"
-msgstr ""
+msgstr "Експортувати і зберегти текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:43
 msgid "Add Footnote"
-msgstr ""
+msgstr "Додати виноску"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:44
 msgid "Add Table"
-msgstr ""
+msgstr "Додати таблицю"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:45
 msgid "Add Image"
-msgstr ""
+msgstr "Додати зображення"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:46
 msgid "Add Link"
-msgstr ""
+msgstr "Додати посилання"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:47
 msgid "Add Citation"
 msgstr ""
+"Додати цитату\n"
+"додавання цитати"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:48
 msgid "Title of Paper"
-msgstr ""
+msgstr "Заголовок тексту"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:49
 msgid "Revert to saved version"
-msgstr ""
+msgstr "Повернутися до збереженої версії"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:50
 msgid "Are you sure you wish to revert to the saved version?"
-msgstr ""
+msgstr "Ви справді хочете повернутися до збереженої версії?"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:51
 msgid "New paper"
-msgstr ""
+msgstr "Новий текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:52
 msgid "Open paper"
-msgstr ""
+msgstr "Відкрити текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:53
 msgid "Delete paper"
-msgstr ""
+msgstr "Вилучити текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:54
 msgid "Delete paper(s): "
-msgstr ""
+msgstr "Вилучити тексти:"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:55
 #: components/plugins/wordprocessor/wordprocessormessages.php:65
 msgid "Successfully deleted paper(s)"
-msgstr ""
+msgstr "Успішно вилучено тексти"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:56
 msgid "List papers"
-msgstr ""
+msgstr "Список текстів"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:57
 msgid ""
 "You can download and backup papers if you wish. The newest files are "
 "displayed first."
 msgstr ""
+"Ви можете отримувати тексти і створювати їхні резервні копії, якщо хочете. "
+"Найновіші файли буде показано першими."
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:58
 msgid "You have no papers"
-msgstr ""
+msgstr "У вас немає текстів"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:59
 msgid "Import paper"
-msgstr ""
+msgstr "Імпортувати текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:60
 msgid ""
 "You can import a paper here which should be a plain text or HTML file (basic "
 "HTML only)."
 msgstr ""
+"Ви можете імпортувати текст, який має бути звичайним неформатованим текстом "
+"або файлом HTML (лише базові можливості HTML)."
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:61
 msgid "Filename"
-msgstr ""
+msgstr "Назва файла"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:62
 msgid "Paper has now been loaded ready for appending"
-msgstr ""
+msgstr "Текст завантажено, він готовий до дописування"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:63
 msgid "The paper you are trying to import already exists in this wikindx"
-msgstr ""
+msgstr "Текст, який ви намагаєтеся імпортувати, вже існує у цьому wikindx"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:64
 msgid "Successfully saved paper"
-msgstr ""
+msgstr "Успішно збережено текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:66
 msgid "Successfully imported paper"
-msgstr ""
+msgstr "Успішно імпортовано текст"
 
 #. / loadAppendPaper Load a paper ready for appending one paper to another in the WP
 #: components/plugins/wordprocessor/wordprocessormessages.php:68
 msgid "Load paper"
-msgstr ""
+msgstr "Завантажити текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:69
 msgid "You have already deleted that paper"
-msgstr ""
+msgstr "Ви вже вилучити цей текст"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:70
 msgid "Paper saved"
-msgstr ""
+msgstr "Текст збережено"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:71
 msgid "Paper not yet saved"
-msgstr ""
+msgstr "Текст ще не збережено"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:72
 msgid "Paper not saved: write error"
-msgstr ""
+msgstr "Текст не збережено: помилка запису"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:73
 msgid "Paper not saved: invalid title"
-msgstr ""
+msgstr "Текст не збережено: некоректний заголовок"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:74
 msgid "Save new version"
-msgstr ""
+msgstr "Зберегти нову версію"
 
 #. / Export functions
 #: components/plugins/wordprocessor/wordprocessormessages.php:76
 msgid "Export paper to"
-msgstr ""
+msgstr "Експортувати текст до"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:77
 msgid "Rich Text Format (RTF)"
-msgstr ""
+msgstr "Форматований текст (RTF)"
 
 #. / lineSpacePaper Line spacing for paper exporting to RTF etc.
 #: components/plugins/wordprocessor/wordprocessormessages.php:79
 msgid "Paper line space"
-msgstr ""
+msgstr "Інтервал між рядками у тексті"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:80
 msgid "Bibliography line space"
-msgstr ""
+msgstr "Інтервал між рядками у бібліографії"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:81
 msgid "Single"
-msgstr ""
+msgstr "Одинарний"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:82
 msgid "1.5 lines"
-msgstr ""
+msgstr "1,5 рядка"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:83
 msgid "Double"
-msgstr ""
+msgstr "Подвійний"
 
 #. / indentBib Bibliography indentation for exporting to RTF etc.
 #: components/plugins/wordprocessor/wordprocessormessages.php:85
 msgid "Bibliography indentation"
-msgstr ""
+msgstr "Відступ у бібліографії"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:86
 #: components/plugins/wordprocessor/wordprocessormessages.php:98
 msgid "None"
-msgstr ""
+msgstr "Немає"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:87
 msgid "All"
-msgstr ""
+msgstr "Усі"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:88
 msgid "First line"
-msgstr ""
+msgstr "До першого рядка"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:89
 msgid "All but first line"
-msgstr ""
+msgstr "Усі, окрім першого рядка"
 
 #. / indentFt Spacing, font size and indentation for footnotes
 #: components/plugins/wordprocessor/wordprocessormessages.php:91
 msgid "Footnote indentation"
-msgstr ""
+msgstr "Відступи у виносках"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:92
 msgid "Footnote line space"
-msgstr ""
+msgstr "Інтервал між рядками у виносках"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:93
 msgid "Footnote font size"
-msgstr ""
+msgstr "Розмір шрифту виносок"
 
 #. / pageNumber Page numbering for RTF exports
 #: components/plugins/wordprocessor/wordprocessormessages.php:95
 msgid "Page numbering"
-msgstr ""
+msgstr "Нумерація сторінок"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:96
 msgid "Footer"
-msgstr ""
+msgstr "Виноска"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:97
 msgid "Header"
-msgstr ""
+msgstr "Верхній колонтитул"
 
 #. / pageNumberalign Page number alignment for RTF exports
 #: components/plugins/wordprocessor/wordprocessormessages.php:100
 msgid "Page number alignment"
-msgstr ""
+msgstr "Вирівнювання номерів сторінок"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:101
 msgid "Centre"
-msgstr ""
+msgstr "За центром"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:102
 msgid "Left"
-msgstr ""
+msgstr "Ліворуч"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:103
 msgid "Right"
-msgstr ""
+msgstr "Праворуч"
 
 #. / indentQuoteWords Indentation options for large quotations
 #: components/plugins/wordprocessor/wordprocessormessages.php:105
 msgid "Indent quotations with at least this number of words"
-msgstr ""
+msgstr "Відступ у цитатах на принаймні цю кількість слів"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:106
 msgid "Quotation line space"
-msgstr ""
+msgstr "Інтервал між рядками у цитатах"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:107
 msgid "Font size"
-msgstr ""
+msgstr "Розмір шрифту"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:108
 msgid "Keep quotation marks"
-msgstr ""
+msgstr "Зберігати лапки"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:109
 msgid "Export and Save"
-msgstr ""
+msgstr "Експортувати і зберегти"
 
 #. / sectionFtRestart If a section has been inserted in the paper, any footnotes are renumbered from 1 at each section
 #: components/plugins/wordprocessor/wordprocessormessages.php:111
 msgid "Restart footnotes at each section"
-msgstr ""
+msgstr "Нумерувати виноски окремо у кожному розділі"
 
 #. / paperSize Size of exported paper (letter, A4 etc.)
 #: components/plugins/wordprocessor/wordprocessormessages.php:113
 msgid "Paper size"
-msgstr ""
+msgstr "Розмір паперу"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:114
 msgid "Columns"
-msgstr ""
+msgstr "Стовпчики"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:115
 msgid "Rows"
-msgstr ""
+msgstr "Рядки"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:116
 msgid "Image URL"
-msgstr ""
+msgstr "Адреса зображення"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:117
 msgid "URL"
-msgstr ""
+msgstr "Адреса"

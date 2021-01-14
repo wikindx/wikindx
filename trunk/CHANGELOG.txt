@@ -25,6 +25,7 @@ MAINTENANCE:
 6. Bump component compatibility version of styles to 5.
 7. Fix some typos (ticket #310).
 8. Simplify MySQL/MariaDB version query.
+9. Partial Ukranian translation and credits of translators.
 
 SECURITY
 1. XSS injection in publisher name.

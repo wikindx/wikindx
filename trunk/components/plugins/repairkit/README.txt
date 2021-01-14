@@ -44,6 +44,7 @@ BUGS AND LIMITATIONS
 
 CHANGELOG:
 
+2021-01-14 : FIX : correctly detects multi-field indexes (#303).
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
 2020-12-21 : CHG : handle multiple tabs.
 2020-12-21 : CHG : Keep internal version numbers in a dedicated table (#268).

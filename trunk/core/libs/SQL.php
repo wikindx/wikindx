@@ -304,24 +304,27 @@ class SQL
     {
         $schema = [];
         
+        // Extract the list of tables, except tables of plugins
         $tables = $this->listTables();
-        foreach ($tables as $table)
+        foreach ($tables as $k => $table)
         {
             $basicTable = preg_replace("/^" . preg_quote(WIKINDX_DB_TABLEPREFIX, "/") . "/ui", '', $table);
             
             if (strpos($basicTable, 'plugin_') === 0)
             {
-                continue; // ignore plugin tables
+                // ignore plugin tables
+                unset($tables[$k]);
             }
-            
-            // Extract fields schema
-            $result = $this->query("DESCRIBE " . $table);
-            $result = (array)$result;
-            $schema[$basicTable]['fields'][] = $result;
-            
-            // Extract tables schema
+        }
+        
+        // TABLES
+        foreach ($tables as $table)
+        {
             $result = $this->query("
-                SELECT *
+                SELECT
+                    TABLE_NAME AS `Table`,
+                    ENGINE AS Engine,
+                    TABLE_COLLATION AS Collation
                 FROM INFORMATION_SCHEMA.TABLES
     			WHERE
 		        	TABLE_TYPE = 'BASE TABLE'
@@ -329,12 +332,61 @@ class SQL
 	    			AND LOWER(TABLE_NAME) LIKE LOWER('$table')
             ");
             $result = (array)$result;
-            $schema[$basicTable]['schema'][] = $result;
+            $result = $result[0];
             
+            if (is_array($result))
+            {
+                $schema['tables'][] = $result;
+            }
+        }
+        
+        // FIELDS
+        foreach ($tables as $table)
+        {
+            // Extract fields schema
+            $result = $this->query("SHOW FULL FIELDS FROM $table FROM " . WIKINDX_DB);
+            $result = (array)$result;
+            
+            if (is_array($result))
+            {
+                foreach ($result as $fields)
+                {
+                    // Skip privileges
+                    unset($fields["Privileges"]);
+                    
+                    // Add the Table name on the head of the table
+                    $def = ["Table" => $table];
+                    foreach ($fields as $k => $v)
+                    {
+                        $def[$k] = $v;
+                    }
+                    
+                    $schema['fields'][] = $def;
+                }
+            }
+        }
+        
+        // INDICES
+        foreach ($tables as $table)
+        {
             // Extract indices schema
             $result = $this->query("SHOW INDEX FROM $table FROM " . WIKINDX_DB);
             $result = (array)$result;
-            $schema[$basicTable]['indices'][] = $result;
+            
+            if (is_array($result) && is_array($result[0]))
+            {
+                // Add the Table name on the head of the table
+                foreach ($result as $indices)
+                {
+                    $def = ["Table" => $table];
+                    foreach ($indices as $k => $v)
+                    {
+                        $def[$k] = $v;
+                    }
+                    
+                    $schema['indices'][] = $def;
+                }
+            }
         }
         
         return $schema;

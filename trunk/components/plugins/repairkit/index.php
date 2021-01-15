@@ -579,7 +579,9 @@ class repairkit_MODULE
      */
     private function dbIntegrityReport($currentDbSchema, $correctDbSchema)
     {
-        $nbError = 0;
+        $nbErrorTable = 0;
+        $nbErrorField = 0;
+        $nbErrorIndex = 0;
         
         $pString = "
             <style>
@@ -616,11 +618,6 @@ class repairkit_MODULE
         
         $pString .= \HTML\tbodyStart();
             $pString .= \HTML\trStart();
-            $pString .= \HTML\td("OK");
-            $pString .= \HTML\td("Nothing");
-            $pString .= \HTML\td("Green", "ok");
-            $pString .= \HTML\trEnd();
-            $pString .= \HTML\trStart();
             $pString .= \HTML\td("NOK");
             $pString .= \HTML\td("Redefine");
             $pString .= \HTML\td("Red", "nok");
@@ -632,7 +629,7 @@ class repairkit_MODULE
             $pString .= \HTML\trEnd();
             $pString .= \HTML\trStart();
             $pString .= \HTML\td("Supernumerary");
-            $pString .= \HTML\td("Ignore (prevent data loss)");
+            $pString .= \HTML\td("Ignore (prevent data loss) or delete");
             $pString .= \HTML\td("Blue", "supernumerary");
             $pString .= \HTML\trEnd();
         $pString .= \HTML\tbodyEnd();
@@ -695,66 +692,31 @@ class repairkit_MODULE
             }
             
             $k++;
-            $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
             if ($match == 0)
             {
                 // Table missing
-                $nbError++;
-                foreach ($tableCorrect as $v)
-                {
-                    $pString .= \HTML\td($v, "missing");
-                }
-                $pString .= \HTML\td("Missing", "missing");
-            }
-            elseif ($match == 1)
-            {
-                // Table present
-                foreach ($tableCorrect as $v)
-                {
-                    $pString .= \HTML\td($v, "ok");
-                }
-                $pString .= \HTML\td("OK", "ok");
+                $nbErrorTable++;
+                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                    foreach ($tableCorrect as $v)
+                    {
+                        $pString .= \HTML\td($v, "missing");
+                    }
+                    $pString .= \HTML\td("Missing", "missing");
+                $pString .= \HTML\trEnd();
             }
             elseif ($match == 2)
             {
                 // Table definition mismatch
-                $nbError++;
-                foreach ($tableCorrect as $key => $value)
-                {
-                    if ($tableCorrect[$key] === $tableCurrent[$key])
-                        $pString .= \HTML\td($value, "ok");
-                    else
-                        $pString .= \HTML\td("'" . $tableCurrent[$key] . "' instead of '" . $value . "'", "nok");
-                }
-                $pString .= \HTML\td("Mismatch", "nok");
-            }
-            $pString .= \HTML\trEnd();
-        }
-        
-        foreach ($tableArrayCurrent as $tableCurrent)
-        {
-            // Table present (by default)
-            $match = FALSE;
-            
-            foreach ($tableArrayCorrect as $tableCorrect)
-            {
-                if (mb_strtolower($tableCurrent["Table"]) == mb_strtolower($tableCorrect["Table"]))
-                {
-                    $match = TRUE;
-                    break;
-                }
-            }
-            
-            $k++;
-            if (!$match)
-            {
-                // Table supernumerary
+                $nbErrorTable++;
                 $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
-                    foreach ($tableCorrect as $v)
+                    foreach ($tableCorrect as $key => $value)
                     {
-                        $pString .= \HTML\td($v, "supernumerary");
+                        if ($tableCorrect[$key] === $tableCurrent[$key])
+                            $pString .= \HTML\td($value, "ok");
+                        else
+                            $pString .= \HTML\td("'" . $tableCurrent[$key] . "' instead of '" . $value . "'", "nok");
                     }
-                    $pString .= \HTML\td("Supernumerary", "supernumerary");
+                    $pString .= \HTML\td("Mismatch", "nok");
                 $pString .= \HTML\trEnd();
             }
         }
@@ -828,40 +790,33 @@ class repairkit_MODULE
             }
             
             $k++;
-            $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
             if ($match == 0)
             {
                 // Field missing
-                $nbError++;
-                foreach ($fieldCorrect as $v)
-                {
-                    $pString .= \HTML\td($v, "missing");
-                }
-                $pString .= \HTML\td("Missing", "missing");
+                $nbErrorField++;
+                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                    foreach ($fieldCorrect as $v)
+                    {
+                        $pString .= \HTML\td($v, "missing");
+                    }
+                    $pString .= \HTML\td("Missing", "missing");
+                $pString .= \HTML\trEnd();
             }
-            elseif ($match == 1)
-            {
-                // Field present
-                foreach ($fieldCorrect as $v)
-                {
-                    $pString .= \HTML\td($v, "ok");
-                }
-                $pString .= \HTML\td("OK", "ok");
-            }
-            elseif ($match == 2)
+            if ($match == 2)
             {
                 // Field definition mismatch
-                $nbError++;
-                foreach ($fieldCorrect as $key => $value)
-                {
-                    if ($fieldCorrect[$key] === $fieldCurrent[$key])
-                        $pString .= \HTML\td($value, "ok");
-                    else
-                        $pString .= \HTML\td("'" . $fieldCurrent[$key] . "' instead of '" . $value . "'", "nok");
-                }
-                $pString .= \HTML\td("Mismatch", "nok");
+                $nbErrorField++;
+                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                    foreach ($fieldCorrect as $key => $value)
+                    {
+                        if ($fieldCorrect[$key] === $fieldCurrent[$key])
+                            $pString .= \HTML\td($value, "ok");
+                        else
+                            $pString .= \HTML\td("'" . $fieldCurrent[$key] . "' instead of '" . $value . "'", "nok");
+                    }
+                    $pString .= \HTML\td("Mismatch", "nok");
+                $pString .= \HTML\trEnd();
             }
-            $pString .= \HTML\trEnd();
         }
         
         foreach ($fieldArrayCurrent as $fieldCurrent)
@@ -883,17 +838,18 @@ class repairkit_MODULE
             }
             
             $k++;
-            $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
             if ($match == 0)
             {
                 // Field supernumerary
-                foreach ($fieldCurrent as $v)
-                {
-                    $pString .= \HTML\td($v, "supernumerary");
-                }
-                $pString .= \HTML\td("Supernumerary", "supernumerary");
+                $nbErrorField++;
+                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                    foreach ($fieldCurrent as $v)
+                    {
+                        $pString .= \HTML\td($v, "supernumerary");
+                    }
+                    $pString .= \HTML\td("Supernumerary", "supernumerary");
+                $pString .= \HTML\trEnd();
             }
-            $pString .= \HTML\trEnd();
         }
         
         $pString .= \HTML\tbodyEnd();
@@ -966,40 +922,33 @@ class repairkit_MODULE
             }
             
             $k++;
-            $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
             if ($match == 0)
             {
                 // Index missing
-                $nbError++;
-                foreach ($indexCorrect as $v)
-                {
-                    $pString .= \HTML\td($v, "missing");
-                }
-                $pString .= \HTML\td("Missing", "missing");
+                $nbErrorIndex++;
+                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                    foreach ($indexCorrect as $v)
+                    {
+                        $pString .= \HTML\td($v, "missing");
+                    }
+                    $pString .= \HTML\td("Missing", "missing");
+                $pString .= \HTML\trEnd();
             }
-            elseif ($match == 1)
-            {
-                // Index present
-                foreach ($indexCorrect as $v)
-                {
-                    $pString .= \HTML\td($v, "ok");
-                }
-                $pString .= \HTML\td("OK", "ok");
-            }
-            elseif ($match == 2)
+            if ($match == 2)
             {
                 // Index definition mismatch
-                $nbError++;
-                foreach ($indexCorrect as $key => $value)
-                {
-                    if ($indexCorrect[$key] === $indexCurrent[$key])
-                        $pString .= \HTML\td($value, "ok");
-                    else
-                        $pString .= \HTML\td("'" . $indexCurrent[$key] . "' instead of '" . $value . "'", "nok");
-                }
-                $pString .= \HTML\td("Mismatch", "nok");
+                $nbErrorIndex++;
+                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                    foreach ($indexCorrect as $key => $value)
+                    {
+                        if ($indexCorrect[$key] === $indexCurrent[$key])
+                            $pString .= \HTML\td($value, "ok");
+                        else
+                            $pString .= \HTML\td("'" . $indexCurrent[$key] . "' instead of '" . $value . "'", "nok");
+                    }
+                    $pString .= \HTML\td("Mismatch", "nok");
+                $pString .= \HTML\trEnd();
             }
-            $pString .= \HTML\trEnd();
         }
         
         foreach ($indexArrayCurrent as $indexCurrent)
@@ -1021,17 +970,18 @@ class repairkit_MODULE
             }
             
             $k++;
-            $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
             if ($match == 0)
             {
                 // Index supernumerary
-                foreach ($indexCurrent as $v)
-                {
-                    $pString .= \HTML\td($v, "supernumerary");
-                }
-                $pString .= \HTML\td("Supernumerary", "supernumerary");
+                $nbErrorIndex++;
+                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                    foreach ($indexCurrent as $v)
+                    {
+                        $pString .= \HTML\td($v, "supernumerary");
+                    }
+                    $pString .= \HTML\td("Supernumerary", "supernumerary");
+                $pString .= \HTML\trEnd();
             }
-            $pString .= \HTML\trEnd();
         }
         
         $pString .= \HTML\tbodyEnd();
@@ -1067,7 +1017,7 @@ class repairkit_MODULE
             return FALSE;
         }*/
 
-        return ($nbError == 0);
+        return (($nbErrorTable + $nbErrorField + $nbErrorIndex) == 0);
     }
     /**
      * getDbInconsistencies

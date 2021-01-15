@@ -52,7 +52,7 @@ class RESOURCEPARAPHRASE
         $function = $this->vars['method'];
         if (!method_exists($this, $function))
         {
-            $this->navigate->resource($this->vars['resourceId'], $this->errors->text("inputError", "invalid"));
+            $this->navigate->resource($this->vars['resourceId'], "inputError_invalid", TRUE);
         }
         $this->return = '&nbsp;&nbsp;' . \HTML\a(
             $this->icons->getClass("edit"),
@@ -80,24 +80,24 @@ class RESOURCEPARAPHRASE
         $addEdit = $this->textqp->edit();
         if ($addEdit == 'added')
         {
-            $message = $this->success->text("paraphraseAdd");
+            $messages[] = $this->success->text("paraphraseAdd");
         }
         elseif ($addEdit == 'edited')
         {
-            $message = $this->success->text("paraphraseEdit");
+            $messages[] = $this->success->text("paraphraseEdit");
         }
         elseif ($addEdit == 'deleted')
         {
-            $message = $this->success->text("paraphraseDelete");
+            $messages[] = $this->success->text("paraphraseDelete");
         }
         else
         {
-            $message = $addEdit; // $addEdit is an error message
+            $messages[] = $addEdit; // $addEdit is an error message
         }
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // send back to view this resource with success message
-        $this->navigate->resource($this->vars['resourceId'], $message);
+        $this->navigate->resource($this->vars['resourceId'], $messages);
     }
     /**
      * Ask for confirmation for paraphrase to be deleted
@@ -127,6 +127,6 @@ class RESOURCEPARAPHRASE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // send back to view this resource with success message
-        $this->navigate->resource($this->vars['resourceId'], $this->success->text("paraphraseDelete"));
+        $this->navigate->resource($this->vars['resourceId'], "paraphraseDelete");
     }
 }

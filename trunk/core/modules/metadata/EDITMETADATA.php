@@ -96,7 +96,7 @@ class EDITMETADATA
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['id']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
-        $this->navigate($this->success->text("abstractDelete"));
+        $this->navigate("abstractDelete");
     }
     /**
      * Ask for confirmation for note to be deleted
@@ -124,7 +124,7 @@ class EDITMETADATA
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['id']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
-        $this->navigate($this->success->text("noteDelete"));
+        $this->navigate("noteDelete");
     }
     /**
      * Display form for editing abstract
@@ -212,9 +212,9 @@ class EDITMETADATA
         {
             if (!$abstract)
             {
-                $this->navigate($this->errors->text("inputError", "missing"));
+                $this->navigate("inputError_missing", TRUE);
             }
-            $message = $this->success->text("abstractAdd");
+            $message = "abstractAdd";
             $fields[] = "resourcetextId";
             $values[] = $this->vars['id'];
             $fields[] = "resourcetextAbstract";
@@ -232,14 +232,14 @@ class EDITMETADATA
             // if abstractText is empty, set fields to null
             if (!$abstract)
             {
-                $message = $this->success->text("abstractDelete");
+                $message = "abstractDelete";
                 $this->db->updateNull('resource_text', ['resourcetextAbstract', 'resourcetextAddUserIdAbstract',
                     'resourcetextEditUserIdAbstract', ]);
                 $this->checkDeleteRow();
             }
             else
             {
-                $message = $this->success->text("abstractEdit");
+                $message = "abstractEdit";
                 if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdAbstract') && $userId)
                 {
                     $updateArray["resourcetextAddUserIdAbstract"] = $userId;
@@ -275,9 +275,9 @@ class EDITMETADATA
         {
             if (!$note)
             {
-                $this->navigate($this->errors->text("inputError", "missing"));
+                $this->navigate("inputError_missing", TRUE);
             }
-            $message = $this->success->text("noteAdd");
+            $message = "noteAdd";
             $fields[] = "resourcetextId";
             $values[] = $this->vars['id'];
             $fields[] = "resourcetextNote";
@@ -299,14 +299,14 @@ class EDITMETADATA
             // if noteText is empty, set fields to null
             if (!$note)
             {
-                $message = $this->success->text("noteDelete");
+                $message = "noteDelete";
                 $this->db->updateNull('resource_text', ['resourcetextNote', 'resourcetextAddUserIdNote',
                     'resourcetextEditUserIdNote', ]);
                 $this->checkDeleteRow();
             }
             else
             {
-                $message = $this->success->text("noteEdit");
+                $message = "noteEdit";
                 $updateArray["resourcetextNote"] = $note;
                 if ($userId)
                 {
@@ -349,11 +349,12 @@ class EDITMETADATA
      * Navigate to last resource with message (success or error)
      *
      * @param mixed $message
+     * @param bool $error Default FALSE
      */
-    private function navigate($message)
+    private function navigate($message, $error = FALSE)
     {
         $navigate = FACTORY_NAVIGATE::getInstance();
-        $navigate->resource($this->vars['id'], $message);
+        $navigate->resource($this->vars['id'], $message, $error);
         FACTORY_CLOSE::getInstance();
     }
 }

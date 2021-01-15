@@ -27,6 +27,7 @@ class RESOURCECUSTOM
     private $gatekeep;
     private $badInput;
     private $cite;
+    private $browserTabID = FALSE;
 
     // Constructor
     public function __construct()
@@ -43,6 +44,7 @@ class RESOURCECUSTOM
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * Display resource's custom fields
@@ -67,7 +69,7 @@ class RESOURCECUSTOM
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
                     "index.php?action=resource_RESOURCECUSTOM_CORE" . htmlentities("&method=writeInit&id=" . $row['customId'] .
-                    '&resourceId=' . $rId)
+                    '&resourceId=' . $rId . '&browserTabID=' . $this->browserTabID)
                 );
                 $array[$index]['title'] = \HTML\nlToHtml($row['customLabel']);
                 ++$index;
@@ -85,7 +87,7 @@ class RESOURCECUSTOM
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
                     "index.php?action=resource_RESOURCECUSTOM_CORE" . htmlentities("&method=editInit&id=" . $row['resourcecustomId'] .
-                    '&size=' . $row['customSize'])
+                    '&size=' . $row['customSize'] . '&browserTabID=' . $this->browserTabID)
                 );
             }
             $text = FALSE;
@@ -146,6 +148,7 @@ class RESOURCECUSTOM
         $pString .= \FORM\hidden("id", $this->vars['id']);
         $pString .= \FORM\hidden("resourceId", $row['resourcecustomResourceId']);
         $pString .= \FORM\hidden("size", $this->vars['size']);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= $tinymce->loadMetadataTextarea();
         // The second parameter ('customText') to textareaInput is the textarea name
         if ($this->vars['size'] == 'L')
@@ -183,13 +186,13 @@ class RESOURCECUSTOM
         // if customText is empty, delete the row
         if (!\UTF8\mb_trim($this->vars['customText']))
         {
-            $message = $this->success->text("fieldDelete");
+            $message = "fieldDelete";
             $this->db->formatConditions(['resourcecustomId' => $this->vars['id']]);
             $this->db->delete('resource_custom');
         }
         else
         {
-            $message = $this->success->text("fieldEdit");
+            $message = "fieldEdit";
             if ($this->vars['size'] == 'S')
             {
                 $field = 'resourcecustomShort';
@@ -232,6 +235,7 @@ class RESOURCECUSTOM
         $pString .= \FORM\hidden("id", $this->vars['id']);
         $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);
         $pString .= \FORM\hidden("size", $row['customSize']);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= $tinymce->loadMetadataTextarea();
         // The second parameter ('customText') to textareaInput is the textarea name
         if ($row['customSize'] == 'L')
@@ -297,7 +301,7 @@ class RESOURCECUSTOM
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
         // send back to view this resource with success message
-        $this->navigate($this->success->text("fieldAdd"));
+        $this->navigate("fieldAdd");
     }
     /**
      * Check we have appropriate input
@@ -310,7 +314,7 @@ class RESOURCECUSTOM
         {
             if (!array_key_exists($item, $this->vars) || !$this->vars[$item])
             {
-                $this->navigate($this->errors->text("inputError", "missing"));
+                $this->navigate("inputError_missing", TRUE);
             }
         }
     }
@@ -318,11 +322,12 @@ class RESOURCECUSTOM
      * Navigate to last resource with message (success or error)
      *
      * @param mixed $message
+     * @param bool $error Default FALSE
      */
-    private function navigate($message)
+    private function navigate($message, $error = FALSE)
     {
         $navigate = FACTORY_NAVIGATE::getInstance();
-        $navigate->resource($this->vars['resourceId'], $message);
+        $navigate->resource($this->vars['resourceId'], $message, $error);
         FACTORY_CLOSE::getInstance();
     }
 }

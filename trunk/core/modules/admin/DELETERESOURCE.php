@@ -110,7 +110,7 @@ class DELETERESOURCE
             $bibStyle = FACTORY_BIBSTYLE::getInstance();
             $bibStyle->output = 'html';
             while ($row = $this->db->fetchRow($recordset))
-            {print_r($row); print BR . BR;
+            {
                 $resourceList[]['resource'] = $bibStyle->process($row);
             }
             // Templates expect list ordered from 0, so we renumber from zero
@@ -358,12 +358,12 @@ class DELETERESOURCE
         if ($this->navigate == 'nextResource')
         { // next single view
             $navigate = FACTORY_NAVIGATE::getInstance();
-            $navigate->resource($this->nextResourceId, $this->success->text("resourceDelete"));
+            $navigate->resource($this->nextResourceId, "resourceDelete");
         }
         elseif ($this->navigate == 'list')
         { // previous multi list
             $navigate = FACTORY_NAVIGATE::getInstance();
-            $navigate->listView($this->success->text("resourceDelete"));
+            $navigate->listView("resourceDelete");
         }
         elseif ($this->navigate == 'front')
         { // Return to home page

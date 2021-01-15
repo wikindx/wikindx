@@ -172,7 +172,7 @@ class BOOKMARK
             $this->session->setVar("bookmark_" . $id . "_multi", serialize($bookmark));
             // send back to view list with success message
             $navigate = FACTORY_NAVIGATE::getInstance();
-            $navigate->listView($this->success->text("bookmark"));
+            $navigate->listView("bookmark");
         }
     }
     /**

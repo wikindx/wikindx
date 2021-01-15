@@ -132,6 +132,7 @@ class RESOURCEFORM
         $pString .= \FORM\formHeaderName('resource_RESOURCEWRITE_CORE', 'resourceForm', $js);
         $pString .= \FORM\hidden('resourceFormType', $this->formData["resourceFormType"]);
         $pString .= \FORM\hidden('uuid', $this->uuid);
+        $pString .= \FORM\hidden('browserTabID', $this->browserTabID);
         if ($this->edit)
         {
             $pString .= \FORM\hidden('resourceId', $this->vars['id']);

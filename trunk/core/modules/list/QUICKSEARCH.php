@@ -23,6 +23,7 @@ class QUICKSEARCH
     private $vars;
     private $stmt;
     private $errors;
+    private $success;
     private $messages;
     private $common;
     private $metadata;
@@ -41,6 +42,7 @@ class QUICKSEARCH
         $this->vars = GLOBALS::getVars();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
+        $this->success = FACTORY_SUCCESS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $this->metadata = FACTORY_METADATA::getInstance();
@@ -263,9 +265,15 @@ class QUICKSEARCH
 
             return;
         }
-        if (array_key_exists('message', $this->vars))
-        {
-            GLOBALS::addTplVar('content', $this->vars['message']);
+    	$message = FALSE;
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
+        }
+        if ($message) {
+            GLOBALS::addTplVar('content', $message);
         }
         if (array_key_exists('quickSearch', $this->vars))
         {

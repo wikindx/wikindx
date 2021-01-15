@@ -481,8 +481,7 @@ class LISTADDTO
         {
             $this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId'], $values);
         }
-        $success = FACTORY_SUCCESS::getInstance();
-        $this->navigate->listView($success->text("organized"));
+        $this->navigate->listView("organized");
         FACTORY_CLOSE::getInstance(); // die
     }
     /**
@@ -517,8 +516,7 @@ class LISTADDTO
         }
         $this->session->setVar("mywikindx_Bibliography_add", $this->vars['bibId']);
         $this->session->setVar("setup_Bibliographies", TRUE);
-        $success = FACTORY_SUCCESS::getInstance();
-        $this->navigate->listView($success->text("addBib"));
+        $this->navigate->listView("addBib");
         FACTORY_CLOSE::getInstance(); // die
     }
     /**
@@ -842,8 +840,7 @@ class LISTADDTO
         if ($this->browserTabID) {
 	    	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
 	    }
-        $success = FACTORY_SUCCESS::getInstance();
-        $this->navigate->listView($success->text("basketAdd"));
+        $this->navigate->listView("basketAdd");
         FACTORY_CLOSE::getInstance(); // die
     }
     /**
@@ -893,13 +890,12 @@ class LISTADDTO
 	    		\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
 	    	}
         }
-        $success = FACTORY_SUCCESS::getInstance();
         if (empty($basket))
         {
             header("Location: index.php?success=basketRemove");
             die;
         }
-        $this->navigate->listView($success->text("basketRemove"));
+        $this->navigate->listView("basketRemove");
         FACTORY_CLOSE::getInstance(); // die
     }
     /**
@@ -964,7 +960,6 @@ class LISTADDTO
         $this->db->formatConditionsOneField($ids, 'userbibliographyresourceResourceId');
         $this->db->delete('user_bibliography_resource');
         $bibs = $this->commonBib->getUserBibs();
-        $success = FACTORY_SUCCESS::getInstance();
         if (!empty($bibs))
         {
             $this->session->setVar("setup_Bibliographies", TRUE);
@@ -978,7 +973,7 @@ class LISTADDTO
             header("Location: index.php?success=deleteFromBib");
             die;
         }
-        $this->navigate->listView($success->text("deleteFromBib"));
+        $this->navigate->listView("deleteFromBib");
         FACTORY_CLOSE::getInstance(); // die
     }
     /**
@@ -1011,7 +1006,6 @@ class LISTADDTO
         $this->db->formatConditionsOneField($ids, 'resourcemiscId');
         $updateArray = ['resourcemiscQuarantine' => 'N'];
         $this->db->update('resource_misc', $updateArray);
-        $success = FACTORY_SUCCESS::getInstance();
         $this->db->formatConditions(['resourcemiscQuarantine' => 'Y']);
         $resultset = $this->db->select('resource_misc', ['resourcemiscId']);
         if (!$this->db->numRows($resultset))
@@ -1019,7 +1013,7 @@ class LISTADDTO
             header("Location: index.php?success=unquarantineResource");
             die;
         }
-        $this->navigate->listView($success->text("unquarantineResource"));
+        $this->navigate->listView("unquarantineResource");
         FACTORY_CLOSE::getInstance(); // die
     }
     /**

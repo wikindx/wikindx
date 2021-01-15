@@ -67,16 +67,16 @@ class RESOURCEWRITE
         if (!array_key_exists('resourceFormType', $this->formData) || ($this->formData["resourceFormType"] == 'new')) {
             if (($this->session->getVar("setup_Superadmin") != 1) && (WIKINDX_QUARANTINE))
             {
-                $success = $this->success->text("resourceAdd") . \HTML\p($this->success->text('quarantined'));
+                $success[] = $this->success->text("resourceAdd") . \HTML\p($this->success->text('quarantined'));
             }
             else
             {
-                $success = $this->success->text("resourceAdd");
+                $success[] = $this->success->text("resourceAdd");
             }
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'newResource'));
         }
         else {
-            $success = $this->success->text("resourceEdit");
+            $success[] = $this->success->text("resourceEdit");
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource'));
         }
         $this->gatherInput();
@@ -88,7 +88,7 @@ class RESOURCEWRITE
         $emailClass = new EMAIL();
         $newResource = $this->edit === FALSE ? TRUE : FALSE;
         if (!$emailClass->notify($this->resourceId, $newResource)) {
-            $success .= $this->errors->text("inputError", "mail", GLOBALS::getError());
+            $success[] = $this->errors->text("inputError", "mail", GLOBALS::getError());
         }
         $this->navigate->resource($this->resourceId, $success);
     }

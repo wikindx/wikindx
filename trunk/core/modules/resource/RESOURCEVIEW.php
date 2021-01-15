@@ -96,12 +96,13 @@ class RESOURCEVIEW
             $id = filter_var($id, FILTER_SANITIZE_NUMBER_INT); // NB, $id is now a string
             $this->vars['id'] = $id;
         }
-        // message can come from ATTACHMENTS.php or when deleting a resource
         if (array_key_exists('success', $this->vars) && $this->vars['success']) {
             $message = $this->success->text($this->vars['success']);
         } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
         	$split = explode('_', $this->vars['error']);
             $message = $this->errors->text($split[0], $split[1]);
+        } elseif (array_key_exists('messages', $this->vars) && $this->vars['messages']) {
+            $message = join('', \TEMPSTORAGE\fetchOne($this->db, $this->vars['messages'], 'resourceMessages'));
         }
         $qs = $this->session->getArray('QueryStrings');
         if (empty($qs) || (mb_strpos($qs[0], 'RESOURCEFORM_CORE') !== FALSE))

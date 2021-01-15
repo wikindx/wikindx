@@ -20,6 +20,7 @@ class LISTRESOURCES
     private $stmt;
     private $messages;
     private $errors;
+    private $success;
     private $badInput;
     private $session;
     private $common;
@@ -38,6 +39,7 @@ class LISTRESOURCES
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
+        $this->success = FACTORY_SUCCESS::getInstance();
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
@@ -133,9 +135,15 @@ class LISTRESOURCES
      */
     public function reorder()
     {
-        if (array_key_exists('message', $this->vars))
-        {
-            GLOBALS::addTplVar('content', $this->vars['message']);
+    	$message = FALSE;
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
+        }
+        if ($message) {
+            GLOBALS::addTplVar('content', $message);
         }
         $this->session->setVar("sql_ListParams", $this->params);
         if ($this->browserTabID) {

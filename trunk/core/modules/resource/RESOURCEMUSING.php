@@ -56,7 +56,7 @@ class RESOURCEMUSING
         $function = $this->vars['method'];
         if (!method_exists($this, $function))
         {
-            $this->navigate->resource($this->vars['resourceId'], $this->errors->text("inputError", "invalid"));
+            $this->navigate->resource($this->vars['resourceId'], "inputError_invalid", TRUE);
         }
         $this->return = '&nbsp;&nbsp;' . \HTML\a(
             $this->icons->getClass("edit"),
@@ -194,7 +194,7 @@ class RESOURCEMUSING
         // insert
         if (!array_key_exists('resourcemetadataId', $this->vars))
         {
-            $message = $this->success->text("musingAdd");
+            $messages[] = $this->success->text("musingAdd");
             $fields[] = 'resourcemetadataResourceId';
             $values[] = \UTF8\mb_trim($this->vars['resourceId']);
             if (array_key_exists('PageStart', $this->vars) && $this->vars['PageStart'])
@@ -257,7 +257,7 @@ class RESOURCEMUSING
             // if musingText is empty, delete the row
             if (!$this->vars['Text'])
             {
-                $message = $this->success->text("musingDelete");
+                $messages[] = $this->success->text("musingDelete");
                 $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->delete('resource_metadata');
                 $this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
@@ -266,7 +266,7 @@ class RESOURCEMUSING
             }
             else
             {
-                $message = $this->success->text("musingEdit");
+                $messages[] = $this->success->text("musingEdit");
                 $updateArray = [];
                 $updateArray['resourcemetadataText'] = \UTF8\mb_trim($this->vars['Text']);
                 if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N'))
@@ -345,12 +345,11 @@ class RESOURCEMUSING
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
-        if (!$emailClass->notify($this->vars['resourceId']))
-        {
-            $message = $this->errors->text("inputError", "mail", GLOBALS::getError());
+        if (!$emailClass->notify($this->vars['resourceId'])) {
+            $messages[] = $this->errors->text("inputError", "mail", GLOBALS::getError());
         }
         // send back to view this resource with success message
-        $this->navigate->resource($this->vars['resourceId'], $message);
+	    $this->navigate->resource($this->vars['resourceId'], $messages);
     }
     /**
      * Ask for confirmation for musing to be deleted
@@ -383,7 +382,7 @@ class RESOURCEMUSING
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // send back to view this resource with success message
-        $this->navigate->resource($this->vars['resourceId'], $this->success->text("musingDelete"));
+        $this->navigate->resource($this->vars['resourceId'], "musingDelete");
     }
     /**
      * Check we have appropriate input.

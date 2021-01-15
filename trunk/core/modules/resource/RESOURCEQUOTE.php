@@ -52,7 +52,7 @@ class RESOURCEQUOTE
         $function = $this->vars['method'];
         if (!method_exists($this, $function))
         {
-            $this->navigate->resource($this->vars['resourceId'], $this->errors->text("inputError", "invalid"));
+            $this->navigate->resource($this->vars['resourceId'], "inputError_invalid", TRUE);
         }
         $this->return = '&nbsp;&nbsp;' . \HTML\a(
             $this->icons->getClass("edit"),
@@ -80,24 +80,24 @@ class RESOURCEQUOTE
         $addEdit = $this->textqp->edit();
         if ($addEdit == 'added')
         {
-            $message = $this->success->text("quoteAdd");
+            $messages[] = $this->success->text("quoteAdd");
         }
         elseif ($addEdit == 'edited')
         {
-            $message = $this->success->text("quoteEdit");
+            $messages[] = $this->success->text("quoteEdit");
         }
         elseif ($addEdit == 'deleted')
         {
-            $message = $this->success->text("quoteDelete");
+            $messages[] = $this->success->text("quoteDelete");
         }
         else
         {
-            $message = $addEdit; // $addEdit is an error message
+            $messages[] = $addEdit; // $addEdit is an error message
         }
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // send back to view this resource with success message
-        $this->navigate->resource($this->vars['resourceId'], $message);
+        $this->navigate->resource($this->vars['resourceId'], $messages);
     }
     /**
      * Ask for confirmation for quote to be deleted
@@ -127,6 +127,6 @@ class RESOURCEQUOTE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // send back to view this resource with success message
-        $this->navigate->resource($this->vars['resourceId'], $this->success->text("quoteDelete"));
+        $this->navigate->resource($this->vars['resourceId'], "quoteDelete");
     }
 }

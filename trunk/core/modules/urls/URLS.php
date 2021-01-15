@@ -86,7 +86,7 @@ class URLS
         $this->storeUrl();
         // send back to view this resource with success message
         $navigate = FACTORY_NAVIGATE::getInstance();
-        $navigate->resource($this->resourceId, $this->success->text("urlAdd"));
+        $navigate->resource($this->resourceId, "urlAdd");
     }
     /**
      * edit urls
@@ -158,7 +158,6 @@ class URLS
         }
         // store new URL
         $this->storeUrl();
-        $message = $this->success->text("urlEdit");
         if (isset($deletes))
         {
             $this->delete($deletes);
@@ -167,7 +166,7 @@ class URLS
         $this->setPrimaryUrl();
         // send back to view this resource with success message (deleteConfirm breaks out before this)
         $navigate = FACTORY_NAVIGATE::getInstance();
-        $navigate->resource($this->resourceId, $message);
+        $navigate->resource($this->resourceId, 'urlEdit');
     }
     /**
      * delete URLs
@@ -221,7 +220,7 @@ class URLS
         $this->setPrimaryUrl();
         // send back to view this resource with success message
         $navigate = FACTORY_NAVIGATE::getInstance();
-        $navigate->resource($this->resourceId, $this->success->text("urlEdit"));
+        $navigate->resource($this->resourceId, "urlEdit");
     }
     /**
      * set primary URL

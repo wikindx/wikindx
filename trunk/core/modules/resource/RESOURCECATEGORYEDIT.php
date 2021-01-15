@@ -145,7 +145,7 @@ class RESOURCECATEGORYEDIT
         // Update edit user
         $this->db->formatConditions(['resourcemiscId' => $this->vars['id']]);
         $this->db->update('resource_misc', ['resourcemiscEditUserIdResource' => $this->session->getVar("setup_UserId")]);
-        $this->navigate($this->success->text("categoryKeywordEdit"));
+        $this->navigate("categoryKeywordEdit");
     }
     /**
      * display language form

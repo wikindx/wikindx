@@ -143,9 +143,15 @@ class BASKET
         if (!is_array($bl)) {
         	$bl = [];
         }
-        if (array_key_exists('message', $this->vars))
-        {
-            GLOBALS::addTplVar('content', $this->vars['message']);
+    	$message = FALSE;
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $message = $this->success->text($this->vars['success']);
+        } elseif (array_key_exists('error', $this->vars) && $this->vars['error']) {
+        	$split = explode('_', $this->vars['error']);
+            $message = $this->errors->text($split[0], $split[1]);
+        }
+        if ($message) {
+            GLOBALS::addTplVar('content', $message);
         }
         $sql = FALSE;
         $this->session->delVar('sql_ListParams');
@@ -258,7 +264,7 @@ class BASKET
         		return;
         	}
 		}
-        if ($confirm)
+        if ($confirm) // todo – not used?
         {
             $this->session->clearArray('basket');
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));

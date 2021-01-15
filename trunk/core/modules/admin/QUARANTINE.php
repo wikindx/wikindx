@@ -45,7 +45,7 @@ class QUARANTINE
         $this->db->formatConditions(['resourcemiscId' => $this->vars['resourceId']]);
         $updateArray['resourcemiscQuarantine'] = 'N';
         $this->db->update('resource_misc', $updateArray);
-        $this->navigate->resource($this->vars['resourceId'], $this->success->text("quarantineApprove"));
+        $this->navigate->resource($this->vars['resourceId'], "quarantineApprove");
     }
     /**
      * Quarantine resource
@@ -60,7 +60,7 @@ class QUARANTINE
         $this->db->formatConditions(['resourcemiscId' => $this->vars['resourceId']]);
         $updateArray['resourcemiscQuarantine'] = 'Y';
         $this->db->update('resource_misc', $updateArray);
-        $this->navigate->resource($this->vars['resourceId'], $this->success->text("quarantined"));
+        $this->navigate->resource($this->vars['resourceId'], "quarantined");
     }
     /**
      * Quickly check if there are any quarantined resources (used in MENU)

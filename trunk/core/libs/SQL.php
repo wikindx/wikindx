@@ -341,6 +341,8 @@ class SQL
         }
         
         // FIELDS
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/show-columns.html
+        // cf. https://dev.mysql.com/doc/refman/8.0/en/show-columns.html
         foreach ($tables as $table)
         {
             // Extract fields schema
@@ -351,8 +353,9 @@ class SQL
             {
                 foreach ($result as $fields)
                 {
-                    // Skip privileges
+                    // Skip unused columns
                     unset($fields["Privileges"]);
+                    unset($fields["Comment"]); // Feature unused
                     
                     // Add the Table name on the head of the table
                     $def = ["Table" => $table];
@@ -367,6 +370,8 @@ class SQL
         }
         
         // INDICES
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/show-index.html
+        // cf. https://dev.mysql.com/doc/refman/8.0/en/show-index.html
         foreach ($tables as $table)
         {
             // Extract indices schema
@@ -379,6 +384,14 @@ class SQL
                 foreach ($result as $indices)
                 {
                     $def = ["Table" => $table];
+                    
+                    // Skip unused columns
+                    unset($indices["Cardinality"]); // Provide info, not an option
+                    unset($indices["Comment"]); // We don't use the disable feature
+                    unset($indices["Visible"]); // Feature unused
+                    unset($indices["Index_comment"]); // Feature unused
+                    unset($indices["Expression"]); // Feature unused
+                    
                     foreach ($indices as $k => $v)
                     {
                         $def[$k] = $v;

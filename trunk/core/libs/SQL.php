@@ -3396,11 +3396,11 @@ class SQL
      * Return Sql instruction packaged in a nice HTML
      *
      * @param string $sqlStatement Default is ""
-     * @param string $executionType
+     * @param string $executionType Default is ""
      *
      * @return string
      */
-    private function beautify($sqlStatement = '', $executionType)
+    private function beautify($sqlStatement = '', $executionType = '')
     {
         $keyWords = [
             'ANALYZE ',

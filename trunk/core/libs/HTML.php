@@ -392,15 +392,15 @@ namespace HTML
      *
      * @param string $color Default is '#000'
      * @param string $size Default is '1em'
-     * @param string $label
-     * @param string $link
+     * @param string $label Default is ''
+     * @param string $link Default is ''
      * @param string $target Default is ''
      * @param string $title Default is ''
      * @param string $js Default is ''
      *
      * @return string
      */
-    function aBrowse($color = '#000', $size = '1em', $label, $link, $target = '', $title = '', $js = '')
+    function aBrowse($color = '#000', $size = '1em', $label = '', $link ='', $target = '', $title = '', $js = '')
     {
         $string = '<a'
             . \HTML\_inlineHtmlAttribute('class', 'browseLink')

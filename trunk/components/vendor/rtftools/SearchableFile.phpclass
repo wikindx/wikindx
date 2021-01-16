@@ -305,7 +305,7 @@ class  SearchableFile			implements 	\ArrayAccess, \Countable, \Iterator
 	   { return ( $this -> do_strpos ( $searched_string, $offset, 'stripos' ) ) ; }
 
 
-	private function   do_strpos ( $searched_string, $offset = 0, $func )
+	private function   do_strpos ( $searched_string, $offset = 0, $func = NULL )
 	   {
 		$searched_length 	=  strlen ( $searched_string ) ;
 

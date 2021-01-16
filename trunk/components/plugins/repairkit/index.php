@@ -720,6 +720,13 @@ class repairkit_MODULE
                 $pString .= \HTML\trEnd();
             }
         }
+
+        if ($nbErrorTable == 0)
+        {
+                $pString .= \HTML\trStart("alternate1 center");
+                    $pString .= \HTML\td("No error detected", "ok", count($tableArrayCorrect));
+                $pString .= \HTML\trEnd();
+        }
         
         $pString .= \HTML\tbodyEnd();
         
@@ -852,6 +859,13 @@ class repairkit_MODULE
             }
         }
         
+        if ($nbErrorField == 0)
+        {
+                $pString .= \HTML\trStart("alternate1 center");
+                    $pString .= \HTML\td("No error detected", "ok", count($fieldArrayCorrect));
+                $pString .= \HTML\trEnd();
+        }
+
         $pString .= \HTML\tbodyEnd();
         
         $pString .= \HTML\tfootStart();
@@ -982,6 +996,13 @@ class repairkit_MODULE
                     $pString .= \HTML\td("Supernumerary", "supernumerary");
                 $pString .= \HTML\trEnd();
             }
+        }
+
+        if ($nbErrorIndex == 0)
+        {
+                $pString .= \HTML\trStart("alternate1 center");
+                    $pString .= \HTML\td("No error detected", "ok", count($indexArrayCorrect));
+                $pString .= \HTML\trEnd();
         }
         
         $pString .= \HTML\tbodyEnd();

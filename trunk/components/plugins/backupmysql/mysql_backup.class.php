@@ -249,7 +249,7 @@ class MySQL_Backup
             $value .= '#' . "\n";
             $value .= '# Host: ' . $this->server . "\n";
             $value .= '# Generated: ' . date('M j, Y') . ' at ' . date('H:i') . "\n";
-            $value .= '# MySQL version: ' . $this->db->getStringEngineVersion() . "\n";
+            $value .= '# MySQL version: ' . $this->db->queryFetchFirstField("SELECT version() AS EngineVersion;") . "\n";
             $value .= '# PHP version: ' . phpversion() . "\n";
             $value .= '#' . "\n";
             $value .= '# Database: `' . $this->database . '`' . "\n";

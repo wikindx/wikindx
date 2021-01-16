@@ -305,7 +305,8 @@ class SQL
         $schema = [];
         
         // DATABASE
-        $schema["collation_database"] = $this->queryFetchFirstField("SELECT @@collation_database;");
+        $schema["database"]["collation"] = $this->queryFetchFirstField("SELECT @@character_set_database;");
+        $schema["database"]["character_set"] = $this->queryFetchFirstField("SELECT @@collation_database;");
         
         // Extract the list of tables, except tables of plugins
         $tables = $this->listTables();

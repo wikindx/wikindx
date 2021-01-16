@@ -646,10 +646,16 @@ class repairkit_MODULE
 
 
         // DATABASE
-        if ($correctDbSchema["collation_database"] != $currentDbSchema["collation_database"])
+        if ($correctDbSchema["database"]["character_set"] != $currentDbSchema["database"]["character_set"])
         {
             $nbErrorDb++;
-            $pString = \HTML\p("The database collation is wrong: " . $currentDbSchema["collation_database"] . " instead of " . $correctDbSchema["collation_database"] . ".", "nok");
+            $pString = \HTML\p("The database character set is wrong: " . $currentDbSchema["database"]["character_set"] . " instead of " . $correctDbSchema["database"]["character_set"] . ".", "nok");
+            GLOBALS::addTplVar('content', $pString);
+        }
+        if ($correctDbSchema["database"]["collation"] != $currentDbSchema["database"]["collation"])
+        {
+            $nbErrorDb++;
+            $pString = \HTML\p("The database collation is wrong: " . $currentDbSchema["database"]["collation"] . " instead of " . $correctDbSchema["database"]["collation"] . ".", "nok");
             GLOBALS::addTplVar('content', $pString);
         }
         

@@ -12,6 +12,9 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+-- Set utf8mb4_unicode_520_ci as the default collation of the database
+ALTER DATABASE CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
 CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%bibtex_string` (
   `bibtexstringId` int(11) NOT NULL AUTO_INCREMENT,
   `bibtexstringText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,

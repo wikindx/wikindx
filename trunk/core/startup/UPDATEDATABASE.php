@@ -1648,6 +1648,16 @@ END;
     	$this->styleLocaleFix();
         $this->updateCoreInternalVersion();
     }
+
+    /**
+     * Upgrade database schema to version 38 (6.4.1)
+     *
+     * Set utf8mb4_unicode_520_ci as the default collation of the database
+     */
+    private function upgradeTo40()
+    {
+        $this->upgradeToTargetVersion();
+    }
     
     /**
      * Flush the temp_storage table

@@ -29,7 +29,7 @@ var upcontrol = {
     data.append('file', upcontrol.queue[upcontrol.now]);
     var url = '';
     url = url.concat('index.php?action=attachments_ATTACHMENTS_CORE&method=init&function=addDragAndDrop', 
-    	'&resourceId=', rId, '&MAX_FILE_SIZE=', max_file_size);
+    	'&resourceId=', rId, '&MAX_FILE_SIZE=', max_file_size, '&browserTabID=', browserTabID);
     xhr.open('POST', url, true);
     xhr.onload = function (e) {
       // SHOW UPLOAD STATUS

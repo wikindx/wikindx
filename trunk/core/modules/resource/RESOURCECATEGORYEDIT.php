@@ -84,6 +84,7 @@ class RESOURCECATEGORYEDIT
         $pString .= \FORM\formHeader('resource_RESOURCECATEGORYEDIT_CORE', "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden('method', 'edit');
         $pString .= \FORM\hidden("id", $this->vars['id']);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= $this->getTable();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
         $pString .= \FORM\formEnd();

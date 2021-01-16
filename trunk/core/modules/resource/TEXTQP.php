@@ -27,6 +27,7 @@ class TEXTQP
     private $cite;
     private $badInput;
     private $commentOnly = FALSE;
+    private $browserTabID = FALSE;
 
     // Constructor
     public function __construct()
@@ -40,6 +41,7 @@ class TEXTQP
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         \AJAX\loadJavascript(WIKINDX_URL_BASE . '/core/modules/resource/resourceCategoryEdit.js?ver=' . WIKINDX_PUBLIC_VERSION);
     }
     /**
@@ -68,6 +70,7 @@ class TEXTQP
             $pString .= \FORM\formHeader('resource_RESOURCEPARAPHRASE_CORE');
         }
         $pString .= \FORM\hidden('method', 'edit');
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= $tinymce->loadMetadataTextarea(['Text', 'Comment']);
         $metadata['hidden'] = $pString;
         $pageStart = 'PageStart';

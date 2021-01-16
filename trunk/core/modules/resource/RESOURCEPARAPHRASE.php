@@ -110,6 +110,7 @@ class RESOURCEPARAPHRASE
         $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);
         $pString .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
         $pString .= \FORM\hidden("summaryType", 'resourcesummaryParaphrases');
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Confirm")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);

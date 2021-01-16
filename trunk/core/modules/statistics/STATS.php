@@ -255,17 +255,14 @@ class STATS
      */
     public function setMaturityIndex()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
-        $resource = new RESOURCEVIEW();
+        $navigate = FACTORY_NAVIGATE::getInstance();
         $gatekeep = FACTORY_GATEKEEP::getInstance();
         $gatekeep->init();
         if (!array_key_exists('resourceId', $this->vars) || !array_key_exists('maturityIndex', $this->vars) ||
         !is_numeric($this->vars['maturityIndex']))
         {
-            $resource->init($this->session->getVar("sql_LastSolo"));
-            GLOBALS::addTplVar('content', $this->errors->text("inputError", "invalid"));
-
-            return;
+        	$navigate->resource($this->vars['resourceId'], "inputError_invalid", TRUE);
+        	FACTORY_CLOSE::getInstance();
         }
         $mIndex = round(\UTF8\mb_trim($this->vars['maturityIndex']), 1);
         if ($mIndex > 10)
@@ -281,8 +278,8 @@ class STATS
             'resource_misc',
             $this->db->formatFields('resourcemiscMaturityIndex') . "=" . $this->db->tidyInput($mIndex)
         );
-        $resource->init($this->session->getVar("sql_LastSolo"));
-        GLOBALS::addTplVar('content', $this->success->text("maturityIndex"));
+        $navigate->resource($this->vars['resourceId'], 'maturityIndex', $error);
+        FACTORY_CLOSE::getInstance();
     }
     /**
      * Get stats for keywords

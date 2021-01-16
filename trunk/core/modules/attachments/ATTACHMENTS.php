@@ -59,7 +59,8 @@ class ATTACHMENTS
         {
             if ($_SERVER["CONTENT_LENGTH"] > \FILE\fileMaxSize())
             {
-                $url = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_uploadSize';
+                $url = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_uploadSize' . 
+                	'&browserTabID=' . $this->browserTabID;
                 header("Location: $url");
                 die;
             }
@@ -75,7 +76,7 @@ class ATTACHMENTS
         if (!array_key_exists('deleteAll', $this->vars))
         {
             $id = $this->resourceId;
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=inputError_missing");
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=inputError_missing&browserTabID=" . $this->browserTabID);
             die;
         }
         $return = \HTML\a(
@@ -87,6 +88,7 @@ class ATTACHMENTS
         $pString = \FORM\formHeader("attachments_ATTACHMENTS_CORE");
         $pString .= \FORM\hidden('function', 'delete');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= $this->messages->text('resources', 'deleteConfirmAttach') . ':' . BR;
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
         $recordSet = $this->db->select(
@@ -177,11 +179,11 @@ class ATTACHMENTS
         $this->getEmbargo();
         if (!$this->storeFile())
         { // FALSE if attachment already exists
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attchmentExists");
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attchmentExists&browserTabID=" . $this->browserTabID);
             die;
         }
         // send back to view this resource with success message
-        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success=attachAdd");
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success=attachAdd&browserTabID=" . $this->browserTabID);
         die;
     }
     /**
@@ -208,12 +210,12 @@ class ATTACHMENTS
         $id = $this->resourceId;
         if (!$this->storeFile(TRUE))
         { // FALSE if attachment already exists
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attachmentExists");
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attachmentExists&browserTabID=" . $this->browserTabID);
             die;
         }
         // send back to view this resource with success message
         $message = rawurlencode($this->success->text("attachAdd"));
-        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success_attachAdd");
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success_attachAdd&browserTabID=" . $this->browserTabID);
         die;
     }
     /**
@@ -293,7 +295,8 @@ class ATTACHMENTS
         {
             if (!$this->storeFile())
             { // FALSE if attachment already exists
-                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attachmentExists");
+                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attachmentExists&browserTabID=" 
+                	. $this->browserTabID);
                 die;
             }
         }
@@ -304,7 +307,7 @@ class ATTACHMENTS
             return;
         }
         // send back to view this resource with success message (deleteConfirm breaks out before this)
-        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success_attachEdit");
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success_attachEdit&browserTabID=" . $this->browserTabID);
         die;
     }
     /**
@@ -391,6 +394,7 @@ class ATTACHMENTS
         $pString = \FORM\formHeader("attachments_ATTACHMENTS_CORE");
         $pString .= \FORM\hidden('function', 'delete');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= $this->messages->text('resources', 'deleteConfirmAttach') . ':' . BR;
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
         $recordSet = $this->db->select(
@@ -453,7 +457,7 @@ class ATTACHMENTS
         }
         // send back to view this resource with success message
         $id = $this->resourceId;
-        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success=attachDelete");
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&success=attachDelete&browserTabID=" . $this->browserTabID);
         die;
     }
     /**
@@ -472,7 +476,7 @@ class ATTACHMENTS
             $filesArray = FILE\fileUpload($varFileName, $multiple);
             if (empty($filesArray))
             {
-                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload");
+                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload&browserTabID=" . $this->browserTabID);
                 die;
             }
             foreach ($filesArray as $array)
@@ -484,7 +488,7 @@ class ATTACHMENTS
                 // $array[4] = index of array in $_FILES['file']
                 if (!$array[1])
                 {
-                    header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload");
+                    header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload&browserTabID=" . $this->browserTabID);
                     die;
                 }
                 if (!$this->actuallyStoreFile($array[0], $array[1], $array[2], $array[3], $array[4]))
@@ -498,7 +502,7 @@ class ATTACHMENTS
             list($filename, $hash, $type, $size) = FILE\fileUpload($varFileName);
             if (!$hash)
             {
-                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload");
+                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload&browserTabID=" . $this->browserTabID);
                 die;
             }
             if (!$this->actuallyStoreFile($filename, $hash, $type, $size, FALSE))
@@ -525,7 +529,7 @@ class ATTACHMENTS
         if (!FILE\fileStore(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]), $hash, $index))
         {
             $id = $this->resourceId;
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload");
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_upload&browserTabID=" . $this->browserTabID);
             die;
         }
         
@@ -664,16 +668,14 @@ class ATTACHMENTS
         GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' .
             WIKINDX_PUBLIC_VERSION . '"></script>');
         GLOBALS::addTplVar('scripts', '<script>var rId = ' . $this->resourceId . '; </script>');
-        $error = rawurlencode($this->errors->text("file", "upload"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_upload';
         GLOBALS::addTplVar('scripts', '<script>var errorUrl = "' . $closeUrl . '"; </script>');
-        $error = rawurlencode($this->errors->text("file", "uploadSize", $maxSize));
         $sizeErrorUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_uploadSize';
         GLOBALS::addTplVar('scripts', '<script>var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
-        $success = rawurlencode($this->success->text("attachAdd"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&success=attachAdd';
         GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var browserTabID = "' . $this->browserTabID . '"; </script>');
         $td = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
         GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
             $this->messages->text("resources", "fileAttachFallback") . '"; </script>');
@@ -685,6 +687,7 @@ class ATTACHMENTS
         $td .= \FORM\hidden('function', 'add');
         $td .= \FORM\hidden('resourceId', $this->resourceId);
         $td .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $td .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td .= \FORM\fileUpload(
             $this->messages->text("resources", "fileAttach"),
             "file",
@@ -706,6 +709,7 @@ class ATTACHMENTS
         $td .= \FORM\hidden('function', 'addMultipleFiles');
         $td .= \FORM\hidden('resourceId', $this->resourceId);
         $td .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $td .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td .= \FORM\fileUploadMultiple($this->messages->text("resources", "fileAttachMultiple"), "file[]", 50);
         $td .= $this->embargoForm(FALSE, TRUE);
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
@@ -725,6 +729,7 @@ class ATTACHMENTS
             $td = \FORM\formMultiHeader("attachments_ATTACHMENTS_CORE");
             $td .= \FORM\hidden('function', 'deleteConfirmAll');
             $td .= \FORM\hidden('resourceId', $this->resourceId);
+        	$td .= \FORM\hidden("browserTabID", $this->browserTabID);
             $td .= $this->messages->text('misc', 'fileAttachDeleteAll') . ':&nbsp;' . \FORM\checkBox(FALSE, "deleteAll");
             $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
             $td .= \FORM\formEnd();
@@ -737,6 +742,7 @@ class ATTACHMENTS
         $pString .= \FORM\hidden('function', 'edit');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
         $pString .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         // Edit individual attachments
         $pString .= \HTML\tableStart('generalTable left');
         $pString .= \HTML\trStart();
@@ -817,16 +823,14 @@ class ATTACHMENTS
         GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' .
             WIKINDX_PUBLIC_VERSION . '"></script>');
         GLOBALS::addTplVar('scripts', '<script>var rId = ' . $this->resourceId . '; </script>');
-        $error = rawurlencode($this->errors->text("file", "upload"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_upload';
         GLOBALS::addTplVar('scripts', '<script>var errorUrl = "' . $closeUrl . '"; </script>');
-        $error = rawurlencode($this->errors->text("file", "uploadSize", $maxSize));
         $sizeErrorUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_uploadSize';
         GLOBALS::addTplVar('scripts', '<script>var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
-        $success = rawurlencode($this->success->text("attachAdd"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&success=attachAdd';
         GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var browserTabID = "' . $this->browserTabID . '"; </script>');
         $td1 = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
         GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
             $this->messages->text("resources", "fileAttachFallback") . '"; </script>');
@@ -836,6 +840,7 @@ class ATTACHMENTS
         $td2 .= \FORM\hidden('function', 'add');
         $td2 .= \FORM\hidden('resourceId', $this->resourceId);
         $td2 .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $td2 .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td2 .= \FORM\fileUpload($this->messages->text("resources", "fileAttach"), "file", 50);
         $td2 .= \HTML\p(\FORM\textInput($this->messages->text("resources", "fileName"), "fileName"));
         $td2 .= $this->embargoForm();
@@ -852,6 +857,7 @@ class ATTACHMENTS
         $td3 .= \FORM\hidden('function', 'addMultipleFiles');
         $td3 .= \FORM\hidden('resourceId', $this->resourceId);
         $td3 .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $td3 .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td3 .= \FORM\fileUploadMultiple($this->messages->text("resources", "fileAttachMultiple"), "file[]", 50);
         $td3 .= $this->embargoForm(FALSE, TRUE);
         $td3 .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")), '', 3);

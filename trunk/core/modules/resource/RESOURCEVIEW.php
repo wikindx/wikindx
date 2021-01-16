@@ -427,6 +427,7 @@ class RESOURCEVIEW
                 $maturityIndex = \FORM\formHeader('statistics_STATS_CORE');
                 $maturityIndex .= \FORM\hidden("method", 'setMaturityIndex');
                 $maturityIndex .= \FORM\hidden("resourceId", $row['resourceId']);
+       			$maturityIndex .= \FORM\hidden("browserTabID", $this->browserTabID);
                 $maturityIndex .= \HTML\span($this->messages->text("viewResource", "maturityIndex")) .
                     "&nbsp;&nbsp;" . \FORM\textInput(
                         FALSE,
@@ -1319,7 +1320,7 @@ class RESOURCEVIEW
         $name = \HTML\nlToHtml($row['publisherLocation'] ? $row['publisherName'] .
             ' (' . $row['publisherLocation'] . ')' : $row['publisherName']);
         $countRow = $this->db->fetchRow($resultset);
-        if ($countRow['count'] > 1)
+        if (!is_bool($countRow) && $countRow['count'] > 1)
         { // i.e. more than one resource for this publisher
             $name = \HTML\a("link", $name, 'index.php?' .
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=publisherProcess&id=' . $publisherId 
@@ -1351,7 +1352,7 @@ class RESOURCEVIEW
         $resultset = $this->db->selectCounts('resource_misc', 'resourcemiscCollection');
         $name = preg_replace("/{(.*)}/Uu", "$1", \HTML\nlToHtml($row['collectionTitle']));
         $countRow = $this->db->fetchRow($resultset);
-        if ($countRow['count'] > 1)
+        if (!is_bool($countRow) && $countRow['count'] > 1)
         { // i.e. more than one resource for this collection
             $name = \HTML\a("link", $name, 'index.php?' .
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=collectionProcess&id=' .
@@ -1870,7 +1871,7 @@ class RESOURCEVIEW
         $array['forward'] = \HTML\a(
             $this->icons->getClass("next"),
             $this->icons->getHTML("next"),
-            htmlentities('index.php?action=resource_RESOURCEVIEW_CORE&method=random')
+            htmlentities('index.php?action=resource_RESOURCEVIEW_CORE&method=random&browserTabID=' . $this->browserTabID)
         );
         /*
         if ($this->session->getVar("setup_Superadmin"))

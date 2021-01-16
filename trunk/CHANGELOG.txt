@@ -28,6 +28,7 @@ MAINTENANCE:
 8. Simplify MySQL/MariaDB version query.
 9. Partial Ukranian translation and credits of translators.
 10. Set utf8mb4_unicode_520_ci as the default collation of the database.
+11. Improve browserTabID functionality for single resource views.
 
 SECURITY
 1. XSS injection in publisher name.

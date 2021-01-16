@@ -206,14 +206,15 @@ class RESOURCEMETA
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
                     "index.php?action=resource_RESOURCEMUSING_CORE&method=musingEdit" . htmlentities("&resourceId=" . $resourceId .
-                '&resourcemetadataId=' . $row['resourcemetadataId'])
+                	'&resourcemetadataId=' . $row['resourcemetadataId'] . '&browserTabID=' . $this->browserTabID)
                 );
                 
                 $this->musing[$index]['editLink'] .= '&nbsp;' . \HTML\a(
                     $this->icons->getClass("delete"),
                     $this->icons->getHTML("delete"),
                     "index.php?action=resource_RESOURCEMUSING_CORE&method=deleteInit" .
-                htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'])
+                	htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'] . 
+                	'&browserTabID=' . $this->browserTabID)
                 );
             }
             $index++;
@@ -275,7 +276,7 @@ class RESOURCEMETA
                     "link",
                     \HTML\nlToHtml($row2['keywordKeyword']),
                     "index.php?action=list_LISTSOMERESOURCES_CORE" .
-                    '&method=metaKeywordProcess' . htmlentities("&id=" . $row2['keywordId']),
+                    '&method=metaKeywordProcess' . htmlentities("&id=" . $row2['keywordId']). '&browserTabID=' . $this->browserTabID,
                     "",
                     \HTML\dbToHtmlPopupTidy($row2['keywordGlossary'])
                 );
@@ -337,14 +338,16 @@ class RESOURCEMETA
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
                     "index.php?action=$phpFile&method=$action" .
-                htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'])
+                htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'] . 
+                	'&browserTabID=' . $this->browserTabID)
                 );
                 
                 $this->{$type}[$index]['editLink'] .= '&nbsp;' . \HTML\a(
                     $this->icons->getClass("delete"),
                     $this->icons->getHTML("delete"),
                     "index.php?action=$phpFile&method=deleteInit" .
-                htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'] . '&summaryType=' . $summaryType)
+                	htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'] . 
+                	'&summaryType=' . $summaryType . '&browserTabID=' . $this->browserTabID)
                 );
             }
             $index++;

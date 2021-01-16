@@ -79,6 +79,7 @@ class EDITMETADATA
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "abstractDelete");
         $pString .= \FORM\hidden("id", $this->vars['id']);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Confirm")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -107,6 +108,7 @@ class EDITMETADATA
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "noteDelete");
         $pString .= \FORM\hidden("id", $this->vars['id']);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Confirm")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -138,6 +140,7 @@ class EDITMETADATA
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "abstractEdit");
         $pString .= \FORM\hidden("id", $this->vars['id']);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= $this->tinymce->loadMetadataTextarea();
         $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
         $recordset = $this->db->select('resource_text', 'resourcetextAbstract');
@@ -173,6 +176,7 @@ class EDITMETADATA
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "noteEdit");
         $pString .= \FORM\hidden("id", $this->vars['id']);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= $this->tinymce->loadMetadataTextarea();
         $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
         $recordset = $this->db->select('resource_text', 'resourcetextNote');

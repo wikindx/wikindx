@@ -358,6 +358,7 @@ class URLS
         $pString .= \FORM\formHeader("urls_URLS_CORE");
         $pString .= \FORM\hidden('function', 'edit');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         // Form elements for adding another URL
         $pString .= \HTML\tableStart('left');
         $pString .= \HTML\trStart();
@@ -454,6 +455,7 @@ class URLS
         $pString .= \FORM\formHeader("urls_URLS_CORE");
         $pString .= \FORM\hidden('function', 'add');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= \HTML\tableStart('left');
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($this->messages->text("resources", "url") . ":&nbsp;" .

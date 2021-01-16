@@ -78,6 +78,7 @@ class RESOURCEMUSING
         $pString .= \FORM\formHeader('resource_RESOURCEMUSING_CORE');
         $hidden = \FORM\hidden("resourceId", $this->vars['resourceId']);
         $hidden .= \FORM\hidden('method', 'edit');
+        $hidden .= \FORM\hidden("browserTabID", $this->browserTabID);
         $metadata['hidden'] = $pString;
         $page_start = $page_end = $db_paragraph = $db_section = $db_chapter = $text = $private = FALSE;
         $private = 'Y';
@@ -361,6 +362,7 @@ class RESOURCEMUSING
         $pString .= \FORM\hidden("method", 'delete');
         $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);
         $pString .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Confirm")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);

@@ -7,7 +7,7 @@
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
-require_once("./includes/general.php");
+require_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "includes/general.php"]);
 
 // Set RPC response headers
 header('Content-Type: text/plain');

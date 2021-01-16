@@ -353,15 +353,16 @@ class SQL
             {
                 foreach ($result as $fields)
                 {
-                    // Skip unused columns
-                    unset($fields["Privileges"]);
-                    unset($fields["Comment"]); // Feature unused
-                    
                     // Add the Table name on the head of the table
                     $def = ["Table" => $table];
                     foreach ($fields as $k => $v)
                     {
-                        $def[$k] = $v;
+                        // Keep only columns compatible with te features of the minimum MySQL Version required (5.7.5)
+                        // and remove unused info
+                        if (in_array($k, ["Table", "Field", "Type", "Collation", "Null", "Key", "Default", "Extra"]))
+                        {
+                            $def[$k] = $v;
+                        }
                     }
                     
                     $schema['fields'][] = $def;
@@ -385,16 +386,14 @@ class SQL
                 {
                     $def = ["Table" => $table];
                     
-                    // Skip unused columns
-                    unset($indices["Cardinality"]); // Provide info, not an option
-                    unset($indices["Comment"]); // We don't use the disable feature
-                    unset($indices["Visible"]); // Feature unused
-                    unset($indices["Index_comment"]); // Feature unused
-                    unset($indices["Expression"]); // Feature unused
-                    
                     foreach ($indices as $k => $v)
                     {
-                        $def[$k] = $v;
+                        // Keep only columns compatible with te features of the minimum MySQL Version required (5.7.5)
+                        // and remove unused info
+                        if (in_array($k, ["Table", "Non_unique", "Key_name", "Seq_in_index", "Column_name", "Collation", "Sub_part", "Packed", "Null", "Index_type"]))
+                        {
+                            $def[$k] = $v;
+                        }
                     }
                     
                     $schema['indices'][] = $def;

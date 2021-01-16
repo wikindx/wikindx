@@ -168,7 +168,7 @@ class ADMINCOMPONENTS
                     {
                         $action["disable"] = $this->messages->text("components", "disable");
                     }
-                    if ($cr["component_status"] == "disabled" && $cr["component_integrity"] == 0)
+                    if ($cr["component_status"] == "disabled" && $cr["component_integrity"] == 0 && $ci["component_type"] != "vendor")
                     {
                         $action["enable"] = $this->messages->text("components", "enable");
                     }
@@ -217,7 +217,7 @@ class ADMINCOMPONENTS
                 {
                     $action["disable"] = $this->messages->text("components", "disable");
                 }
-                if ($ci["component_status"] == "disabled" && $ci["component_integrity"] == 0)
+                if ($ci["component_status"] == "disabled" && $ci["component_integrity"] == 0 && $ci["component_type"] != "vendor")
                 {
                     $action["enable"] = $this->messages->text("components", "enable");
                 }

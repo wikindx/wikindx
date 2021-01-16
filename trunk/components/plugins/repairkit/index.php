@@ -579,6 +579,7 @@ class repairkit_MODULE
      */
     private function dbIntegrityReport($currentDbSchema, $correctDbSchema)
     {
+        $nbErrorDb = 0;
         $nbErrorTable = 0;
         $nbErrorField = 0;
         $nbErrorIndex = 0;
@@ -639,7 +640,18 @@ class repairkit_MODULE
             $pString .= \HTML\th("Fix");
             $pString .= \HTML\th("Color");
         $pString .= \HTML\tfootEnd();
+
+        $pString .= \HTML\tableEnd();
         GLOBALS::addTplVar('content', $pString);
+
+
+        // DATABASE
+        if ($correctDbSchema["collation_database"] != $currentDbSchema["collation_database"])
+        {
+            $nbErrorDb++;
+            $pString = \HTML\p("The database collation is wrong: " . $currentDbSchema["collation_database"] . " instead of " . $correctDbSchema["collation_database"] . ".", "nok");
+            GLOBALS::addTplVar('content', $pString);
+        }
         
         
         // TABLES
@@ -1038,7 +1050,7 @@ class repairkit_MODULE
             return FALSE;
         }*/
 
-        return (($nbErrorTable + $nbErrorField + $nbErrorIndex) == 0);
+        return (($nbErrorDb + $nbErrorTable + $nbErrorField + $nbErrorIndex) == 0);
     }
     /**
      * getDbInconsistencies

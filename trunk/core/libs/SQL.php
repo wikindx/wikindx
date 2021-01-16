@@ -304,6 +304,9 @@ class SQL
     {
         $schema = [];
         
+        // DATABASE
+        $schema["collation_database"] = $this->queryFetchFirstField("SELECT @@collation_database;");
+        
         // Extract the list of tables, except tables of plugins
         $tables = $this->listTables();
         foreach ($tables as $k => $table)

@@ -745,6 +745,17 @@ namespace HTML
         }
     }
     /**
+     * Format text grabbed from database for printing to HTML (should be just where the original input was from text input elements).
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    function dbToHtmlTidy($string)
+    {
+        return htmlspecialchars($string, ENT_QUOTES | ENT_HTML5);
+    }
+    /**
      * Format text grabbed from database for printing to HTML popups.
      *
      * @param string $string

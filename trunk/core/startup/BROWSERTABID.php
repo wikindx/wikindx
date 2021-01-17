@@ -32,7 +32,7 @@ class BROWSERTABID
         $active = ['list_QUICKSEARCH_CORE', 'resource_RESOURCEVIEW_CORE', 'admin_DELETERESOURCE_CORE', 'list_LISTRESOURCES_CORE', 
         	'list_LISTSOMERESOURCES_CORE', 'basket_BASKET_CORE', 'attachments_ATTACHMENTS_CORE', 'resource_RESOURCECATEGORYEDIT_CORE', 
         	'urls_URLS_CORE', 'resource_RESOURCEQUOTE_CORE', 'resource_RESOURCEPARAPHRASE_CORE', 'resource_RESOURCEMUSING_CORE', 
-        	'metadata_EDITMETADATA_CORE', 'resource_RESOURCEFORM_CORE', 'list_LISTADDTO_CORE', 'list_SEARCH_CORE', 
+        	'metadata_EDITMETADATA_CORE', 'resource_RESOURCEFORM_CORE', 'resource_RESOURCEWRITE_CORE', 'list_LISTADDTO_CORE', 'list_SEARCH_CORE', 
         	'admin_QUARANTINE_CORE', 'resource_RESOURCECUSTOM_CORE', 'resource_RESOURCEMETA_CORE', 'statistics_STATS_CORE'];
         $tempSession = [];
         if (WIKINDX_BROWSER_TAB_ID && 

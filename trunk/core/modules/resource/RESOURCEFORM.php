@@ -1266,7 +1266,9 @@ class RESOURCEFORM
                 $this->db->formatConditions(['resourcecustomResourceId' => $this->vars['id']]);
                 $this->db->formatConditions(['resourcecustomCustomId' => $id]);
                 $row = $this->db->selectFirstRow('resource_custom', 'resourcecustomShort');
-                $value = $row['resourcecustomShort'];
+                if (is_array($row)) {
+	                $value = $row['resourcecustomShort'];
+	            }
             }
             $tdContent .= \HTML\td(\FORM\textInput($label, 'customId' . $id, $value, 30, 255));
 
@@ -1308,7 +1310,9 @@ class RESOURCEFORM
                 $this->db->formatConditions(['resourcecustomResourceId' => $this->vars['id']]);
                 $this->db->formatConditions(['resourcecustomCustomId' => $id]);
                 $row = $this->db->selectFirstRow('resource_custom', 'resourcecustomLong');
-                $value = $row['resourcecustomLong'];
+                if (is_array($row)) {
+	                $value = $row['resourcecustomLong'];
+	            }
             }
             $tdContent .= \HTML\td(\FORM\textareaInput($label, 'customId' . $id, \HTML\dbToFormTidy($value), 60, 10));
 
@@ -1336,7 +1340,6 @@ class RESOURCEFORM
             $pString .= $this->tinymce->loadMetadataTextarea($idArray);
         }
         $pString .= \HTML\td($tdContent, $this->tdContentWidth);
-
         return \HTML\tableStart('generalTable borderStyleSolid')
             . \HTML\trStart()
             . $pString

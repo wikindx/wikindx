@@ -3435,62 +3435,69 @@ class SQL
             ' LIMIT ',
             'NULL',
         ];
-        $prettyKeyWords = [
-            '<span style="font-weight:bold;color:red;">ANALYZE </span>',
-            '<span style="font-weight:bold;color:red;">SELECT </span>',
-            '<span style="font-weight:bold;color:red;">DISTINCT </span>',
-            '<span style="font-weight:bold;color:red;">UPDATE </span>',
-            '<span style="font-weight:bold;color:red;">EXECUTE </span>',
-            '<span style="font-weight:bold;color:red;">INSERT </span>',
-            '<span style="font-weight:bold;color:red;">DELETE </span>',
-            '<span style="font-weight:bold;color:red;">SET </span>',
-            '<span style="font-weight:bold;color:red;">UNION </span>',
-            '<span style="font-weight:bold;color:red;">SHOW </span>',
-            '<span style="font-weight:bold;color:red;">ALTER </span>',
-            '<span style="font-weight:bold;color:red;">CREATE </span>',
-
-            '<span style="font-weight:bold;color:blue;">FROM </span>',
-            '<span style="font-weight:bold;color:blue;">NATURAL JOIN </span>',
-            '<span style="font-weight:bold;color:blue;">INNER JOIN </span>',
-            '<span style="font-weight:bold;color:blue;">CROSS JOIN </span>',
-            '<span style="font-weight:bold;color:blue;">LEFT JOIN </span>',
-            '<span style="font-weight:bold;color:blue;">RIGHT JOIN </span>',
-            '<span style="font-weight:bold;color:blue;">LEFT OUTER JOIN </span>',
-            '<span style="font-weight:bold;color:blue;">RIGHT OUTER JOIN </span>',
-            '<span style="font-weight:bold;color:blue;">STRAIGHT_JOIN </span>',
-            '<span style="font-weight:bold;color:blue;">WHERE </span>',
-            '<span style="font-weight:bold;color:blue;">HAVING </span>',
-            '<span style="font-weight:bold;color:blue;">GROUP BY </span>',
-            '<span style="font-weight:bold;color:blue;">ORDER BY </span>',
-            '<span style="font-weight:bold;color:blue;">CASE</span>',
-            '<span style="font-weight:bold;color:blue;">END</span>',
-            '<span style="font-weight:bold;color:blue;"> AS </span>',
-            '<span style="font-weight:bold;color:blue;"> ASC</span>',
-            '<span style="font-weight:bold;color:blue;"> DESC</span>',
-
-            '<span style="font-weight:bold;color:green;"> ON </span>',
-            '<span style="font-weight:bold;color:green;"> AND </span>',
-            '<span style="font-weight:bold;color:green;"> OR </span>',
-            '<span style="font-weight:bold;color:green;"> XOR </span>',
-            '<span style="font-weight:bold;color:green;"> WHEN </span>',
-            '<span style="font-weight:bold;color:green;"> THEN </span>',
-            '<span style="font-weight:bold;color:green;"> ELSE </span>',
-            '<span style="font-weight:bold;color:green;"> BETWEEN </span>',
-
-            '<span style="font-weight:bold;color:black;">(</span>',
-            '<span style="font-weight:bold;color:black;">)</span>',
-            '<span style="font-weight:bold;color:black;">[</span>',
-            '<span style="font-weight:bold;color:black;">]</span>',
-            '<span style="font-weight:bold;color:black;"> = </span>',
-            '<span style="font-weight:bold;color:black;">&lt;&gt;</span>',
-            '<span style="font-weight:bold;color:black;"> IN </span>',
-            '<span style="font-weight:bold;color:black;"> IS </span>',
-            '<span style="font-weight:bold;color:black;"> NOT</span>',
-            '<span style="font-weight:bold;color:black;"> LIKE </span>',
-            '<span style="font-weight:bold;color:black;"> LIMIT </span>',
-            '<span style="font-weight:bold;color:black;">NULL</span>',
-        ];
-
-        return "<hr><div><strong>[$executionType]</strong> " . str_ireplace($keyWords, $prettyKeyWords, $sqlStatement) . "</div>\n";
+        if (PHP_SAPI === 'cli')
+        {            
+            return "[$executionType] " . $sqlStatement . "\n";
+        }
+        else
+        {
+            $prettyKeyWords = [
+                '<span style="font-weight:bold;color:red;">ANALYZE </span>',
+                '<span style="font-weight:bold;color:red;">SELECT </span>',
+                '<span style="font-weight:bold;color:red;">DISTINCT </span>',
+                '<span style="font-weight:bold;color:red;">UPDATE </span>',
+                '<span style="font-weight:bold;color:red;">EXECUTE </span>',
+                '<span style="font-weight:bold;color:red;">INSERT </span>',
+                '<span style="font-weight:bold;color:red;">DELETE </span>',
+                '<span style="font-weight:bold;color:red;">SET </span>',
+                '<span style="font-weight:bold;color:red;">UNION </span>',
+                '<span style="font-weight:bold;color:red;">SHOW </span>',
+                '<span style="font-weight:bold;color:red;">ALTER </span>',
+                '<span style="font-weight:bold;color:red;">CREATE </span>',
+    
+                '<span style="font-weight:bold;color:blue;">FROM </span>',
+                '<span style="font-weight:bold;color:blue;">NATURAL JOIN </span>',
+                '<span style="font-weight:bold;color:blue;">INNER JOIN </span>',
+                '<span style="font-weight:bold;color:blue;">CROSS JOIN </span>',
+                '<span style="font-weight:bold;color:blue;">LEFT JOIN </span>',
+                '<span style="font-weight:bold;color:blue;">RIGHT JOIN </span>',
+                '<span style="font-weight:bold;color:blue;">LEFT OUTER JOIN </span>',
+                '<span style="font-weight:bold;color:blue;">RIGHT OUTER JOIN </span>',
+                '<span style="font-weight:bold;color:blue;">STRAIGHT_JOIN </span>',
+                '<span style="font-weight:bold;color:blue;">WHERE </span>',
+                '<span style="font-weight:bold;color:blue;">HAVING </span>',
+                '<span style="font-weight:bold;color:blue;">GROUP BY </span>',
+                '<span style="font-weight:bold;color:blue;">ORDER BY </span>',
+                '<span style="font-weight:bold;color:blue;">CASE</span>',
+                '<span style="font-weight:bold;color:blue;">END</span>',
+                '<span style="font-weight:bold;color:blue;"> AS </span>',
+                '<span style="font-weight:bold;color:blue;"> ASC</span>',
+                '<span style="font-weight:bold;color:blue;"> DESC</span>',
+    
+                '<span style="font-weight:bold;color:green;"> ON </span>',
+                '<span style="font-weight:bold;color:green;"> AND </span>',
+                '<span style="font-weight:bold;color:green;"> OR </span>',
+                '<span style="font-weight:bold;color:green;"> XOR </span>',
+                '<span style="font-weight:bold;color:green;"> WHEN </span>',
+                '<span style="font-weight:bold;color:green;"> THEN </span>',
+                '<span style="font-weight:bold;color:green;"> ELSE </span>',
+                '<span style="font-weight:bold;color:green;"> BETWEEN </span>',
+    
+                '<span style="font-weight:bold;color:black;">(</span>',
+                '<span style="font-weight:bold;color:black;">)</span>',
+                /*'<span style="font-weight:bold;color:black;">[</span>',
+                '<span style="font-weight:bold;color:black;">]</span>',*/
+                '<span style="font-weight:bold;color:black;"> = </span>',
+                '<span style="font-weight:bold;color:black;">&lt;&gt;</span>',
+                '<span style="font-weight:bold;color:black;"> IN </span>',
+                '<span style="font-weight:bold;color:black;"> IS </span>',
+                '<span style="font-weight:bold;color:black;"> NOT</span>',
+                '<span style="font-weight:bold;color:black;"> LIKE </span>',
+                '<span style="font-weight:bold;color:black;"> LIMIT </span>',
+                '<span style="font-weight:bold;color:black;">NULL</span>',
+            ];
+            
+            return "<hr><div><strong>[$executionType]</strong> " . str_ireplace($keyWords, $prettyKeyWords, $sqlStatement) . "</div>\n";
+        }
     }
 }

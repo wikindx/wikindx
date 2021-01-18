@@ -40,6 +40,12 @@ include_once("core/startup/FACTORY.php");
 // Initialize the static config read from config.php file
 include_once("core/startup/LOADSTATICCONFIG.php");
 
+include_once("core/startup/LOADCONFIG.php");
+
+FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
+
+FACTORY_LOADCONFIG::getInstance()->loadUserVars();
+
 $db = FACTORY_DB::getInstance();
 
 $dbSchema = $db->createRepairKitDbSchema();

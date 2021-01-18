@@ -3178,7 +3178,10 @@ class SQL
 
         $this->sqlTimerOff();
 
-        $this->printSQLDebugTime();
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
+        {
+            GLOBALS::addTplVar('logsql', '<hr><div>Elapsed time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
+        }
 
         if (!$execOk && !$bNoError)
         {
@@ -3362,14 +3365,7 @@ class SQL
             }
         }
     }
-
-    /**
-     * Format display of SQL timer in debug mode
-     */
-    private function printSQLDebugTime()
-    {
-        GLOBALS::addTplVar('logsql', '<hr><div>Elapsed time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
-    }
+    
     /**
      * Die or throw an exception depending on the configuration
      *

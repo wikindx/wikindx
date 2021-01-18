@@ -3000,27 +3000,6 @@ class SQL
             }
         }
     }
-
-    /**
-     * Format display of SQL query in debug mode
-     *
-     * @param string $querystring SQL of a query to display
-     * @param string $executionType Description of execution type (EXEC, NOEXEC...)
-     */
-    public function printSQLDebug($querystring = '', $executionType = 'SQL')
-    {
-        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
-        {
-            $beautified = $this->beautify($querystring, $executionType);
-            GLOBALS::addTplVar('logsql', $beautified);
-        }
-        else
-        {
-            $beautified = $querystring;
-        }
-
-        return $beautified;
-    }
     /**
      * Open SQL database
      *
@@ -3140,7 +3119,7 @@ class SQL
         
         if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
-            GLOBALS::addTplVar('logsql', $this->beautify($querystring, "SQL"));
+            GLOBALS::addTplVar('logsql', $this->beautifySQL($querystring, "SQL"));
         }
 
         $this->sqlTimerOn();
@@ -3185,7 +3164,7 @@ class SQL
 
         if (!$execOk && !$bNoError)
         {
-            $this->sqlDie($this->error, $this->beautify($querystring, "SQL ERROR"));
+            $this->sqlDie($this->error, $this->beautifySQL($querystring, "SQL ERROR"));
         }
 
         GLOBALS::incrementDbQueries();
@@ -3399,7 +3378,7 @@ class SQL
      *
      * @return string
      */
-    private function beautify($sqlStatement = '', $executionType = '')
+    public function beautifySQL($sqlStatement = '', $executionType = '')
     {
         $keyWords = [
             'ANALYZE ',

@@ -1,64 +1,71 @@
-# Ukrainian translations for repairkit package.
-# Copyright (C) 2021 THE repairkit'S COPYRIGHT HOLDER
+# Wikindx's Translation ressource: Українська.
+# For copyright see the component.json file
 # This file is distributed under the same license as the repairkit package.
-# Automatically generated, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Yuri Chornoivan <yurchor@ukr.net>, 2021
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: repairkit\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-12-14 01:37+0100\n"
-"PO-Revision-Date: 2020-12-14 01:37+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2019-09-26 21:03+0000\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
+"Language-Team: Ukrainian (https://www.transifex.com/saulery/teams/103557/"
+"uk/)\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 "
+"> 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. *
 #. * Menu items
 #.
 #: components/plugins/repairkit/repairkitmessages.php:27
 msgid "Repair kit..."
-msgstr ""
+msgstr "Набір інструментів виправлення…"
 
 #: components/plugins/repairkit/repairkitmessages.php:28
 msgid "Missing rows"
-msgstr ""
+msgstr "Пропущено рядки"
 
 #: components/plugins/repairkit/repairkitmessages.php:29
 msgid "Dump DB schema"
-msgstr ""
+msgstr "Дамп схеми БД"
 
 #: components/plugins/repairkit/repairkitmessages.php:30
 msgid "DB integrity"
-msgstr ""
+msgstr "Цілісність БД"
 
 #: components/plugins/repairkit/repairkitmessages.php:31
 msgid "Fix creators"
-msgstr ""
+msgstr "Виправити авторів"
 
 #. *
 #. * Headings
 #.
 #: components/plugins/repairkit/repairkitmessages.php:35
 msgid "Missing Rows"
-msgstr ""
+msgstr "Пропущено рядки"
 
 #: components/plugins/repairkit/repairkitmessages.php:36
 msgid "Dump Database Schema"
-msgstr ""
+msgstr "Дамп схеми бази даних"
 
 #: components/plugins/repairkit/repairkitmessages.php:37
 msgid "Database Integrity"
-msgstr ""
+msgstr "Цілісність бази даних"
 
 #: components/plugins/repairkit/repairkitmessages.php:38
 msgid "Fix Creators"
-msgstr ""
+msgstr "Виправити авторів"
 
 #. *
 #. * Text
@@ -69,10 +76,14 @@ msgid ""
 "intensive. The plugin turns on error reporting so, if you see a memory error, "
 "adjust memory in config.php and try again."
 msgstr ""
+"Залежно від розміру вашої бази даних, ця дія може бути доволі вимогливою щодо "
+"оперативної пам'яті. Додаток повідомить про можливу нестачу пам'яті. Якщо ви "
+"побачите таке повідомлення, скоригуйте розмір оперативної пам'яті у config."
+"php і повторіть спробу."
 
 #: components/plugins/repairkit/repairkitmessages.php:43
 msgid "It is assumed you have backed up your database."
-msgstr ""
+msgstr "Припускаємо, що ви створили резервну копію вашої бази даних."
 
 #: components/plugins/repairkit/repairkitmessages.php:44
 msgid ""
@@ -81,24 +92,29 @@ msgid ""
 "rows are identified, they will be created and filled with default (usually "
 "NULL) data."
 msgstr ""
+"Іноді при додаванні нових ресурсів система не створює відповідних рядків, що "
+"може призвести до проблем із пошуком та інших проблем. Якщо буде виявлено "
+"такі рядки, програма створить їх і заповнить типовими (зазвичай, NULL) даними."
 
 #: components/plugins/repairkit/repairkitmessages.php:45
 msgid "Fix various errors regarding creators."
-msgstr ""
+msgstr "Виправити різноманітні помилки, пов'язані із записами авторів."
 
 #: components/plugins/repairkit/repairkitmessages.php:46
 msgid ""
 "Before checking the database integrity, you should ensure that your database "
 "(currently version ###)"
 msgstr ""
+"Перш ніж перевіряти цілісність вашої бази даних, вам слід переконатися, що "
+"ваша база даних (поточна версія ###)"
 
 #: components/plugins/repairkit/repairkitmessages.php:47
 msgid "matches the WIKINDX version (currently version ###)."
-msgstr ""
+msgstr "відповідає версії WIKINDX (поточна версія ###)."
 
 #: components/plugins/repairkit/repairkitmessages.php:48
 msgid "The database structure is correct and there is nothing to fix."
-msgstr ""
+msgstr "Структура бази даних є правильною — нічого виправляти."
 
 #: components/plugins/repairkit/repairkitmessages.php:49
 msgid ""
@@ -112,37 +128,51 @@ msgid ""
 "database has been mistakenly upgraded with SVN code. As always, backup your "
 "database before proceeding."
 msgstr ""
+"Структура бази даних відрізняється від структури бази даних для остаточного "
+"випуску версії ### (див. звіт нижче). Причиною може бути те, що ви оновили цю "
+"базу даних до версії для коду у SVN-версії, що передує випуску, і ця версія "
+"послідовно оновила структуру. Натисніть «Гаразд», щоб виправити це. "
+"Зауваження: пропущені таблиці або пропущені поля виправлено НЕ буде — "
+"програма виправить лише відмінності у записах рушія, об'єднання, індекси, "
+"типи полів та порожні і типові значення. Пам'ятайте — до цього виправлення "
+"слід вдаватися, лише якщо ви не можете виправити в інший спосіб результати "
+"помилкового оновлення бази даних у промисловому середовищі (не у тестовому "
+"варіанті) на основі коду з SVN. Як завжди, перед виконанням дій створіть "
+"резервну копію вашої бази даних."
 
 #: components/plugins/repairkit/repairkitmessages.php:50
 msgid "Successfully fixed. ###"
-msgstr ""
+msgstr "Успішно виправлено. ###"
 
 #: components/plugins/repairkit/repairkitmessages.php:51
 msgid ": ### resources fixed."
-msgstr ""
+msgstr ": виправлено ### ресурсів."
 
 #: components/plugins/repairkit/repairkitmessages.php:52
 msgid "Invalid or missing input"
-msgstr ""
+msgstr "Некоректні вхідні дані або немає вхідних даних"
 
 #: components/plugins/repairkit/repairkitmessages.php:53
 msgid "Unable to write to file."
-msgstr ""
+msgstr "Не вдалося записати дані до файла."
 
 #: components/plugins/repairkit/repairkitmessages.php:54
 msgid "Unable to read file."
-msgstr ""
+msgstr "Не вдалося прочитати дані з файла."
 
 #: components/plugins/repairkit/repairkitmessages.php:55
 msgid "The database is missing the following tables and cannot be fixed:"
 msgstr ""
+"У базі даних не вистачає вказаних нижче таблиць — її неможливо виправити:"
 
 #: components/plugins/repairkit/repairkitmessages.php:56
 msgid "The database is missing the following fields and cannot be fixed:"
-msgstr ""
+msgstr "У базі даних не вистачає вказаних нижче полів — її неможливо виправити:"
 
 #: components/plugins/repairkit/repairkitmessages.php:57
 msgid ""
 "There are invalid datetime field values ('0000-00-00 00:00:00') that must be "
 "fixed."
 msgstr ""
+"Виявлено некоректні значення полів дати і часу («0000-00-00 00:00:00»), які "
+"має бути виправлено."

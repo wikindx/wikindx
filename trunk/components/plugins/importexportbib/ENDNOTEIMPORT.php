@@ -274,16 +274,17 @@ class ENDNOTEIMPORT
         $uuid = \TEMPSTORAGE\getUuid($this->db);
         if ($finalInput)
         {
+            $message = \HTML\p($this->pluginmessages->text("importEndnoteSuccess"), 'success', 'center');
             \TEMPSTORAGE\store(
                 $this->db,
                 $uuid,
                 ['rIds' => $this->rIds, 'resourceAdded' => $this->resourceAdded, 'garbageFiles' => $this->garbageFiles,
                     'resourceDiscarded' => $this->resourceDiscarded, 'rejectTitles' => $this->rejectTitles, 'rejects' => $this->rejects,
                     'deleteCacheCreators' => $this->deleteCacheCreators, 'deleteCachePublishers' => $this->deleteCachePublishers,
-                    'deleteCacheCollections' => $this->deleteCacheCollections, 'deleteCacheKeywords' => $this->deleteCacheKeywords, ]
+                    'deleteCacheCollections' => $this->deleteCacheCollections, 'deleteCacheKeywords' => $this->deleteCacheKeywords, 
+                    'importMessages' => $message]
             );
-            $message = rawurlencode(HTML\p($this->pluginmessages->text("importEndnoteSuccess"), 'success'));
-            header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importSuccess&message=$message&uuid=$uuid");
+            header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importSuccess&uuid=$uuid");
             die;
         }
         else

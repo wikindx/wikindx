@@ -270,7 +270,6 @@ class IMPORTCOMMON
      */
     public function importSuccess()
     {
-        $pString = $this->success->text($this->vars['success']);
         $data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']); // FALSE if nothing there (reloading page?), else array
         if (is_array($data))
         {
@@ -284,6 +283,13 @@ class IMPORTCOMMON
                 $email = new EMAIL();
                 $email->notify(FALSE, TRUE);
             }
+            if (array_key_exists('success', $this->vars)) {
+    		    $pString = $this->success->text($this->vars['success']);
+	        } elseif (array_key_exists('importMessages', $data)) {
+	        	$pString = $data['importMessages'];
+	        } else {
+	        	$pString = '';
+	        }
             $pString .= \HTML\p($this->messages->text("import", "added", " " . $data['resourceAdded']));
             $pString .= $this->printDuplicates($data['resourceDiscarded'], $data['rejectTitles']);
             $pString .= \HTML\hr();
@@ -309,6 +315,9 @@ class IMPORTCOMMON
             \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
             $this->tidyTables();
             $this->session->delVar("sql_LastMulti");
+        }
+        else {
+        	$pString = $this->success->text($this->vars['success']);
         }
         GLOBALS::setTplVar('content', $pString);
     }

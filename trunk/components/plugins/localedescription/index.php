@@ -76,20 +76,16 @@ class localedescription_MODULE
      */
     public function display($message = FALSE)
     {
-        if (array_key_exists('message', $this->vars))
-        {
-            $pString = $this->vars['message'];
+        if (array_key_exists('success', $this->vars) && $this->vars['success']) {
+            $pString = \HTML\p($this->pluginmessages->text("success", $this->vars['language']), 'success', 'center');
         }
-        else
-        {
+        else {
             $pString = $message;
         }
-        if (array_key_exists('language', $this->vars))
-        {
+        if (array_key_exists('language', $this->vars)) {
             $language = $this->vars['language'];
         }
-        else
-        {
+        else {
             $language = FALSE;
         }
         $pString .= FORM\formHeader("localedescription_edit");
@@ -99,19 +95,14 @@ class localedescription_MODULE
         $languages = \LOCALES\getTranslatableLocales(\LOCALES\determine_locale());
         unset($languages[WIKINDX_LANGUAGE]);
         
-        if (count($languages) == 0)
-        {
+        if (count($languages) == 0) {
             GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text("noLocaleAvailable", WIKINDX_LANGUAGE), "error", "center"));
         }
-        else
-        {
+        else {
             $recordset = $this->db->select('plugin_localedescription', 'pluginlocaledescriptionLocale');
-            if ($this->db->numRows($recordset) > 0)
-            {
-                while ($row = $this->db->fetchRow($recordset))
-                {
-                    if (array_key_exists($row['pluginlocaledescriptionLocale'], $languages))
-                    {
+            if ($this->db->numRows($recordset) > 0) {
+                while ($row = $this->db->fetchRow($recordset)) {
+                    if (array_key_exists($row['pluginlocaledescriptionLocale'], $languages)) {
                         $languages[$row['pluginlocaledescriptionLocale']] = "* " . $languages[$row['pluginlocaledescriptionLocale']];
                     }
                 }
@@ -119,10 +110,8 @@ class localedescription_MODULE
                 asort($languages, SORT_LOCALE_STRING);
             }
             
-            if (!$language)
-            {
-                foreach ($languages as $lang => $null)
-                {
+            if (!$language) {
+                foreach ($languages as $lang => $null) {
                     $language = $lang;
     
                     break;
@@ -148,18 +137,15 @@ class localedescription_MODULE
     {
         $version = \UPDATE\getPluginInternalVersion($this->db, mb_strtolower(basename(__DIR__)));
         
-        if ($version == 0)
-        {
+        if ($version == 0) {
             // NB: Windows MySQL lowercases any table name
             // To be sure, it is necessary to lowercase all table elements
             $tables = $this->db->listTables(FALSE);
-            foreach ($tables as $k => $v)
-            {
+            foreach ($tables as $k => $v) {
                 $tables[$k] = mb_strtolower($v);
             }
             
-            if (array_search('plugin_localedescription', $tables) === FALSE)
-            {
+            if (array_search('plugin_localedescription', $tables) === FALSE) {
                 $this->db->queryNoError("
                     CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_localedescription` (
                         `pluginlocaledescriptionLocale` varchar(16) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -177,14 +163,12 @@ class localedescription_MODULE
      */
     public function edit()
     {
-        if (!array_key_exists('language', $this->vars))
-        {
+        if (!array_key_exists('language', $this->vars)) {
             $this->display(HTML\p($this->pluginmessages->text("missingLanguage"), "error", "center"));
             FACTORY_CLOSE::getInstance();
         }
         $this->db->formatConditions(['pluginlocaledescriptionLocale' => $this->vars['language']]);
-        if ($input = $this->db->fetchOne($this->db->select('plugin_localedescription', 'pluginlocaledescriptionText')))
-        {
+        if ($input = $this->db->fetchOne($this->db->select('plugin_localedescription', 'pluginlocaledescriptionText'))) {
             $input = HTML\nlToHtml($input);
         }
         $original = HTML\nlToHtml(WIKINDX_DESCRIPTION);
@@ -196,7 +180,8 @@ class localedescription_MODULE
         $pString .= FORM\formHeader("localedescription_write");
         $pString .= FORM\hidden('language', $this->vars['language']);
         $pString .= $tinymce->loadMinimalTextarea(['description'], TRUE);
-        $pString .= HTML\p(FORM\textareaInput(HTML\strong($this->vars['language'] . " - " . \Locale::getDisplayName($this->vars['language'], \LOCALES\determine_locale())), "description", $input, 75, 20));
+        $pString .= HTML\p(FORM\textareaInput(HTML\strong($this->vars['language'] . " - " . 
+        	\Locale::getDisplayName($this->vars['language'], \LOCALES\determine_locale())), "description", $input, 75, 20));
         $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
         $pString .= FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -206,33 +191,28 @@ class localedescription_MODULE
      */
     public function write()
     {
-        $message = rawurlencode(HTML\p($this->pluginmessages->text("success", $this->vars['language']), 'success', 'center'));
-        
         $this->db->formatConditions(['pluginlocaledescriptionLocale' => $this->vars['language']]);
         $resultSet = $this->db->select('plugin_localedescription', '*');
         $exists = $this->db->numRows($resultSet);
         
-        if (!array_key_exists('description', $this->vars) || !\UTF8\mb_trim($this->vars['description']))
-        { // delete row if it exists in table
-            if ($exists)
-            {
+        if (!array_key_exists('description', $this->vars) || !\UTF8\mb_trim($this->vars['description'])) { // delete row if it exists in table
+            if ($exists) {
                 $this->db->formatConditions(['pluginlocaledescriptionLocale' => $this->vars['language']]);
                 $this->db->delete('plugin_localedescription');
             }
-            header("Location: index.php?action=localedescription_init&message=$message&language=" . $this->vars['language']);
+            header("Location: index.php?action=localedescription_init&success=success&language=" . $this->vars['language']);
             die;
         }
         // something to write
-        if ($exists)
-        {
+        if ($exists) {
             $this->db->formatConditions(['pluginlocaledescriptionLocale' => $this->vars['language']]);
             $this->db->update('plugin_localedescription', ['pluginlocaledescriptionText' => \UTF8\mb_trim($this->vars['description'])]);
         }
-        else
-        {
-            $this->db->insert('plugin_localedescription', ['pluginlocaledescriptionLocale', 'pluginlocaledescriptionText'], [$this->vars['language'], \UTF8\mb_trim($this->vars['description'])]);
+        else {
+            $this->db->insert('plugin_localedescription', ['pluginlocaledescriptionLocale', 'pluginlocaledescriptionText'], 
+            	[$this->vars['language'], \UTF8\mb_trim($this->vars['description'])]);
         }
-        header("Location: index.php?action=localedescription_init&message=$message&language=" . $this->vars['language']);
+        header("Location: index.php?action=localedescription_init&success=success&language=" . $this->vars['language']);
         die;
     }
     /**

@@ -98,60 +98,41 @@ class repairkit_MODULE
 
             return;
         }
-        if ($this->checkDatetime())
+        
+        $dbErrors = $this->checkDbIntegrity($currentDbSchema, $correctDbSchema);
+        
+        if ($dbErrors["count"] > 0)
         {
-            $this->dbInvalidDatetime = TRUE;
+            // Database can be fixed
+            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble3', $wVersion));
+            $pString .= FORM\formHeader("repairkit_dbIntegrityFix");
+            $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "OK")));
+            $pString .= FORM\formEnd();
+            GLOBALS::addTplVar('content', $pString);
+            
+            $this->dbIntegrityReport($dbErrors, $currentDbSchema, $correctDbSchema);
+            
+            return;
         }
-        if (($this->dbIntegrityReport($currentDbSchema, $correctDbSchema) === TRUE) && !$this->dbInvalidDatetime)
+        elseif ($this->checkDbIntegrityInvalidDatetime())
         {
-            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble2'));
+            // Database can be fixed
+            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble3', $wVersion));
+            $pString .= FORM\formHeader("repairkit_dbIntegrityFix");
+            $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "OK")));
+            $pString .= FORM\formEnd();
+            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityInvalidDatetime'));
             GLOBALS::addTplVar('content', $pString);
 
             return;
         }
         else
         {
-            // Structure needs fixing – can it be?
-            if (!empty($this->dbMissingTables))
-            {
-                // Cannot be fixed
-                $pString .= HTML\p($this->pluginmessages->text('dbIntegrityMissingTables') . BR . implode(BR, $this->dbMissingTables));
-                GLOBALS::addTplVar('content', $pString);
+            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble2'));
+            GLOBALS::addTplVar('content', $pString);
 
-                return;
-            }
-            if (!empty($this->dbMissingFields))
-            {
-                // Cannot be fixed
-                $missingFields = '';
-                foreach ($this->dbMissingFields as $table)
-                {
-                    // [0] == table, [1] == field
-                    $missingFields .= "TABLE " . $table[0] . ": " . $table[1] . BR;
-                }
-                $pString .= HTML\p($this->pluginmessages->text('dbIntegrityMissingFields') . BR . $missingFields);
-                GLOBALS::addTplVar('content', $pString);
-
-                return;
-            }
-            // Database can be fixed
-            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble3', $wVersion));
-            $pString .= FORM\formHeader("repairkit_dbIntegrityFix");
-            $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "OK")));
-            $pString .= FORM\formEnd();
-            $pString .= HTML\hr();
-            if ($this->dbInvalidDatetime)
-            {
-                $pString .= HTML\p($this->pluginmessages->text('dbIntegrityInvalidDatetime'));
-            }
-            foreach ($this->dbInconsistenciesReport as $table)
-            {
-                $pString .= HTML\p(implode('', $table));
-            }
+            return;
         }
-        GLOBALS::addTplVar('content', $pString);
-
-        return;
     }
     /**
      * dbIntegrityFix
@@ -184,7 +165,7 @@ class repairkit_MODULE
 
             return;
         }
-        if ($this->checkDatetime())
+        if ($this->checkDbIntegrityInvalidDatetime())
         { // fix invalid datetime fields first or else the charset/collation might fail.
             $this->fixDatetimeFields();
         }
@@ -510,11 +491,11 @@ class repairkit_MODULE
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuDbIntegrity')] = "dbIntegrityInit";
     }
     /**
-     * checkDatetime
+     * checkDbIntegrityInvalidDatetime
      *
      * @return bool
      */
-    private function checkDatetime()
+    private function checkDbIntegrityInvalidDatetime()
     {
         $this->db->formatConditions(['resourcemetadataTimestamp' => '0000-00-00 00:00:00']);
         if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataTimestamp')))
@@ -570,14 +551,249 @@ class repairkit_MODULE
         return FALSE;
     }
     /**
+     * checkDbIntegrity
+     *
+     * Error Codes:
+     * - 0, OK db object
+     * - 1, NOK db object (declaration mismatch)
+     * - 2, Missing db object
+     * - 3, Supernumerary db object
+     *
+     * @param array $currentDbSchema
+     * @param array $correctDbSchema
+     *
+     * @return array
+     */
+    private function checkDbIntegrity($currentDbSchema, $correctDbSchema)
+    {
+        $dbError = [
+            "database" => [],
+            "tables" => [],
+            "fields" => [],
+            "indices" => [],
+            "count" => 0,
+        ];
+
+        // DATABASE
+        if ($correctDbSchema["database"]["character_set"] != $currentDbSchema["database"]["character_set"])
+        {
+            $dbError["database"][] = [
+                "Option" => "character_set",
+                "Code" => 1,
+            ];
+            $dbError["count"]++;
+        }
+        if ($correctDbSchema["database"]["collation"] != $currentDbSchema["database"]["collation"])
+        {
+            $dbError["database"][] = [
+                "Option" => "collation",
+                "Code" => 1,
+            ];
+            $dbError["count"]++;
+        }
+        
+        
+        // TABLES
+        $tableArrayCorrect = $correctDbSchema["tables"];
+        $tableArrayCurrent = $currentDbSchema["tables"];
+        
+        foreach ($tableArrayCorrect as $tableCorrect)
+        {
+            // Table missing (by default)
+            $match = 2;
+            
+            foreach ($tableArrayCurrent as $tableCurrent)
+            {
+                if (mb_strtolower($tableCorrect["Table"]) == mb_strtolower($tableCurrent["Table"]))
+                {
+                    // Table declaration matching (by default)
+                    $match = 0;
+                    
+                    foreach ($tableCorrect as $key => $value)
+                    {
+                        if ($tableCorrect[$key] !== $tableCurrent[$key])
+                        {
+                            // Table declaration mismatching
+                            $match = 1;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            
+            if ($match > 0)
+            {
+                $dbError["tables"][] = [
+                    "Table" => $tableCorrect["Table"],
+                    "Code" => $match,
+                ];
+                $dbError["count"]++;
+            }
+        }
+        
+        
+        // FIELDS
+        $fieldArrayCorrect = $correctDbSchema["fields"];
+        $fieldArrayCurrent = $currentDbSchema["fields"];
+        
+        foreach ($fieldArrayCorrect as $fieldCorrect)
+        {
+            // Field missing (by default)
+            $match = 2;
+            
+            foreach ($fieldArrayCurrent as $fieldCurrent)
+            {
+                if (
+                    mb_strtolower($fieldCorrect["Table"]) == mb_strtolower($fieldCurrent["Table"])
+                    && mb_strtolower($fieldCorrect["Field"]) == mb_strtolower($fieldCurrent["Field"])
+                ) {
+                    // Field declaration matching (by default)
+                    $match = 0;
+                    
+                    foreach ($fieldCorrect as $key => $value)
+                    {
+                        if ($fieldCorrect[$key] !== $fieldCurrent[$key] && $key != "Table")
+                        {
+                            // Field declaration mismatching
+                            $match = 1;
+                            break;
+                        }
+                    }
+                    
+                    break;
+                }
+            }
+            
+            if ($match > 0)
+            {
+                $dbError["fields"][] = [
+                    "Table" => $fieldCorrect["Table"],
+                    "Field" => $fieldCorrect["Field"],
+                    "Code" => $match,
+                ];
+                $dbError["count"]++;
+            }
+        }
+        
+        foreach ($fieldArrayCurrent as $fieldCurrent)
+        {
+            // Field supernumerary (by default)
+            $match = 3;
+            
+            foreach ($fieldArrayCorrect as $fieldCorrect)
+            {
+                if (
+                    mb_strtolower($fieldCurrent["Table"]) == mb_strtolower($fieldCorrect["Table"])
+                    && mb_strtolower($fieldCurrent["Field"]) == mb_strtolower($fieldCorrect["Field"])
+                )
+                {
+                    // Field present
+                    $match = 0;
+                    break;
+                }
+            }
+            
+            if ($match > 0)
+            {
+                $dbError["fields"][] = [
+                    "Table" => $fieldCurrent["Table"],
+                    "Field" => $fieldCurrent["Field"],
+                    "Code" => $match,
+                ];
+                $dbError["count"]++;
+            }
+        }
+        
+        
+        // INDICES
+        $indexArrayCorrect = $correctDbSchema["indices"];
+        $indexArrayCurrent = $currentDbSchema["indices"];
+        
+        foreach ($indexArrayCorrect as $indexCorrect)
+        {
+            // Index missing (by default)
+            $match = 2;
+            
+            foreach ($indexArrayCurrent as $indexCurrent)
+            {
+                if (
+                    mb_strtolower($indexCorrect["Table"]) == mb_strtolower($indexCurrent["Table"])
+                    && mb_strtolower($indexCorrect["Key_name"]) == mb_strtolower($indexCurrent["Key_name"])
+                    && mb_strtolower($indexCorrect["Seq_in_index"]) == mb_strtolower($indexCurrent["Seq_in_index"])
+                ) {
+                    // Index declaration matching (by default)
+                    $match = 0;
+                    
+                    foreach ($indexCorrect as $key => $value)
+                    {
+                        if ($indexCorrect[$key] !== $indexCurrent[$key] && $key != "Table")
+                        {
+                            // Index declaration mismatching
+                            $match = 1;
+                            break;
+                        }
+                    }
+                    
+                    break;
+                }
+            }
+            
+            if ($match > 0)
+            {
+                $dbError["indices"][] = [
+                    "Table" => $indexCorrect["Table"],
+                    "Key_name" => $indexCorrect["Key_name"],
+                    "Seq_in_index" => $indexCorrect["Seq_in_index"],
+                    "Code" => $match,
+                ];
+                $dbError["count"]++;
+            }
+        }
+        
+        foreach ($indexArrayCurrent as $indexCurrent)
+        {
+            // Index supernumerary (by default)
+            $match = 3;
+            
+            foreach ($indexArrayCorrect as $indexCorrect)
+            {
+                if (
+                    mb_strtolower($indexCurrent["Table"]) == mb_strtolower($indexCorrect["Table"])
+                    && mb_strtolower($indexCurrent["Key_name"]) == mb_strtolower($indexCorrect["Key_name"])
+                )
+                {
+                    // Index declaration matching
+                    $match = 0;
+                    break;
+                }
+            }
+            
+            if ($match > 0)
+            {
+                $dbError["indices"][] = [
+                    "Table" => $indexCurrent["Table"],
+                    "Key_name" => $indexCurrent["Key_name"],
+                    "Seq_in_index" => $indexCurrent["Seq_in_index"],
+                    "Code" => $match,
+                ];
+                $dbError["count"]++;
+            }
+        }
+
+        return $dbError;
+    }
+    
+    /**
      * dbIntegrityReport
      *
+     * @param array $dbErrors
      * @param array $currentDbSchema
      * @param array $correctDbSchema
      *
      * @return bool
      */
-    private function dbIntegrityReport($currentDbSchema, $correctDbSchema)
+    private function dbIntegrityReport($dbErrors, $currentDbSchema, $correctDbSchema)
     {
         $nbErrorDb = 0;
         $nbErrorTable = 0;
@@ -618,46 +834,70 @@ class repairkit_MODULE
         $pString .= \HTML\theadEnd();
         
         $pString .= \HTML\tbodyStart();
-            $pString .= \HTML\trStart();
+            $pString .= \HTML\trStart("alternate1");
             $pString .= \HTML\td("NOK");
             $pString .= \HTML\td("Redefine");
             $pString .= \HTML\td("Red", "nok");
             $pString .= \HTML\trEnd();
-            $pString .= \HTML\trStart();
+            $pString .= \HTML\trStart("alternate2");
             $pString .= \HTML\td("Missing");
             $pString .= \HTML\td("Create");
             $pString .= \HTML\td("Brown", "missing");
             $pString .= \HTML\trEnd();
-            $pString .= \HTML\trStart();
+            $pString .= \HTML\trStart("alternate1");
             $pString .= \HTML\td("Supernumerary");
             $pString .= \HTML\td("Ignore (prevent data loss) or delete");
             $pString .= \HTML\td("Blue", "supernumerary");
             $pString .= \HTML\trEnd();
         $pString .= \HTML\tbodyEnd();
-        
-        $pString .= \HTML\tfootStart();
-            $pString .= \HTML\th("Integrity State");
-            $pString .= \HTML\th("Fix");
-            $pString .= \HTML\th("Color");
-        $pString .= \HTML\tfootEnd();
 
         $pString .= \HTML\tableEnd();
         GLOBALS::addTplVar('content', $pString);
 
 
         // DATABASE
-        if ($correctDbSchema["database"]["character_set"] != $currentDbSchema["database"]["character_set"])
+        $pString  = \HTML\tableStart();
+        
+        $pString .= \HTML\tableCaption("DB Integrity State", "tcaption");
+        
+        $pString .= \HTML\theadStart();
+            $pString .= \HTML\trStart();
+            $pString .= \HTML\th("Option");
+            $pString .= \HTML\th("Value");
+            $pString .= \HTML\th("Integrity");
+            $pString .= \HTML\trEnd();
+        $pString .= \HTML\theadEnd();
+        
+        $pString .= \HTML\tbodyStart();
+        
+        if (count($dbErrors["database"]) > 0)
         {
-            $nbErrorDb++;
-            $pString = \HTML\p("The database character set is wrong: " . $currentDbSchema["database"]["character_set"] . " instead of " . $correctDbSchema["database"]["character_set"] . ".", "nok");
-            GLOBALS::addTplVar('content', $pString);
+            $k = 0;
+            foreach ($dbErrors["database"] as $e)
+            {
+                $k++;
+                
+                if ($e["Code"] == 1)
+                {
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        $pString .= \HTML\td($e["Option"]);
+                        $pString .= \HTML\td("'" . $currentDbSchema["database"][$e["Option"]] . "' instead of '" . $correctDbSchema["database"][$e["Option"]] . "'", "nok");
+                        $pString .= \HTML\td("Mismatch", "nok");
+                    $pString .= \HTML\trEnd();
+                }
+            }
         }
-        if ($correctDbSchema["database"]["collation"] != $currentDbSchema["database"]["collation"])
+        else
         {
-            $nbErrorDb++;
-            $pString = \HTML\p("The database collation is wrong: " . $currentDbSchema["database"]["collation"] . " instead of " . $correctDbSchema["database"]["collation"] . ".", "nok");
-            GLOBALS::addTplVar('content', $pString);
+            $pString .= \HTML\trStart("alternate1 center");
+                $pString .= \HTML\td("No error detected", "ok", 3);
+            $pString .= \HTML\trEnd();
         }
+        
+        $pString .= \HTML\tbodyEnd();
+
+        $pString .= \HTML\tableEnd();
+        GLOBALS::addTplVar('content', $pString);
         
         
         // TABLES
@@ -680,83 +920,66 @@ class repairkit_MODULE
         
         $pString .= \HTML\tbodyStart();
         
-        $k = 0;
-        
-        foreach ($tableArrayCorrect as $tableCorrect)
+        if (count($dbErrors["tables"]) > 0)
         {
-            // Table missing (by default)
-            $match = 0;
-            
-            foreach ($tableArrayCurrent as $tableCurrent)
+            $k = 0;
+            foreach ($dbErrors["tables"] as $e)
             {
-                if (mb_strtolower($tableCorrect["Table"]) == mb_strtolower($tableCurrent["Table"]))
+                $k++;
+                $tableCorrect = [];
+                $tableCurrent = [];
+                
+                foreach($tableArrayCorrect as $t)
                 {
-                    // Table declaration matching (by default)
-                    $match = 1;
-                    
-                    foreach ($tableCorrect as $key => $value)
+                    if ($t["Table"] == $e["Table"])
                     {
-                        if ($tableCorrect[$key] !== $tableCurrent[$key])
-                        {
-                            if (\UTILS\OSName() != "windows" || $key != "Table")
-                            {
-                                $match = 2;
-                                break;
-                            }
-                        }
+                        $tableCorrect = $t;
                     }
-                    break;
+                }
+                
+                foreach($tableArrayCurrent as $t)
+                {
+                    if ($t["Table"] == $e["Table"])
+                    {
+                        $tableCurrent = $t;
+                    }
+                }
+                
+                if ($e["Code"] == 1)
+                {
+                    // Table definition mismatch
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        foreach ($tableCorrect as $key => $value)
+                        {
+                            if ($tableCorrect[$key] === $tableCurrent[$key])
+                                $pString .= \HTML\td($value, "ok");
+                            else
+                                $pString .= \HTML\td("'" . $tableCurrent[$key] . "' instead of '" . $value . "'", "nok");
+                        }
+                        $pString .= \HTML\td("Mismatch", "nok");
+                    $pString .= \HTML\trEnd();
+                }
+                elseif ($e["Code"] == 2)
+                {
+                    // Table missing
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        foreach ($tableCorrect as $v)
+                        {
+                            $pString .= \HTML\td($v, "missing");
+                        }
+                        $pString .= \HTML\td("Missing", "missing");
+                    $pString .= \HTML\trEnd();
                 }
             }
-            
-            $k++;
-            if ($match == 0)
-            {
-                // Table missing
-                $nbErrorTable++;
-                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
-                    foreach ($tableCorrect as $v)
-                    {
-                        $pString .= \HTML\td($v, "missing");
-                    }
-                    $pString .= \HTML\td("Missing", "missing");
-                $pString .= \HTML\trEnd();
-            }
-            elseif ($match == 2)
-            {
-                // Table definition mismatch
-                $nbErrorTable++;
-                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
-                    foreach ($tableCorrect as $key => $value)
-                    {
-                        if ($tableCorrect[$key] === $tableCurrent[$key])
-                            $pString .= \HTML\td($value, "ok");
-                        else
-                            $pString .= \HTML\td("'" . $tableCurrent[$key] . "' instead of '" . $value . "'", "nok");
-                    }
-                    $pString .= \HTML\td("Mismatch", "nok");
-                $pString .= \HTML\trEnd();
-            }
         }
-
-        if ($nbErrorTable == 0)
+        else
         {
-                $pString .= \HTML\trStart("alternate1 center");
-                    $pString .= \HTML\td("No error detected", "ok", count($tableArrayCorrect));
-                $pString .= \HTML\trEnd();
+            $pString .= \HTML\trStart("alternate1 center");
+                $pString .= \HTML\td("No error detected", "ok", count($tableArrayCorrect[0]) + 1);
+            $pString .= \HTML\trEnd();
         }
         
         $pString .= \HTML\tbodyEnd();
-        
-        $pString .= \HTML\tfootStart();
-            $pString .= \HTML\trStart();
-                foreach ($tableArrayCorrect[0] as $key => $value)
-                {
-                    $pString .= \HTML\th($key);
-                }
-                $pString .= \HTML\th("Integrity");
-            $pString .= \HTML\trEnd();
-        $pString .= \HTML\tfootEnd();
         
         $pString .= \HTML\tableEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -782,119 +1005,77 @@ class repairkit_MODULE
         
         $pString .= \HTML\tbodyStart();
         
-        $k = 0;
-        
-        foreach ($fieldArrayCorrect as $fieldCorrect)
+        if (count($dbErrors["fields"]) > 0)
         {
-            // Field missing (by default)
-            $match = 0;
-            
-            foreach ($fieldArrayCurrent as $fieldCurrent)
+            $k = 0;
+            foreach ($dbErrors["fields"] as $e)
             {
-                if (
-                    mb_strtolower($fieldCorrect["Table"]) == mb_strtolower($fieldCurrent["Table"])
-                    && mb_strtolower($fieldCorrect["Field"]) == mb_strtolower($fieldCurrent["Field"])
-                ) {
-                    // Field declaration matching (by default)
-                    $match = 1;
-                    
-                    foreach ($fieldCorrect as $key => $value)
-                    {
-                        if ($fieldCorrect[$key] !== $fieldCurrent[$key] && $key != "Table")
-                        {
-                            if (\UTILS\OSName() != "windows" || $key != "Field")
-                            {
-                                $match = 2;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    break;
-                }
-            }
-            
-            $k++;
-            if ($match == 0)
-            {
-                // Field missing
-                $nbErrorField++;
-                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
-                    foreach ($fieldCorrect as $v)
-                    {
-                        $pString .= \HTML\td($v, "missing");
-                    }
-                    $pString .= \HTML\td("Missing", "missing");
-                $pString .= \HTML\trEnd();
-            }
-            if ($match == 2)
-            {
-                // Field definition mismatch
-                $nbErrorField++;
-                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
-                    foreach ($fieldCorrect as $key => $value)
-                    {
-                        if ($fieldCorrect[$key] === $fieldCurrent[$key])
-                            $pString .= \HTML\td($value, "ok");
-                        else
-                            $pString .= \HTML\td("'" . $fieldCurrent[$key] . "' instead of '" . $value . "'", "nok");
-                    }
-                    $pString .= \HTML\td("Mismatch", "nok");
-                $pString .= \HTML\trEnd();
-            }
-        }
-        
-        foreach ($fieldArrayCurrent as $fieldCurrent)
-        {
-            // Field missing (by default)
-            $match = 0;
-            
-            foreach ($fieldArrayCorrect as $fieldCorrect)
-            {
-                if (
-                    mb_strtolower($fieldCurrent["Table"]) == mb_strtolower($fieldCorrect["Table"])
-                    && mb_strtolower($fieldCurrent["Field"]) == mb_strtolower($fieldCorrect["Field"])
-                )
+                $k++;
+                $fieldCorrect = [];
+                $fieldCurrent = [];
+                
+                foreach($fieldArrayCorrect as $f)
                 {
-                    // Field declaration matching
-                    $match = 1;
-                    break;
+                    if ($f["Table"] == $e["Table"] && $f["Field"] == $e["Field"])
+                    {
+                        $fieldCorrect = $f;
+                    }
+                }
+                
+                foreach($fieldArrayCurrent as $f)
+                {
+                    if ($f["Table"] == $e["Table"] && $f["Field"] == $e["Field"])
+                    {
+                        $fieldCurrent = $f;
+                    }
+                }
+                
+                if ($e["Code"] == 1)
+                {
+                    // Field definition mismatch
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        foreach ($fieldCorrect as $key => $value)
+                        {
+                            if ($fieldCorrect[$key] === $fieldCurrent[$key])
+                                $pString .= \HTML\td($value, "ok");
+                            else
+                                $pString .= \HTML\td("'" . $fieldCurrent[$key] . "' instead of '" . $value . "'", "nok");
+                        }
+                        $pString .= \HTML\td("Mismatch", "nok");
+                    $pString .= \HTML\trEnd();
+                }
+                elseif ($e["Code"] == 2)
+                {
+                    // Field missing
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        foreach ($fieldCorrect as $v)
+                        {
+                            $pString .= \HTML\td($v, "missing");
+                        }
+                        $pString .= \HTML\td("Missing", "missing");
+                    $pString .= \HTML\trEnd();
+                }
+                elseif ($e["Code"] == 3)
+                {
+                    // Field supernumerary
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        foreach ($fieldCurrent as $v)
+                        {
+                            $pString .= \HTML\td($v, "supernumerary");
+                        }
+                        $pString .= \HTML\td("Supernumerary", "supernumerary");
+                    $pString .= \HTML\trEnd();
                 }
             }
-            
-            $k++;
-            if ($match == 0)
-            {
-                // Field supernumerary
-                $nbErrorField++;
-                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
-                    foreach ($fieldCurrent as $v)
-                    {
-                        $pString .= \HTML\td($v, "supernumerary");
-                    }
-                    $pString .= \HTML\td("Supernumerary", "supernumerary");
-                $pString .= \HTML\trEnd();
-            }
         }
-        
-        if ($nbErrorField == 0)
+        else
         {
-                $pString .= \HTML\trStart("alternate1 center");
-                    $pString .= \HTML\td("No error detected", "ok", count($fieldArrayCorrect));
-                $pString .= \HTML\trEnd();
+            $pString .= \HTML\trStart("alternate1 center");
+                $pString .= \HTML\td("No error detected", "ok", count($fieldArrayCorrect[0]) + 1);
+            $pString .= \HTML\trEnd();
         }
 
         $pString .= \HTML\tbodyEnd();
-        
-        $pString .= \HTML\tfootStart();
-            $pString .= \HTML\trStart();
-                foreach ($fieldArrayCorrect[0] as $key => $value)
-                {
-                    $pString .= \HTML\th($key);
-                }
-                $pString .= \HTML\th("Integrity");
-            $pString .= \HTML\trEnd();
-        $pString .= \HTML\tfootEnd();
         
         $pString .= \HTML\tableEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -920,144 +1101,88 @@ class repairkit_MODULE
         
         $pString .= \HTML\tbodyStart();
         
-        $k = 0;
-        
-        foreach ($indexArrayCorrect as $indexCorrect)
+        if (count($dbErrors["indices"]) > 0)
         {
-            // Index missing (by default)
-            $match = 0;
-            
-            foreach ($indexArrayCurrent as $indexCurrent)
+            $k = 0;
+            foreach ($dbErrors["indices"] as $e)
             {
-                if (
-                    mb_strtolower($indexCorrect["Table"]) == mb_strtolower($indexCurrent["Table"])
-                    && mb_strtolower($indexCorrect["Key_name"]) == mb_strtolower($indexCurrent["Key_name"])
-                    && mb_strtolower($indexCorrect["Seq_in_index"]) == mb_strtolower($indexCurrent["Seq_in_index"])
-                ) {
-                    // Index declaration matching (by default)
-                    $match = 1;
-                    
-                    foreach ($indexCorrect as $key => $value)
-                    {
-                        if ($indexCorrect[$key] !== $indexCurrent[$key] && $key != "Table")
-                        {
-                            if (\UTILS\OSName() != "windows" || $key != "Field")
-                            {
-                                $match = 2;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    break;
-                }
-            }
-            
-            $k++;
-            if ($match == 0)
-            {
-                // Index missing
-                $nbErrorIndex++;
-                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
-                    foreach ($indexCorrect as $v)
-                    {
-                        $pString .= \HTML\td($v, "missing");
-                    }
-                    $pString .= \HTML\td("Missing", "missing");
-                $pString .= \HTML\trEnd();
-            }
-            if ($match == 2)
-            {
-                // Index definition mismatch
-                $nbErrorIndex++;
-                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
-                    foreach ($indexCorrect as $key => $value)
-                    {
-                        if ($indexCorrect[$key] === $indexCurrent[$key])
-                            $pString .= \HTML\td($value, "ok");
-                        else
-                            $pString .= \HTML\td("'" . $indexCurrent[$key] . "' instead of '" . $value . "'", "nok");
-                    }
-                    $pString .= \HTML\td("Mismatch", "nok");
-                $pString .= \HTML\trEnd();
-            }
-        }
-        
-        foreach ($indexArrayCurrent as $indexCurrent)
-        {
-            // Index missing (by default)
-            $match = 0;
-            
-            foreach ($indexArrayCorrect as $indexCorrect)
-            {
-                if (
-                    mb_strtolower($indexCurrent["Table"]) == mb_strtolower($indexCorrect["Table"])
-                    && mb_strtolower($indexCurrent["Key_name"]) == mb_strtolower($indexCorrect["Key_name"])
-                )
+                $k++;
+                $indexCorrect = [];
+                $indexCurrent = [];
+                
+                foreach($indexArrayCorrect as $i)
                 {
-                    // Index declaration matching
-                    $match = 1;
-                    break;
+                    if (
+                        $i["Table"] == $e["Table"]
+                        && $i["Key_name"] == $e["Key_name"]
+                        && $i["Seq_in_index"] == $e["Seq_in_index"]
+                    ) {
+                        $indexCorrect = $i;
+                    }
+                }
+                
+                foreach($indexArrayCurrent as $i)
+                {
+                    if (
+                        $i["Table"] == $e["Table"]
+                        && $i["Key_name"] == $e["Key_name"]
+                        && $i["Seq_in_index"] == $e["Seq_in_index"]
+                    ) {
+                        $indexCurrent = $i;
+                    }
+                }
+                
+                if ($e["Code"] == 1)
+                {
+                    // Index definition mismatch
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        foreach ($indexCorrect as $key => $value)
+                        {
+                            if ($indexCorrect[$key] === $indexCurrent[$key])
+                                $pString .= \HTML\td($value, "ok");
+                            else
+                                $pString .= \HTML\td("'" . $indexCurrent[$key] . "' instead of '" . $value . "'", "nok");
+                        }
+                        $pString .= \HTML\td("Mismatch", "nok");
+                    $pString .= \HTML\trEnd();
+                }
+                elseif ($e["Code"] == 2)
+                {
+                    // Index missing
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        foreach ($indexCorrect as $v)
+                        {
+                            $pString .= \HTML\td($v, "missing");
+                        }
+                        $pString .= \HTML\td("Missing", "missing");
+                    $pString .= \HTML\trEnd();
+                }
+                elseif ($e["Code"] == 3)
+                {
+                    // Index supernumerary
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        foreach ($indexCurrent as $v)
+                        {
+                            $pString .= \HTML\td($v, "supernumerary");
+                        }
+                        $pString .= \HTML\td("Supernumerary", "supernumerary");
+                    $pString .= \HTML\trEnd();
                 }
             }
-            
-            $k++;
-            if ($match == 0)
-            {
-                // Index supernumerary
-                $nbErrorIndex++;
-                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
-                    foreach ($indexCurrent as $v)
-                    {
-                        $pString .= \HTML\td($v, "supernumerary");
-                    }
-                    $pString .= \HTML\td("Supernumerary", "supernumerary");
-                $pString .= \HTML\trEnd();
-            }
         }
-
-        if ($nbErrorIndex == 0)
+        else
         {
-                $pString .= \HTML\trStart("alternate1 center");
-                    $pString .= \HTML\td("No error detected", "ok", count($indexArrayCorrect));
-                $pString .= \HTML\trEnd();
+            $pString .= \HTML\trStart("alternate1 center");
+                $pString .= \HTML\td("No error detected", "ok", count($indexArrayCorrect[0]) + 1);
+            $pString .= \HTML\trEnd();
         }
         
         $pString .= \HTML\tbodyEnd();
         
-        $pString .= \HTML\tfootStart();
-            $pString .= \HTML\trStart();
-                foreach ($indexArrayCorrect[0] as $key => $value)
-                {
-                    $pString .= \HTML\th($key);
-                }
-                $pString .= \HTML\th("Integrity");
-            $pString .= \HTML\trEnd();
-        $pString .= \HTML\tfootEnd();
-        
         $pString .= \HTML\tableEnd();
         GLOBALS::addTplVar('content', $pString);
-        
-        
-        /*
-        foreach ($correctDbSchema as $table => $tableArray)
-        {
-            if (!array_key_exists($table, $currentDbSchema))
-            {
-                // skip missing tables
-                $this->dbMissingTables[] = $table;
-
-                continue;
-            }
-            $this->getDbInconsistencies($currentDbSchema, $tableArray, $table, TRUE);
-        }
-        if (!empty($this->dbMissingTables) || !empty($this->dbMissingFields) || !empty($this->dbInconsistenciesReport))
-        {
-            return FALSE;
-        }*/
-
-        return (($nbErrorDb + $nbErrorTable + $nbErrorField + $nbErrorIndex) == 0);
     }
+    
     /**
      * getDbInconsistencies
      *

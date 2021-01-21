@@ -296,6 +296,245 @@ class repairkit_MODULE
         header("Location: index.php?action=repairkit_dbIntegrityInit&message=$message");
         die;
     }
+    
+    /*
+     * Change the collation and character set of the db
+     */
+    private function changeDbCollation($dbDef)
+    {
+        $sql = "ALTER DATABASE " . $tableDef["Table"] . " CHARACTER SET " . $dbDef["character_set"] . " COLLATE " . $dbDef["collation"] . ";";
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Create a table
+     */
+    private function createTable($tableDef)
+    {
+        $basicTable = preg_replace("/^" . preg_quote(WIKINDX_DB_TABLEPREFIX, "/") . "/ui", '', $tableDef["Table"]);
+        
+        // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
+        // or /plugins/<PluginDirectory>/dbschema/full
+        $dbSchemaPath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DB_SCHEMA, "full"]);
+        $sqlfile = "table_" . $basicTable . ".sql";
+        $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
+        $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Rename a table
+     */
+    private function renameTable($from, $to)
+    {
+        $sql = "ALTER TABLE `" . $from . "` RENAME AS `" . $to . "`;";
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Change the collation and character set of a table
+     */
+    private function changeTableCollation($tableDef)
+    {
+        if ($tableDef["Collation"] == "binary")
+            $charset = "binary";
+        else
+            $charset = substr($tableDef["Collation"], 0, strpos($tableDef["Collation"], "_"));
+        
+        $sql = "ALTER TABLE " . $tableDef["Table"] . " CONVERT TO CHARACTER SET " . $charset . " COLLATE " . $tableDef["Collation"] . ";";
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Change the engine of a table
+     */
+    private function changeTableEngine($tableDef)
+    {
+        $sql = "ALTER TABLE " . $tableDef["Table"] . " ENGINE = " . $tableDef["Engine"] . ";";
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Drop a table
+     */
+    private function dropTable($tableDef)
+    {
+        $sql = "DROP TABLE IF EXISTS " . $tableDef["Table"] . ";";
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Create a field on a table
+     */
+    private function createField($fieldDef)
+    {
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/create-table.html
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/alter-table.html
+        
+        // tbl_name
+        $sql = "ALTER TABLE " . $fieldDef["Table"] . " ";
+        
+        // alter_option (column_name)
+        $sql .= " ADD COLUMN `" . $fieldDef["Field"] . "` ";
+        
+        // column_definition (data_type)
+        $sql .= " " . $fieldDef["Type"] . " ";
+        
+        // column_definition (nullable?)
+        $sql .= $fieldDef["Null"] == "YES" ? " NULL " : " NOT NULL ";
+        
+        // column_definition (default value)
+        if ($fieldDef["Default"] == "current_timestamp()")
+            $sql .= " " . $fieldDef["Default"] . " ";
+        elseif ($fieldDef["Default"] != NULL)
+            $sql .= " '" . $this->db->escapeString($fieldDef["Default"]) . "' ";
+        
+        // column_definition (extra clause)
+        if ($fieldDef["Extra"] == "on update current_timestamp()")
+            $sql .= " " . $fieldDef["Default"] . " ";
+        elseif ($fieldDef["Extra"] == "auto_increment")
+            $sql .= " " . $fieldDef["Default"] . " ";
+        
+        // column_definition (collation)
+        $sql .= $fieldDef["Collation"] == NULL ? "" : " COLLATE " . $fieldDef["Collation"] . " ";
+        
+        $sql .= ";";
+        
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Change a field of a table
+     */
+    private function changeField($fieldDef)
+    {
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/create-table.html
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/alter-table.html
+        
+        // tbl_name
+        $sql = "ALTER TABLE " . $fieldDef["Table"] . " ";
+        
+        // alter_option (column_name)
+        $sql .= " CHANGE COLUMN " . $fieldDef["Field"] . " `" . $fieldDef["Field"] . "` ";
+        
+        // column_definition (data_type)
+        $sql .= " " . $fieldDef["Type"] . " ";
+        
+        // column_definition (nullable?)
+        $sql .= $fieldDef["Null"] == "YES" ? " NULL " : " NOT NULL ";
+        
+        // column_definition (default value)
+        if ($fieldDef["Default"] == "current_timestamp()")
+            $sql .= " " . $fieldDef["Default"] . " ";
+        elseif ($fieldDef["Default"] != NULL)
+            $sql .= " '" . $this->db->escapeString($fieldDef["Default"]) . "' ";
+        
+        // column_definition (extra clause)
+        if ($fieldDef["Extra"] == "on update current_timestamp()")
+            $sql .= " " . $fieldDef["Default"] . " ";
+        elseif ($fieldDef["Extra"] == "auto_increment")
+            $sql .= " " . $fieldDef["Default"] . " ";
+        
+        // column_definition (collation)
+        $sql .= $fieldDef["Collation"] == NULL ? "" : " COLLATE " . $fieldDef["Collation"] . " ";
+        
+        $sql .= ";";
+        
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Drop a field from a table
+     */
+    private function dropField($fieldDef)
+    {
+        $sql = "ALTER TABLE " . $fieldDef["Table"] . " DROP COLUMN " . $fieldDef["Field"] . ";";
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Create an index on a table
+     */
+    private function createIndex($indicesDef)
+    {
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/alter-table.html
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/create-index.html
+        
+        $indexDef = $indicesDef[0];
+        
+        // tbl_name
+        $sql = "ALTER TABLE " . $indexDef["Table"] . " ";
+        
+        // alter_option
+        if ($indexDef["Key_name"] == "PRIMARY")
+        {
+            // Primary Key
+            $sql .= " ADD PRIMARY KEY ";
+        }
+        elseif ($indexDef["Non_unique"] == "1")
+        {
+            // unique Key
+            $sql .= " ADD UNIQUE KEY `" . $indexDef["Key_name"] . "` ";
+        }
+        else
+        {
+            // Others indices
+            $sql .= " ADD ";
+            if (in_array($indexDef["Index_type"], ["FULLTEXT", "SPATIAL"])) $sql .= " " . $indexDef["Index_type"] . " ";
+            $sql .= " INDEX `" . $indexDef["Key_name"] . "` ";
+        }
+        
+        // index_type
+        $indexType = [
+            "BTREE" => " USING BTREE ",
+            "FULLTEXT" => "", // Not inserted at this place
+            "HASH" => " USING HASH ",
+            "RTREE" => "", // Not used (for MyISAM storage engine only)
+        ];
+        $sql .= " USING " . $indexType[$indexDef["Index_type"]] . " ";
+        
+        $sql .= " ( ";
+            foreach($indicesDef as $indexDef)
+            {
+                // key_part (col_name)
+                $sql .= $indexDef["Column_name"];
+                
+                // key_part (length)
+                if ($indexDef["Sub_part"] != NULL) $sql .= "(" . $indexDef["Sub_part"] . ")";
+                
+                // key_part (sorting)
+                $sortType = [
+                    "A" => " ASC ",
+                    "D" => " DSC ",
+                    NULL => "",
+                ];
+                $sql .= $sortType[$indexDef["Collation"]];
+                $sql .= ",";
+            }
+            $sql = rtrim($sql, ",");
+        $sql .= " ) ";
+        
+        $sql .= ";";
+        
+        $this->db->query($sql);
+    }
+    
+    /*
+     * Drop an index from a table
+     */
+    private function dropIndex($indexDef)
+    {
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/alter-table.html
+        // cf. https://dev.mysql.com/doc/refman/5.7/en/drop-index.html
+        
+        if ($indexDef["Key_name"] == "PRIMARY")
+            $sql = "ALTER TABLE " . $indexDef["Table"] . " DROP INDEX " . $indexDef["Key_name"] . ";";
+        else
+            $sql = "ALTER TABLE " . $indexDef["Table"] . " DROP PRIMARY KEY;";
+        
+        $this->db->query($sql);
+    }
+    
     /**
      * creatorsInit
      */
@@ -573,6 +812,8 @@ class repairkit_MODULE
             "indices" => [],
             "count" => 0,
         ];
+        
+        //var_dump($correctDbSchema["database"]);
 
         // DATABASE
         if ($correctDbSchema["database"]["character_set"] != $currentDbSchema["database"]["character_set"])
@@ -596,6 +837,8 @@ class repairkit_MODULE
         // TABLES
         $tableArrayCorrect = $correctDbSchema["tables"];
         $tableArrayCurrent = $currentDbSchema["tables"];
+        
+        //var_dump($tableArrayCurrent);
         
         foreach ($tableArrayCorrect as $tableCorrect)
         {
@@ -636,6 +879,8 @@ class repairkit_MODULE
         // FIELDS
         $fieldArrayCorrect = $correctDbSchema["fields"];
         $fieldArrayCurrent = $currentDbSchema["fields"];
+        
+        //var_dump($fieldArrayCurrent);
         
         foreach ($fieldArrayCorrect as $fieldCorrect)
         {
@@ -709,6 +954,8 @@ class repairkit_MODULE
         // INDICES
         $indexArrayCorrect = $correctDbSchema["indices"];
         $indexArrayCurrent = $currentDbSchema["indices"];
+        
+        //var_dump($indexArrayCorrect);
         
         foreach ($indexArrayCorrect as $indexCorrect)
         {

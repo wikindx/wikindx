@@ -47,8 +47,7 @@ is installed – without CURL, components must be installed manually by
 downloading them from the Sourceforge server. It's not recommend to
 disable CURL and manage components by hand.
 
-4/ The standard PHP/Apache installation has a memory_limit of 32
-Megabytes configured in php.ini. In most cases, this is sufficient to
+4/ The standard PHP/Apache installation is typically sufficient to
 run WIKINDX. However, there are some instances (PHP/Apache installations
 with particular configurations or extras, for example) where this memory
 limit may need to be increased. An indication of this is typically an

@@ -29,6 +29,7 @@ class repairkitMessages
             "menuDumpSchema" => dgettext($domain, "Dump DB schema"),
             "menuDbIntegrity" => dgettext($domain, "DB integrity"),
             "menuCreators" => dgettext($domain, "Fix creators"),
+            "menuDatetimes" => dgettext($domain, "Fix Datetimes"),
             /**
              * Headings
              */
@@ -36,13 +37,16 @@ class repairkitMessages
             "headingDumpSchema" => dgettext($domain, "Dump Database Schema"),
             "headingDbIntegrity" => dgettext($domain, "Database Integrity"),
             "headingCreators" => dgettext($domain, "Fix Creators"),
+            "headingDatetimes" => dgettext($domain, "Fix Datetimes"),
             /**
              * Text
              */
+            "noErrorsFound" => "No errors were found.",
             "preamble1" => dgettext($domain, "Depending on the size of your database, this operation can be memory intensive. The plugin turns on error reporting so, if you see a memory error, adjust memory in config.php and try again."),
             "preamble2" => dgettext($domain, "It is assumed you have backed up your database."),
             "missingrowsPreamble" => dgettext($domain, "Sometimes rows required in other tables are not created when new resources are added and this can lead to problems in searching etc. If such missing rows are identified, they will be created and filled with default (usually NULL) data."),
             "creatorsPreamble" => dgettext($domain, "Fix various errors regarding creators."),
+            "datetimesPreamble" => dgettext($domain, "There are invalid datetime field values ('0000-00-00 00:00:00') that must be fixed."),
             "dbIntegrityPreamble1a" => dgettext($domain, "Before checking the database integrity, you should ensure that your database (currently version ###)"),
             "dbIntegrityPreamble1b" => dgettext($domain, "matches the WIKINDX version (currently version ###)."),
             "dbIntegrityPreamble2" => dgettext($domain, "The database structure is correct and there is nothing to fix."),
@@ -52,9 +56,6 @@ class repairkitMessages
             "invalidInput" => dgettext($domain, "Invalid or missing input"),
             "fileWriteError" => dgettext($domain, "Unable to write to file."),
             "fileReadError" => dgettext($domain, "Unable to read file."),
-            "dbIntegrityMissingTables" => dgettext($domain, "The database is missing the following tables and cannot be fixed:"),
-            "dbIntegrityMissingFields" => dgettext($domain, "The database is missing the following fields and cannot be fixed:"),
-            "dbIntegrityInvalidDatetime" => dgettext($domain, "There are invalid datetime field values ('0000-00-00 00:00:00') that must be fixed."),
         ];
     }
 }

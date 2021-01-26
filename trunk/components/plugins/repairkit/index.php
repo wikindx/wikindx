@@ -69,15 +69,10 @@ class repairkit_MODULE
      */
     public function dbIntegrityInit()
     {
-        if (array_key_exists('message', $this->vars))
-        {
-            $pString = $this->vars['message'];
-        }
-        else
-        {
-            $pString = '';
-        }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDbIntegrity'));
+        
+        $pString  = $this->vars['message'] ?? "";
+        
         $wVersion = WIKINDX_INTERNAL_VERSION;
         $dbVersion = \UPDATE\getCoreInternalVersion($this->db);
         if (floatval($dbVersion) != floatval($wVersion))
@@ -99,7 +94,7 @@ class repairkit_MODULE
             return;
         }
         
-        $dbErrors = $this->checkDbIntegrity($currentDbSchema, $correctDbSchema);
+        $dbErrors = $this->dbIntegrityCheck($currentDbSchema, $correctDbSchema);
         
         if ($dbErrors["count"] > 0)
         {
@@ -110,28 +105,12 @@ class repairkit_MODULE
             $pString .= FORM\formEnd();
             GLOBALS::addTplVar('content', $pString);
             
-            $this->dbIntegrityReport($dbErrors, $currentDbSchema, $correctDbSchema);
-            
-            return;
-        }
-        elseif ($this->checkDbIntegrityInvalidDatetime())
-        {
-            // Database can be fixed
-            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble3', $wVersion));
-            $pString .= FORM\formHeader("repairkit_dbIntegrityFix");
-            $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "OK")));
-            $pString .= FORM\formEnd();
-            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityInvalidDatetime'));
-            GLOBALS::addTplVar('content', $pString);
-
-            return;
+            $this->dbIntegrityDisplay($dbErrors, $currentDbSchema, $correctDbSchema);
         }
         else
         {
             $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble2'));
             GLOBALS::addTplVar('content', $pString);
-
-            return;
         }
     }
     /**
@@ -164,10 +143,6 @@ class repairkit_MODULE
             GLOBALS::addTplVar('content', $pString);
 
             return;
-        }
-        if ($this->checkDbIntegrityInvalidDatetime())
-        { // fix invalid datetime fields first or else the charset/collation might fail.
-            $this->fixDatetimeFields();
         }
 
         // Remove wrong indices before others field changes.
@@ -292,6 +267,7 @@ class repairkit_MODULE
                 $this->db->query("CREATE INDEX `$keyName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table` (`$columnName`$subPart)");
             }
         }
+        
         $message = rawurlencode($this->pluginmessages->text('success'));
         header("Location: index.php?action=repairkit_dbIntegrityInit&message=$message");
         die;
@@ -540,41 +516,67 @@ class repairkit_MODULE
      */
     public function creatorsInit()
     {
-        if (array_key_exists('message', $this->vars))
-        {
-            $pString = $this->vars['message'];
-        }
-        else
-        {
-            $pString = '';
-        }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingCreators'));
+        
+        $pString  = $this->vars['message'] ?? "";
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
         GLOBALS::addTplVar('content', $pString);
-        $this->creatorsDisplay();
-
-        return;
+        
+        $pString  = HTML\p($this->pluginmessages->text('creatorsPreamble'));
+        $pString .= FORM\formHeader("repairkit_creatorsFix");
+        $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
+        $pString .= FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
+    }
+    
+    /**
+     * datetimeInit
+     */
+    public function datetimesInit()
+    {
+        GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDatetimes'));
+        
+        $pString  = $this->vars['message'] ?? "";
+        $pString .= HTML\p($this->pluginmessages->text('preamble1'));
+        $pString .= HTML\p($this->pluginmessages->text('preamble2'));
+        GLOBALS::addTplVar('content', $pString);
+        
+        $pString  = "";
+        $pString .= HTML\p($this->pluginmessages->text('datetimesPreamble'));
+        
+        if ($this->datetimesCheck())
+        {
+            // Database can be fixed
+            $pString .= FORM\formHeader("repairkit_datetimesFix");
+            $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "OK")));
+            $pString .= FORM\formEnd();
+        }
+        else
+        {
+            $pString .= HTML\p($this->pluginmessages->text('noErrorsFound'), "bold");
+        }
+        
+        GLOBALS::addTplVar('content', $pString);
     }
     /**
      * missingrowsInit
      */
     public function missingrowsInit()
     {
-        if (array_key_exists('message', $this->vars))
-        {
-            $pString = $this->vars['message'];
-        }
-        else
-        {
-            $pString = '';
-        }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingMissingrows'));
+        
+        $pString  = $this->vars['message'] ?? "";
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
+        
         GLOBALS::addTplVar('content', $pString);
-
-        return $this->missingrowsDisplay();
+        
+        $pString  = HTML\p($this->pluginmessages->text('missingrowsPreamble'));
+        $pString .= FORM\formHeader("repairkit_missingrowsFix");
+        $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
+        $pString .= FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
     }
     /**
      * AJAX-based DIV content creator
@@ -593,9 +595,10 @@ class repairkit_MODULE
     /**
      * Find and fix missing rows
      */
-    public function missingrows()
+    public function missingrowsFix()
     {
         $this->errorsOn();
+        
         $resIds = [];
         $resources = 0;
         $this->db->formatConditions($this->db->formatFields('resourcecreatorResourceId') . $this->db->equal . $this->db->formatFields('resourceId'));
@@ -675,6 +678,7 @@ class repairkit_MODULE
                 $resIds[] = $row['resourceId'];
             }
         }
+        
         $string = $this->pluginmessages->text('missingRowsCount', $resources);
         $message = rawurlencode(HTML\p($this->pluginmessages->text('success', $string), 'success', 'center'));
         header("Location: index.php?action=repairkit_missingrowsInit&message=$message");
@@ -683,9 +687,10 @@ class repairkit_MODULE
     /**
      * Fix various creator errors
      */
-    public function creators()
+    public function creatorsFix()
     {
         $this->errorsOn();
+        
         $creatorIds = [];
         // In some cases, 'resourcecreatorCreatorSurname' does not match the id in resourcecreatorCreatorMain
         $this->db->formatConditions(['resourcecreatorCreatorMain' => 'IS NOT NULL']);
@@ -708,6 +713,7 @@ class repairkit_MODULE
                 $this->db->update('resource_creator', ['resourcecreatorCreatorSurname' => $creatorIds[$row['resourcecreatorCreatorMain']]]);
             }
         }
+        
         $message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
         header("Location: index.php?action=repairkit_creatorsInit&message=$message");
         die;
@@ -727,14 +733,15 @@ class repairkit_MODULE
         ];
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuMissingrows')] = "missingrowsInit";
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuCreators')] = "creatorsInit";
+        $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuDatetimes')] = "DatetimesInit";
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuDbIntegrity')] = "dbIntegrityInit";
     }
     /**
-     * checkDbIntegrityInvalidDatetime
+     * datetimesCheck
      *
      * @return bool
      */
-    private function checkDbIntegrityInvalidDatetime()
+    private function datetimesCheck()
     {
         $this->db->formatConditions(['resourcemetadataTimestamp' => '0000-00-00 00:00:00']);
         if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataTimestamp')))
@@ -790,7 +797,7 @@ class repairkit_MODULE
         return FALSE;
     }
     /**
-     * checkDbIntegrity
+     * dbIntegrityCheck
      *
      * Error Codes:
      * - 0, OK db object
@@ -803,7 +810,7 @@ class repairkit_MODULE
      *
      * @return array
      */
-    private function checkDbIntegrity($currentDbSchema, $correctDbSchema)
+    private function dbIntegrityCheck($currentDbSchema, $correctDbSchema)
     {
         $dbError = [
             "database" => [],
@@ -1032,7 +1039,7 @@ class repairkit_MODULE
     }
     
     /**
-     * dbIntegrityReport
+     * dbIntegrityDisplay
      *
      * @param array $dbErrors
      * @param array $currentDbSchema
@@ -1040,7 +1047,7 @@ class repairkit_MODULE
      *
      * @return bool
      */
-    private function dbIntegrityReport($dbErrors, $currentDbSchema, $correctDbSchema)
+    private function dbIntegrityDisplay($dbErrors, $currentDbSchema, $correctDbSchema)
     {
         $nbErrorDb = 0;
         $nbErrorTable = 0;
@@ -1682,8 +1689,10 @@ class repairkit_MODULE
      * 2. Find the minimum value in the table then set all incorrect fields to that. Otherwise,
      * 3. If all values are incorrect, then set all values to default.
      */
-    private function fixDatetimeFields()
+    private function datetimesFix()
     {
+        $this->errorsOn();
+        
         // user_register
         $this->db->formatConditions($this->db->formatFields('userregisterTimestamp'));
         $minArray = $this->db->selectMin('user_register', 'userregisterTimestamp');
@@ -1800,28 +1809,10 @@ class repairkit_MODULE
         }
         $this->db->formatConditions(['resourcemetadataTimestampEdited' => '0000-00-00 00:00:00']);
         $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
-    }
-    /**
-     * missingrowsDisplay
-     */
-    private function missingrowsDisplay()
-    {
-        $pString = HTML\p($this->pluginmessages->text('missingrowsPreamble'));
-        $pString .= FORM\formHeader("repairkit_missingrows");
-        $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
-        $pString .= FORM\formEnd();
-        GLOBALS::addTplVar('content', $pString);
-    }
-    /**
-     * creatorsDisplay
-     */
-    private function creatorsDisplay()
-    {
-        $pString = HTML\p($this->pluginmessages->text('creatorsPreamble'));
-        $pString .= FORM\formHeader("repairkit_creators");
-        $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
-        $pString .= FORM\formEnd();
-        GLOBALS::addTplVar('content', $pString);
+        
+        $message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
+        header("Location: index.php?action=repairkit_datetimesInit&message=$message");
+        die;
     }
     /**
      * Turn error reporting on

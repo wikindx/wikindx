@@ -1689,7 +1689,7 @@ class repairkit_MODULE
      * 2. Find the minimum value in the table then set all incorrect fields to that. Otherwise,
      * 3. If all values are incorrect, then set all values to default.
      */
-    private function datetimesFix()
+    public function datetimesFix()
     {
         $this->errorsOn();
         

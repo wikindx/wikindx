@@ -278,7 +278,7 @@ class repairkit_MODULE
      */
     private function changeDbCollation($dbDef)
     {
-        $sql = "ALTER DATABASE " . $tableDef["Table"] . " CHARACTER SET " . $dbDef["character_set"] . " COLLATE " . $dbDef["collation"] . ";";
+        $sql = "ALTER DATABASE " . WIKINDX_DB . " CHARACTER SET " . $dbDef["collation"] . " COLLATE " . $dbDef["character_set"] . ";";
         $this->db->query($sql);
     }
     

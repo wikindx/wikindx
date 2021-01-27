@@ -600,7 +600,7 @@ class repairkit_MODULE
             "HASH" => " USING HASH ",
             "RTREE" => "", // Not used (for MyISAM storage engine only)
         ];
-        $sql .= " USING " . $indexType[$indexDef["Index_type"]] . " ";
+        $sql .= " " . $indexType[$indexDef["Index_type"]] . " ";
         
         $sql .= " ( ";
             foreach($indicesDef as $indexDef)

@@ -253,6 +253,19 @@ class repairkit_MODULE
                     
                     if ($e["Code"] == 1)
                     {
+                        // Remove indices before others field changes.
+                        // A length change on (var)char field can raise an error about
+                        // index length limits and prevent all other corrections.
+                        foreach ($correctDbSchema["indices"] as $i)
+                        {
+                            if (
+                                mb_strtolower($i["Table"]) == mb_strtolower($e["Table"])
+                                && mb_strtolower($i["Column_name"]) == mb_strtolower($e["Field"])
+                            ) {
+                                $this->dropIndex($i["Table"], $i["Key_name"]);
+                            }
+                        }
+                        
                         // NOK
                         $this->changeField($fieldCurrent, $fieldCorrect);
                     }

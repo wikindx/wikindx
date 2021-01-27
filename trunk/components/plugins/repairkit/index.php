@@ -162,7 +162,60 @@ class repairkit_MODULE
                 
                 foreach ($dbErrors["tables"] as $e)
                 {
+                    // Search the correct definition
+                    $tableCorrect = [];
+                    foreach ($tableArrayCorrect as $t)
+                    {
+                        if ($t["Table"] == $e["Table"])
+                        {
+                            $tableCorrect = $t;
+                            break;
+                        }
+                    }
+                    // Search the current definition
+                    $tableCurrent = [];
+                    foreach ($tableArrayCurrent as $t)
+                    {
+                        if (mb_strtolower($t["Table"]) == mb_strtolower($e["Table"]))
+                        {
+                            $tableCurrent = $t;
+                            break;
+                        }
+                    }
                     
+                    if ($e["Code"] == 1)
+                    {
+                        // NOK table
+                        // If the table is empty it's easier to recreate it. 
+                        if ($this->db->tableIsEmpty($this->db->basicTable($e["Table"])))
+                        {
+                            $this->dropTable($e["Table"]);
+                            $this->createTable($e["Table"]);
+                        }
+                        else
+                        {
+                            $this->changeTableCollation($tableCorrect);
+                            $this->changeTableEngine($tableCorrect);
+                            
+                            if (array_key_exists("Table", $tableArrayCurrent) && $tableCorrect["Table"] != $tableCurrent["Table"])
+                            {
+                                $this->renameTable($tableCurrent["Table"], $tableCorrect["Table"]);
+                            }
+                        }
+                    }
+                    elseif ($e["Code"] == 2)
+                    {
+                        // Missing table
+                        $this->createTable($e["Table"]);
+                    }
+                    elseif ($e["Code"] == 3)
+                    {
+                        // Supernumerary table (provided it is empty)
+                        if ($this->db->tableIsEmpty($this->db->basicTable($e["Table"])))
+                        {
+                            $this->dropTable($e["Table"]);
+                        }
+                    }
                 }
             }
             // FIELDS

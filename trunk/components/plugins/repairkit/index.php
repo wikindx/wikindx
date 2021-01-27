@@ -290,8 +290,18 @@ class repairkit_MODULE
                 $indexArrayCorrect = $correctDbSchema["indices"];
                 $indexArrayCurrent = $currentDbSchema["indices"];
                 
-                foreach ($dbErrors["indices"] as $e)
+                foreach ($dbErrors["indices"] as $k => $e)
                 {
+                    // When an index is multi-field, we must fix it only once,
+                    // so we must skip the definition of secondary fields
+                    if (
+                        $k > 0
+                        && $dbErrors["indices"][$k]["Table"] == $e["Table"]
+                        && $dbErrors["indices"][$k]["Key_name"] == $e["Key_name"]
+                    ) {
+                        continue;
+                    }
+                    
                     // Search the correct definition
                     $indexCorrect = [];
                     foreach ($indexArrayCorrect as $i)
@@ -300,6 +310,7 @@ class repairkit_MODULE
                             mb_strtolower($i["Table"]) == mb_strtolower($e["Table"])
                             && mb_strtolower($i["Key_name"]) == mb_strtolower($e["Key_name"])
                         ) {
+                            // Gathers the definitions of all the fields of a multi-field index
                             $indexCorrect[] = $i;
                         }
                     }
@@ -311,6 +322,7 @@ class repairkit_MODULE
                             mb_strtolower($i["Table"]) == mb_strtolower($e["Table"])
                             && mb_strtolower($i["Key_name"]) == mb_strtolower($e["Key_name"])
                         ) {
+                            // Gathers the definitions of all the fields of a multi-field index
                             $indexCurrent[] = $i;
                         }
                     }

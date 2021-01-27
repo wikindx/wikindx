@@ -473,7 +473,7 @@ class repairkit_MODULE
     /*
      * Change a field of a table
      */
-    private function changeField($fieldDef)
+    private function changeField($fieldDefOld, $fieldDef)
     {
         // cf. https://dev.mysql.com/doc/refman/5.7/en/create-table.html
         // cf. https://dev.mysql.com/doc/refman/5.7/en/alter-table.html
@@ -482,7 +482,7 @@ class repairkit_MODULE
         $sql = "ALTER TABLE " . $fieldDef["Table"] . " ";
         
         // alter_option (column_name)
-        $sql .= " CHANGE COLUMN " . $fieldDef["Field"] . " `" . $fieldDef["Field"] . "` ";
+        $sql .= " CHANGE COLUMN `" . (count($fieldDefOld) > 0 ? $fieldDefOld["Field"] : $fieldDef["Field"]) . "` `" . $fieldDef["Field"] . "` ";
         
         // column_definition (data_type)
         $sql .= " " . $fieldDef["Type"] . " ";
@@ -492,15 +492,15 @@ class repairkit_MODULE
         
         // column_definition (default value)
         if ($fieldDef["Default"] == "current_timestamp()")
-            $sql .= " " . $fieldDef["Default"] . " ";
+            $sql .= " DEFAULT " . $fieldDef["Default"] . " ";
         elseif ($fieldDef["Default"] != NULL)
-            $sql .= " '" . $this->db->escapeString($fieldDef["Default"]) . "' ";
+            $sql .= " DEFAULT '" . $this->db->escapeString($fieldDef["Default"]) . "' ";
         
         // column_definition (extra clause)
         if ($fieldDef["Extra"] == "on update current_timestamp()")
-            $sql .= " " . $fieldDef["Default"] . " ";
+            $sql .= " " . $fieldDef["Extra"] . " ";
         elseif ($fieldDef["Extra"] == "auto_increment")
-            $sql .= " " . $fieldDef["Default"] . " ";
+            $sql .= " " . $fieldDef["Extra"] . " ";
         
         // column_definition (collation)
         $sql .= $fieldDef["Collation"] == NULL ? "" : " COLLATE " . $fieldDef["Collation"] . " ";

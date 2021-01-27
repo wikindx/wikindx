@@ -219,7 +219,7 @@ class repairkit_MODULE
                 }
             }
             // FIELDS
-            elseif (count($dbErrors["fields"]) > 0)
+            /*elseif (count($dbErrors["fields"]) > 0)
             {
                 $fieldArrayCorrect = $correctDbSchema["fields"];
                 $fieldArrayCurrent = $currentDbSchema["fields"];
@@ -270,7 +270,7 @@ class repairkit_MODULE
                         }
                     }
                 }
-            }
+            }*/
             // INDICES
             elseif (count($dbErrors["indices"]) > 0)
             {
@@ -279,7 +279,45 @@ class repairkit_MODULE
                 
                 foreach ($dbErrors["indices"] as $e)
                 {
+                    // Search the correct definition
+                    $indexCorrect = [];
+                    foreach ($indexArrayCorrect as $i)
+                    {
+                        if (
+                            mb_strtolower($i["Table"]) == mb_strtolower($e["Table"])
+                            && mb_strtolower($i["Key_name"]) == mb_strtolower($e["Key_name"])
+                        ) {
+                            $indexCorrect[] = $i;
+                        }
+                    }
+                    // Search the current definition
+                    $indexCurrent = [];
+                    foreach ($indexArrayCurrent as $i)
+                    {
+                        if (
+                            mb_strtolower($i["Table"]) == mb_strtolower($e["Table"])
+                            && mb_strtolower($i["Key_name"]) == mb_strtolower($e["Key_name"])
+                        ) {
+                            $indexCurrent[] = $i;
+                        }
+                    }
                     
+                    if ($e["Code"] == 1)
+                    {
+                        // NOK
+                        $this->dropIndex($indexCurrent[0]["Table"], $indexCurrent[0]["Key_name"]);
+                        $this->createIndex($indexCorrect);
+                    }
+                    elseif ($e["Code"] == 2)
+                    {
+                        // Missing
+                        $this->createIndex($indexCorrect);
+                    }
+                    elseif ($e["Code"] == 3)
+                    {
+                        // Supernumerary
+                        $this->dropIndex($indexCurrent[0]["Table"], $indexCurrent[0]["Key_name"]);
+                    }
                 }
             }
             
@@ -580,7 +618,7 @@ class repairkit_MODULE
             // Primary Key
             $sql .= " ADD PRIMARY KEY ";
         }
-        elseif ($indexDef["Non_unique"] == "1")
+        elseif ($indexDef["Non_unique"] == "0")
         {
             // unique Key
             $sql .= " ADD UNIQUE KEY `" . $indexDef["Key_name"] . "` ";
@@ -630,16 +668,19 @@ class repairkit_MODULE
     
     /*
      * Drop an index from a table
+     *
+     * @param string $table Fullname of a table
+     * @param string $index Name of an index
      */
-    private function dropIndex($indexDef)
+    private function dropIndex($table, $index)
     {
         // cf. https://dev.mysql.com/doc/refman/5.7/en/alter-table.html
         // cf. https://dev.mysql.com/doc/refman/5.7/en/drop-index.html
         
-        if ($indexDef["Key_name"] == "PRIMARY")
-            $sql = "ALTER TABLE " . $indexDef["Table"] . " DROP PRIMARY KEY;";
+        if ($index == "PRIMARY")
+            $sql = "ALTER TABLE " . $table . " DROP PRIMARY KEY;";
         else
-            $sql = "ALTER TABLE " . $indexDef["Table"] . " DROP INDEX " . $indexDef["Key_name"] . ";";
+            $sql = "ALTER TABLE " . $table . " DROP INDEX " . $index . ";";
         
         $this->db->query($sql);
     }

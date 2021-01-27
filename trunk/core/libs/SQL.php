@@ -312,7 +312,7 @@ class SQL
         $tables = $this->listTables();
         foreach ($tables as $k => $table)
         {
-            $basicTable = preg_replace("/^" . preg_quote(WIKINDX_DB_TABLEPREFIX, "/") . "/ui", '', $table);
+            $basicTable = $this->basicTable($table);
             
             if (strpos($basicTable, 'plugin_') === 0)
             {
@@ -1634,6 +1634,18 @@ class SQL
 
             return $this->delimit($tableListe, $brackets);
         }
+    }
+    
+    /**
+     * Return a table name without prefix
+     *
+     * @param string $table A prefixed table name
+     *
+     * @return string
+     */
+    public function basicTable($table)
+    {
+        return preg_replace("/^" . preg_quote(WIKINDX_DB_TABLEPREFIX, "/") . "/ui", "", $table);
     }
     /**
      * Create a WHERE() statement

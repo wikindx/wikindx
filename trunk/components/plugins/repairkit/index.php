@@ -185,7 +185,7 @@ class repairkit_MODULE
                     
                     if ($e["Code"] == 1)
                     {
-                        // NOK table
+                        // NOK
                         // If the table is empty it's easier to recreate it. 
                         if ($this->db->tableIsEmpty($this->db->basicTable($e["Table"])))
                         {
@@ -205,12 +205,12 @@ class repairkit_MODULE
                     }
                     elseif ($e["Code"] == 2)
                     {
-                        // Missing table
+                        // Missing
                         $this->createTable($e["Table"]);
                     }
                     elseif ($e["Code"] == 3)
                     {
-                        // Supernumerary table (provided it is empty)
+                        // Supernumerary (provided it is empty)
                         if ($this->db->tableIsEmpty($this->db->basicTable($e["Table"])))
                         {
                             $this->dropTable($e["Table"]);
@@ -226,7 +226,49 @@ class repairkit_MODULE
                 
                 foreach ($dbErrors["fields"] as $e)
                 {
+                    // Search the correct definition
+                    $fieldCorrect = [];
+                    foreach ($fieldArrayCorrect as $f)
+                    {
+                        if (
+                            $f["Table"] == $e["Table"]
+                            && $f["Field"] == $e["Field"]
+                        ) {
+                            $fieldCorrect = $f;
+                            break;
+                        }
+                    }
+                    // Search the current definition
+                    $fieldCurrent = [];
+                    foreach ($fieldArrayCurrent as $f)
+                    {
+                        if (
+                            mb_strtolower($f["Table"]) == mb_strtolower($e["Table"])
+                            && mb_strtolower($f["Field"]) == mb_strtolower($e["Field"])
+                        ) {
+                            $fieldCurrent = $f;
+                            break;
+                        }
+                    }
                     
+                    if ($e["Code"] == 1)
+                    {
+                        // NOK
+                        $this->changeField($fieldCurrent, $fieldCorrect);
+                    }
+                    elseif ($e["Code"] == 2)
+                    {
+                        // Missing
+                        $this->createField($fieldCorrect);
+                    }
+                    elseif ($e["Code"] == 3)
+                    {
+                        // Supernumerary (provided it is empty)
+                        if ($this->db->tableIsEmpty($this->db->basicTable($e["Table"])))
+                        {
+                            $this->dropField($fieldCurrent);
+                        }
+                    }
                 }
             }
             // INDICES

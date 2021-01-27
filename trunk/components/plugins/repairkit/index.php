@@ -102,6 +102,7 @@ class repairkit_MODULE
         {
             // Database can be fixed
             $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble3', $wVersion));
+            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble4', $wVersion));
             $pString .= FORM\formHeader("repairkit_dbIntegrityFix");
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "OK")));
             $pString .= FORM\formEnd();
@@ -117,6 +118,10 @@ class repairkit_MODULE
     }
     /**
      * dbIntegrityFix
+     *
+     * Each type of fix is not mixed with an other type of fix
+     * because some of them are dependent on a lower or higer level of SQL object.
+     * They are done by descending to the lowest SQL object level : db, table, field, index.
      */
     public function dbIntegrityFix()
     {

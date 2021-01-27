@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: repairkit\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-14 01:37+0100\n"
+"POT-Creation-Date: 2021-01-28 00:37+0100\n"
 "PO-Revision-Date: 2019-09-27 01:50+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -40,40 +40,42 @@ msgstr ""
 msgid "Fix creators"
 msgstr ""
 
+#: components/plugins/repairkit/repairkitmessages.php:32
+#: components/plugins/repairkit/repairkitmessages.php:40
+msgid "Fix Datetimes"
+msgstr ""
+
 #. *
 #. * Headings
 #.
-#: components/plugins/repairkit/repairkitmessages.php:35
+#: components/plugins/repairkit/repairkitmessages.php:36
 msgid "Missing Rows"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:36
+#: components/plugins/repairkit/repairkitmessages.php:37
 msgid "Dump Database Schema"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:37
+#: components/plugins/repairkit/repairkitmessages.php:38
 msgid "Database Integrity"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:38
+#: components/plugins/repairkit/repairkitmessages.php:39
 msgid "Fix Creators"
 msgstr ""
 
-#. *
-#. * Text
-#.
-#: components/plugins/repairkit/repairkitmessages.php:42
+#: components/plugins/repairkit/repairkitmessages.php:45
 msgid ""
 "Depending on the size of your database, this operation can be memory "
 "intensive. The plugin turns on error reporting so, if you see a memory error, "
 "adjust memory in config.php and try again."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:43
+#: components/plugins/repairkit/repairkitmessages.php:46
 msgid "It is assumed you have backed up your database."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:44
+#: components/plugins/repairkit/repairkitmessages.php:47
 msgid ""
 "Sometimes rows required in other tables are not created when new resources "
 "are added and this can lead to problems in searching etc. If such missing "
@@ -81,67 +83,68 @@ msgid ""
 "NULL) data."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:45
+#: components/plugins/repairkit/repairkitmessages.php:48
 msgid "Fix various errors regarding creators."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:46
+#: components/plugins/repairkit/repairkitmessages.php:49
+msgid ""
+"There are invalid datetime field values ('0000-00-00 00:00:00') that must be "
+"fixed."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:50
 msgid ""
 "Before checking the database integrity, you should ensure that your database "
 "(currently version ###)"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:47
+#: components/plugins/repairkit/repairkitmessages.php:51
 msgid "matches the WIKINDX version (currently version ###)."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:48
+#: components/plugins/repairkit/repairkitmessages.php:52
 msgid "The database structure is correct and there is nothing to fix."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:49
+#: components/plugins/repairkit/repairkitmessages.php:53
 msgid ""
 "The database structure differs to the final release database structure for "
 "version ### (see report below). This could be because you have been updating "
 "this database with pre-release SVN code that has upgraded the structure in "
-"incremental steps. Click on OK to fix this. Note: this fix does NOT fix "
-"missing tables or missing fields – it will only fix variances in engine, "
-"collation, indices, field types, and null and default values. Remember, this "
-"fix is a last resort for those cases where a production (rather than a test) "
-"database has been mistakenly upgraded with SVN code. As always, backup your "
-"database before proceeding."
-msgstr ""
-
-#: components/plugins/repairkit/repairkitmessages.php:50
-msgid "Successfully fixed. ###"
-msgstr ""
-
-#: components/plugins/repairkit/repairkitmessages.php:51
-msgid ": ### resources fixed."
-msgstr ""
-
-#: components/plugins/repairkit/repairkitmessages.php:52
-msgid "Invalid or missing input"
-msgstr ""
-
-#: components/plugins/repairkit/repairkitmessages.php:53
-msgid "Unable to write to file."
+"incremental steps. Click on OK to fix this. Note: this program does NOT fix "
+"supernumerary tables or fields when they are not empty, name changes (unless "
+"it is only case). Remember, this fix is a last resort for those cases where a "
+"production (rather than a test) database has been mistakenly upgraded with "
+"SVN code. As always, backup your database before proceeding."
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:54
-msgid "Unable to read file."
+msgid ""
+"Corrections are not all applied at once. They are batch applied from the "
+"highest level SQL objects to the lowest level. When one correction depends on "
+"another, an SQL object can be redefined and raise a temporary definition "
+"error. If a correction crashes, this program may not be complete enough or "
+"the database cannot be repaired without human intervention. Open a ticket on "
+"SourceForge if you experience a crash. "
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:55
-msgid "The database is missing the following tables and cannot be fixed:"
+msgid "Successfully fixed. ###"
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:56
-msgid "The database is missing the following fields and cannot be fixed:"
+msgid ": ### resources fixed."
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:57
-msgid ""
-"There are invalid datetime field values ('0000-00-00 00:00:00') that must be "
-"fixed."
+msgid "Invalid or missing input"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:58
+msgid "Unable to write to file."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:59
+msgid "Unable to read file."
 msgstr ""

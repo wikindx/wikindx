@@ -669,6 +669,8 @@ class repairkit_MODULE
     /*
      * Drop an index from a table
      *
+     * Simulate an IF EXISTS clause that is missing in MySQL SQL dialect.
+     *
      * @param string $table Fullname of a table
      * @param string $index Name of an index
      */
@@ -677,12 +679,24 @@ class repairkit_MODULE
         // cf. https://dev.mysql.com/doc/refman/5.7/en/alter-table.html
         // cf. https://dev.mysql.com/doc/refman/5.7/en/drop-index.html
         
-        if ($index == "PRIMARY")
-            $sql = "ALTER TABLE " . $table . " DROP PRIMARY KEY;";
-        else
-            $sql = "ALTER TABLE " . $table . " DROP INDEX " . $index . ";";
-        
-        $this->db->query($sql);
+        if ($this->db->queryFetchFirstField("
+                SELECT EXISTS(
+                    SELECT 1
+                    FROM INFORMATION_SCHEMA.STATISTICS
+                    WHERE
+            	    	INDEX_SCHEMA LIKE '" . WIKINDX_DB . "'
+                        AND LOWER(TABLE_NAME) LIKE LOWER('$table')
+                        AND LOWER(INDEX_NAME) = LOWER('$index')
+                ) AS IfIndexExists;
+            ")
+        ) {            
+            if ($index == "PRIMARY")
+                $sql = "ALTER TABLE " . $table . " DROP PRIMARY KEY;";
+            else
+                $sql = "ALTER TABLE " . $table . " DROP INDEX " . $index . ";";
+            
+            $this->db->query($sql);
+        }
     }
     
     /**

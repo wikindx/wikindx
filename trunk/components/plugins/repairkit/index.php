@@ -84,8 +84,10 @@ class repairkit_MODULE
 
             return;
         }
+        
         $currentDbSchema = $this->db->createRepairKitDbSchema();
         $correctDbSchema = $this->db->getRepairKitDbSchema(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA);
+        
         if ($correctDbSchema === FALSE)
         {
             $pString .= HTML\p($this->pluginmessages->text('fileReadError'), 'error');
@@ -118,9 +120,21 @@ class repairkit_MODULE
      */
     public function dbIntegrityFix()
     {
+        $wVersion = WIKINDX_INTERNAL_VERSION;
+        $dbVersion = \UPDATE\getCoreInternalVersion($this->db);
+        if (floatval($dbVersion) != floatval($wVersion))
+        {
+            // Abort: we should not be there if the version if not the current!
+            // Display the report silently
+            $this->dbIntegrityInit();
+            die();
+        }
+        
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDbIntegrity'));
+        
         $currentDbSchema = $this->db->createRepairKitDbSchema();
         $correctDbSchema = $this->db->getRepairKitDbSchema(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA);
+        
         if ($correctDbSchema === FALSE)
         {
             $pString = HTML\p($this->pluginmessages->text('fileReadError'), 'error');
@@ -128,144 +142,160 @@ class repairkit_MODULE
 
             return;
         }
-        foreach ($correctDbSchema as $table => $tableArray)
+        
+        $dbErrors = $this->dbIntegrityCheck($currentDbSchema, $correctDbSchema);
+        
+        // Errors need to be fixed
+        if ($dbErrors["count"] > 0)
         {
-            if (!array_key_exists($table, $currentDbSchema))
-            {	// skip missing tables
-                continue;
-            }
-            $this->getDbInconsistencies($currentDbSchema, $tableArray, $table);
-        }
-        if (empty($this->dbTableInconsistenciesFix) && empty($this->dbFieldInconsistenciesFix) &&
-            empty($this->dbKeyInconsistenciesFix) && empty($this->dbIndexInconsistenciesFix))
-        {
-            $pString = HTML\p($this->pluginmessages->text('dbIntegrityPreamble2')); // nothing to fix
-            GLOBALS::addTplVar('content', $pString);
-
-            return;
-        }
-
-        // Remove wrong indices before others field changes.
-        // A length change on (var)char field can raise an error about
-        // index length limits and prevent all other corrections.
-        foreach ($this->dbKeyInconsistenciesFix as $table => $fields)
-        {
-            if (array_key_exists($table, $correctDbSchema))
+            // DATABASE
+            if (count($dbErrors["database"]) > 0)
             {
-                foreach ($correctDbSchema[$table]['fields'][0] as $correctField)
+                // Since there are only two easy cases, fix them in a single action
+                $this->changeDbCollation($correctDbSchema["database"]);
+            }
+            // TABLES
+            elseif (count($dbErrors["tables"]) > 0)
+            {
+                $tableArrayCorrect = $correctDbSchema["tables"];
+                $tableArrayCurrent = $currentDbSchema["tables"];
+                
+                foreach ($dbErrors["tables"] as $e)
                 {
-                    if (array_search($correctField['Field'], $fields) !== FALSE)
+                    
+                }
+            }
+            // FIELDS
+            elseif (count($dbErrors["fields"]) > 0)
+            {
+                $fieldArrayCorrect = $correctDbSchema["fields"];
+                $fieldArrayCurrent = $currentDbSchema["fields"];
+                
+                foreach ($dbErrors["fields"] as $e)
+                {
+                    
+                }
+            }
+            // INDICES
+            elseif (count($dbErrors["indices"]) > 0)
+            {
+                $indexArrayCorrect = $correctDbSchema["indices"];
+                $indexArrayCurrent = $currentDbSchema["indices"];
+                
+                foreach ($dbErrors["indices"] as $e)
+                {
+                    
+                }
+            }
+            
+            
+            /*
+            // Remove wrong indices before others field changes.
+            // A length change on (var)char field can raise an error about
+            // index length limits and prevent all other corrections.
+            foreach ($this->dbKeyInconsistenciesFix as $table => $fields)
+            {
+                if (array_key_exists($table, $correctDbSchema))
+                {
+                    foreach ($correctDbSchema[$table]['fields'][0] as $correctField)
                     {
-                        $fieldName = $correctField['Field'];
-                        if (!$correctField['Key'])
+                        if (array_search($correctField['Field'], $fields) !== FALSE)
                         {
-                            $this->db->query("DROP INDEX `$fieldName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table`");
+                            $fieldName = $correctField['Field'];
+                            if (!$correctField['Key'])
+                            {
+                                $this->db->query("DROP INDEX `$fieldName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table`");
+                            }
                         }
                     }
                 }
             }
-        }
-        foreach ($this->dbIndexInconsistenciesFix as $table => $fields)
-        {
-            foreach ($fields as $parts)
+            foreach ($this->dbIndexInconsistenciesFix as $table => $fields)
             {
-                $keyName = $parts['Key_name'];
-                //				$columnName = $parts['Column_name'];
-                //				$subPart = $parts['Sub_part'] ? '(' . $parts['Sub_part'] . ')' : FALSE;
-                // quietly drop any existing indices before adding them anew with the correct configuration
-                $this->db->queryNoError("DROP INDEX `$keyName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table`");
-            }
-        }
-        foreach ($this->dbTableInconsistenciesFix as $index => $tables)
-        {
-            if ($index == 'collation')
-            {
-                foreach ($tables as $table)
+                foreach ($fields as $parts)
                 {
-                    $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci");
+                    $keyName = $parts['Key_name'];
+                    //				$columnName = $parts['Column_name'];
+                    //				$subPart = $parts['Sub_part'] ? '(' . $parts['Sub_part'] . ')' : FALSE;
+                    // quietly drop any existing indices before adding them anew with the correct configuration
+                    $this->db->queryNoError("DROP INDEX `$keyName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table`");
                 }
             }
-            elseif ($index == 'engine')
+            foreach ($this->dbFieldInconsistenciesFix as $table => $fields)
             {
-                foreach ($tables as $table)
+                if (array_key_exists($table, $correctDbSchema))
                 {
-                    $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` ENGINE=InnoDB");
-                }
-            }
-        }
-        foreach ($this->dbFieldInconsistenciesFix as $table => $fields)
-        {
-            if (array_key_exists($table, $correctDbSchema))
-            {
-                foreach ($correctDbSchema[$table]['fields'][0] as $correctField)
-                {
-                    if (array_search($correctField['Field'], $fields) !== FALSE)
+                    foreach ($correctDbSchema[$table]['fields'][0] as $correctField)
                     {
-                        $fieldName = $correctField['Field'];
-                        $type = $correctField['Type'];
-                        if (!$correctField['Default'])
+                        if (array_search($correctField['Field'], $fields) !== FALSE)
                         {
-                            $default = 'DEFAULT';
-                        }
-                        else
-                        {
-                            if ($type == 'datetime')
+                            $fieldName = $correctField['Field'];
+                            $type = $correctField['Type'];
+                            if (!$correctField['Default'])
                             {
-                                $default = "DEFAULT " . $correctField['Default'];
+                                $default = 'DEFAULT';
                             }
                             else
                             {
-                                $default = "DEFAULT '" . $correctField['Default'] . "'";
+                                if ($type == 'datetime')
+                                {
+                                    $default = "DEFAULT " . $correctField['Default'];
+                                }
+                                else
+                                {
+                                    $default = "DEFAULT '" . $correctField['Default'] . "'";
+                                }
+                            }
+                            if ($correctField['Null'] == 'NO')
+                            {
+                                $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type NOT NULL");
+                            }
+                            else
+                            {
+                                $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type $default NULL");
                             }
                         }
-                        if ($correctField['Null'] == 'NO')
-                        {
-                            $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type NOT NULL");
-                        }
-                        else
-                        {
-                            $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type $default NULL");
-                        }
                     }
                 }
             }
-        }
-        // Recreate right indices
-        foreach ($this->dbKeyInconsistenciesFix as $table => $fields)
-        {
-            if (array_key_exists($table, $correctDbSchema))
+            // Recreate right indices
+            foreach ($this->dbKeyInconsistenciesFix as $table => $fields)
             {
-                foreach ($correctDbSchema[$table]['fields'][0] as $correctField)
+                if (array_key_exists($table, $correctDbSchema))
                 {
-                    if (array_search($correctField['Field'], $fields) !== FALSE)
+                    foreach ($correctDbSchema[$table]['fields'][0] as $correctField)
                     {
-                        $fieldName = $correctField['Field'];
-                        if (!$correctField['Key'])
+                        if (array_search($correctField['Field'], $fields) !== FALSE)
                         {
-                            //Don't drop indices twice
-                            continue;
-                        }
-                        elseif ($correctField['Key'] == 'MUL')
-                        {
-                            $this->db->query("CREATE INDEX `$fieldName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table` (`$fieldName`)");
-                        }
-                        elseif ($correctField['Key'] == 'PRI')
-                        { // Primary key
-                            $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY `$fieldName` INT(11) PRIMARY KEY AUTO_INCREMENT");
+                            $fieldName = $correctField['Field'];
+                            if (!$correctField['Key'])
+                            {
+                                //Don't drop indices twice
+                                continue;
+                            }
+                            elseif ($correctField['Key'] == 'MUL')
+                            {
+                                $this->db->query("CREATE INDEX `$fieldName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table` (`$fieldName`)");
+                            }
+                            elseif ($correctField['Key'] == 'PRI')
+                            { // Primary key
+                                $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY `$fieldName` INT(11) PRIMARY KEY AUTO_INCREMENT");
+                            }
                         }
                     }
                 }
             }
-        }
-        foreach ($this->dbIndexInconsistenciesFix as $table => $fields)
-        {
-            foreach ($fields as $parts)
+            foreach ($this->dbIndexInconsistenciesFix as $table => $fields)
             {
-                $keyName = $parts['Key_name'];
-                $columnName = $parts['Column_name'];
-                $subPart = $parts['Sub_part'] ? '(' . $parts['Sub_part'] . ')' : FALSE;
-                $this->db->query("CREATE INDEX `$keyName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table` (`$columnName`$subPart)");
+                foreach ($fields as $parts)
+                {
+                    $keyName = $parts['Key_name'];
+                    $columnName = $parts['Column_name'];
+                    $subPart = $parts['Sub_part'] ? '(' . $parts['Sub_part'] . ')' : FALSE;
+                    $this->db->query("CREATE INDEX `$keyName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table` (`$columnName`$subPart)");
+                }
             }
+            */
         }
         
         $message = rawurlencode($this->pluginmessages->text('success'));
@@ -284,15 +314,15 @@ class repairkit_MODULE
     
     /*
      * Create a table
+     *
+     * @param string $table Fullname of a source table
      */
-    private function createTable($tableDef)
+    private function createTable($table)
     {
-        $basicTable = preg_replace("/^" . preg_quote(WIKINDX_DB_TABLEPREFIX, "/") . "/ui", '', $tableDef["Table"]);
-        
         // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
         // or /plugins/<PluginDirectory>/dbschema/full
         $dbSchemaPath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DB_SCHEMA, "full"]);
-        $sqlfile = "table_" . $basicTable . ".sql";
+        $sqlfile = "table_" . $this->db->basicTable($table) . ".sql";
         $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
         $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
         $this->db->query($sql);
@@ -300,11 +330,17 @@ class repairkit_MODULE
     
     /*
      * Rename a table
+     *
+     * @param string $src Fullname of a source table
+     * @param string $dst Fullname of a destination table
      */
-    private function renameTable($from, $to)
+    private function renameTable($src, $dst)
     {
-        $sql = "ALTER TABLE `" . $from . "` RENAME AS `" . $to . "`;";
-        $this->db->query($sql);
+        $tmpTable = uniqid(WIKINDX_DB_TABLEPREFIX);
+        
+        // Change the name of all tables to lower case (workaround for mySQL engine on case sensitive files systems)
+        $this->db->query("ALTER TABLE `" . $src . "` RENAME AS `" . $tmpTable . "`;");
+        $this->db->query("ALTER TABLE `" . $tmpTable . "` RENAME AS `" . $dst . "`;");
     }
     
     /*
@@ -332,10 +368,12 @@ class repairkit_MODULE
     
     /*
      * Drop a table
+     *
+     * @param string $table Fullname of a table
      */
-    private function dropTable($tableDef)
+    private function dropTable($table)
     {
-        $sql = "DROP TABLE IF EXISTS " . $tableDef["Table"] . ";";
+        $sql = "DROP TABLE IF EXISTS " . $table . ";";
         $this->db->query($sql);
     }
     

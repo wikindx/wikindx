@@ -219,7 +219,7 @@ class repairkit_MODULE
                 }
             }
             // FIELDS
-            /*elseif (count($dbErrors["fields"]) > 0)
+            elseif (count($dbErrors["fields"]) > 0)
             {
                 $fieldArrayCorrect = $correctDbSchema["fields"];
                 $fieldArrayCurrent = $currentDbSchema["fields"];
@@ -270,7 +270,7 @@ class repairkit_MODULE
                         }
                     }
                 }
-            }*/
+            }
             // INDICES
             elseif (count($dbErrors["indices"]) > 0)
             {

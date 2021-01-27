@@ -363,7 +363,7 @@ class SQL
                     {
                         // Keep only columns compatible with te features of the minimum MySQL Version required (5.7.5)
                         // and remove unused info
-                        if (in_array($k, ["Table", "Field", "Type", "Collation", "Null", "Key", "Default", "Extra"]))
+                        if (in_array($k, ["Table", "Field", "Type", "Collation", "Null", "Default", "Extra"]))
                         {
                             $def[$k] = $v;
                         }

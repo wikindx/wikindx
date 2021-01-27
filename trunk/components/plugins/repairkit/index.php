@@ -637,9 +637,9 @@ class repairkit_MODULE
         // cf. https://dev.mysql.com/doc/refman/5.7/en/drop-index.html
         
         if ($indexDef["Key_name"] == "PRIMARY")
-            $sql = "ALTER TABLE " . $indexDef["Table"] . " DROP INDEX " . $indexDef["Key_name"] . ";";
-        else
             $sql = "ALTER TABLE " . $indexDef["Table"] . " DROP PRIMARY KEY;";
+        else
+            $sql = "ALTER TABLE " . $indexDef["Table"] . " DROP INDEX " . $indexDef["Key_name"] . ";";
         
         $this->db->query($sql);
     }

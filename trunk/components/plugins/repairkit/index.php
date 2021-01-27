@@ -882,6 +882,35 @@ class repairkit_MODULE
             }
         }
         
+        foreach ($tableArrayCurrent as $tableCurrent)
+        {
+            // Field supernumerary (by default)
+            $match = 3;
+            
+            foreach ($tableArrayCorrect as $tableCorrect)
+            {
+                if (mb_strtolower($tableCurrent["Table"]) == mb_strtolower($tableCorrect["Table"]))
+                {
+                    // Field present
+                    $match = 0;
+                    break;
+                }
+            }
+            
+            if ($match > 0)
+            {
+                // Provided the table is empty
+                if ($this->db->tableIsEmpty($this->db->basicTable($tableCurrent["Table"])))
+                {
+                    $dbError["tables"][] = [
+                        "Table" => $tableCurrent["Table"],
+                        "Code" => $match,
+                    ];
+                    $dbError["count"]++;
+                }
+            }
+        }
+        
         
         // FIELDS
         $fieldArrayCorrect = $correctDbSchema["fields"];
@@ -938,8 +967,7 @@ class repairkit_MODULE
                 if (
                     mb_strtolower($fieldCurrent["Table"]) == mb_strtolower($fieldCorrect["Table"])
                     && mb_strtolower($fieldCurrent["Field"]) == mb_strtolower($fieldCorrect["Field"])
-                )
-                {
+                ) {
                     // Field present
                     $match = 0;
                     break;
@@ -1015,8 +1043,7 @@ class repairkit_MODULE
                 if (
                     mb_strtolower($indexCurrent["Table"]) == mb_strtolower($indexCorrect["Table"])
                     && mb_strtolower($indexCurrent["Key_name"]) == mb_strtolower($indexCorrect["Key_name"])
-                )
-                {
+                ) {
                     // Index declaration matching
                     $match = 0;
                     break;
@@ -1222,6 +1249,17 @@ class repairkit_MODULE
                             $pString .= \HTML\td($v, "missing");
                         }
                         $pString .= \HTML\td("Missing", "missing");
+                    $pString .= \HTML\trEnd();
+                }
+                elseif ($e["Code"] == 3)
+                {
+                    // Table missing
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        foreach ($tableCurrent as $v)
+                        {
+                            $pString .= \HTML\td($v, "supernumerary");
+                        }
+                        $pString .= \HTML\td("Supernumerary", "supernumerary");
                     $pString .= \HTML\trEnd();
                 }
             }

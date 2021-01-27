@@ -1067,12 +1067,16 @@ class repairkit_MODULE
             
             if ($match > 0)
             {
-                $dbError["fields"][] = [
-                    "Table" => $fieldCurrent["Table"],
-                    "Field" => $fieldCurrent["Field"],
-                    "Code" => $match,
-                ];
-                $dbError["count"]++;
+                // Provided the table is empty
+                if ($this->db->tableIsEmpty($this->db->basicTable($fieldCurrent["Table"])))
+                {
+                    $dbError["fields"][] = [
+                        "Table" => $fieldCurrent["Table"],
+                        "Field" => $fieldCurrent["Field"],
+                        "Code" => $match,
+                    ];
+                    $dbError["count"]++;
+                }
             }
         }
         
@@ -1311,7 +1315,7 @@ class repairkit_MODULE
                 
                 foreach($tableArrayCurrent as $t)
                 {
-                    if ($t["Table"] == $e["Table"])
+                    if (mb_strtolower($t["Table"]) == mb_strtolower($e["Table"]))
                     {
                         $tableCurrent = $t;
                     }
@@ -1407,8 +1411,10 @@ class repairkit_MODULE
                 
                 foreach($fieldArrayCurrent as $f)
                 {
-                    if ($f["Table"] == $e["Table"] && $f["Field"] == $e["Field"])
-                    {
+                    if (
+                        mb_strtolower($f["Table"]) == mb_strtolower($e["Table"])
+                        && mb_strtolower($f["Field"]) == mb_strtolower($e["Field"])
+                    ) {
                         $fieldCurrent = $f;
                     }
                 }
@@ -1507,9 +1513,9 @@ class repairkit_MODULE
                 foreach($indexArrayCurrent as $i)
                 {
                     if (
-                        $i["Table"] == $e["Table"]
-                        && $i["Key_name"] == $e["Key_name"]
-                        && $i["Seq_in_index"] == $e["Seq_in_index"]
+                        mb_strtolower($i["Table"]) == mb_strtolower($e["Table"])
+                        && mb_strtolower($i["Key_name"]) == mb_strtolower($e["Key_name"])
+                        && mb_strtolower($i["Seq_in_index"]) == mb_strtolower($e["Seq_in_index"])
                     ) {
                         $indexCurrent = $i;
                     }

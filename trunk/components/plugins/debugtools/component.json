@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "debugtools",
-    "component_version": "363",
+    "component_version": "382",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Debug Tools",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "386a760ee65faa66f74508024af141c2d3d7b67468881d894fcb3188ad88b087"
+    "component_sha256": "cb52b35821746ed989cc14509d8c9d6670ed8490494c5f9109c85c6b085af07d"
 }

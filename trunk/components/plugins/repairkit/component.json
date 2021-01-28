@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "repairkit",
-    "component_version": "363",
+    "component_version": "382",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Repair Kit",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "390bec13a591c07c1a62fce151322912285db237ab9d981b92e068b73470f8fb"
+    "component_sha256": "00e9c530383cbf0d704876ef6069683e80de6496e3af0868359a79495434e174"
 }

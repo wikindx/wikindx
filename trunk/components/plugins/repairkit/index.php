@@ -1058,6 +1058,7 @@ class repairkit_MODULE
             {
                 $sql .= " " . $k . " = (SELECT $k FROM " . $this->db->formatTables("users") . " WHERE usersId = $oldusersId), ";
             }
+            $sql = rtrim($sql);
             $sql = rtrim($sql, ",");
             $sql .= " WHERE usersId = $newusersId;" . LF;
             

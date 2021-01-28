@@ -70,8 +70,11 @@ class repairkit_MODULE
     public function dbIntegrityInit()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDbIntegrity'));
-        
-        $pString  = $this->vars['message'] ?? "";
+        $pString = '';
+        if (array_key_exists('uuid', $this->vars)) {
+	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
+//        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+		}
         
         $wVersion = WIKINDX_INTERNAL_VERSION;
         $dbVersion = \UPDATE\getCoreInternalVersion($this->db);
@@ -352,8 +355,10 @@ class repairkit_MODULE
             }
         }
         
-        $message = rawurlencode($this->pluginmessages->text('success'));
-        header("Location: index.php?action=repairkit_dbIntegrityInit&message=$message");
+        $message = HTML\p($this->pluginmessages->text('success'), 'success', 'center');
+        $uuid = \TEMPSTORAGE\getUuid($this->db);
+    	\TEMPSTORAGE\store($this->db, $uuid, ['repairkitMessages' => $message]);
+        header("Location: index.php?action=repairkit_dbIntegrityInit&uuid=$uuid");
         die;
     }
     
@@ -626,8 +631,11 @@ class repairkit_MODULE
     public function creatorsInit()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingCreators'));
-        
-        $pString  = $this->vars['message'] ?? "";
+        $pString = '';
+        if (array_key_exists('uuid', $this->vars)) {
+	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
+//        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+		}
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
         GLOBALS::addTplVar('content', $pString);
@@ -645,8 +653,11 @@ class repairkit_MODULE
     public function datetimesInit()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDatetimes'));
-        
-        $pString  = $this->vars['message'] ?? "";
+        $pString = '';
+        if (array_key_exists('uuid', $this->vars)) {
+	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
+//        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+		}
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
         GLOBALS::addTplVar('content', $pString);
@@ -674,8 +685,11 @@ class repairkit_MODULE
     public function missingrowsInit()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingMissingrows'));
-        
-        $pString  = $this->vars['message'] ?? "";
+        $pString = '';
+        if (array_key_exists('uuid', $this->vars)) {
+	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
+//        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+		}
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
         
@@ -694,8 +708,11 @@ class repairkit_MODULE
     public function duplicateUsersInit()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDuplicateUsers'));
-        
-        $pString  = $this->vars['message'] ?? "";
+        $pString = '';
+        if (array_key_exists('uuid', $this->vars)) {
+	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
+//        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+		}
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
         GLOBALS::addTplVar('content', $pString);
@@ -958,8 +975,10 @@ class repairkit_MODULE
         }
         
         $string = $this->pluginmessages->text('missingRowsCount', $resources);
-        $message = rawurlencode(HTML\p($this->pluginmessages->text('success', $string), 'success', 'center'));
-        header("Location: index.php?action=repairkit_missingrowsInit&message=$message");
+        $message = HTML\p($this->pluginmessages->text('success', $string), 'success', 'center');
+        $uuid = \TEMPSTORAGE\getUuid($this->db);
+    	\TEMPSTORAGE\store($this->db, $uuid, ['repairkitMessages' => $message]);
+        header("Location: index.php?action=repairkit_missingrowsInit&uuid=$uuid");
         die;
     }
     /**
@@ -992,8 +1011,10 @@ class repairkit_MODULE
             }
         }
         
-        $message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
-        header("Location: index.php?action=repairkit_creatorsInit&message=$message");
+        $message = HTML\p($this->pluginmessages->text('success'), 'success', 'center');
+        $uuid = \TEMPSTORAGE\getUuid($this->db);
+    	\TEMPSTORAGE\store($this->db, $uuid, ['repairkitMessages' => $message]);
+        header("Location: index.php?action=repairkit_creatorsInit&uuid=$uuid");
         die;
     }
     /**
@@ -1006,11 +1027,11 @@ class repairkit_MODULE
         $selection = $this->vars;
         $newusersId = $selection["usersId"];
         $oldusersId = $selection["usersId"] == $selection["user1"] ? $selection["user2"] : $selection["user1"];
-        
+/*        
         $pString  = "";
         $pString .= "newusersId = $newusersId" . BR;
         $pString .= "oldusersId = $oldusersId" . BR;
-
+*/
         foreach ($selection as $k => $v)
         {
             // Forget data that is not a field selection
@@ -1040,28 +1061,30 @@ class repairkit_MODULE
             $sql = rtrim($sql, ",");
             $sql .= " WHERE usersId = $newusersId;" . LF;
             
-            $pString .= "sql (merge fields) = " . BR . "<pre>$sql</pre>" . BR;
-            //$this->db->queryNoResult($sql);
+//            $pString .= "sql (merge fields) = " . BR . "<pre>$sql</pre>" . BR;
+            $this->db->queryNoResult($sql);
         }
         
         // Merge user account data
-        $sql = "...";
-        $pString .= "sql (merge data) = " . BR . "<pre>$sql</pre>" . BR;
+ //       $sql = "...";
+ //       $pString .= "sql (merge data) = " . BR . "<pre>$sql</pre>" . BR;
         
         
         // Remove the old user account
         $sql = "DELETE FROM " . $this->db->formatTables("users") . " WHERE usersId = $oldusersId;";
-        $pString .= "sql (delete) = " . BR . "<pre>$sql</pre>" . BR;
-        //$this->db->queryNoResult($sql);
+//        $pString .= "sql (delete) = " . BR . "<pre>$sql</pre>" . BR;
+        $this->db->queryNoResult($sql);
         
         // Merge oldusersId data from other tables
         $this->duplicateUsersMergeData($newusersId, $oldusersId);
         
-        GLOBALS::addTplVar('content', $pString);
+//        GLOBALS::addTplVar('content', $pString);
         
-        /*$message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
-        header("Location: index.php?action=repairkit_duplicateUsersInit&message=$message");
-        die;*/
+        $message = HTML\p($this->pluginmessages->text('success'), 'success', 'center');
+        $uuid = \TEMPSTORAGE\getUuid($this->db);
+    	\TEMPSTORAGE\store($this->db, $uuid, ['repairkitMessages' => $message]);
+        header("Location: index.php?action=repairkit_duplicateUsersInit&uuid=$uuid");
+        die;
     }
     /**
      * Merge old user's data in various tables to the new user
@@ -1075,6 +1098,10 @@ class repairkit_MODULE
 		$updateArray = ['userbibliographyUserId' => $newusersId];
         $this->db->formatConditionsOneField($oldusersId, 'userbibliographyUserId');
         $this->db->update('user_bibliography', $updateArray);
+        // Merge from user_groups
+		$updateArray = ['usergroupsAdminId' => $newusersId];
+        $this->db->formatConditionsOneField($oldusersId, 'usergroupsAdminId');
+        $this->db->update('user_groups', $updateArray);
         // Merge from user_groups_users
 		$updateArray = ['usergroupsusersUserId' => $newusersId];
         $this->db->formatConditionsOneField($oldusersId, 'usergroupsusersUserId');
@@ -2235,8 +2262,10 @@ class repairkit_MODULE
         $this->db->formatConditions(['resourcemetadataTimestampEdited' => '0000-00-00 00:00:00']);
         $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
         
-        $message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
-        header("Location: index.php?action=repairkit_datetimesInit&message=$message");
+        $message = HTML\p($this->pluginmessages->text('success'), 'success', 'center');
+        $uuid = \TEMPSTORAGE\getUuid($this->db);
+    	\TEMPSTORAGE\store($this->db, $uuid, ['repairkitMessages' => $message]);
+        header("Location: index.php?action=repairkit_datetimesInit&uuid=$uuid");
         die;
     }
     /**

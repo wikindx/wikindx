@@ -1504,6 +1504,9 @@ class USER
         	$this->db->formatConditionsOneField($input, 'userbibliographyUserId');
         	$this->db->delete('user_bibliography');
         }
+        // Delete from user_groups
+        $this->db->formatConditionsOneField($input, 'usergroupsAdminId');
+        $this->db->delete('user_groups');
         // Delete from user_groups_users
         $this->db->formatConditionsOneField($input, 'usergroupsusersUserId');
         $this->db->delete('user_groups_users');

@@ -29,6 +29,7 @@ class repairkitMessages
             "menuDumpSchema" => dgettext($domain, "Dump DB schema"),
             "menuDbIntegrity" => dgettext($domain, "DB integrity"),
             "menuCreators" => dgettext($domain, "Fix creators"),
+            "menuDuplicateUsers" => dgettext($domain, "Deduplicate users"),
             "menuDatetimes" => dgettext($domain, "Fix Datetimes"),
             /**
              * Headings
@@ -37,6 +38,7 @@ class repairkitMessages
             "headingDumpSchema" => dgettext($domain, "Dump Database Schema"),
             "headingDbIntegrity" => dgettext($domain, "Database Integrity"),
             "headingCreators" => dgettext($domain, "Fix Creators"),
+            "headingDuplicateUsers" => dgettext($domain, "Deduplicate users"),
             "headingDatetimes" => dgettext($domain, "Fix Datetimes"),
             /**
              * Text
@@ -47,6 +49,7 @@ class repairkitMessages
             "missingrowsPreamble" => dgettext($domain, "Sometimes rows required in other tables are not created when new resources are added and this can lead to problems in searching etc. If such missing rows are identified, they will be created and filled with default (usually NULL) data."),
             "creatorsPreamble" => dgettext($domain, "Fix various errors regarding creators."),
             "datetimesPreamble" => dgettext($domain, "There are invalid datetime field values ('0000-00-00 00:00:00') that must be fixed."),
+            "duplicateUsersPreamble" => dgettext($domain, "The user login must be unique for the authentication to work without error but before version 6.3.0 this constraint did not exist. With this screen you can merge two user accounts by choosing the target account which will be credited with all the data of the second (resources, notes ...)."),
             "dbIntegrityPreamble1a" => dgettext($domain, "Before checking the database integrity, you should ensure that your database (currently version ###)"),
             "dbIntegrityPreamble1b" => dgettext($domain, "matches the WIKINDX version (currently version ###)."),
             "dbIntegrityPreamble2" => dgettext($domain, "The database structure is correct and there is nothing to fix."),

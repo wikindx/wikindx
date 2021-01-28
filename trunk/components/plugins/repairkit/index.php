@@ -687,6 +687,175 @@ class repairkit_MODULE
         $pString .= FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
     }
+    
+    /**
+     * duplicateUsersInit
+     */
+    public function duplicateUsersInit()
+    {
+        GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDuplicateUsers'));
+        
+        $pString  = $this->vars['message'] ?? "";
+        $pString .= HTML\p($this->pluginmessages->text('preamble1'));
+        $pString .= HTML\p($this->pluginmessages->text('preamble2'));
+        GLOBALS::addTplVar('content', $pString);
+        
+        $pString  = HTML\p($this->pluginmessages->text('duplicateUsersPreamble'));
+        $pString .= HTML\p("Please choose two user accounts to merge.", "bold");
+        
+        $rs = $this->db->query("
+            SELECT
+                usersId,
+                usersUsername,
+                usersPassword,
+                usersFullname,
+                usersEmail,
+                usersTimestamp
+            FROM " . $this->db->formatTables("users") . "
+            WHERE LOWER(usersUsername) IN (
+                SELECT LOWER(usersUsername)
+                FROM " . $this->db->formatTables("users") . "
+                GROUP BY LOWER(usersUsername)
+                HAVING COUNT(*) > 1
+            )
+            ORDER BY usersUsername, usersId
+        ");
+        
+        if (is_array($rs))
+        {
+            $pString .= FORM\formHeader("repairkit_duplicateUsersSelectFields");
+            $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
+            
+            $pString .= \HTML\tableStart();
+            
+            $pString .= \HTML\theadStart();
+                $pString .= \HTML\trStart();
+                    $pString .= \HTML\th("Select user 1");
+                    $pString .= \HTML\th("Select user 2");
+                    foreach ($rs[0] as $key => $value)
+                    {
+                        $pString .= \HTML\th($key);
+                    }
+                $pString .= \HTML\trEnd();
+            $pString .= \HTML\theadEnd();
+            
+            $pString .= \HTML\tbodyStart();
+            
+            $k = 0;
+            foreach ($rs as $row)
+            {
+                $k++;
+                $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                    $pString .= \HTML\td(\FORM\radioButton(FALSE, "usersId1", $row["usersId"]));
+                    $pString .= \HTML\td(\FORM\radioButton(FALSE, "usersId2", $row["usersId"]));
+                    foreach ($row as $v)
+                    {
+                        $pString .= \HTML\td($v);
+                    }
+                $pString .= \HTML\trEnd();
+            }
+            
+            $pString .= \HTML\tbodyEnd();
+            
+            $pString .= \HTML\tableEnd();
+            
+            $pString .= FORM\formEnd();
+        }
+        else
+        {
+            $pString .= HTML\p($this->pluginmessages->text('noErrorsFound'), "bold");
+        }
+        
+        GLOBALS::addTplVar('content', $pString);
+    }
+    
+    /**
+     * duplicateUsersSelectFields
+     */
+    public function duplicateUsersSelectFields()
+    {
+        $usersId1 = $this->vars['usersId1'] ?? "";
+        $usersId2 = $this->vars['usersId2'] ?? "";
+        
+        if ($usersId1 == $usersId2 || $usersId1 == "" || $usersId2 == "")
+        {
+            $this->duplicateUsersInit();
+            return;
+        }
+        GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDuplicateUsers'));
+        
+        $pString  = $this->vars['message'] ?? "";
+        $pString .= HTML\p($this->pluginmessages->text('preamble1'));
+        $pString .= HTML\p($this->pluginmessages->text('preamble2'));
+        GLOBALS::addTplVar('content', $pString);
+        
+        $pString  = HTML\p($this->pluginmessages->text('duplicateUsersPreamble'));
+        $pString .= HTML\p("For each field, please choose the value to retain in the merged account (only different fields are displayed).", "bold");
+        
+        $rs = $this->db->query("
+            SELECT *
+            FROM " . $this->db->formatTables("users") . "
+            WHERE usersId IN ($usersId1, $usersId2)
+            ORDER BY usersId
+        ");
+        
+        if (is_array($rs))
+        {
+            $user1 = $rs[0];
+            $user2 = $rs[1];
+            
+            $pString .= FORM\formHeader("repairkit_duplicateUsersFix");
+            $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
+            
+            $pString .= \FORM\hidden("user1", $user1["usersId"]);
+            $pString .= \FORM\hidden("user2", $user2["usersId"]);
+            
+            $pString .= \HTML\tableStart();
+            
+            $pString .= \HTML\theadStart();
+                $pString .= \HTML\trStart();
+                    $pString .= \HTML\th("Field name");
+                    $pString .= \HTML\th("User 1");
+                    $pString .= \HTML\th("User 2");
+                $pString .= \HTML\trEnd();
+            $pString .= \HTML\theadEnd();
+            
+            $pString .= \HTML\tbodyStart();
+            
+            $k = 0;
+            foreach (array_keys($user1) as $field)
+            {
+                if ($user1[$field] !== $user2[$field])
+                {
+                    $k++;
+                    $pString .= \HTML\trStart("alternate" . ($k % 2 ? "1" : "2"));
+                        $pString .= \HTML\td($field);
+                        $pString .= \HTML\td(
+                            \FORM\radioButton(FALSE, $field, $user1["usersId"], TRUE)
+                            . $user1[$field]
+                        );
+                        $pString .= \HTML\td(
+                            \FORM\radioButton(FALSE, $field, $user2["usersId"])
+                            . $user2[$field]
+                        );
+                    $pString .= \HTML\trEnd();
+                }
+            }
+            
+            $pString .= \HTML\tbodyEnd();
+            
+            $pString .= \HTML\tableEnd();
+            
+            $pString .= FORM\formEnd();
+        }
+        else
+        {
+            $pString .= HTML\p($this->pluginmessages->text('noErrorsFound'), "bold");
+        }
+        
+        GLOBALS::addTplVar('content', $pString);
+    }
+    
     /**
      * AJAX-based DIV content creator
      */
@@ -828,6 +997,70 @@ class repairkit_MODULE
         die;
     }
     /**
+     * Deduplicate two users
+     */
+    public function duplicateUsersFix()
+    {
+        $this->errorsOn();
+        
+        $selection = $this->vars;
+        $newusersId = $selection["usersId"];
+        $oldusersId = $selection["usersId"] == $selection["user1"] ? $selection["user2"] : $selection["user1"];
+        
+        $pString  = "";
+        $pString .= "newusersId = $newusersId" . BR;
+        $pString .= "oldusersId = $oldusersId" . BR;
+        
+        foreach ($selection as $k => $v)
+        {
+            // Forget data that is not a field selection
+            if (!\UTILS\matchPrefix($k, "users"))
+            {
+                unset($selection[$k]);
+            }
+            // Forget fields that come from the target user account
+            if ($v == $newusersId)
+            {
+                unset($selection[$k]);
+            }
+        }
+        
+        
+        //$pString .= "this->vars = " . print_r($this->vars, TRUE) . BR;
+        //$pString .= "selection = " . print_r($selection, TRUE) . BR;
+        
+        // Merge user account fields
+        if (count($selection) > 0)
+        {
+            $sql = "UPDATE " . $this->db->formatTables("users") . " SET ";
+            foreach ($selection as $k => $v)
+            {
+                $sql .= " " . $k . " = (SELECT $k FROM " . $this->db->formatTables("users") . " WHERE usersId = $oldusersId), ";
+            }
+            $sql = rtrim($sql, ",");
+            $sql .= " WHERE usersId = $newusersId;" . LF;
+            
+            $pString .= "sql (merge fields) = " . BR . "<pre>$sql</pre>" . BR;
+            //$this->db->queryNoResult($sql);
+        }
+        
+        // Merge user account data
+        $sql = "...";
+        $pString .= "sql (merge data) = " . BR . "<pre>$sql</pre>" . BR;
+        
+        
+        // Remove the old user account
+        $sql = "DELETE FROM " . $this->db->formatTables("users") . " WHERE usersId = $oldusersId;";
+        $pString .= "sql (delete) = " . BR . "<pre>$sql</pre>" . BR;
+        //$this->db->queryNoResult($sql);
+        
+        GLOBALS::addTplVar('content', $pString);
+        
+        /*$message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
+        header("Location: index.php?action=repairkit_duplicateUsersInit&message=$message");
+        die;*/
+    }
+    /**
      * Make the menus
      *
      * @param array $menuArray
@@ -842,7 +1075,8 @@ class repairkit_MODULE
         ];
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuMissingrows')] = "missingrowsInit";
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuCreators')] = "creatorsInit";
-        $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuDatetimes')] = "DatetimesInit";
+        $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuDatetimes')] = "datetimesInit";
+        $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuDuplicateUsers')] = "duplicateUsersInit";
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuDbIntegrity')] = "dbIntegrityInit";
     }
     /**

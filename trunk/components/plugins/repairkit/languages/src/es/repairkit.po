@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: repairkit\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-01-28 00:37+0100\n"
+"POT-Creation-Date: 2021-01-28 03:25+0100\n"
 "PO-Revision-Date: 2019-09-27 01:50+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -40,41 +40,46 @@ msgid "Fix creators"
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:32
-#: components/plugins/repairkit/repairkitmessages.php:40
+#: components/plugins/repairkit/repairkitmessages.php:41
+msgid "Deduplicate users"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:33
+#: components/plugins/repairkit/repairkitmessages.php:42
 msgid "Fix Datetimes"
 msgstr ""
 
 #. *
 #. * Headings
 #.
-#: components/plugins/repairkit/repairkitmessages.php:36
+#: components/plugins/repairkit/repairkitmessages.php:37
 msgid "Missing Rows"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:37
+#: components/plugins/repairkit/repairkitmessages.php:38
 msgid "Dump Database Schema"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:38
+#: components/plugins/repairkit/repairkitmessages.php:39
 msgid "Database Integrity"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:39
+#: components/plugins/repairkit/repairkitmessages.php:40
 msgid "Fix Creators"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:45
+#: components/plugins/repairkit/repairkitmessages.php:47
 msgid ""
 "Depending on the size of your database, this operation can be memory "
 "intensive. The plugin turns on error reporting so, if you see a memory error, "
 "adjust memory in config.php and try again."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:46
+#: components/plugins/repairkit/repairkitmessages.php:48
 msgid "It is assumed you have backed up your database."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:47
+#: components/plugins/repairkit/repairkitmessages.php:49
 msgid ""
 "Sometimes rows required in other tables are not created when new resources "
 "are added and this can lead to problems in searching etc. If such missing "
@@ -82,31 +87,49 @@ msgid ""
 "NULL) data."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:48
+#: components/plugins/repairkit/repairkitmessages.php:50
 msgid "Fix various errors regarding creators."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:49
+#: components/plugins/repairkit/repairkitmessages.php:51
 msgid ""
 "There are invalid datetime field values ('0000-00-00 00:00:00') that must be "
 "fixed."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:50
+#: components/plugins/repairkit/repairkitmessages.php:52
+msgid ""
+"The user login must be unique for the authentication to work without error "
+"but before version 6.3.0 this constraint did not exist. With this screen you "
+"can merge two user accounts by choosing the target account which will be "
+"credited with all the data of the second (resources, notes ...)."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:53
+msgid "Please choose two user accounts to merge."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:54
+msgid ""
+"For each field, please choose the value to retain in the merged account (only "
+"different fields are displayed)."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:55
 msgid ""
 "Before checking the database integrity, you should ensure that your database "
 "(currently version ###)"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:51
+#: components/plugins/repairkit/repairkitmessages.php:56
 msgid "matches the WIKINDX version (currently version ###)."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:52
+#: components/plugins/repairkit/repairkitmessages.php:57
 msgid "The database structure is correct and there is nothing to fix."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:53
+#: components/plugins/repairkit/repairkitmessages.php:58
 msgid ""
 "The database structure differs to the final release database structure for "
 "version ### (see report below). This could be because you have been updating "
@@ -118,32 +141,48 @@ msgid ""
 "SVN code. As always, backup your database before proceeding."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:54
+#: components/plugins/repairkit/repairkitmessages.php:59
 msgid ""
 "Corrections are not all applied at once. They are batch applied from the "
 "highest level SQL objects to the lowest level. When one correction depends on "
 "another, an SQL object can be redefined and raise a temporary definition "
 "error. If a correction crashes, this program may not be complete enough or "
 "the database cannot be repaired without human intervention. Open a ticket on "
-"SourceForge if you experience a crash. "
+"SourceForge if you experience a crash."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:55
+#: components/plugins/repairkit/repairkitmessages.php:60
+msgid "DB Integrity State"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:61
+msgid "Tables Integrity State"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:62
+msgid "Fields Integrity State"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:63
+msgid "Indices Integrity State"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:64
 msgid "Successfully fixed. ###"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:56
+#: components/plugins/repairkit/repairkitmessages.php:65
 msgid ": ### resources fixed."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:57
+#: components/plugins/repairkit/repairkitmessages.php:66
 msgid "Invalid or missing input"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:58
+#: components/plugins/repairkit/repairkitmessages.php:67
 msgid "Unable to write to file."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:59
+#: components/plugins/repairkit/repairkitmessages.php:68
 msgid "Unable to read file."
 msgstr ""

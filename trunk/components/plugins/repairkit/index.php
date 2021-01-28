@@ -701,7 +701,7 @@ class repairkit_MODULE
         GLOBALS::addTplVar('content', $pString);
         
         $pString  = HTML\p($this->pluginmessages->text('duplicateUsersPreamble'));
-        $pString .= HTML\p("Please choose two user accounts to merge.", "bold");
+        $pString  = HTML\p($this->pluginmessages->text('duplicateUsersPreamble2'), "bold");
         
         $rs = $this->db->query("
             SELECT
@@ -790,7 +790,7 @@ class repairkit_MODULE
         GLOBALS::addTplVar('content', $pString);
         
         $pString  = HTML\p($this->pluginmessages->text('duplicateUsersPreamble'));
-        $pString .= HTML\p("For each field, please choose the value to retain in the merged account (only different fields are displayed).", "bold");
+        $pString  = HTML\p($this->pluginmessages->text('duplicateUsersPreamble3'), "bold");
         
         $rs = $this->db->query("
             SELECT *
@@ -1447,46 +1447,12 @@ class repairkit_MODULE
                 }
             </style>";
         GLOBALS::addTplVar('content', $pString);
-        
-        // LEGEND
-        $pString  = \HTML\tableStart();
-        
-        $pString .= \HTML\tableCaption("Integrity State Legend", "tcaption");
-        
-        $pString .= \HTML\theadStart();
-            $pString .= \HTML\trStart();
-            $pString .= \HTML\th("Integrity State");
-            $pString .= \HTML\th("Fix");
-            $pString .= \HTML\th("Color");
-            $pString .= \HTML\trEnd();
-        $pString .= \HTML\theadEnd();
-        
-        $pString .= \HTML\tbodyStart();
-            $pString .= \HTML\trStart("alternate1");
-            $pString .= \HTML\td("NOK");
-            $pString .= \HTML\td("Redefine");
-            $pString .= \HTML\td("Red", "nok");
-            $pString .= \HTML\trEnd();
-            $pString .= \HTML\trStart("alternate2");
-            $pString .= \HTML\td("Missing");
-            $pString .= \HTML\td("Create");
-            $pString .= \HTML\td("Brown", "missing");
-            $pString .= \HTML\trEnd();
-            $pString .= \HTML\trStart("alternate1");
-            $pString .= \HTML\td("Supernumerary");
-            $pString .= \HTML\td("Ignore (prevent data loss) or delete");
-            $pString .= \HTML\td("Blue", "supernumerary");
-            $pString .= \HTML\trEnd();
-        $pString .= \HTML\tbodyEnd();
-
-        $pString .= \HTML\tableEnd();
-        GLOBALS::addTplVar('content', $pString);
 
 
         // DATABASE
         $pString  = \HTML\tableStart();
         
-        $pString .= \HTML\tableCaption("DB Integrity State", "tcaption");
+        $pString .= \HTML\tableCaption($this->pluginmessages->text('dbIntegrityCaptionDb'), "tcaption");
         
         $pString .= \HTML\theadStart();
             $pString .= \HTML\trStart();
@@ -1518,7 +1484,7 @@ class repairkit_MODULE
         else
         {
             $pString .= \HTML\trStart("alternate1 center");
-                $pString .= \HTML\td("No error detected", "ok", 3);
+                $pString .= \HTML\td($this->pluginmessages->text('noErrorsFound'), "ok", 3);
             $pString .= \HTML\trEnd();
         }
         
@@ -1534,7 +1500,7 @@ class repairkit_MODULE
         
         $pString  = \HTML\tableStart();
         
-        $pString .= \HTML\tableCaption("Tables Integrity State", "tcaption");
+        $pString .= \HTML\tableCaption($this->pluginmessages->text('dbIntegrityCaptionTables'), "tcaption");
         
         $pString .= \HTML\theadStart();
             $pString .= \HTML\trStart();
@@ -1614,7 +1580,7 @@ class repairkit_MODULE
         else
         {
             $pString .= \HTML\trStart("alternate1 center");
-                $pString .= \HTML\td("No error detected", "ok", count($tableArrayCorrect[0]) + 1);
+                $pString .= \HTML\td($this->pluginmessages->text('noErrorsFound'), "ok", count($tableArrayCorrect[0]) + 1);
             $pString .= \HTML\trEnd();
         }
         
@@ -1630,7 +1596,7 @@ class repairkit_MODULE
         
         $pString  = \HTML\tableStart();
         
-        $pString .= \HTML\tableCaption("Fields Integrity State", "tcaption");
+        $pString .= \HTML\tableCaption($this->pluginmessages->text('dbIntegrityCaptionFields'), "tcaption");
         
         $pString .= \HTML\theadStart();
             $pString .= \HTML\trStart();
@@ -1712,7 +1678,7 @@ class repairkit_MODULE
         else
         {
             $pString .= \HTML\trStart("alternate1 center");
-                $pString .= \HTML\td("No error detected", "ok", count($fieldArrayCorrect[0]) + 1);
+                $pString .= \HTML\td($this->pluginmessages->text('noErrorsFound'), "ok", count($fieldArrayCorrect[0]) + 1);
             $pString .= \HTML\trEnd();
         }
 
@@ -1728,7 +1694,7 @@ class repairkit_MODULE
         
         $pString  = \HTML\tableStart();
         
-        $pString .= \HTML\tableCaption("Indices Integrity State", "tcaption");
+        $pString .= \HTML\tableCaption($this->pluginmessages->text('dbIntegrityCaptionFields'), "tcaption");
         
         $pString .= \HTML\theadStart();
             $pString .= \HTML\trStart();
@@ -1814,7 +1780,7 @@ class repairkit_MODULE
         else
         {
             $pString .= \HTML\trStart("alternate1 center");
-                $pString .= \HTML\td("No error detected", "ok", count($indexArrayCorrect[0]) + 1);
+                $pString .= \HTML\td($this->pluginmessages->text('noErrorsFound'), "ok", count($indexArrayCorrect[0]) + 1);
             $pString .= \HTML\trEnd();
         }
         

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-01-25 20:26+0100\n"
+"POT-Creation-Date: 2021-01-28 03:15+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/saulery/teams/103557/"
@@ -25,31 +25,31 @@ msgstr ""
 "> 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: core/libs/sql.php:3045 core/messages/errors.php:92
+#: core/libs/sql.php:3057 core/messages/errors.php:92
 msgid "Unable to open ### database."
 msgstr "Не вдалося відкрити базу даних ###."
 
-#: core/libs/sql.php:3046 core/messages/errors.php:93
+#: core/libs/sql.php:3058 core/messages/errors.php:93
 msgid "Unable to write to database."
 msgstr "Не вдалося виконати запис до бази даних."
 
-#: core/libs/sql.php:3047 core/messages/errors.php:94
+#: core/libs/sql.php:3059 core/messages/errors.php:94
 msgid "Unable to read database."
 msgstr "Не вдалося прочитати базу даних."
 
-#: core/libs/sql.php:3048 core/messages/errors.php:95
+#: core/libs/sql.php:3060 core/messages/errors.php:95
 msgid "Missing Configuration Parameter in config.php."
 msgstr "У config.php пропущено параметр налаштовування."
 
-#: core/libs/sql.php:3049 core/messages/errors.php:96
+#: core/libs/sql.php:3061 core/messages/errors.php:96
 msgid "Unable to open update/createMySQL.txt."
 msgstr "Не вдалося відкрити update/createMySQL.txt."
 
-#: core/libs/sql.php:3050 core/messages/errors.php:97
+#: core/libs/sql.php:3062 core/messages/errors.php:97
 msgid "No RDBMS type selected in config.php."
 msgstr "У config.php не вибрано типу RDBMS."
 
-#: core/libs/sql.php:3051 core/messages/errors.php:98
+#: core/libs/sql.php:3063 core/messages/errors.php:98
 msgid "Missing subQuery statement."
 msgstr "Пропущено інструкцію subQuery."
 

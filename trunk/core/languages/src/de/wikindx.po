@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-01-11 14:11+0100\n"
+"POT-Creation-Date: 2021-01-28 03:15+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,36 +16,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: core/libs/sql.php:3024 core/messages/errors.php:92
+#: core/libs/sql.php:3057 core/messages/errors.php:92
 msgid "Unable to open ### database."
 msgstr "Datenbank ### kann nicht geöffnet werden."
 
-#: core/libs/sql.php:3025 core/messages/errors.php:93
+#: core/libs/sql.php:3058 core/messages/errors.php:93
 msgid "Unable to write to database."
 msgstr "In die Datenbank kann nicht geschrieben werden."
 
-#: core/libs/sql.php:3026 core/messages/errors.php:94
+#: core/libs/sql.php:3059 core/messages/errors.php:94
 msgid "Unable to read database."
 msgstr "Aus der Datenbank kann nicht gelesen werden."
 
-#: core/libs/sql.php:3027 core/messages/errors.php:95
+#: core/libs/sql.php:3060 core/messages/errors.php:95
 msgid "Missing Configuration Parameter in config.php."
 msgstr "Ein Konfigurationsparameter fehlt in config.php."
 
-#: core/libs/sql.php:3028 core/messages/errors.php:96
+#: core/libs/sql.php:3061 core/messages/errors.php:96
 msgid "Unable to open update/createMySQL.txt."
 msgstr ""
 "Die Datei updateMySQL.txt oder createMySQL.txt kann nicht geöffnet werden."
 
-#: core/libs/sql.php:3029 core/messages/errors.php:97
+#: core/libs/sql.php:3062 core/messages/errors.php:97
 msgid "No RDBMS type selected in config.php."
 msgstr "In config.php wurde kein RDBMS-Typ ausgewählt."
 
-#: core/libs/sql.php:3030 core/messages/errors.php:98
+#: core/libs/sql.php:3063 core/messages/errors.php:98
 msgid "Missing subQuery statement."
 msgstr "Fehlende subQuery-Anweisung."
 
-#. translators: When using the word processor how are extra, unnamed authors indicated?
+#. translators: When using the word processor how are extra, unnamed authors indicated? 
 #. In English this would be 'et al.' as in: 'According to Grimshaw et al., "blah blah blah".
 #: core/messages/constants.php:29
 msgid "et al."
@@ -55,10 +55,10 @@ msgstr "et al."
 #. You should not translate this string but establish a list separated by ;
 #. of the singular possessive forms of your language, if they exist.
 #. THAT END BY A POINT AND ONLY A POINT.
-#.
+#. 
 #. If your language does not use it or is incompatible with the operation described
 #. below of the word processor, put a ; in this string empty.
-#.
+#. 
 #. When using the word processor, how is singular possessive defined.
 #. This is only for a single creator's surname and, like 'et al.' above, is used
 #. to detect if a creator name should be removed from the in-text citation
@@ -95,20 +95,20 @@ msgstr "“"
 #. a list separated by ; of the most common abbreviations of your language
 #. or bibliographic styles used in your language (country)
 #. THAT END BY A POINT AND ONLY A POINT.
-#.
+#. 
 #. It is strongly recommended to leave the Latin abbreviations
 #. which are a common place of bibliographies.
-#.
+#. 
 #. Remove the English abbreviations unless they are used in your language.
-#.
+#. 
 #. Abreviations such as U.S.A., U.S.S.R., N.B. are dealt with in the code
 #. (must be capital English characters and no spaces).
 #. '...' and multiple dots consisting of two or more dots are dealt with in the code.
-#.
+#. 
 #. N.B. MATCHING IS CASE SENSITIVE. You must indicate all the possible cases of an abbreviation.
-#.
+#. 
 #. If you have no abbreviations, put a ; in this string.
-#.
+#. 
 #. When using the word processor, for certain styles the text
 #. must be split up into sentences -- e.g. APA requires that year
 #. must follow the author name and page no. follows the citation
@@ -117,7 +117,7 @@ msgstr "“"
 #. This string handles other groups of characters (commonly abbreviations)
 #. that may appear in a sentence // but do not indicate a sentence divider.
 #. If there are no such abbreviations, the string must exist and be empty.
-#.
+#. 
 #. The Latin abbreviations which are a common place of bibliographies
 #. are already included. Do not add them to your list.
 #. Latin abbreviations in order of apparition are:
@@ -138,7 +138,7 @@ msgstr "“"
 #. - sqq. : sequunturque
 #. - v. : versus
 #. - viz. : videre licet
-#.
+#. 
 #. English abbreviations in order of apparition are:
 #. - short for Brothers (as in Warner Bros.)
 #. - company
@@ -9694,6 +9694,9 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
+#~ msgid "Fix UTF8:"
+#~ msgstr "UTF8-Fehler korrigieren"
+
 #, fuzzy
 #~| msgid ""
 #~| "<ul>\n"
@@ -9762,28 +9765,6 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "will mandate a certain number of menu levels in which case, attempting to "
 #~ "change the number of menu levels for that template will make no difference."
 #~ "</li>\n"
-#~ "<li>BibTeX:  BibTeX is a bibliographic format familiar to engineers and "
-#~ "scientists.</li>\n"
-#~ "<li>CMS: If the administrator allows it, bibliographic data from WIKINDX "
-#~ "may be displayed in Content Management Systems such as MediaWiki, Moodle "
-#~ "and WordPress. To aid in this, you can display a 'cms' link that provides "
-#~ "the data required.</li>\n"
-#~ "<li>User groups: In a multi-user WIKINDX, registered users can define user "
-#~ "groups.  Potentially private information, such as comments on quotations "
-#~ "or resource musings, can then be assigned to be viewed only by members of "
-#~ "a user group.  Additionally, user groups may collaborate in building a "
-#~ "user group bibliography.</li>\n"
-#~ "<li>User bibliographies: These are drawn from the WIKINDX Master "
-#~ "Bibliography and may be personal or managed by a user group. Operations on "
-#~ "a user bibliography (such as removing resources from it) have no effect on "
-#~ "the WIKINDX Master Bibliography.</li>\n"
-#~ "<li>Email notification: Receive emails notifying of additions of resources "
-#~ "or edits to them. The days figure is a threshold – requirements to notify "
-#~ "by email are triggered only when resources are added or edited so that a "
-#~ "threshold of 7 days, for example, does not necessarily mean that the "
-#~ "notification will be sent immediately following the passing of the "
-#~ "threshold, only that the notification will be sent the next time a "
-#~ "resource is added or edited.</li>\n"
 #~ "</ul>"
 #~ msgstr ""
 #~ "<ul>\n"
@@ -9822,14 +9803,258 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "für diese Vorlagen keine Wirkung hat.</li>\n"
 #~ "</ul>"
 
-#~ msgid "Enabled Plugins"
-#~ msgstr "Plugins aktivieren"
+#~ msgid "Select the creators you wish to remove from the group"
+#~ msgstr "Wählen Sie die Urheber, die aus der Gruppe entfernt werden sollen."
 
-#~ msgid "Upgrade the Database"
-#~ msgstr "Datenbankschema aktualisieren"
+#~ msgid "Enabled Templates"
+#~ msgstr "Aktivierte Vorlagen"
 
-#~ msgid "Import BibTeX"
-#~ msgstr "BibTeX importieren"
+#~ msgid "Ungroup"
+#~ msgstr "Gruppierung aufheben"
+
+#, fuzzy
+#~| msgid "Disabled Languages"
+#~ msgid "Available Languages"
+#~ msgstr "Deaktivierte Sprachen"
+
+#, fuzzy
+#~| msgid "Reporter"
+#~ msgid "Exporter"
+#~ msgstr "Protokollführer"
+
+#~ msgid "Disabled Plugins"
+#~ msgstr "Plugins deaktivieren"
+
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Anmeldung als Superadmin:"
+
+#~ msgid ""
+#~ "If you have languages and styles that are in your WIKINDX installation "
+#~ "folders but they do not show here, then they are not compatible with this "
+#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
+#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
+#~ "localization and adminstyle plug-ins and use them to update your files."
+#~ msgstr ""
+#~ "Wenn Sie Sprachen oder Stile in Ihrem WIKINDX-Installationsverzeichnis "
+#~ "haben, die hier nicht erscheinen, dann sind sie nicht kombatibel mit "
+#~ "dieser Version von WIKINDX. Von der WIKINDX-Sourceforge-Downloadseite "
+#~ "(https://sourceforge.net/projects/wikindx//files/pluginsxxx/) können sie "
+#~ "die aktuellen Lokalisierungen und Adminstyle-Plugins herunterladen."
+
+#~ msgid "My Bibliographies"
+#~ msgstr "Meine Bibliographien"
+
+#~ msgid ""
+#~ "The upgrade process may take some time depending upon a number of factors. "
+#~ "If your database is large or your server is slow, it is advised to "
+#~ "temporarily increase 'max_execution_time' and 'memory_limit' in php.ini "
+#~ "and to restart the web server before upgrading. (You can try to increase "
+#~ "memory first in config.php -- WIKINDX_MEMORY_LIMIT -- in which case you do "
+#~ "not need to restart the server.) During upgrading, PHP error reporting is "
+#~ "turned on regardless of your config.php settings.<p> If you get a blank "
+#~ "page or an error similar to: 'Fatal error: Allowed memory size of 16777216 "
+#~ "bytes exhausted (tried to allocate 38 bytes)', then you must start the "
+#~ "upgrade process from the <strong>beginning</strong>:<br> a) Reload your "
+#~ "backed-up v.3.8.2 or v.4.x database or database tables (you have backed up "
+#~ "haven't you?);<br> b) Increase PHP memory as per the instructions above "
+#~ "(after upgrading, you can set it back to the default 64M);<br> c) Restart "
+#~ "the upgrade process.<p> The upgrade comprises several stages for a v3.8 "
+#~ "database (a v4 database is upgraded in one step): as a very rough guide "
+#~ "(and depending upon the speed of your server), the longest stages will "
+#~ "take about 25 seconds for a database of 23,000 records and the greatest "
+#~ "memory use will be about 50MB. Some of the upgrade stages that are most "
+#~ "likely to take the greatest time will safely halt if the scripts notice "
+#~ "that 'max_execution_time' is about to be exceeded -- simply keep clicking "
+#~ "on the Continue button.<p> WIKINDX v4 and higher ensures that all "
+#~ "characters are encoded as UTF-8 (to account for character sets found in "
+#~ "many of the world's languages) and the upgrade process does the necessary "
+#~ "conversion.  If, however, after the upgrade is complete, you still see "
+#~ "characters similar to 'ã¼' or 'ã¶' etc., then you should install and run "
+#~ "the repairkit plugin from the Sourceforge.net WIKINDX site.<p> Do not "
+#~ "break the process or use browser back or forward buttons.<p> "
+#~ "<strong>Before upgrading, you should ensure that all attachments in "
+#~ "wikindx3 or wikindx4 have been copied to the new wikindx/attachments/ "
+#~ "folder -- the upgrade process will remove references to attachments in the "
+#~ "database if the attachment files do not exist in the new location.</strong>"
+#~ msgstr ""
+#~ "Die Aktualisierung kann einige Zeit in Anspruch nehmen, deren Dauer von "
+#~ "einigen Faktoren abhängt. Wenn Ihre Datenbank groß oder Ihr Server langsam "
+#~ "ist, kann es sinnvoll sein, temporär den Wert 'max_execution_time' in der "
+#~ "php.ini zu vergrößern und den Webserver vor dem Aktualisierungslauf neu zu "
+#~ "starten. (Sie können auch auch zunächst versuchen, das Speicherlimit in "
+#~ "der Datei config.php zu setzen -- WIKINDX_MEMORY_LIMIT --, in diesem Fall "
+#~ "brauchen Sie den Server nicht neu starten). Während der Aktualisierung ist "
+#~ "die Anzeige von PHP-Fehlermeldungen aktiviert, unabhängig von den "
+#~ "Einstellungen in config.php. <p> Falls Sie einen Fehler der Art 'Fatal "
+#~ "error: Allowed memory size of 16777216 bytes exhausted (tried to allocate "
+#~ "38 bytes)' erhalten, müssen Sie den Aktualisierungsvorgang "
+#~ "<strong>vollständig neu durchführen</strong>:<br> a) Stellen Sie die "
+#~ "Datenbank mit Ihrer Sicherungskopie wieder her (Sie haben eine "
+#~ "Sicherungskopie angelegt, nicht wahr?); <br> b) Erhöhen sie das PHP-"
+#~ "Speicherlimit nach den Anweisungen oben (nach der Aktualisierung können "
+#~ "Sie es auf den Standardwert von 64M zurücksetzen); <br> c) Führen Sie den "
+#~ "Aktualisierungsvorgang erneut durch.<p>Die Aktualisierung besteht aus "
+#~ "mehreren Schritten: grob geschätzt (je nach Geschwindigkeit Ihres Servers) "
+#~ "braucht der längste Schritt etwa 25 Sekunden bei einer Datenbank mit "
+#~ "23.000 Einträgen, und es werden etwa 50M an Arbeitsspeicher benötig. "
+#~ "Einige der Aktualisierungsschritte, die gewöhnlich die meiste Zeit "
+#~ "brauchen, werden problemlos angehalten, wenn das Skript feststellt, dass "
+#~ "die maximal erlaubte Dauer ('max_execution_time') überschritten wird -- "
+#~ "klicken Sie einfach immer wieder auf die \"Fortsetzen\"-Schaltfläche.<p> "
+#~ "WIKINDX stellt sicher, dass alle Zeichen als UTF-8 kodiert sind (sodass "
+#~ "die Zeichensätze der meisten der Sprachen der Welt abgedeckt sind). Wenn "
+#~ "Sie aber nach Abschluss der Aktualisierung Zeichen wie 'Ã£Â¼' oder 'Ã£Â¶' "
+#~ "sehen, sollten Sie das Repairkit-Plugin von der WIKINDX-Website "
+#~ "installieren und laufen lassen.<p>Unterbrechen Sie den "
+#~ "Aktualisierungsvorgang nicht, und verwenden Sie nicht die 'Vor'- oder "
+#~ "'Zurück'-Funktionen des Browsers.<p> Vor der Aktualisierung sollten Sie "
+#~ "sicherstellen, dass Sie alle Anhänge von wikindx3 in den neuen Ordner "
+#~ "'wikindx4/attachments/' kopiert haben -- der Aktualisierungsvorgang wird "
+#~ "Verweise auf Anhänge in der Datenbank löschen, wenn die entsprechenden "
+#~ "Dateien dieser Anhänge im neuen Ordner nicht vorhanden sind."
+
+#~ msgid "Enabled Styles"
+#~ msgstr "Aktivierte Stile"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Datenbank aktualisieren"
+
+#~ msgid "bibtex"
+#~ msgstr "bibtex"
+
+#~ msgid ""
+#~ "<p>At least one template, one bibliographic style and one language must "
+#~ "remain enabled. WIKINDX expects that the English language pack is "
+#~ "available on the server (i.e. that you do not physically remove it from "
+#~ "the wikindx/languages/ folder) whether it has been disabled or not.  This "
+#~ "is because the English language pack is used to supply any messages that "
+#~ "might be missing from other language packs.</p>"
+#~ msgstr ""
+#~ "<p>Mindestens eine Vorlage, ein Bibliographiestil und eine Sprache müssen "
+#~ "aktiviert bleiben. WIKINDX erwartet, dass das englische Sprachpaket auf "
+#~ "dem Server verfügbar ist (d.h. dass Sie es nicht aus dem Verzeichnis "
+#~ "wikindx4/languages/ gelöscht haben), ganz gleich ob es deaktiviert wurde "
+#~ "oder nicht. Das englische Sprachpaket ist nötig, um alle Hinweistexte "
+#~ "anzuzeigen, die evtl. in den anderen Sprachpaketen fehlen.</p>"
+
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Mein Wikindx"
+
+#~ msgid "Unable to update database with update/updateMySQL.txt."
+#~ msgstr ""
+#~ "Die Datenbank kann nicht mit der Datei updateMySQL.txt oder createMySQL."
+#~ "txt aktualisiert werden."
+
+#~ msgid "Plugin has no README file or the README file is empty"
+#~ msgstr "Plugin hat keine README-Datei"
+
+#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
+#~ msgstr ""
+#~ "Sperre neue Ressourcen aus der öffentlichen Ansicht, bis sie von einem "
+#~ "Administrator freigegeben werden."
+
+#~ msgid "Plugin Commands"
+#~ msgstr "Plugin-Befehle"
+
+#~ msgid ""
+#~ "<p>Ensure the wikindx/plugins directories (and the index.php and config."
+#~ "php files) and the wikindx/styles, wikindx/languages and wikindx/templates "
+#~ "folders (and all files therein) can be written to by the web server user.</"
+#~ "p>"
+#~ msgstr ""
+#~ "<p>Stellen Sie sicher, dass das Verzeichnisse unter wikindx4/plugins "
+#~ "(sowie die Dateien index.php und config.php) sowie die Verzeichnisse "
+#~ "wikindx4/styles, wikindx4/languages und wikindx4/templates (einschließlich "
+#~ "aller enthaltenen Dateien) für den Webserver Schreibrechte haben.</p>"
+
+#~ msgid "Menu Location"
+#~ msgstr "Ort des Menüs"
+
+#~ msgid "There is no news available to view"
+#~ msgstr "Es gibt keine Nachrichten"
+
+#~ msgid "Configurable Inline Plugins"
+#~ msgstr "Konfigurierbare Inline-Plugins"
+
+#~ msgid ""
+#~ "Before being able to use WIKINDX, you must configure it. The minimum "
+#~ "initially required are username, password and email. From the Admin menu, "
+#~ "after configuration, you can add and edit other settings."
+#~ msgstr ""
+#~ "Bevor Sie Wikindx verwenden können, müssen Sie es zunächst konfigurieren. "
+#~ "Am Anfang sind mindestens Benutzername, Passwort und E-Mail nötig. Nach "
+#~ "der Konfikuration können Sie unter dem Administrations-Menü Kategorien, "
+#~ "Unterkategorien, Sprachen und zusätzliche Datenbankfelder (die jeweils den "
+#~ "Ressourcen zugeordnet werden können, wenn diese bearbeitet werden) sowie "
+#~ "Systembenutzer hinzufügen."
+
+#~ msgid "Disabled Templates"
+#~ msgstr "Deaktivierte Vorlagen"
+
+#~ msgid "Disabled Styles"
+#~ msgstr "Deaktivierte Stile"
+
+#~ msgid "Remove users from this group"
+#~ msgstr "Benutzer aus dieser Benutzergruppe entfernen"
+
+#~ msgid ""
+#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
+#~ "you are strongly advised not to run it on a production server -- if you "
+#~ "wish to test it, either create a new database or make a copy of your "
+#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
+#~ "have been dealt with, and the final release version provided, before using "
+#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
+#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
+#~ "detected that this is the first time a new version is being run and that "
+#~ "the database requires upgrading. This upgrading is automatic but only the "
+#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
+#~ "strong> to <strong>back up your old database</strong> first. If you do not "
+#~ "do this and you experience the memory errors detailed below when upgrading "
+#~ "your only copy of the database, then you will have irrevocably corrupted "
+#~ "the database: <em>caveat upgrader</em><p>"
+#~ msgstr ""
+#~ "Wikindx hat festgestellt, dass gerade eine neue Programmversion das erste "
+#~ "Mal gestartet wurde und das Datenbankschema aktualisiert werden muss. "
+#~ "Diese Aktualisierung verläuft völlig automatisch, kann allerdings nur vom "
+#~ "WIKINDX-Superadmin durchgeführt werden. <p>Wir <strong>empfehlen dringend</"
+#~ "strong>, eine  <strong>Sicherungskopie Ihrer bestehenden Datenbank</"
+#~ "strong> zu machen. Wenn Sie dies nicht tun und während der Aktualisierung "
+#~ "die unten beschriebenen Speicherplatzprobleme auftreten, dann kann ihre "
+#~ "Datenbank unwiderbringlich zerstört werden: <em>caveat upgrador</em><p>"
+
+#~ msgid "Configurable Menu Plugins"
+#~ msgstr "konfigurierbare Menüplugins"
+
+#~ msgid "Disabled Languages"
+#~ msgstr "Deaktivierte Sprachen"
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Aktivierte Sprachen"
+
+#~ msgid ""
+#~ "Depending on what the sources were for your resources, you may have broken "
+#~ "UTF-8 characters.  If you opt not to fix such instances now and discover "
+#~ "after the upgrade that you do have broken UTF-8 characters, you can either "
+#~ "run the upgrade again, reloading the original database, and check the "
+#~ "checkbox here or you can download and run the repairkit plugin (which "
+#~ "gives more control over what is fixed)."
+#~ msgstr ""
+#~ "Je nachdem, aus welchen Quellen Ihre Ressourcen stammen, können UTF-8-"
+#~ "Zeichen falsch importiert worden sein. Falls Sie entscheiden, solche "
+#~ "Fehler jetzt nicht korrigieren zu lassen, und dann nach der Aktualisierung "
+#~ "bemerken, dass Sie fehlerhafte UTF-8-Zeichen haben, können Sie entweder "
+#~ "die Aktualisierung nochmals durchführen und das Häkchen in der Auswahlbox "
+#~ "setzen, oder Sie können das Repairkit-Plugin herunterladen und ausführen "
+#~ "(es gibt mehr Kontrolle darüber, was korrigiert wird)."
+
+#~ msgid ""
+#~ "You are not logged on as the superAdmin: please ask that person ### to "
+#~ "carry out the upgrade through their web browser."
+#~ msgstr ""
+#~ "Sie sind nicht als Superadmin angemeldet: bitten Sie ###, die "
+#~ "Aktualisierung des Datenbankschemas vorzunehmen."
 
 #, fuzzy
 #~| msgid ""
@@ -9929,261 +10154,14 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "angezeigt.</li>\n"
 #~ "</ul>"
 
-#~ msgid ""
-#~ "You are not logged on as the superAdmin: please ask that person ### to "
-#~ "carry out the upgrade through their web browser."
-#~ msgstr ""
-#~ "Sie sind nicht als Superadmin angemeldet: bitten Sie ###, die "
-#~ "Aktualisierung des Datenbankschemas vorzunehmen."
+#~ msgid "Import BibTeX"
+#~ msgstr "BibTeX importieren"
 
-#~ msgid ""
-#~ "Depending on what the sources were for your resources, you may have broken "
-#~ "UTF-8 characters.  If you opt not to fix such instances now and discover "
-#~ "after the upgrade that you do have broken UTF-8 characters, you can either "
-#~ "run the upgrade again, reloading the original database, and check the "
-#~ "checkbox here or you can download and run the repairkit plugin (which "
-#~ "gives more control over what is fixed)."
-#~ msgstr ""
-#~ "Je nachdem, aus welchen Quellen Ihre Ressourcen stammen, können UTF-8-"
-#~ "Zeichen falsch importiert worden sein. Falls Sie entscheiden, solche "
-#~ "Fehler jetzt nicht korrigieren zu lassen, und dann nach der Aktualisierung "
-#~ "bemerken, dass Sie fehlerhafte UTF-8-Zeichen haben, können Sie entweder "
-#~ "die Aktualisierung nochmals durchführen und das Häkchen in der Auswahlbox "
-#~ "setzen, oder Sie können das Repairkit-Plugin herunterladen und ausführen "
-#~ "(es gibt mehr Kontrolle darüber, was korrigiert wird)."
+#~ msgid "Upgrade the Database"
+#~ msgstr "Datenbankschema aktualisieren"
 
-#~ msgid "Enabled Languages"
-#~ msgstr "Aktivierte Sprachen"
-
-#~ msgid "Disabled Languages"
-#~ msgstr "Deaktivierte Sprachen"
-
-#~ msgid "Configurable Menu Plugins"
-#~ msgstr "konfigurierbare Menüplugins"
-
-#~ msgid ""
-#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
-#~ "you are strongly advised not to run it on a production server -- if you "
-#~ "wish to test it, either create a new database or make a copy of your "
-#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
-#~ "have been dealt with, and the final release version provided, before using "
-#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
-#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
-#~ "detected that this is the first time a new version is being run and that "
-#~ "the database requires upgrading. This upgrading is automatic but only the "
-#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
-#~ "strong> to <strong>back up your old database</strong> first. If you do not "
-#~ "do this and you experience the memory errors detailed below when upgrading "
-#~ "your only copy of the database, then you will have irrevocably corrupted "
-#~ "the database: <em>caveat upgrader</em><p>"
-#~ msgstr ""
-#~ "Wikindx hat festgestellt, dass gerade eine neue Programmversion das erste "
-#~ "Mal gestartet wurde und das Datenbankschema aktualisiert werden muss. "
-#~ "Diese Aktualisierung verläuft völlig automatisch, kann allerdings nur vom "
-#~ "WIKINDX-Superadmin durchgeführt werden. <p>Wir <strong>empfehlen dringend</"
-#~ "strong>, eine  <strong>Sicherungskopie Ihrer bestehenden Datenbank</"
-#~ "strong> zu machen. Wenn Sie dies nicht tun und während der Aktualisierung "
-#~ "die unten beschriebenen Speicherplatzprobleme auftreten, dann kann ihre "
-#~ "Datenbank unwiderbringlich zerstört werden: <em>caveat upgrador</em><p>"
-
-#~ msgid "Remove users from this group"
-#~ msgstr "Benutzer aus dieser Benutzergruppe entfernen"
-
-#~ msgid "Disabled Styles"
-#~ msgstr "Deaktivierte Stile"
-
-#~ msgid "Disabled Templates"
-#~ msgstr "Deaktivierte Vorlagen"
-
-#~ msgid ""
-#~ "Before being able to use WIKINDX, you must configure it. The minimum "
-#~ "initially required are username, password and email. From the Admin menu, "
-#~ "after configuration, you can add and edit other settings."
-#~ msgstr ""
-#~ "Bevor Sie Wikindx verwenden können, müssen Sie es zunächst konfigurieren. "
-#~ "Am Anfang sind mindestens Benutzername, Passwort und E-Mail nötig. Nach "
-#~ "der Konfikuration können Sie unter dem Administrations-Menü Kategorien, "
-#~ "Unterkategorien, Sprachen und zusätzliche Datenbankfelder (die jeweils den "
-#~ "Ressourcen zugeordnet werden können, wenn diese bearbeitet werden) sowie "
-#~ "Systembenutzer hinzufügen."
-
-#~ msgid "Configurable Inline Plugins"
-#~ msgstr "Konfigurierbare Inline-Plugins"
-
-#~ msgid "There is no news available to view"
-#~ msgstr "Es gibt keine Nachrichten"
-
-#~ msgid "Menu Location"
-#~ msgstr "Ort des Menüs"
-
-#~ msgid ""
-#~ "<p>Ensure the wikindx/plugins directories (and the index.php and config."
-#~ "php files) and the wikindx/styles, wikindx/languages and wikindx/templates "
-#~ "folders (and all files therein) can be written to by the web server user.</"
-#~ "p>"
-#~ msgstr ""
-#~ "<p>Stellen Sie sicher, dass das Verzeichnisse unter wikindx4/plugins "
-#~ "(sowie die Dateien index.php und config.php) sowie die Verzeichnisse "
-#~ "wikindx4/styles, wikindx4/languages und wikindx4/templates (einschließlich "
-#~ "aller enthaltenen Dateien) für den Webserver Schreibrechte haben.</p>"
-
-#~ msgid "Plugin Commands"
-#~ msgstr "Plugin-Befehle"
-
-#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
-#~ msgstr ""
-#~ "Sperre neue Ressourcen aus der öffentlichen Ansicht, bis sie von einem "
-#~ "Administrator freigegeben werden."
-
-#~ msgid "Plugin has no README file or the README file is empty"
-#~ msgstr "Plugin hat keine README-Datei"
-
-#~ msgid "Unable to update database with update/updateMySQL.txt."
-#~ msgstr ""
-#~ "Die Datenbank kann nicht mit der Datei updateMySQL.txt oder createMySQL."
-#~ "txt aktualisiert werden."
-
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Mein Wikindx"
-
-#~ msgid ""
-#~ "<p>At least one template, one bibliographic style and one language must "
-#~ "remain enabled. WIKINDX expects that the English language pack is "
-#~ "available on the server (i.e. that you do not physically remove it from "
-#~ "the wikindx/languages/ folder) whether it has been disabled or not.  This "
-#~ "is because the English language pack is used to supply any messages that "
-#~ "might be missing from other language packs.</p>"
-#~ msgstr ""
-#~ "<p>Mindestens eine Vorlage, ein Bibliographiestil und eine Sprache müssen "
-#~ "aktiviert bleiben. WIKINDX erwartet, dass das englische Sprachpaket auf "
-#~ "dem Server verfügbar ist (d.h. dass Sie es nicht aus dem Verzeichnis "
-#~ "wikindx4/languages/ gelöscht haben), ganz gleich ob es deaktiviert wurde "
-#~ "oder nicht. Das englische Sprachpaket ist nötig, um alle Hinweistexte "
-#~ "anzuzeigen, die evtl. in den anderen Sprachpaketen fehlen.</p>"
-
-#~ msgid "bibtex"
-#~ msgstr "bibtex"
-
-#~ msgid "Upgrade the database"
-#~ msgstr "Datenbank aktualisieren"
-
-#~ msgid "Enabled Styles"
-#~ msgstr "Aktivierte Stile"
-
-#~ msgid ""
-#~ "The upgrade process may take some time depending upon a number of factors. "
-#~ "If your database is large or your server is slow, it is advised to "
-#~ "temporarily increase 'max_execution_time' and 'memory_limit' in php.ini "
-#~ "and to restart the web server before upgrading. (You can try to increase "
-#~ "memory first in config.php -- WIKINDX_MEMORY_LIMIT -- in which case you do "
-#~ "not need to restart the server.) During upgrading, PHP error reporting is "
-#~ "turned on regardless of your config.php settings.<p> If you get a blank "
-#~ "page or an error similar to: 'Fatal error: Allowed memory size of 16777216 "
-#~ "bytes exhausted (tried to allocate 38 bytes)', then you must start the "
-#~ "upgrade process from the <strong>beginning</strong>:<br> a) Reload your "
-#~ "backed-up v.3.8.2 or v.4.x database or database tables (you have backed up "
-#~ "haven't you?);<br> b) Increase PHP memory as per the instructions above "
-#~ "(after upgrading, you can set it back to the default 64M);<br> c) Restart "
-#~ "the upgrade process.<p> The upgrade comprises several stages for a v3.8 "
-#~ "database (a v4 database is upgraded in one step): as a very rough guide "
-#~ "(and depending upon the speed of your server), the longest stages will "
-#~ "take about 25 seconds for a database of 23,000 records and the greatest "
-#~ "memory use will be about 50MB. Some of the upgrade stages that are most "
-#~ "likely to take the greatest time will safely halt if the scripts notice "
-#~ "that 'max_execution_time' is about to be exceeded -- simply keep clicking "
-#~ "on the Continue button.<p> WIKINDX v4 and higher ensures that all "
-#~ "characters are encoded as UTF-8 (to account for character sets found in "
-#~ "many of the world's languages) and the upgrade process does the necessary "
-#~ "conversion.  If, however, after the upgrade is complete, you still see "
-#~ "characters similar to 'ã¼' or 'ã¶' etc., then you should install and run "
-#~ "the repairkit plugin from the Sourceforge.net WIKINDX site.<p> Do not "
-#~ "break the process or use browser back or forward buttons.<p> "
-#~ "<strong>Before upgrading, you should ensure that all attachments in "
-#~ "wikindx3 or wikindx4 have been copied to the new wikindx/attachments/ "
-#~ "folder -- the upgrade process will remove references to attachments in the "
-#~ "database if the attachment files do not exist in the new location.</strong>"
-#~ msgstr ""
-#~ "Die Aktualisierung kann einige Zeit in Anspruch nehmen, deren Dauer von "
-#~ "einigen Faktoren abhängt. Wenn Ihre Datenbank groß oder Ihr Server langsam "
-#~ "ist, kann es sinnvoll sein, temporär den Wert 'max_execution_time' in der "
-#~ "php.ini zu vergrößern und den Webserver vor dem Aktualisierungslauf neu zu "
-#~ "starten. (Sie können auch auch zunächst versuchen, das Speicherlimit in "
-#~ "der Datei config.php zu setzen -- WIKINDX_MEMORY_LIMIT --, in diesem Fall "
-#~ "brauchen Sie den Server nicht neu starten). Während der Aktualisierung ist "
-#~ "die Anzeige von PHP-Fehlermeldungen aktiviert, unabhängig von den "
-#~ "Einstellungen in config.php. <p> Falls Sie einen Fehler der Art 'Fatal "
-#~ "error: Allowed memory size of 16777216 bytes exhausted (tried to allocate "
-#~ "38 bytes)' erhalten, müssen Sie den Aktualisierungsvorgang "
-#~ "<strong>vollständig neu durchführen</strong>:<br> a) Stellen Sie die "
-#~ "Datenbank mit Ihrer Sicherungskopie wieder her (Sie haben eine "
-#~ "Sicherungskopie angelegt, nicht wahr?); <br> b) Erhöhen sie das PHP-"
-#~ "Speicherlimit nach den Anweisungen oben (nach der Aktualisierung können "
-#~ "Sie es auf den Standardwert von 64M zurücksetzen); <br> c) Führen Sie den "
-#~ "Aktualisierungsvorgang erneut durch.<p>Die Aktualisierung besteht aus "
-#~ "mehreren Schritten: grob geschätzt (je nach Geschwindigkeit Ihres Servers) "
-#~ "braucht der längste Schritt etwa 25 Sekunden bei einer Datenbank mit "
-#~ "23.000 Einträgen, und es werden etwa 50M an Arbeitsspeicher benötig. "
-#~ "Einige der Aktualisierungsschritte, die gewöhnlich die meiste Zeit "
-#~ "brauchen, werden problemlos angehalten, wenn das Skript feststellt, dass "
-#~ "die maximal erlaubte Dauer ('max_execution_time') überschritten wird -- "
-#~ "klicken Sie einfach immer wieder auf die \"Fortsetzen\"-Schaltfläche.<p> "
-#~ "WIKINDX stellt sicher, dass alle Zeichen als UTF-8 kodiert sind (sodass "
-#~ "die Zeichensätze der meisten der Sprachen der Welt abgedeckt sind). Wenn "
-#~ "Sie aber nach Abschluss der Aktualisierung Zeichen wie 'Ã£Â¼' oder 'Ã£Â¶' "
-#~ "sehen, sollten Sie das Repairkit-Plugin von der WIKINDX-Website "
-#~ "installieren und laufen lassen.<p>Unterbrechen Sie den "
-#~ "Aktualisierungsvorgang nicht, und verwenden Sie nicht die 'Vor'- oder "
-#~ "'Zurück'-Funktionen des Browsers.<p> Vor der Aktualisierung sollten Sie "
-#~ "sicherstellen, dass Sie alle Anhänge von wikindx3 in den neuen Ordner "
-#~ "'wikindx4/attachments/' kopiert haben -- der Aktualisierungsvorgang wird "
-#~ "Verweise auf Anhänge in der Datenbank löschen, wenn die entsprechenden "
-#~ "Dateien dieser Anhänge im neuen Ordner nicht vorhanden sind."
-
-#~ msgid "My Bibliographies"
-#~ msgstr "Meine Bibliographien"
-
-#~ msgid ""
-#~ "If you have languages and styles that are in your WIKINDX installation "
-#~ "folders but they do not show here, then they are not compatible with this "
-#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
-#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
-#~ "localization and adminstyle plug-ins and use them to update your files."
-#~ msgstr ""
-#~ "Wenn Sie Sprachen oder Stile in Ihrem WIKINDX-Installationsverzeichnis "
-#~ "haben, die hier nicht erscheinen, dann sind sie nicht kombatibel mit "
-#~ "dieser Version von WIKINDX. Von der WIKINDX-Sourceforge-Downloadseite "
-#~ "(https://sourceforge.net/projects/wikindx//files/pluginsxxx/) können sie "
-#~ "die aktuellen Lokalisierungen und Adminstyle-Plugins herunterladen."
-
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Anmeldung als Superadmin:"
-
-#~ msgid "Disabled Plugins"
-#~ msgstr "Plugins deaktivieren"
-
-#, fuzzy
-#~| msgid "Reporter"
-#~ msgid "Exporter"
-#~ msgstr "Protokollführer"
-
-#, fuzzy
-#~| msgid "Disabled Languages"
-#~ msgid "Available Languages"
-#~ msgstr "Deaktivierte Sprachen"
-
-#~ msgid "Ungroup"
-#~ msgstr "Gruppierung aufheben"
-
-#~ msgid "Enabled Templates"
-#~ msgstr "Aktivierte Vorlagen"
-
-#~ msgid "Select the creators you wish to remove from the group"
-#~ msgstr "Wählen Sie die Urheber, die aus der Gruppe entfernt werden sollen."
-
-#~ msgid "Fix UTF8:"
-#~ msgstr "UTF8-Fehler korrigieren"
+#~ msgid "Enabled Plugins"
+#~ msgstr "Plugins aktivieren"
 
 #, fuzzy
 #~| msgid ""
@@ -10253,6 +10231,28 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "will mandate a certain number of menu levels in which case, attempting to "
 #~ "change the number of menu levels for that template will make no difference."
 #~ "</li>\n"
+#~ "<li>BibTeX:  BibTeX is a bibliographic format familiar to engineers and "
+#~ "scientists.</li>\n"
+#~ "<li>CMS: If the administrator allows it, bibliographic data from WIKINDX "
+#~ "may be displayed in Content Management Systems such as MediaWiki, Moodle "
+#~ "and WordPress. To aid in this, you can display a 'cms' link that provides "
+#~ "the data required.</li>\n"
+#~ "<li>User groups: In a multi-user WIKINDX, registered users can define user "
+#~ "groups.  Potentially private information, such as comments on quotations "
+#~ "or resource musings, can then be assigned to be viewed only by members of "
+#~ "a user group.  Additionally, user groups may collaborate in building a "
+#~ "user group bibliography.</li>\n"
+#~ "<li>User bibliographies: These are drawn from the WIKINDX Master "
+#~ "Bibliography and may be personal or managed by a user group. Operations on "
+#~ "a user bibliography (such as removing resources from it) have no effect on "
+#~ "the WIKINDX Master Bibliography.</li>\n"
+#~ "<li>Email notification: Receive emails notifying of additions of resources "
+#~ "or edits to them. The days figure is a threshold – requirements to notify "
+#~ "by email are triggered only when resources are added or edited so that a "
+#~ "threshold of 7 days, for example, does not necessarily mean that the "
+#~ "notification will be sent immediately following the passing of the "
+#~ "threshold, only that the notification will be sent the next time a "
+#~ "resource is added or edited.</li>\n"
 #~ "</ul>"
 #~ msgstr ""
 #~ "<ul>\n"

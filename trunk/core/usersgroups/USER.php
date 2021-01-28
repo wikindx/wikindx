@@ -1491,10 +1491,93 @@ class USER
         $this->db->delete('users');
         // Delete from user_bibliography
         $this->db->formatConditionsOneField($input, 'userbibliographyUserId');
-        $this->db->delete('user_bibliography');
+        $resultSet = $this->db->select('user_bibliography', ['userbibliographyId']);
+        if ($this->db->numRows($resultSet)) {
+        	$ids = [];
+        	while ($row = $this->db->fetchRow($resultSet)) {
+        		$ids[] = $row['userbibliographyId'];
+        	}
+        	if (!empty($ids)) {
+        		$this->db->formatConditionsOneField($ids, 'userbibliographyresourceBibliographyId');
+        		$this->db->delete('user_bibliography_resource');
+        	}
+        	$this->db->formatConditionsOneField($input, 'userbibliographyUserId');
+        	$this->db->delete('user_bibliography');
+        }
         // Delete from user_groups_users
         $this->db->formatConditionsOneField($input, 'usergroupsusersUserId');
         $this->db->delete('user_groups_users');
+        // Delete from user_keywordgroups
+        $this->db->formatConditionsOneField($input, 'userkeywordgroupsUserId');
+        $resultSet = $this->db->select('user_keywordgroups', ['userkeywordgroupsId']);
+        if ($this->db->numRows($resultSet)) {
+        	$ids = [];
+        	while ($row = $this->db->fetchRow($resultSet)) {
+        		$ids[] = $row['userkeywordgroupsId'];
+        	}
+        	if (!empty($ids)) {
+        		$this->db->formatConditionsOneField($ids, 'userkgusergroupsKeywordGroupId');
+        		$this->db->delete('user_kg_usergroups');
+        		$this->db->formatConditionsOneField($ids, 'userkgkeywordsKeywordGroupId');
+        		$this->db->delete('user_kg_keywords');
+        	}
+        	$this->db->formatConditionsOneField($input, 'userkeywordgroupsUserId');
+        	$this->db->delete('user_keywordgroups');
+        }
+    	// Delete from user_tags
+        $this->db->formatConditionsOneField($input, 'usertagsUserId');
+        $resultSet = $this->db->select('user_tags', ['usertagsId']);
+        if ($this->db->numRows($resultSet)) {
+        	$ids = [];
+        	while ($row = $this->db->fetchRow($resultSet)) {
+        		$ids[] = $row['usertagsId'];
+        	}
+        	if (!empty($ids)) {
+        		$this->db->formatConditionsOneField($ids, 'resourceusertagsTagId');
+        		$this->db->delete('resource_user_tags');
+        	}
+        	$this->db->formatConditionsOneField($input, 'usertagsUserId');
+        	$this->db->delete('user_tags');
+        }
+    	// Check for any plugin tables with user rows
+    	$tables = $this->db->listTables(FALSE);
+    	foreach ($tables as $table) {
+    		if (strpos($table, 'plugin_') === 0) {
+    			$userField = str_replace('_', '', $table) . 'UserId';
+    			$fields = $this->db->listFields($table);
+    			if (in_array($userField, $fields)) {
+        			$this->db->formatConditionsOneField($input, $userField);
+        			$this->db->delete($table);
+    			}
+    		}
+    	}
+    	// Set any resource_custom entries to superAdmin ID 1
+		$updateArray = ['resourcecustomAddUserIdCustom' => 1];
+		$this->db->formatConditionsOneField($input, 'resourcecustomAddUserIdCustom');
+		$this->db->update('resource_custom', $updateArray);
+		$updateArray = ['resourcecustomEditUserIdCustom' => 1];
+		$this->db->formatConditionsOneField($input, 'resourcecustomEditUserIdCustom');
+		$this->db->update('resource_custom', $updateArray);
+    	// Set any resource_misc entries to superAdmin ID 1
+		$updateArray = ['resourcemiscAddUserIdResource' => 1];
+		$this->db->formatConditionsOneField($input, 'resourcemiscAddUserIdResource');
+		$this->db->update('resource_misc', $updateArray);
+		$updateArray = ['resourcemiscEditUserIdResource' => 1];
+		$this->db->formatConditionsOneField($input, 'resourcemiscEditUserIdResource');
+		$this->db->update('resource_misc', $updateArray);
+    	// Set any resource_text entries to superAdmin ID 1
+		$updateArray = ['resourcetextAddUserIdNote' => 1];
+		$this->db->formatConditionsOneField($input, 'resourcetextAddUserIdNote');
+		$this->db->update('resource_text', $updateArray);
+		$updateArray = ['resourcetextEditUserIdNote' => 1];
+		$this->db->formatConditionsOneField($input, 'resourcetextEditUserIdNote');
+		$this->db->update('resource_text', $updateArray);
+		$updateArray = ['resourcetextAddUserIdAbstract' => 1];
+		$this->db->formatConditionsOneField($input, 'resourcetextAddUserIdAbstract');
+		$this->db->update('resource_text', $updateArray);
+		$updateArray = ['resourcetextEditUserIdAbstract' => 1];
+		$this->db->formatConditionsOneField($input, 'resourcetextEditUserIdAbstract');
+		$this->db->update('resource_text', $updateArray);
         // Manage deleted user's metadata
         // $this->vars['userMetadata']:
         // 0 -- do nothing except set to public

@@ -16,6 +16,7 @@ BUG FIXES:
 9. Fix a missing input error in bibliographic/citation styles (bugs #249 & #305).
 10. Fix a crash on upgrade of step 34 for version 6.4.0. MariaDB and/or MySQL engines don’t support to fill, drop, and create a table in a single transaction.
 11. Vendor components cannot be enabled/disabled.
+12. Ensure that user database rows are universally deleted when deleting a user.
 
 MAINTENANCE:
 1. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].

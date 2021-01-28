@@ -48,14 +48,17 @@ given below, both the file and the class are called 'testMessages_en'.  The
 name of a language folder in wikindx/components/languages/. New localization
  files should go into the same plugin folder as the xxx_en file.
 
-For creating or upgrading the db structure of the objects used by yours plugin,
+For creating or upgrading the db structure of the objects used by your plugin,
 create a folder "dbschema" (lowercase) in your plugin directory. In "dbschema"
 create one directory for each database driver supported (lowercase) (currently
 mysqli only). In each driver directory, create one directory "full" (lowercase)
 and one directory "update" (lowercase).
 
-full and update directories may contain one or more SQL file to run one the first
-execution off Wikindx or on upgrade stage, in alphabetical order.
+Full and update directories may contain one or more SQL files to run on the first
+execution of Wikindx or on upgrade stage, in alphabetical order. If you do create 
+a database table that stores user IDs, then that field should be named
+'pluginxxxxUserId' (when a user is deleted from the WIKINDX, the delete routines 
+check plugin database tables for fields that follow that convention).
 
 To run the SQL code for a creation call the function
 createDbSchema(<plugindirrame>) of the UPDATEDATABASE class.

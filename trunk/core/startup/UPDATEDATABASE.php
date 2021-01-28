@@ -1650,11 +1650,21 @@ END;
     }
 
     /**
-     * Upgrade database schema to version 38 (6.4.1)
+     * Upgrade database schema to version 40 (6.4.1)
      *
      * Set utf8mb4_unicode_520_ci as the default collation of the database
      */
     private function upgradeTo40()
+    {
+        $this->upgradeToTargetVersion();
+    }
+
+    /**
+     * Upgrade database schema to version 41 (6.4.1)
+     *
+     * Add a default value to the users.usersFullname field (bugfix #316)
+     */
+    private function upgradeTo41()
     {
         $this->upgradeToTargetVersion();
     }

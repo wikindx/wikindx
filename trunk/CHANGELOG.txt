@@ -19,6 +19,7 @@ BUG FIXES:
 12. Ensure that user database rows are universally deleted when deleting a user.
 13. Ensure that logged-in users can attach resources to user tags.
 14. Ensure that logged-in users can only edit a resource's categories, keywords, and languages if they own the resource or allowed to by the superadmin.
+15. Add a default value to the users.usersFullname field [#316].
 
 MAINTENANCE:
 1. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].

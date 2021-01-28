@@ -73,7 +73,7 @@ class repairkit_MODULE
         $pString = '';
         if (array_key_exists('uuid', $this->vars)) {
 	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
-        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+            \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uuid'], ['repaikitrMessages']);
 		}
         
         $wVersion = WIKINDX_INTERNAL_VERSION;
@@ -634,7 +634,7 @@ class repairkit_MODULE
         $pString = '';
         if (array_key_exists('uuid', $this->vars)) {
 	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
-        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uuid'], ['repaikitrMessages']);
 		}
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
@@ -656,7 +656,7 @@ class repairkit_MODULE
         $pString = '';
         if (array_key_exists('uuid', $this->vars)) {
 	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
-        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uuid'], ['repaikitrMessages']);
 		}
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
@@ -688,7 +688,7 @@ class repairkit_MODULE
         $pString = '';
         if (array_key_exists('uuid', $this->vars)) {
 	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
-        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uuid'], ['repaikitrMessages']);
 		}
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
@@ -711,7 +711,7 @@ class repairkit_MODULE
         $pString = '';
         if (array_key_exists('uuid', $this->vars)) {
 	        $pString = \TEMPSTORAGE\fetchOne($this->db, $this->vars['uuid'], 'repairkitMessages');
-        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uid'], ['repaikitrMessages']);
+        \TEMPSTORAGE\deleteKeys($this->db, $this->vars['uuid'], ['repaikitrMessages']);
 		}
         $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));

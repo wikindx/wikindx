@@ -49,7 +49,7 @@ class LISTADDTO
     {
         if (!array_key_exists('resourceSelectedTo', $this->vars))
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $this->session->setVar("resourceSelectedTo", $this->vars['resourceSelectedTo']);
         if ($this->browserTabID) {
@@ -118,7 +118,16 @@ class LISTADDTO
 
             return;
         }
-        $resourceIds = $this->getHiddenIds();
+        $resourceIds = $userTagsResourceIds = $this->getHiddenIds();
+        if (!$this->session->getVar("setup_Superadmin") && WIKINDX_ORIGINATOR_EDIT_ONLY) {
+        	$allowIds = [];
+			$this->db->formatConditions(['resourcemiscAddUserIdResource' => $this->session->getVar("setup_UserId")]);
+			$resultSet = $this->db->select('resource_misc', ['resourcemiscId']);
+			while ($row = $this->db->fetchRow($resultSet)) {
+				$allowIds[] = $row['resourcemiscId'];
+			}
+			$resourceIds = array_intersect($allowIds, $resourceIds);
+		}
         // Categories
         if (array_key_exists("displayCategory", $this->vars))
         {
@@ -422,7 +431,7 @@ class LISTADDTO
             ($this->vars['usertagRadio'] == 'add'))
             {
                 // remove old usertags from all selected resources
-                $this->db->formatConditionsOneField($resourceIds, 'resourceusertagsResourceId');
+                $this->db->formatConditionsOneField($userTagsResourceIds, 'resourceusertagsResourceId');
                 $this->db->delete('resource_user_tags');
             }
             // remove usertags
@@ -430,7 +439,7 @@ class LISTADDTO
             {
                 foreach ($usertagIds as $uId)
                 {
-                    foreach ($resourceIds as $rId)
+                    foreach ($userTagsResourceIds as $rId)
                     {
                         $this->db->formatConditions(['resourceusertagsResourceId' => $rId]);
                         $this->db->formatConditions(['resourceusertagsTagId' => $uId]);
@@ -445,14 +454,14 @@ class LISTADDTO
                 foreach ($usertagIds as $uId)
                 {
                     $foundIds = [];
-                    $this->db->formatConditionsOneField($resourceIds, 'resourceusertagsResourceId');
+                    $this->db->formatConditionsOneField($userTagsResourceIds, 'resourceusertagsResourceId');
                     $this->db->formatConditions(['resourceusertagsTagId' => $uId]);
                     $resultSet = $this->db->select('resource_user_tags', 'resourceusertagsResourceId');
                     while ($row = $this->db->fetchRow($resultSet))
                     {
                         $foundIds[] = $row['resourceusertagsResourceId'];
                     }
-                    foreach (array_diff($resourceIds, $foundIds) as $rId)
+                    foreach (array_diff($userTagsResourceIds, $foundIds) as $rId)
                     {
                         $values[] = [$rId, $uId];
                     }
@@ -499,7 +508,7 @@ class LISTADDTO
         $groupBibs = $this->commonBib->getGroupBibs();
         if (!array_key_exists($this->vars['bibId'], $userBibs) && !array_key_exists($this->vars['bibId'], $groupBibs))
         {
-            $this->badInput->close($this->errors->text("inputError", "invalid"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
         foreach ($ids as $id)
         {
@@ -530,7 +539,7 @@ class LISTADDTO
         list($idFound, $string) = $this->checkIdInput();
         if (!$idFound)
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (!is_array($string) && ($string == 'display'))
         {
@@ -567,7 +576,8 @@ class LISTADDTO
             $pString = $message[0];
             $uuid = $message[1];
         }
-        $pString .= \HTML\strong($this->messages->text("resources", "warningOrganize"));
+        $pString .= \HTML\strong($this->messages->text("resources", "warningOrganize1")) . BR . 
+        	\HTML\strong($this->messages->text("resources", "warningOrganize2"));
         $pString .= \FORM\formHeader('list_LISTADDTO_CORE', "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "organize");
         $pString .= \FORM\hidden('browserTabID', $this->browserTabID);
@@ -582,7 +592,7 @@ class LISTADDTO
         list($idFound, $string) = $this->checkIdInput($uuid);
         if (!$idFound)
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (!$uuid)
         {
@@ -650,7 +660,7 @@ class LISTADDTO
             list($idFound, $string) = $this->checkIdInput($uuid);
             if (!$idFound)
             {
-                $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+                $this->badInput->close($this->errors->text("inputError", "missing"));
             }
             if (!$uuid)
             {
@@ -754,7 +764,7 @@ class LISTADDTO
         }
         if (empty($ids))
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
 
             return;
         }
@@ -805,7 +815,7 @@ class LISTADDTO
         list($idFound, $string) = $this->checkIdInput();
         if (!$idFound)
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (!is_array($string) && ($string == 'display'))
         {
@@ -851,7 +861,7 @@ class LISTADDTO
         list($idFound, $string) = $this->checkIdInput();
         if (!$idFound)
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (!is_array($string) && ($string == 'display'))
         {
@@ -907,7 +917,7 @@ class LISTADDTO
     {
         if (!array_key_exists("uuid", $this->vars))
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $idsString = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
         \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
@@ -927,7 +937,7 @@ class LISTADDTO
         }
         if (!isset($ids))
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
 
         return $ids;
@@ -940,7 +950,7 @@ class LISTADDTO
         list($idFound, $string) = $this->checkIdInput();
         if (!$idFound)
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (!is_array($string) && ($string == 'display'))
         {
@@ -987,7 +997,7 @@ class LISTADDTO
         list($idFound, $string) = $this->checkIdInput();
         if (!$idFound)
         {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (!is_array($string) && ($string == 'display'))
         {

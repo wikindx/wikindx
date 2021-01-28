@@ -1111,12 +1111,25 @@ class RESOURCEVIEW
      */
     private function createCatEditLink($resourceId)
     {
+    // Does the user have user_tags?
+    	$this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
+    	$resultSet = $this->db->select('user_tags', ['usertagsId']);
         if ($this->allowEdit)
         {
             return '&nbsp;&nbsp;' . \HTML\a(
                 $this->icons->getClass("edit"),
                 $this->icons->getHTML("edit"),
-                "index.php?action=resource_RESOURCECATEGORYEDIT_CORE" . htmlentities("&id=" . $resourceId) . '&browserTabID=' . $this->browserTabID
+                "index.php?action=resource_RESOURCECATEGORYEDIT_CORE" . htmlentities("&id=" . $resourceId) . 
+                '&browserTabID=' . $this->browserTabID
+            );
+        }
+        elseif ($this->db->numRows($resultSet))
+        {
+            return '&nbsp;&nbsp;' . \HTML\a(
+                $this->icons->getClass("edit"),
+                $this->icons->getHTML("edit"),
+                "index.php?action=resource_RESOURCECATEGORYEDIT_CORE" . htmlentities("&id=" . $resourceId) . htmlentities("&tagEditOnly=1") . 
+                '&browserTabID=' . $this->browserTabID
             );
         }
         else

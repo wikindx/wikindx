@@ -80,6 +80,13 @@ class RESOURCECATEGORYEDIT
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
+        if (!$this->session->getVar("setup_Superadmin") && !array_key_exists('tagEditOnly', $this->vars)) {
+			$this->db->formatConditions(['resourcemiscId' => $this->vars['id']]);
+			$resultSet = $this->db->select('resource_misc', ['resourcemiscAddUserIdResource']);
+			if (WIKINDX_ORIGINATOR_EDIT_ONLY && ($this->db->fetchOne($resultSet) != $this->session->getVar("setup_UserId"))) {
+				$this->badInput->close($this->errors->text("inputError", "invalid"));
+			}
+		}
         $pString = $message;
         $pString .= \FORM\formHeader('resource_RESOURCECATEGORYEDIT_CORE', "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden('method', 'edit');
@@ -104,18 +111,25 @@ class RESOURCECATEGORYEDIT
     {
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\HTML\div('categoryDiv', $this->displayCategory($multiIds)));
-        $pString .= \HTML\td(\HTML\div('subcategoryDiv', $this->displaySubcategory($multiIds)));
-        $pString .= \HTML\td(\HTML\div('languageDiv', $this->displayLanguage($multiIds)));
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\tableEnd();
-        $pString .= \HTML\tableStart();
-        $pString .= \HTML\trStart();
-        $pString .= \HTML\td('&nbsp;', FALSE, FALSE, FALSE, 2) . \HTML\trEnd() . \HTML\trStart();
-        $pString .= \HTML\td(\HTML\div('keywordDiv', $this->displayKeyword($multiIds)));
-        if (!empty($this->userTags))
-        {
-            $pString .= \HTML\td(\HTML\div('usertagDiv', $this->displayUserTags($multiIds)));
+        if (array_key_exists('tagEditOnly', $this->vars)) {
+			if (!empty($this->userTags))
+			{
+				$pString .= \HTML\td(\HTML\div('usertagDiv', $this->displayUserTags($multiIds)));
+			}
+        } else {
+			$pString .= \HTML\td(\HTML\div('categoryDiv', $this->displayCategory($multiIds)));
+			$pString .= \HTML\td(\HTML\div('subcategoryDiv', $this->displaySubcategory($multiIds)));
+			$pString .= \HTML\td(\HTML\div('languageDiv', $this->displayLanguage($multiIds)));
+			$pString .= \HTML\trEnd();
+			$pString .= \HTML\tableEnd();
+			$pString .= \HTML\tableStart();
+			$pString .= \HTML\trStart();
+			$pString .= \HTML\td('&nbsp;', FALSE, FALSE, FALSE, 2) . \HTML\trEnd() . \HTML\trStart();
+			$pString .= \HTML\td(\HTML\div('keywordDiv', $this->displayKeyword($multiIds)));
+			if (!empty($this->userTags))
+			{
+				$pString .= \HTML\td(\HTML\div('usertagDiv', $this->displayUserTags($multiIds)));
+			}
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();

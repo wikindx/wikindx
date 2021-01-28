@@ -581,8 +581,9 @@ class MESSAGES
 				"primaryUrl" => dgettext($domain, "Display this URL first"),
 				"deleteConfirmUrl" => dgettext($domain, "Delete URL(s) ###"),
 				"usertags" => dgettext($domain, "User tags"),
-/// resources_warningOrganize A warning shown when organizing a list of resources (search, select etc.) into categories, keywords etc.
-				"warningOrganize" => dgettext($domain, "If you select nothing for item labels that are displayed, opt to replace the existing set and then save, you are removing those item labels from all selected resources. A resource must always belong to a category; if you attempt to save with categories removed, the resources will be placed in category 'General'. Uncheck the checkboxes to disable editing for that group."),
+/// resources_warningOrganize1 A warning shown when organizing a list of resources (search, select etc.) into categories, keywords etc.
+				"warningOrganize1" => dgettext($domain, "If you select nothing for item labels that are displayed, opt to replace the existing set and then save, you are removing those item labels from all selected resources. A resource must always belong to a category; if you attempt to save with categories removed, the resources will be placed in category 'General'. Uncheck the checkboxes to disable editing for that group."),
+				"warningOrganize2" => dgettext($domain, "You can only edit categories, keywords, and languages for those resources you own or where the superadmin has given global permissions."),
 /// resources_availableKeywords Existing keywords stored in the database
 				"availableKeywords" => dgettext($domain, "Available keywords"),
 /// resources_availableUserTags Existing user tags stored in the database

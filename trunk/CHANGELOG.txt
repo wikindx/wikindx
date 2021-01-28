@@ -17,6 +17,8 @@ BUG FIXES:
 10. Fix a crash on upgrade of step 34 for version 6.4.0. MariaDB and/or MySQL engines don’t support to fill, drop, and create a table in a single transaction.
 11. Vendor components cannot be enabled/disabled.
 12. Ensure that user database rows are universally deleted when deleting a user.
+13. Ensure that logged-in users can attach resources to user tags.
+14. Ensure that logged-in users can only edit a resource's categories, keywords, and languages if they own the resource or allowed to by the superadmin.
 
 MAINTENANCE:
 1. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].

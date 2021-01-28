@@ -36,7 +36,7 @@ MAINTENANCE:
 12. Credits of translators.
 
 SECURITY
-1. A cross-site scripting (XSS) vulnerability in many forms of version 6.4.0 allows remote attackers to inject arbitrary web script or HTML via the 'message’ parameter.
+1. A cross-site scripting (XSS) vulnerability in many forms of version 6.4.0 allows remote attackers to inject arbitrary web script or HTML via the 'message’ parameter (CVE-2021-3340, thanks to jppuetz).
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

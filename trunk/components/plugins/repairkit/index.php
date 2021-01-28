@@ -1027,11 +1027,7 @@ class repairkit_MODULE
         $selection = $this->vars;
         $newusersId = $selection["usersId"];
         $oldusersId = $selection["usersId"] == $selection["user1"] ? $selection["user2"] : $selection["user1"];
-/*        
-        $pString  = "";
-        $pString .= "newusersId = $newusersId" . BR;
-        $pString .= "oldusersId = $oldusersId" . BR;
-*/
+        
         foreach ($selection as $k => $v)
         {
             // Forget data that is not a field selection
@@ -1046,10 +1042,6 @@ class repairkit_MODULE
             }
         }
         
-        
-        //$pString .= "this->vars = " . print_r($this->vars, TRUE) . BR;
-        //$pString .= "selection = " . print_r($selection, TRUE) . BR;
-        
         // Merge user account fields
         if (count($selection) > 0)
         {
@@ -1062,24 +1054,15 @@ class repairkit_MODULE
             $sql = rtrim($sql, ",");
             $sql .= " WHERE usersId = $newusersId;" . LF;
             
-//            $pString .= "sql (merge fields) = " . BR . "<pre>$sql</pre>" . BR;
             $this->db->queryNoResult($sql);
         }
         
-        // Merge user account data
- //       $sql = "...";
- //       $pString .= "sql (merge data) = " . BR . "<pre>$sql</pre>" . BR;
-        
-        
         // Remove the old user account
         $sql = "DELETE FROM " . $this->db->formatTables("users") . " WHERE usersId = $oldusersId;";
-//        $pString .= "sql (delete) = " . BR . "<pre>$sql</pre>" . BR;
         $this->db->queryNoResult($sql);
         
         // Merge oldusersId data from other tables
         $this->duplicateUsersMergeData($newusersId, $oldusersId);
-        
-//        GLOBALS::addTplVar('content', $pString);
         
         $message = HTML\p($this->pluginmessages->text('success'), 'success', 'center');
         $uuid = \TEMPSTORAGE\getUuid($this->db);
@@ -1262,8 +1245,6 @@ class repairkit_MODULE
             "indices" => [],
             "count" => 0,
         ];
-        
-        //var_dump($correctDbSchema["database"]);
 
         // DATABASE
         if ($correctDbSchema["database"]["character_set"] != $currentDbSchema["database"]["character_set"])
@@ -1287,8 +1268,6 @@ class repairkit_MODULE
         // TABLES
         $tableArrayCorrect = $correctDbSchema["tables"];
         $tableArrayCurrent = $currentDbSchema["tables"];
-        
-        //var_dump($tableArrayCurrent);
         
         foreach ($tableArrayCorrect as $tableCorrect)
         {
@@ -1358,8 +1337,6 @@ class repairkit_MODULE
         // FIELDS
         $fieldArrayCorrect = $correctDbSchema["fields"];
         $fieldArrayCurrent = $currentDbSchema["fields"];
-        
-        //var_dump($fieldArrayCurrent);
         
         foreach ($fieldArrayCorrect as $fieldCorrect)
         {
@@ -1436,8 +1413,6 @@ class repairkit_MODULE
         // INDICES
         $indexArrayCorrect = $correctDbSchema["indices"];
         $indexArrayCurrent = $currentDbSchema["indices"];
-        
-        //var_dump($indexArrayCorrect);
         
         foreach ($indexArrayCorrect as $indexCorrect)
         {

@@ -363,7 +363,7 @@ class repairkit_MODULE
     private function changeDbCollation($dbDef)
     {
         $sql = "ALTER DATABASE " . WIKINDX_DB . " CHARACTER SET " . $dbDef["collation"] . " COLLATE " . $dbDef["character_set"] . ";";
-        $this->db->query($sql);
+        $this->db->queryNoResult($sql);
     }
     
     /*
@@ -379,7 +379,7 @@ class repairkit_MODULE
         $sqlfile = "table_" . $this->db->basicTable($table) . ".sql";
         $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
         $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
-        $this->db->query($sql);
+        $this->db->queryNoResult($sql);
     }
     
     /*
@@ -393,8 +393,8 @@ class repairkit_MODULE
         $tmpTable = uniqid(WIKINDX_DB_TABLEPREFIX);
         
         // Change the name of all tables to lower case (workaround for mySQL engine on case sensitive files systems)
-        $this->db->query("ALTER TABLE `" . $src . "` RENAME AS `" . $tmpTable . "`;");
-        $this->db->query("ALTER TABLE `" . $tmpTable . "` RENAME AS `" . $dst . "`;");
+        $this->db->queryNoResult("ALTER TABLE `" . $src . "` RENAME AS `" . $tmpTable . "`;");
+        $this->db->queryNoResult("ALTER TABLE `" . $tmpTable . "` RENAME AS `" . $dst . "`;");
     }
     
     /*
@@ -408,7 +408,7 @@ class repairkit_MODULE
             $charset = substr($tableDef["Collation"], 0, strpos($tableDef["Collation"], "_"));
         
         $sql = "ALTER TABLE " . $tableDef["Table"] . " CONVERT TO CHARACTER SET " . $charset . " COLLATE " . $tableDef["Collation"] . ";";
-        $this->db->query($sql);
+        $this->db->queryNoResult($sql);
     }
     
     /*
@@ -417,7 +417,7 @@ class repairkit_MODULE
     private function changeTableEngine($tableDef)
     {
         $sql = "ALTER TABLE " . $tableDef["Table"] . " ENGINE = " . $tableDef["Engine"] . ";";
-        $this->db->query($sql);
+        $this->db->queryNoResult($sql);
     }
     
     /*
@@ -428,7 +428,7 @@ class repairkit_MODULE
     private function dropTable($table)
     {
         $sql = "DROP TABLE IF EXISTS " . $table . ";";
-        $this->db->query($sql);
+        $this->db->queryNoResult($sql);
     }
     
     /*
@@ -468,7 +468,7 @@ class repairkit_MODULE
         
         $sql .= ";";
         
-        $this->db->query($sql);
+        $this->db->queryNoResult($sql);
     }
     
     /*
@@ -508,7 +508,7 @@ class repairkit_MODULE
         
         $sql .= ";";
         
-        $this->db->query($sql);
+        $this->db->queryNoResult($sql);
     }
     
     /*
@@ -517,7 +517,7 @@ class repairkit_MODULE
     private function dropField($fieldDef)
     {
         $sql = "ALTER TABLE " . $fieldDef["Table"] . " DROP COLUMN " . $fieldDef["Field"] . ";";
-        $this->db->query($sql);
+        $this->db->queryNoResult($sql);
     }
     
     /*
@@ -584,7 +584,7 @@ class repairkit_MODULE
         
         $sql .= ";";
         
-        $this->db->query($sql);
+        $this->db->queryNoResult($sql);
     }
     
     /*
@@ -616,7 +616,7 @@ class repairkit_MODULE
             else
                 $sql = "ALTER TABLE " . $table . " DROP INDEX " . $index . ";";
             
-            $this->db->query($sql);
+            $this->db->queryNoResult($sql);
         }
     }
     

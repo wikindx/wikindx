@@ -1010,7 +1010,7 @@ class repairkit_MODULE
         $pString  = "";
         $pString .= "newusersId = $newusersId" . BR;
         $pString .= "oldusersId = $oldusersId" . BR;
-        
+
         foreach ($selection as $k => $v)
         {
             // Forget data that is not a field selection
@@ -1054,11 +1054,83 @@ class repairkit_MODULE
         $pString .= "sql (delete) = " . BR . "<pre>$sql</pre>" . BR;
         //$this->db->queryNoResult($sql);
         
+        // Merge oldusersId data from other tables
+        $this->duplicateUsersMergeData($newusersId, $oldusersId);
+        
         GLOBALS::addTplVar('content', $pString);
         
         /*$message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
         header("Location: index.php?action=repairkit_duplicateUsersInit&message=$message");
         die;*/
+    }
+    /**
+     * Merge old user's data in various tables to the new user
+     *
+     * @param int $newusersId
+     * @param int $oldusersId
+     */
+    private function duplicateUsersMergeData($newusersId, $oldusersId)
+    {
+    	// Merge from user_bibliography
+		$updateArray = ['userbibliographyUserId' => $newusersId];
+        $this->db->formatConditionsOneField($oldusersId, 'userbibliographyUserId');
+        $this->db->update('user_bibliography', $updateArray);
+        // Merge from user_groups_users
+		$updateArray = ['usergroupsusersUserId' => $newusersId];
+        $this->db->formatConditionsOneField($oldusersId, 'usergroupsusersUserId');
+        $this->db->update('user_groups_users', $updateArray);
+        // Merge from user_keywordgroups
+		$updateArray = ['userkeywordgroupsUserId' => $newusersId];
+        $this->db->formatConditionsOneField($oldusersId, 'userkeywordgroupsUserId');
+        $this->db->update('user_keywordgroups', $updateArray);
+    	// Merge from user_tags
+		$updateArray = ['usertagsUserId' => $newusersId];
+        $this->db->formatConditionsOneField($oldusersId, 'usertagsUserId');
+        $this->db->update('user_tags', $updateArray);
+    	// Check and merge for any plugin tables with user rows
+    	$tables = $this->db->listTables(FALSE);
+    	foreach ($tables as $table) {
+    		if (strpos($table, 'plugin_') === 0) {
+    			$userField = str_replace('_', '', $table) . 'UserId';
+    			$fields = $this->db->listFields($table);
+    			if (in_array($userField, $fields)) {
+					$updateArray = [$userField => $newusersId];
+        			$this->db->formatConditionsOneField($oldusersId, $userField);
+        			$this->db->update($table, $updateArray);
+    			}
+    		}
+    	}
+    	// Set any resource_custom entries to $newusersId
+		$updateArray = ['resourcecustomAddUserIdCustom' => $newusersId];
+		$this->db->formatConditionsOneField($oldusersId, 'resourcecustomAddUserIdCustom');
+		$this->db->update('resource_custom', $updateArray);
+		$updateArray = ['resourcecustomEditUserIdCustom' => $newusersId];
+		$this->db->formatConditionsOneField($oldusersId, 'resourcecustomEditUserIdCustom');
+		$this->db->update('resource_custom', $updateArray);
+    	// Set any resource_misc entries to $newusersId
+		$updateArray = ['resourcemiscAddUserIdResource' => $newusersId];
+		$this->db->formatConditionsOneField($oldusersId, 'resourcemiscAddUserIdResource');
+		$this->db->update('resource_misc', $updateArray);
+		$updateArray = ['resourcemiscEditUserIdResource' => $newusersId];
+		$this->db->formatConditionsOneField($oldusersId, 'resourcemiscEditUserIdResource');
+		$this->db->update('resource_misc', $updateArray);
+    	// Set any resource_text entries to $newusersId
+		$updateArray = ['resourcetextAddUserIdNote' => $newusersId];
+		$this->db->formatConditionsOneField($oldusersId, 'resourcetextAddUserIdNote');
+		$this->db->update('resource_text', $updateArray);
+		$updateArray = ['resourcetextEditUserIdNote' => $newusersId];
+		$this->db->formatConditionsOneField($oldusersId, 'resourcetextEditUserIdNote');
+		$this->db->update('resource_text', $updateArray);
+		$updateArray = ['resourcetextAddUserIdAbstract' => $newusersId];
+		$this->db->formatConditionsOneField($oldusersId, 'resourcetextAddUserIdAbstract');
+		$this->db->update('resource_text', $updateArray);
+		$updateArray = ['resourcetextEditUserIdAbstract' => $newusersId];
+		$this->db->formatConditionsOneField($oldusersId, 'resourcetextEditUserIdAbstract');
+		$this->db->update('resource_text', $updateArray);
+        // Manage deleted user's metadata
+		$updateArray = ['resourcemetadataAddUserId' => $newusersId];
+		$this->db->formatConditionsOneField($oldusersId, 'resourcemetadataAddUserId');
+		$this->db->update('resource_metadata', $updateArray);
     }
     /**
      * Make the menus

@@ -2,10 +2,10 @@
 # For copyright see the component.json file
 # This file is distributed under the same license as the repairkit package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# Stéphane Aulery <saulery@legtux.org>, 2020
-#
+# Stéphane Aulery <saulery@legtux.org>, 2021
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2021-01-28 19:46+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
-"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2021\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -47,12 +47,12 @@ msgstr "Corriger les auteurs"
 #: components/plugins/repairkit/repairkitmessages.php:32
 #: components/plugins/repairkit/repairkitmessages.php:41
 msgid "Deduplicate users"
-msgstr ""
+msgstr "Dédoublonner les utilisateurs"
 
 #: components/plugins/repairkit/repairkitmessages.php:33
 #: components/plugins/repairkit/repairkitmessages.php:42
 msgid "Fix Datetimes"
-msgstr ""
+msgstr "Corriger les dates"
 
 #. *
 #. * Headings
@@ -105,13 +105,8 @@ msgid "Fix various errors regarding creators."
 msgstr "Corrige différentes erreurs concernant les auteurs"
 
 #: components/plugins/repairkit/repairkitmessages.php:51
-#, fuzzy
-#| msgid ""
-#| "There are invalid datetime field values ('0000-00-00 00:00:00') that must "
-#| "be fixed."
 msgid "Fix invalid datetime field values (e.g. '0000-00-00 00:00:00')."
-msgstr ""
-"Des valeurs invalides de dates ('0000-00-00 00:00:00') doivent être corrigées."
+msgstr "Corrige les dates invalides (p. ex. '0000-00-00 00:00:00')."
 
 #: components/plugins/repairkit/repairkitmessages.php:52
 msgid ""
@@ -120,16 +115,23 @@ msgid ""
 "can merge two user accounts by choosing the target account which will be "
 "credited with all the data of the second (resources, notes ...)."
 msgstr ""
+"Le login des utilisateurs doivent être unique pour que l'authentification "
+"fonctionne sans erreur mais avant la version 6.3.0 cette contrainte "
+"n'existait pas. Avec cette écran vous pouvez fusionner deux comptes "
+"utilisateurs en choisissant le compte cible qui sera crédité de toutes les "
+"données du second (ressources, notes...)."
 
 #: components/plugins/repairkit/repairkitmessages.php:53
 msgid "Please choose two user accounts to merge."
-msgstr ""
+msgstr "Veuillez choisir deux comptes utilisateur à fusionner."
 
 #: components/plugins/repairkit/repairkitmessages.php:54
 msgid ""
 "For each field, please choose the value to retain in the merged account (only "
 "different fields are displayed)."
 msgstr ""
+"Pour chaque champ, veuillez choisir la valeur à retenir dans le compte "
+"fusionné (seul les champs différents sont affichés)."
 
 #: components/plugins/repairkit/repairkitmessages.php:55
 msgid ""
@@ -149,17 +151,6 @@ msgstr ""
 "La structure de la base de données est correcte. Aucune correction nécessaire."
 
 #: components/plugins/repairkit/repairkitmessages.php:58
-#, fuzzy
-#| msgid ""
-#| "The database structure differs to the final release database structure for "
-#| "version ### (see report below). This could be because you have been "
-#| "updating this database with pre-release SVN code that has upgraded the "
-#| "structure in incremental steps. Click on OK to fix this. Note: this fix "
-#| "does NOT fix missing tables or missing fields – it will only fix variances "
-#| "in engine, collation, indices, field types, and null and default values. "
-#| "Remember, this fix is a last resort for those cases where a production "
-#| "(rather than a test) database has been mistakenly upgraded with SVN code. "
-#| "As always, backup your database before proceeding."
 msgid ""
 "The database structure differs to the final release database structure for "
 "version ### (see report below). This could be because you have been updating "
@@ -173,10 +164,9 @@ msgstr ""
 "La structure de la base de données diffère de la structure de la base de "
 "données officielle pour la version ### (voir le rapport ci-dessous). Cela "
 "peut être dû au fait que vous avez mis à jour cette base de données avec un "
-"code SVN de pré-version. Cliquez sur OK pour résoudre ce problème. Remarque: "
-"ce correctif ne corrige PAS les tables manquantes ou les champs manquants - "
-"il ne corrigera que les écarts dans le moteur, le classement, les index, les "
-"types de champ et les valeurs nulles et par défaut. N'oubliez pas que ce "
+"code SVN de pré-version. Cliquez sur OK pour résoudre ce problème. Remarque : "
+"ce ne corrige PAS les tables ou les champs supplémentaires qui ne sont pas "
+"vides, les renommages (sauf les changements de casse). N'oubliez pas que ce "
 "correctif est un dernier recours dans les cas où une base de données de "
 "production (plutôt qu'une base de données de test) a été mise à niveau par "
 "erreur avec du code SVN. Comme toujours, sauvegardez votre base de données "
@@ -191,26 +181,29 @@ msgid ""
 "the database cannot be repaired without human intervention. Open a ticket on "
 "SourceForge if you experience a crash."
 msgstr ""
+"Les corrections ne sont pas toutes appliquées en une fois. Elles sont "
+"appliquées par lot des object SQL de plus haut niveau vers le plus bas. "
+"Lorsqu'une correction dépendant d'une autre, un objet SQL peut être redéfini "
+"et lever une erreur temporaire de définition. Si une correction crashe il se "
+"peut que ce programme ne soit pas assez complet ou que la base de données ne "
+"soit pas réparable sans intervention humaine. Ouvrez un ticket sur "
+"SourceForge si vous rencontrez un crash."
 
 #: components/plugins/repairkit/repairkitmessages.php:60
-#, fuzzy
-#| msgid "DB integrity"
 msgid "DB Integrity State"
-msgstr "Intégrité BDD"
+msgstr "Intégrité de la BDD"
 
 #: components/plugins/repairkit/repairkitmessages.php:61
-#, fuzzy
-#| msgid "Database Integrity"
 msgid "Tables Integrity State"
-msgstr "Intégrité de la base de données"
+msgstr "Intégrité des tables"
 
 #: components/plugins/repairkit/repairkitmessages.php:62
 msgid "Fields Integrity State"
-msgstr ""
+msgstr "Intégrité des champs"
 
 #: components/plugins/repairkit/repairkitmessages.php:63
 msgid "Indices Integrity State"
-msgstr ""
+msgstr "Intégrité des index"
 
 #: components/plugins/repairkit/repairkitmessages.php:64
 msgid "Successfully fixed. ###"
@@ -231,13 +224,3 @@ msgstr "Impossible d'écrire le fichier."
 #: components/plugins/repairkit/repairkitmessages.php:68
 msgid "Unable to read file."
 msgstr "Impossible de lire le fichier."
-
-#~ msgid "The database is missing the following fields and cannot be fixed:"
-#~ msgstr ""
-#~ "Il manque les champs suivants à la base de données qui ne peuvent pas être "
-#~ "corrigés :"
-
-#~ msgid "The database is missing the following tables and cannot be fixed:"
-#~ msgstr ""
-#~ "Il manque les tables suivantes à la base de données qui ne peuvent pas "
-#~ "être corrigées :"

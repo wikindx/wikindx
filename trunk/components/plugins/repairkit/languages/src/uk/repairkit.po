@@ -2,10 +2,10 @@
 # For copyright see the component.json file
 # This file is distributed under the same license as the repairkit package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Yuri Chornoivan <yurchor@ukr.net>, 2021
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -51,12 +51,12 @@ msgstr "Виправити авторів"
 #: components/plugins/repairkit/repairkitmessages.php:32
 #: components/plugins/repairkit/repairkitmessages.php:41
 msgid "Deduplicate users"
-msgstr ""
+msgstr "Вилучення дублікатів записів користувачів"
 
 #: components/plugins/repairkit/repairkitmessages.php:33
 #: components/plugins/repairkit/repairkitmessages.php:42
 msgid "Fix Datetimes"
-msgstr ""
+msgstr "Виправлення дат і часу"
 
 #. *
 #. * Headings
@@ -108,14 +108,10 @@ msgid "Fix various errors regarding creators."
 msgstr "Виправити різноманітні помилки, пов'язані із записами авторів."
 
 #: components/plugins/repairkit/repairkitmessages.php:51
-#, fuzzy
-#| msgid ""
-#| "There are invalid datetime field values ('0000-00-00 00:00:00') that must "
-#| "be fixed."
 msgid "Fix invalid datetime field values (e.g. '0000-00-00 00:00:00')."
 msgstr ""
-"Виявлено некоректні значення полів дати і часу («0000-00-00 00:00:00»), які "
-"має бути виправлено."
+"Виправити некоректні значення у полі дати і часу (наприклад «0000-00-00 "
+"00:00:00»)."
 
 #: components/plugins/repairkit/repairkitmessages.php:52
 msgid ""
@@ -124,16 +120,23 @@ msgid ""
 "can merge two user accounts by choosing the target account which will be "
 "credited with all the data of the second (resources, notes ...)."
 msgstr ""
+"Щоб розпізнавання працювало без помилок, обліковий запис користувача має бути "
+"унікальним, але це обмеження до версії 6.3.0 не існувало. За допомогою цієї "
+"сторінки ви можете об'єднати два облікових записи користувачів вибором "
+"облікового запису призначення, з яким буде пов'язано усі дані (ресурси, "
+"нотатки тощо) дубльованого облікового запису."
 
 #: components/plugins/repairkit/repairkitmessages.php:53
 msgid "Please choose two user accounts to merge."
-msgstr ""
+msgstr "Будь ласка, виберіть два облікових записи користувача для об'єднання."
 
 #: components/plugins/repairkit/repairkitmessages.php:54
 msgid ""
 "For each field, please choose the value to retain in the merged account (only "
 "different fields are displayed)."
 msgstr ""
+"Для кожного поля, будь ласка, виберіть значення, яке слід зберегти у "
+"об'єднаному обліковому записі (показано лише різні поля)."
 
 #: components/plugins/repairkit/repairkitmessages.php:55
 msgid ""
@@ -152,17 +155,6 @@ msgid "The database structure is correct and there is nothing to fix."
 msgstr "Структура бази даних є правильною — нічого виправляти."
 
 #: components/plugins/repairkit/repairkitmessages.php:58
-#, fuzzy
-#| msgid ""
-#| "The database structure differs to the final release database structure for "
-#| "version ### (see report below). This could be because you have been "
-#| "updating this database with pre-release SVN code that has upgraded the "
-#| "structure in incremental steps. Click on OK to fix this. Note: this fix "
-#| "does NOT fix missing tables or missing fields – it will only fix variances "
-#| "in engine, collation, indices, field types, and null and default values. "
-#| "Remember, this fix is a last resort for those cases where a production "
-#| "(rather than a test) database has been mistakenly upgraded with SVN code. "
-#| "As always, backup your database before proceeding."
 msgid ""
 "The database structure differs to the final release database structure for "
 "version ### (see report below). This could be because you have been updating "
@@ -177,13 +169,13 @@ msgstr ""
 "випуску версії ### (див. звіт нижче). Причиною може бути те, що ви оновили цю "
 "базу даних до версії для коду у SVN-версії, що передує випуску, і ця версія "
 "послідовно оновила структуру. Натисніть «Гаразд», щоб виправити це. "
-"Зауваження: пропущені таблиці або пропущені поля виправлено НЕ буде — "
-"програма виправить лише відмінності у записах рушія, об'єднання, індекси, "
-"типи полів та порожні і типові значення. Пам'ятайте — до цього виправлення "
-"слід вдаватися, лише якщо ви не можете виправити в інший спосіб результати "
-"помилкового оновлення бази даних у промисловому середовищі (не у тестовому "
-"варіанті) на основі коду з SVN. Як завжди, перед виконанням дій створіть "
-"резервну копію вашої бази даних."
+"Зауваження: ця програма НЕ виправляє зайві таблиці або поля, якщо вони не є "
+"порожніми, а також зміни назв (якщо їх не пов'язано із простою зміною "
+"регістру символів). Пам'ятайте — до цього виправлення слід вдаватися, лише "
+"якщо ви не можете виправити в інший спосіб результати помилкового оновлення "
+"бази даних у промисловому середовищі (не у тестовому варіанті) на основі коду "
+"з SVN. Як завжди, перед виконанням дій створіть резервну копію вашої бази "
+"даних."
 
 #: components/plugins/repairkit/repairkitmessages.php:59
 msgid ""
@@ -194,26 +186,30 @@ msgid ""
 "the database cannot be repaired without human intervention. Open a ticket on "
 "SourceForge if you experience a crash."
 msgstr ""
+"Виправлення застосовуються не одразу. Вони застосовуються пакетно, починаючи "
+"з об'єктів SQL найвищого рівня до об'єктів найнижчого рівня. Якщо одне "
+"виправлення залежить від іншого, об'єкт SQL може бути перевизначено, також "
+"може бути показано повідомлення про помилку тимчасового визначення. Якщо "
+"засіб виправлення завершує роботу в аварійному режимі, це означає, що його "
+"програмування є неповним або виправити базу даних без втручання людини "
+"неможливо. Відкрийте квиток на SourceForge, якщо маєте справу із аварійним "
+"завершенням роботи."
 
 #: components/plugins/repairkit/repairkitmessages.php:60
-#, fuzzy
-#| msgid "DB integrity"
 msgid "DB Integrity State"
-msgstr "Цілісність БД"
+msgstr "Стан цілісності бази даних"
 
 #: components/plugins/repairkit/repairkitmessages.php:61
-#, fuzzy
-#| msgid "Database Integrity"
 msgid "Tables Integrity State"
-msgstr "Цілісність бази даних"
+msgstr "Стан цілісності таблиць"
 
 #: components/plugins/repairkit/repairkitmessages.php:62
 msgid "Fields Integrity State"
-msgstr ""
+msgstr "Стан цілісності полів"
 
 #: components/plugins/repairkit/repairkitmessages.php:63
 msgid "Indices Integrity State"
-msgstr ""
+msgstr "Стан цілісності індексів"
 
 #: components/plugins/repairkit/repairkitmessages.php:64
 msgid "Successfully fixed. ###"
@@ -234,11 +230,3 @@ msgstr "Не вдалося записати дані до файла."
 #: components/plugins/repairkit/repairkitmessages.php:68
 msgid "Unable to read file."
 msgstr "Не вдалося прочитати дані з файла."
-
-#~ msgid "The database is missing the following fields and cannot be fixed:"
-#~ msgstr ""
-#~ "У базі даних не вистачає вказаних нижче полів — її неможливо виправити:"
-
-#~ msgid "The database is missing the following tables and cannot be fixed:"
-#~ msgstr ""
-#~ "У базі даних не вистачає вказаних нижче таблиць — її неможливо виправити:"

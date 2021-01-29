@@ -2,10 +2,10 @@
 # For copyright see the component.json file
 # This file is distributed under the same license as the wikindx package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Yuri Chornoivan <yurchor@ukr.net>, 2021
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -5752,6 +5752,9 @@ msgid ""
 "You can only edit categories, keywords, and languages for those resources you "
 "own or where the superadmin has given global permissions."
 msgstr ""
+"Редагувати записи категорій, ключових слів та мов можна лише для тих "
+"ресурсів, власником яких ви є, або там, де суперадміністратором надано "
+"загальні права доступу."
 
 #. / resources_availableKeywords Existing keywords stored in the database
 #: core/messages/messages.php:588

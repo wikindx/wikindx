@@ -26,6 +26,8 @@ class BIBSTYLE
     /** string */
     public $output = 'html';
     /** string */
+    public $ooxml = FALSE;
+    /** string */
     public $shortOutput;
     /** boolean */
     public $export = FALSE;
@@ -511,7 +513,7 @@ class BIBSTYLE
         unset($this->row['resourcetextUrls']);
         if ($this->output == 'html')
         {
-            $label = \URL\reduceUrl($url, 50);
+            $label = $this->ooxml ? $url : \URL\reduceUrl($url, 50);
             if ($this->linkUrl)
             {
                 return \HTML\a('rLink', $label, $url, "_blank");

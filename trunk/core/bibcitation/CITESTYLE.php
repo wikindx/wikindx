@@ -47,7 +47,7 @@ class CITESTYLE
     /**
      * CITESTYLE
      *
-     * @param string $output 'html', plain', 'rtf'. Default is 'html'
+     * @param string $output 'html', 'htmlNoBib', 'ooxml', 'plain', 'rtf'. Default is 'html'
      */
     public function __construct($output = 'html')
     {
@@ -71,7 +71,7 @@ class CITESTYLE
      * @param string $text
      * @param bool $citeLink
      *
-     * @return string
+     * @return mixed
      */
     public function start($text, $citeLink)
     {
@@ -174,7 +174,7 @@ class CITESTYLE
                 return $pString;
             }
         }
-        if ($this->output == 'htmlNoBib')
+        if (($this->output == 'htmlNoBib') || ($this->output = 'ooxml'))
         {
             return $pString;
         }

@@ -31,7 +31,7 @@ MAINTENANCE:
 6. Bump component compatibility version of styles to 5.
 7. Fix some typos (ticket #310).
 8. Simplify MySQL/MariaDB version query.
-9. Ukranian translation.
+9. Full Ukranian translation (thanks to Yuri Chornoivan).
 10. Set utf8mb4_unicode_520_ci as the default collation of the database.
 11. Improve browserTabID functionality for single resource views.
 12. Credits of translators.

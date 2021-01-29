@@ -107,7 +107,7 @@ define('WIKINDX_COPYRIGHT_YEAR', "2003-2021");
  *
  * @name WIKINDX_RELEASE_DATE
  */
-define('WIKINDX_RELEASE_DATE', "2020-12-21");
+define('WIKINDX_RELEASE_DATE', "2021-01-29");
 /**
  * WIKINDX release timestamp
  *

@@ -1,0 +1,34 @@
+{
+    "component_sha256": "1cb88bd2470a104d0001effd7bf9fcff5eda273f8554795a50ffbb018b2af67f",
+    "component_version": "382",
+    "component_description": "Customize the description on the home page in various languages.",
+    "component_licence": "ISC License",
+    "component_name": "Localized Front Page",
+    "component_builtin": "false",
+    "component_id": "localedescription",
+    "component_type": "plugin",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2013, 2016-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2021",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/9/wikindx_plugin_localedescription_382.zip",
+            "package_sha256": "ec594d4aafa70abe2e9d5ca824ee7e1a7bbd7d8c552f363d90a54680fd8e0851",
+            "package_size": 18163
+        }
+    ]
+}

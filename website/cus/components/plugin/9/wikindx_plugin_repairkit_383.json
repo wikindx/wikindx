@@ -1,0 +1,34 @@
+{
+    "component_version": "383",
+    "component_description": "Attempt to fix to a number of errors that can occur over time in the database. For developers, testers, or difficult situations when a db schema is corrupted.",
+    "component_licence": "ISC License",
+    "component_name": "Repair Kit",
+    "component_sha256": "a007718793d24cd5b42e4fb2ab87105842f91d35a10022ad98e61c0980e9a25c",
+    "component_builtin": "false",
+    "component_type": "plugin",
+    "component_id": "repairkit",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2013, 2016-2017, 2019-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2021",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/9/wikindx_plugin_repairkit_383.zip",
+            "package_sha256": "c800a8408b55dbed735f0590c9c9837e16370f0e0b67860acbb2c9a01305bccf",
+            "package_size": 45312
+        }
+    ]
+}

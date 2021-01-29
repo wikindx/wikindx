@@ -1,0 +1,40 @@
+{
+    "component_sha256": "16842227576fae9743386641a78e900994ca223648c23dffc576f7088109e606",
+    "component_version": "363",
+    "component_licence": "LGPL 3.0",
+    "component_name": "PHP Template Engine Smarty",
+    "component_description": "Smarty is a template engine for PHP, facilitating the separation of presentation (HTML/CSS) from application logic.",
+    "component_website": "https://www.smarty.net/",
+    "component_id": "smarty",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_type": "vendor",
+    "component_authors": [
+        {
+            "author_name": "New Digital Group, Inc.",
+            "author_role": "Developers",
+            "author_copyright": "2002-2020"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Packager",
+            "author_copyright": "2012-2016",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2017-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/trunk/wikindx_vendor_smarty_363.zip",
+            "package_sha256": "5f55567ef4c6239a76388b0669bff29fe7bb143934b2a7f596a08a210d160d57",
+            "package_size": 298091
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "component_version": "363",
+    "component_name": "APA",
+    "component_description": "American Psychological Association (APA) (installed by default). APA is an author/date based style. This means emphasis is placed on the author and the date of a piece of work to uniquely identify it.",
+    "component_licence": "ISC License",
+    "component_id": "apa",
+    "component_sha256": "eee874649666afc5c7e54d6a7a60e2914129ef07f6fc6acc0fc9acc15da5f74f",
+    "component_website": "https://apastyle.apa.org",
+    "component_type": "style",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Compiler",
+            "author_copyright": "2005, 2020-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/5/wikindx_style_apa_363.zip",
+            "package_sha256": "3ab1d05c0a9c4e7aa8d91d23d528f20235681dd8c675b01af0c5f9bf15443982",
+            "package_size": 5584
+        }
+    ]
+}

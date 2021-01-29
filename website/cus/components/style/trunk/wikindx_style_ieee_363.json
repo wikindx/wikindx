@@ -1,0 +1,33 @@
+{
+    "component_version": "363",
+    "component_sha256": "96de6e3e1793dfd71fe21e6c6558c204ed0d90dde64c04ff7272b089dcb422fb",
+    "component_name": "IEEE",
+    "component_licence": "ISC License",
+    "component_description": "Institute of Electrical and Electronics Engineers (IEEE), a widely accepted format for writing research papers, commonly used in technical fields, particularly in computer science.",
+    "component_builtin": "false",
+    "component_website": "https://en.wikipedia.org/wiki/IEEE_style",
+    "component_id": "ieee",
+    "component_type": "style",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Frank Goergen",
+            "author_role": "Compiler",
+            "author_copyright": "2005"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Editor",
+            "author_copyright": "2005, 2020-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/trunk/wikindx_style_ieee_363.zip",
+            "package_sha256": "e8aee6db384dff0f65a8a7133a77d544342cc8c657640a48d73e116031db3e54",
+            "package_size": 4219
+        }
+    ]
+}

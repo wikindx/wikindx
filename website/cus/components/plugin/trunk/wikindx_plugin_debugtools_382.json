@@ -1,0 +1,34 @@
+{
+    "component_version": "382",
+    "component_name": "Debug Tools",
+    "component_licence": "ISC License",
+    "component_description": "Some tools for debugging Wikindx. For developers, testers, or difficult situations when a bug arises.",
+    "component_sha256": "cb52b35821746ed989cc14509d8c9d6670ed8490494c5f9109c85c6b085af07d",
+    "component_id": "debugtools",
+    "component_builtin": "false",
+    "component_type": "plugin",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2019-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2019-2021",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_debugtools_382.zip",
+            "package_sha256": "a409b46e182823b6d113867786fd94f0afb35e6d32053ea2334772a1e2389135",
+            "package_size": 21890
+        }
+    ]
+}

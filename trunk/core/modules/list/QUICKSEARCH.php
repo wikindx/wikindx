@@ -570,7 +570,6 @@ class QUICKSEARCH
     private function parseWord()
     {
         $this->words = $this->parsePhrase->parse($this->input);
-        $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE);
         if ((is_array($this->words) && empty($this->words)) || !$this->parsePhrase->validSearch)
         {
             GLOBALS::setTplVar('resourceListSearchForm', FALSE);

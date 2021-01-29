@@ -364,6 +364,8 @@ class repairkit_MODULE
     
     /*
      * Change the collation and character set of the db
+     *
+     * @param array $dbDef Definition of a db object provided by dbIntegrityCheck
      */
     private function changeDbCollation($dbDef)
     {
@@ -390,20 +392,22 @@ class repairkit_MODULE
     /*
      * Rename a table
      *
-     * @param string $src Fullname of a source table
-     * @param string $dst Fullname of a destination table
+     * @param string $tablesrc Fullname of a source table
+     * @param string $tabledst Fullname of a destination table
      */
-    private function renameTable($src, $dst)
+    private function renameTable($tablesrc, $tabledst)
     {
         $tmpTable = uniqid(WIKINDX_DB_TABLEPREFIX);
         
         // Change the name of all tables to lower case (workaround for mySQL engine on case sensitive files systems)
-        $this->db->queryNoResult("ALTER TABLE `" . $src . "` RENAME AS `" . $tmpTable . "`;");
-        $this->db->queryNoResult("ALTER TABLE `" . $tmpTable . "` RENAME AS `" . $dst . "`;");
+        $this->db->queryNoResult("ALTER TABLE `" . $tablesrc . "` RENAME AS `" . $tmpTable . "`;");
+        $this->db->queryNoResult("ALTER TABLE `" . $tmpTable . "` RENAME AS `" . $tabledst . "`;");
     }
     
     /*
      * Change the collation and character set of a table
+     *
+     * @param array $tableDef Definition of a table object provided by dbIntegrityCheck
      */
     private function changeTableCollation($tableDef)
     {
@@ -418,6 +422,8 @@ class repairkit_MODULE
     
     /*
      * Change the engine of a table
+     *
+     * @param array $tableDef Definition of a table object provided by dbIntegrityCheck
      */
     private function changeTableEngine($tableDef)
     {
@@ -438,6 +444,8 @@ class repairkit_MODULE
     
     /*
      * Create a field on a table
+     *
+     * @param array $fieldDef Definition of a field object provided by dbIntegrityCheck
      */
     private function createField($fieldDef)
     {
@@ -478,38 +486,41 @@ class repairkit_MODULE
     
     /*
      * Change a field of a table
+     *
+     * @param array $fieldDefOld Definition of the old field object provided by dbIntegrityCheck
+     * @param array $fieldDefNew Definition of the new field object provided by dbIntegrityCheck
      */
-    private function changeField($fieldDefOld, $fieldDef)
+    private function changeField($fieldDefOld, $fieldDefNew)
     {
         // cf. https://dev.mysql.com/doc/refman/5.7/en/create-table.html
         // cf. https://dev.mysql.com/doc/refman/5.7/en/alter-table.html
         
         // tbl_name
-        $sql = "ALTER TABLE " . $fieldDef["Table"] . " ";
+        $sql = "ALTER TABLE " . $fieldDefNew["Table"] . " ";
         
         // alter_option (column_name)
-        $sql .= " CHANGE COLUMN `" . (count($fieldDefOld) > 0 ? $fieldDefOld["Field"] : $fieldDef["Field"]) . "` `" . $fieldDef["Field"] . "` ";
+        $sql .= " CHANGE COLUMN `" . (count($fieldDefOld) > 0 ? $fieldDefOld["Field"] : $fieldDefNew["Field"]) . "` `" . $fieldDefNew["Field"] . "` ";
         
         // column_definition (data_type)
-        $sql .= " " . $fieldDef["Type"] . " ";
+        $sql .= " " . $fieldDefNew["Type"] . " ";
         
         // column_definition (nullable?)
-        $sql .= $fieldDef["Null"] == "YES" ? " NULL " : " NOT NULL ";
+        $sql .= $fieldDefNew["Null"] == "YES" ? " NULL " : " NOT NULL ";
         
         // column_definition (default value)
-        if ($fieldDef["Default"] == "current_timestamp()")
-            $sql .= " DEFAULT " . $fieldDef["Default"] . " ";
-        elseif ($fieldDef["Default"] != NULL)
-            $sql .= " DEFAULT '" . $this->db->escapeString($fieldDef["Default"]) . "' ";
+        if ($fieldDefNew["Default"] == "current_timestamp()")
+            $sql .= " DEFAULT " . $fieldDefNew["Default"] . " ";
+        elseif ($fieldDefNew["Default"] != NULL)
+            $sql .= " DEFAULT '" . $this->db->escapeString($fieldDefNew["Default"]) . "' ";
         
         // column_definition (extra clause)
-        if ($fieldDef["Extra"] == "on update current_timestamp()")
-            $sql .= " " . $fieldDef["Extra"] . " ";
-        elseif ($fieldDef["Extra"] == "auto_increment")
-            $sql .= " " . $fieldDef["Extra"] . " ";
+        if ($fieldDefNew["Extra"] == "on update current_timestamp()")
+            $sql .= " " . $fieldDefNew["Extra"] . " ";
+        elseif ($fieldDefNew["Extra"] == "auto_increment")
+            $sql .= " " . $fieldDefNew["Extra"] . " ";
         
         // column_definition (collation)
-        $sql .= $fieldDef["Collation"] == NULL ? "" : " COLLATE " . $fieldDef["Collation"] . " ";
+        $sql .= $fieldDefNew["Collation"] == NULL ? "" : " COLLATE " . $fieldDefNew["Collation"] . " ";
         
         $sql .= ";";
         
@@ -518,6 +529,8 @@ class repairkit_MODULE
     
     /*
      * Drop a field from a table
+     *
+     * @param array $fieldDef Definition of a field object provided by dbIntegrityCheck
      */
     private function dropField($fieldDef)
     {
@@ -527,6 +540,8 @@ class repairkit_MODULE
     
     /*
      * Create an index on a table
+     *
+     * @param array $indicesDef Definition of an index object provided by dbIntegrityCheck
      */
     private function createIndex($indicesDef)
     {

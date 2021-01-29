@@ -35,7 +35,7 @@ class FRONT
     /**
      * FRONT
      *
-     * @param string $message
+     * @param string $message (Can come from BASKET::deleteConfirm())
      */
     public function __construct($message = FALSE)
     {

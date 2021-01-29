@@ -74,12 +74,9 @@ class soundexplorer_MODULE
      */
     public function seConfigure()
     {
-        if (array_key_exists('message', $this->vars))
-        {
-            $this->seConfigureDisplay($this->vars['message']);
-        }
-        else
-        {
+        if (array_key_exists('success', $this->vars)) {
+            $this->seConfigureDisplay(\HTML\p($this->pluginmessages->text($this->vars['success']), 'success', 'center'));
+        } else {
             $this->seConfigureDisplay();
         }
         FACTORY_CLOSEPOPUP::getInstance();
@@ -155,7 +152,7 @@ class soundexplorer_MODULE
             $this->session->clearArray("seplugin");
             $this->session->setVar("seplugin_On", $status);
             $this->session->setVar("seplugin_DatabaseCreated", $dbStatus);
-            $message = HTML\p($this->pluginmessages->text('seDeleteSuccess'), 'success', 'center');
+            $message = 'seDeleteSuccess';
         }
         else
         {
@@ -173,7 +170,7 @@ class soundexplorer_MODULE
                     $this->seInsertSearch();
                 }
                 $pString = $this->seConfigureDisplay(HTML\p($this->pluginmessages->text('seStoreSuccess'), 'success', 'center'));
-                $message = HTML\p($this->pluginmessages->text('seStoreSuccess'), 'success', 'center');
+                $message = 'seStoreSuccess';
             }
             else
             {
@@ -183,8 +180,7 @@ class soundexplorer_MODULE
             }
         }
         // redirect to display with success message
-        $message = rawurlencode($message);
-        header("Location: index.php?action=soundexplorer_seConfigure&message=$message");
+        header("Location: index.php?action=soundexplorer_seConfigure&success=$message");
         die;
     }
     /**

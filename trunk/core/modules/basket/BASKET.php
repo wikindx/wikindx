@@ -251,11 +251,9 @@ class BASKET
     /**
      * Delete the basket
      *
-     * @param bool $confirm Default FALSE
-     *
      * @return string
      */
-    public function delete($confirm = FALSE)
+    public function delete()
     {
     	if ($this->browserTabID) {
 			if (!GLOBALS::getTempStorage('basket_List')) {
@@ -264,15 +262,6 @@ class BASKET
         		return;
         	}
 		}
-        if ($confirm) // todo – not used?
-        {
-            $this->session->clearArray('basket');
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
-            $obj = new FRONT($this->db);
-            $obj->message = $this->success->text("basketDelete");
-
-            return $obj->display();
-        }
         // Ask for confirmation first
         GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basketDelete'));
 

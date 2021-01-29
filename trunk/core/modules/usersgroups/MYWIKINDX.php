@@ -61,6 +61,7 @@ class MYWIKINDX
      */
     public function init($message = FALSE)
     {
+    	$item = FALSE;
         // Cleanup if necessary
         if (array_key_exists('uuid', $this->vars))
         {
@@ -89,7 +90,9 @@ class MYWIKINDX
         else
         {
             $this->messageString = $message;
-            $item = FALSE;
+            if (array_key_exists('selectItem', $this->vars)) {
+            	$item = $this->vars['selectItem'];
+            }
         }
         $configGroups = $this->getConfigGroups();
         if (empty($configGroups))
@@ -919,21 +922,15 @@ class MYWIKINDX
     }
     /**
      * Display further user groups settings for deleting
-     *
-     * @param mixed $message
      */
-    public function deleteUserGroupInit($message = FALSE)
+    public function deleteUserGroupInit()
     {
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "deleteGroup")
         ));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
-        }
-        $pString = $message;
+        $pString = '';
         $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
         $title = \HTML\strong($this->db->selectFirstField('user_groups', 'usergroupsTitle'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmGroup") . ":&nbsp;&nbsp;" .
@@ -1240,10 +1237,8 @@ class MYWIKINDX
     }
     /**
      * Display further user tags settings for deleting
-     *
-     * @param mixed $message
      */
-    public function deleteUserTagInit($message = FALSE)
+    public function deleteUserTagInit()
     {
         if (!$tagId = $this->vars['tagId'])
         {
@@ -1261,11 +1256,7 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "deleteUserTag")
         ));
-        if (array_key_exists('message', $this->vars))
-        {
-            $message = $this->vars['message'];
-        }
-        $pString = $message;
+        $pString = '';
         $this->db->formatConditions(['usertagsId' => $this->vars['tagId']]);
         $title = \HTML\strong($this->db->selectFirstField('user_tags', 'usertagsTag'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmUserTag") . ":&nbsp;&nbsp;" .

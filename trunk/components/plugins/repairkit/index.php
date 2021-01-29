@@ -801,8 +801,7 @@ class repairkit_MODULE
         }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDuplicateUsers'));
         
-        $pString  = $this->vars['message'] ?? "";
-        $pString .= HTML\p($this->pluginmessages->text('preamble1'));
+        $pString = HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
         GLOBALS::addTplVar('content', $pString);
         

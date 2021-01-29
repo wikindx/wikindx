@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 21, 2020 at 04:54 PM
+-- Generation Time: Jan 29, 2021 at 08:26 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -7994,7 +7994,7 @@ CREATE TABLE `wkx_version` (
 --
 
 INSERT INTO `wkx_version` (`versionComponentType`, `versionComponentId`, `versionInternalVersion`) VALUES
-('core', 'core', 37),
+('core', 'core', 41),
 ('plugin', 'localedescription', 1),
 ('plugin', 'soundexplorer', 1);
 

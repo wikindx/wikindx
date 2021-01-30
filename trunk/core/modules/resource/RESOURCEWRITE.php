@@ -34,6 +34,7 @@ class RESOURCEWRITE
     private $badInput;
     private $navigate;
     private $formData = [];
+    private $duplicateBackupUuid;
 
     public function __construct()
     {
@@ -175,7 +176,6 @@ class RESOURCEWRITE
         {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCEFORM.php"]));
             $rForm = new RESOURCEFORM();
-
             $res = FACTORY_RESOURCECOMMON::getInstance();
             $bibStyle = FACTORY_BIBSTYLE::getInstance();
             $pString = $this->errors->text('warning', 'resourceExists');
@@ -185,7 +185,7 @@ class RESOURCEWRITE
             $pString .= \HTML\p($bibStyle->process($row));
             $pString .= \HTML\p($this->messages->text('resources', 'duplicate') . '&nbsp;&nbsp;' .
                 \FORM\checkbox(FALSE, 'allowDuplicate'));
-            $rForm->init($pString);
+            $rForm->init($pString, TRUE, $this->duplicateBackupUuid); // 'TRUE' allows reloading of input data.
 
             return FALSE;
         }
@@ -1007,7 +1007,47 @@ class RESOURCEWRITE
             }
         }
         \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+    	$this->duplicateBackup();
     }
+    /**
+     * Backup the formdata for reloading into the resource form when a duplicate is detected
+     *
+    */
+	private function duplicateBackup()
+	{
+		$duplicateBackup['resourceType'] = $this->formData['resourceType'];
+		foreach ($this->vars as $key => $value) {
+			if (($key != 'bibliographies') && 
+				($key != 'keywordList') && 
+				($key != 'userTagList') && 
+				($key != 'resourcekeywordKeywords') && 
+				($key != 'resourcecategoryCategories') && 
+				($key != 'resourcecategorySubcategories')
+				) {
+				$duplicateBackup[$key] = $value;
+			}
+			if ($key == 'keywordList') {
+				$duplicateBackup['resourcekeywordKeywords'] = $value;
+			}
+			if ($key == 'userTagList') {
+				$duplicateBackup['resourceusertagsTagId'] = $value;
+			}
+			if ($key == 'resourcecategoryCategories') {
+				$duplicateBackup['resourcecategoryCategories'] = join(',', $value);
+			}
+			if ($key == 'resourcecategorySubcategories') {
+				$duplicateBackup['resourcecategorySubcategories'] = join(',', $value);
+			}
+			if ($key == 'bibliographies') {
+				if ((sizeOf($value) == 1) && ($value[0] == 0)) {
+					continue;
+				}
+				$duplicateBackup['bibliographies'] = join(',', $value);
+			}
+		}
+		$this->duplicateBackupUuid = \TEMPSTORAGE\getUuid($this->db);
+		\TEMPSTORAGE\store($this->db, $this->duplicateBackupUuid, $duplicateBackup);
+	}
     /**
      * Place title elements and optional transTitle elements into resourceInput array.  Remove accepted elements from $input array
      *

@@ -33,8 +33,8 @@ class OFFICE
     {
     	if (array_key_exists('method', $this->vars)) {
     		switch ($this->vars['method']) {
-    			case 'getCitation':
-    				$this->getCitations();
+    			case 'getResources':
+    				$this->getResources();
     				break;
     			case 'getStyles':
     				$this->getStyles();
@@ -46,10 +46,10 @@ class OFFICE
     	}
     }
     /**
-     * Echo the citation
+     * Get the resource list from the search
      *
      */
-    private function getCitations()
+    private function getResources()
     {
     	$id = array_key_exists('searchWord', $this->vars) ? $this->vars['searchWord'] : 1119; // for test purposes . . .
     	$this->search->input['Word'] = \UTF8\mb_trim($this->vars['searchWord']);
@@ -69,7 +69,7 @@ class OFFICE
     	$resultSet = $this->db->query($sql);
     	while ($row = $this->db->fetchRow($resultSet)) {
     		$bibEntry = $this->bibStyle->process($row);
-    		$citation = trim($this->citeStyle->start('[cite]' . $row['resourceId'] . '[/cite]', FALSE));
+//    		$citation = trim($this->citeStyle->start('[cite]' . $row['resourceId'] . '[/cite]', FALSE));
     		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'citation' => $citation];
     	}
     	return json_encode($jsonArray);

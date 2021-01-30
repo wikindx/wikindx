@@ -49,6 +49,7 @@ class RESOURCEFORM
     private $formData = [];
     private $uuid;
     private $browserTabID = FALSE;
+    private $duplicateCheck;
 
     public function __construct()
     {
@@ -92,25 +93,30 @@ class RESOURCEFORM
      * Start the process of entering a new resource by asking for the choice of resource type and number of authors
      *
      * @param false|string $error
+     * @param bool $duplicateCheck default FALSE
+     * @param string $uuid default '' (Present only if $duplicateCheck = TRUE)
      */
-    public function init($error = FALSE)
+    public function init($error = FALSE, $duplicateCheck = FALSE, $uuid = '')
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit'))
-        {
+    	$this->duplicateCheck = $duplicateCheck;
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit')) {
             $return = '&nbsp;&nbsp;' . \HTML\a(
                 $this->icons->getClass("edit"),
                 $this->icons->getHTML("return"),
                 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id'] . '&browserTabID=' . $this->browserTabID
             );
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource') . $return);
-            if (!$error)
-            {
+            if (!$error) {
                 $this->getEditData();
             }
             $this->formData["resourceFormType"] = 'edit';
-        }
-        else
-        {
+        } else {
+        	if ($this->duplicateCheck) {
+        		$this->formData = \TEMPSTORAGE\fetch($this->db, $uuid);
+        		\TEMPSTORAGE\delete($this->db, $uuid);
+        		$this->resourceType = $this->formData['resourceType'];
+            	$this->resourceMap = FACTORY_RESOURCEMAP::getInstance($this->resourceType);
+        	}
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'newResource'));
             $this->formData["resourceFormType"] = 'new';
         }
@@ -703,7 +709,7 @@ class RESOURCEFORM
     {
         $jsonArray = [];
         $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=addCreatorField&creatorType=$key&uuid=" . $this->uuid;
-        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit'))
+        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit') || $this->duplicateCheck)
         {
             list($index, $editCell) = $this->creatorFieldsEdit($key);
             $jsonArray[] = [
@@ -726,7 +732,7 @@ class RESOURCEFORM
         $addImage = \AJAX\jActionIcon('add', 'onclick', $jsonArray);
         $jsonArray = [];
         $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=removeCreatorField&creatorType=$key&uuid=" . $this->uuid;
-        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit'))
+        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit') || $this->duplicateCheck)
         {
             $jsonArray[] = [
                 'startFunction' => 'removeCreator',
@@ -749,7 +755,7 @@ class RESOURCEFORM
         $images = '&nbsp;&nbsp;' . $addImage . '&nbsp;&nbsp;' . $removeImage;
         $creatorCells = \HTML\trStart();
         $creatorCells .= \HTML\td(\HTML\h($this->messages->text('creators', $creatorMsg) . $images, FALSE, 4), $this->tdLabelWidth);
-        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit'))
+        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit') || $this->duplicateCheck)
         {
             $creatorCells .= \HTML\td(\HTML\div($key . '_Inner', $editCell), $this->tdContentWidth);
         }

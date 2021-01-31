@@ -152,6 +152,30 @@ class CONFIGURE
         FACTORY_CLOSENOMENU::getInstance();
     }
     /**
+     * Display impressum in a pop up
+     */
+    public function displayImpressum()
+    {
+        $this->fromDbToFormdata();
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "configure"));
+        $pString = $this->session->getVar("configmessage");
+        $this->session->delVar("configmessage");
+        $pString .= $this->tinymce->loadMinimalTextarea(['configImpressum'], TRUE);
+        $pString .= \FORM\formHeader("admin_CONFIGURE_CORE");
+        $pString .= \FORM\hidden("method", "writeDb");
+        $pString .= \FORM\hidden("selectItem", 'impressum');
+        $input = array_key_exists("configImpressum", $this->formData) ? $this->formData["configImpressum"] : WIKINDX_IMPRESSUM_DEFAULT;
+        $pString .= \FORM\textareaInput($this->messages->text("config", "impressum"), "configImpressum", $input, 75, 20);
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
+        $pString .= \FORM\formEnd();
+        $pString .= \FORM\formHeader("admin_CONFIGURE_CORE&amp;method=init&amp;selectItem=front", "onsubmit=\"window.close();return true;\"");
+        $pString .= \FORM\hidden("selectItem", "miscellaneous");
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
+        $pString .= \FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
+        FACTORY_CLOSENOMENU::getInstance();
+    }
+    /**
      * Open popup for ldap transaction report
      */
     public function ldapTester()
@@ -540,6 +564,10 @@ class CONFIGURE
                 break;
             case 'misc': // miscellaneous configuration
                 $pString .= $this->miscConfigDisplay();
+
+                break;
+            case 'impressum': // impressum configuration
+                $pString .= $this->displayImpressum();
 
                 break;
             case 'rss': // RSS configuration
@@ -1679,6 +1707,14 @@ class CONFIGURE
             1
         ) . BR . \HTML\span($hint, 'hint'));
         
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\trStart();
+        $pString .= \HTML\td('&nbsp;');
+        $pString .= \HTML\td('&nbsp;');
+        $pString .= \HTML\td('&nbsp;');
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\trStart();
+        
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "maxPaste"));
         $input = array_key_exists("configMaxPaste", $this->formData) ? $this->formData["configMaxPaste"] : WIKINDX_MAX_PASTE_DEFAULT;
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
@@ -1698,6 +1734,13 @@ class CONFIGURE
             $input,
             30,
             255
+        ) . BR . \HTML\span($hint, 'hint'));
+        
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "impressum"));
+        $pString .= \HTML\td(\HTML\a(
+            '',
+            $this->messages->text("config", "impressum"),
+            "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=displayImpressum" . "', 90)"
         ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -1853,6 +1896,13 @@ class CONFIGURE
                     "configResourceUrlPrefix",
                     "configBrowserTabID",
                 ];
+
+                break;
+            case 'impressum': // impressum configuration
+                $array = [
+                    "configImpressum",
+                ];
+                $this->session->setVar("configmessage", $this->success->text("config"));
 
                 break;
             case 'rss': // RSS configuration

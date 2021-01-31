@@ -251,6 +251,10 @@ class CLOSE
         $outputString = ob_get_clean();
         $outputString = str_replace('%%DBTIMER%%', sprintf('%0.5f', $dbExecutionTime), $outputString);
         $outputString = str_replace('%%SCRTIMER%%', sprintf('%0.5f', $scriptExecutionTimeAfterRendering), $outputString);
+        
+        if (WIKINDX_IMPRESSUM) {
+        	$outputString .= WIKINDX_IMPRESSUM;
+        }
 
         // Insert debug info only if we are on the main page
         if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE)

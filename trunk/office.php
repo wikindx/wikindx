@@ -69,7 +69,7 @@ class OFFICE
     	$resultSet = $this->db->query($sql);
     	while ($row = $this->db->fetchRow($resultSet)) {
     		$bibEntry = $this->bibStyle->process($row);
-//    		$citation = trim($this->citeStyle->start('[cite]' . $row['resourceId'] . '[/cite]', FALSE));
+    		$citation = trim($this->citeStyle->start('[cite]' . $row['resourceId'] . '[/cite]', FALSE));
     		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'citation' => $citation];
     	}
     	return json_encode($jsonArray);

@@ -357,6 +357,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configImgHeightLimit"            => ["constname" => "WIKINDX_IMG_HEIGHT_LIMIT",              "type" => "configInt"],
     "configImgWidthLimit"             => ["constname" => "WIKINDX_IMG_WIDTH_LIMIT",               "type" => "configInt"],
     "configImportBib"                 => ["constname" => "WIKINDX_IMPORT_BIB",                    "type" => "configBoolean"],
+    "configImpressum"				  => ["constname" => "WIKINDX_IMPRESSUM",            		  "type" => "configText"],
     "configIsTrunk"                   => ["constname" => "WIKINDX_IS_TRUNK",                      "type" => "configBoolean"],
     "configLanguage"                  => ["constname" => "WIKINDX_LANGUAGE",                      "type" => "configVarchar"],
     "configLastChanges"               => ["constname" => "WIKINDX_LAST_CHANGES",                  "type" => "configInt"],

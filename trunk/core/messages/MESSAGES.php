@@ -354,6 +354,7 @@ class MESSAGES
 				"readOnlyAccess" => dgettext($domain, "If read only access is allowed, bypass the login prompt"),
 				"originatorEditOnly" => dgettext($domain, "Only admins and the resource originator can edit the resource"),
 				"globalEdit" => dgettext($domain, "Registered users can globally edit creators, collections, publishers and keywords"),
+				"impressum" => dgettext($domain, "Impressum"),
 			),
 /// components_ Admin components
 		    "components" => array(
@@ -865,7 +866,8 @@ class MESSAGES
 				"tagImport" => dgettext($domain, "Tag this import so you can do a mass select or delete later."),
 				"splitImport" => dgettext($domain, "Split the title and subtitle in the source bibliography on the first occurrence of the chosen character(s)."),
 				"keywordImport" => dgettext($domain, "Keywords are separated in the source bibliography by the chosen character(s)."),
-				"urlPrefix" => dgettext($domain, "The URL prefix displayed when adding URLs to resources."),
+				"urlPrefix" => dgettext($domain, "A default URL prefix displayed when adding URLs to resources."),
+				"impressum" => dgettext($domain, "Append an impressum/legal notice to the footer of each page."),
 			),
 /// menu_ Menu subsystem.  The trick here is to use short terms that don't cause problems with overflowing the CSS drop-down boxes - some browsers may happily handle this, others won't. Up to 15-16 characters (depending on character width) is a good guide - but check! NB!!!!!  For this array, the values should be unique where the keys form part of the same menu item.  For example, in the File menu, the 'file' key and the 'show' key should not have the same value of, for example, 'Files'.
 		    "menu" => array(

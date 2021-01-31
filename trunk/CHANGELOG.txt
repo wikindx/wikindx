@@ -9,6 +9,7 @@ BUG FIXES:
 
 
 FEATURE ENHANCEMENT:
+1. Added the ability to add an impressum/legal notice at the footer of each page – see Admin|Configure|Miscellaneous.
 
 
 MAINTENANCE:

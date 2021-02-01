@@ -3497,8 +3497,8 @@ class SQL
     
                 '<span style="font-weight:bold;color:black;">(</span>',
                 '<span style="font-weight:bold;color:black;">)</span>',
-                /*'<span style="font-weight:bold;color:black;">[</span>',
-                '<span style="font-weight:bold;color:black;">]</span>',*/
+                '<span style="font-weight:bold;color:black;">[</span>',
+                '<span style="font-weight:bold;color:black;">]</span>',
                 '<span style="font-weight:bold;color:black;"> = </span>',
                 '<span style="font-weight:bold;color:black;">&lt;&gt;</span>',
                 '<span style="font-weight:bold;color:black;"> IN </span>',

@@ -6,6 +6,7 @@ Focus: xxx
 
 BUG FIXES:
 1. When adding a new resource form, if a duplicate title is detected, the form is now re-presented with the filled-in form data intact (bug #313).
+2. Fix SQL formating.
 
 
 FEATURE ENHANCEMENT:

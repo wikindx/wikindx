@@ -9,7 +9,7 @@
 {* $inline3 is one of 4 containers for inline plugin output *}
 {if isset($inline3)}<div class="inline3">{$inline3}</div>{/if}
 
-{* Optional $footerInfo is an array with members: 'wikindxVersion', 'numResources', 'numQueries', 'scriptTime', 'username', 'style' and 'bibliography' *}
+{* Optional $footerInfo is an array with members: 'wikindxVersion', 'numResources', 'username', 'bibliography' and 'style' *}
 {assign var=footerInfo value=$footerInfo|default:false}
 <div class="footerInfo"><a class="link" href="{$wkx_link}" target="_blank">{$wkx_appname}</a>&nbsp;{if isset($footerInfo)}{"&nbsp;|&nbsp;"|implode:$footerInfo}{/if}</div>
 

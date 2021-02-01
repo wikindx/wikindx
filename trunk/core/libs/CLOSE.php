@@ -75,9 +75,12 @@ class CLOSE
         $footer['username'] = $this->messages->text("user", "username") . ":&nbsp;" . $usersUsername;
         $footer['bibliography'] = $this->messages->text("footer", "bib") . "&nbsp;" . $bib;
         $footer['style'] = $this->messages->text("footer", "style") . "&nbsp;" . $styleName;
-        $footer['numQueries'] = $this->messages->text("footer", "queries") . "&nbsp;" . GLOBALS::getDbQueries();
-        $footer['dbTime'] = $this->messages->text("footer", "dbtime") . "&nbsp;" . '%%DBTIMER%%' . "&nbsp;secs";
-        $footer['scriptTime'] = $this->messages->text("footer", "execution") . "&nbsp;" . '%%SCRTIMER%%' . "&nbsp;secs";
+        //$footer['dbTime'] = $this->messages->text("footer", "dbtime") . "&nbsp;" . '%%DBTIMER%%' . "&nbsp;secs";
+        //$footer['scriptTime'] = $this->messages->text("footer", "execution") . "&nbsp;" . '%%SCRTIMER%%' . "&nbsp;secs";
+        
+        if (WIKINDX_IMPRESSUM) {
+        	$footer['impressum'] = WIKINDX_IMPRESSUM;
+        }
 
         // Assigning values to the template and rendering
         $this->template = FACTORY_TEMPLATE::getInstance();
@@ -251,10 +254,6 @@ class CLOSE
         $outputString = ob_get_clean();
         $outputString = str_replace('%%DBTIMER%%', sprintf('%0.5f', $dbExecutionTime), $outputString);
         $outputString = str_replace('%%SCRTIMER%%', sprintf('%0.5f', $scriptExecutionTimeAfterRendering), $outputString);
-        
-        if (WIKINDX_IMPRESSUM) {
-        	$outputString .= WIKINDX_IMPRESSUM;
-        }
 
         // Insert debug info only if we are on the main page
         if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE)
@@ -268,15 +267,15 @@ class CLOSE
             // Insert debug timers
             if (defined('WIKINDX_DEBUG_ERRORS') && WIKINDX_DEBUG_ERRORS)
             {
-                $lineEnding = BR;
-                $debugString .= "<p style='font-family: monospace; font-size: 8pt; text-align: right;'>" . LF;
-                $debugString .= "PHP execution time: " . sprintf('%0.5f', $scriptElapsedTime) . " s$lineEnding";
-                $debugString .= "SQL execution time: " . sprintf('%0.5f', $dbExecutionTime) . " s$lineEnding";
-                $debugString .= "TPL rendering time: " . sprintf('%0.5f', $templateElapsedTime) . " s$lineEnding";
-                $debugString .= "Total elapsed time: " . sprintf('%0.5f', $scriptExecutionTimeAfterRendering) . " s$lineEnding";
-                $debugString .= "Peak memory usage: " . sprintf('%0.4f', memory_get_peak_usage() / 1048576) . " MB$lineEnding";
-                $debugString .= "Memory at close: " . sprintf('%0.4f', memory_get_usage() / 1048576) . " MB";
-                $debugString .= "\n</p>\n";
+                $debugString .= "<p style='font-family: monospace; font-size: 8pt; text-align: right;'>" . BR . LF;
+                $debugString .= "PHP execution time: " . sprintf('%0.5f', $scriptElapsedTime) . " s" . BR . LF;
+                $debugString .= "SQL execution time: " . sprintf('%0.5f', $dbExecutionTime) . " s" . BR . LF;
+                $debugString .= "TPL rendering time: " . sprintf('%0.5f', $templateElapsedTime) . " s" . BR . LF;
+                $debugString .= "Total elapsed time: " . sprintf('%0.5f', $scriptExecutionTimeAfterRendering) . " s" . BR . LF;
+                $debugString .= "Peak memory usage: " . sprintf('%0.4f', memory_get_peak_usage() / 1048576) . " MB" . BR . LF;
+                $debugString .= "Memory at close: " . sprintf('%0.4f', memory_get_usage() / 1048576) . " MB" . BR . LF;
+                $debugString .= "Database queries: " . GLOBALS::getDbQueries() . BR . LF;
+                $debugString .= "</p>" . LF;
             }
 
             $debugString .= "</body>";

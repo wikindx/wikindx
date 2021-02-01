@@ -15,6 +15,7 @@ FEATURE ENHANCEMENT:
 
 MAINTENANCE:
 1. Blocks install/upgrade if the db engine does not meet the requirements [#311].
+2. Move technical details in debug mode [#301].
 
 
 SECURITY

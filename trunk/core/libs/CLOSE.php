@@ -78,8 +78,8 @@ class CLOSE
         //$footer['dbTime'] = $this->messages->text("footer", "dbtime") . "&nbsp;" . '%%DBTIMER%%' . "&nbsp;secs";
         //$footer['scriptTime'] = $this->messages->text("footer", "execution") . "&nbsp;" . '%%SCRTIMER%%' . "&nbsp;secs";
         
-        if (WIKINDX_IMPRESSUM) {
-        	$footer['impressum'] = WIKINDX_IMPRESSUM;
+        if (WIKINDX_IMPRESSUM != "") {
+        	$footer['impressum'] = \html\a("", "Impressum", WIKINDX_URL_BASE . WIKINDX_IMPRESSUM_PAGE);
         }
 
         // Assigning values to the template and rendering

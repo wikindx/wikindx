@@ -75,8 +75,6 @@ class CLOSE
         $footer['username'] = $this->messages->text("user", "username") . ":&nbsp;" . $usersUsername;
         $footer['bibliography'] = $this->messages->text("footer", "bib") . "&nbsp;" . $bib;
         $footer['style'] = $this->messages->text("footer", "style") . "&nbsp;" . $styleName;
-        //$footer['dbTime'] = $this->messages->text("footer", "dbtime") . "&nbsp;" . '%%DBTIMER%%' . "&nbsp;secs";
-        //$footer['scriptTime'] = $this->messages->text("footer", "execution") . "&nbsp;" . '%%SCRTIMER%%' . "&nbsp;secs";
         
         if (WIKINDX_IMPRESSUM != "") {
         	$footer['impressum'] = \html\a("", "Impressum", WIKINDX_URL_BASE . WIKINDX_IMPRESSUM_PAGE);

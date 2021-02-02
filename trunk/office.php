@@ -1,6 +1,18 @@
 <?php
-// Import initial configuration and initialize the web server
+/**
+ * WIKINDX : Bibliographic Management system.
+ *
+ * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
+ * @author The WIKINDX Team
+ * @license https://www.isc.org/licenses/ ISC License
+ */
+
+/**
+ * Import initial configuration and initialize the web server
+ */
 include_once("core/startup/WEBSERVERCONFIG.php");
+
 $class = new OFFICE();
 $class->init();
 
@@ -198,4 +210,3 @@ class OFFICE
         }
     }
 }
-?>

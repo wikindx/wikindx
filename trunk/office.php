@@ -82,6 +82,7 @@ class OFFICE
         $bibStyle = FACTORY_BIBSTYLE::getInstance(); // HTML
         $bibStyle->ooxml = TRUE;
         $citeStyle = FACTORY_CITESTYLE::getInstance(); // HTML
+        $citeStyle->ooxml = TRUE;
     	$id = array_key_exists('id', $this->vars) ? $this->vars['id'] : 1119; // for test purposes . . .
     	$resultSet = $res->getResource($id);
     	$row = $this->db->fetchRow($resultSet);
@@ -103,6 +104,7 @@ class OFFICE
         $bibStyle = FACTORY_BIBSTYLE::getInstance(); // HTML
         $bibStyle->ooxml = TRUE;
         $citeStyle = FACTORY_CITESTYLE::getInstance(); // HTML
+        $citeStyle->ooxml = TRUE;
     	$jsonArray = [];
     	$resultSet = $this->db->query($sql);
     	while ($row = $this->db->fetchRow($resultSet)) {

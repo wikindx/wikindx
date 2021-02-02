@@ -545,7 +545,7 @@ class BIBSTYLE
         $doi = 'https://dx.doi.org/' . $doi;
         if ($this->output == 'html')
         {
-            $label = \URL\reduceUrl($doi, 50);
+            $label = $this->ooxml ? $doi : \URL\reduceUrl($doi, 50);
             if ($this->linkUrl)
             {
                 return \HTML\a('rLink', $label, $doi, "_blank");

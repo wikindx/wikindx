@@ -19,6 +19,8 @@ class CITESTYLE
 {
     /** string */
     public $output = 'html';
+    /** string */
+    public $ooxml = FALSE;
     /** boolean */
     public $rtfBibExport = FALSE;
     /** boolean */
@@ -591,8 +593,8 @@ class CITESTYLE
         // In $urls array, [0] index is primary URL
         $url = ($this->output == 'html') ? htmlspecialchars($urls[0]) : $urls[0];
         if ($this->output == 'html')
-        {
-            $url = \URL\reduceUrl($url, 80);
+        { 
+            $url = $this->ooxml ? $url : \URL\reduceUrl($url, 50);
         }
         $this->citeFormat->formatUrl($url);
     }

@@ -5,9 +5,9 @@ vX.Y.Z
 Focus: xxx
 
 BUG FIXES:
-1. When adding a new resource form, if a duplicate title is detected, the form is now re-presented with the filled-in form data intact (bug #313).
+1. When adding a new resource form, if a duplicate title is detected, the form is now re-presented with the filled-in form data intact [#313].
 2. Fix SQL formatting.
-3. Rearrange the order of some default function fields in readiness for PHP 8 (bug #312).
+3. Rearrange the order of some default function fields in readiness for PHP 8 [#312].
 
 
 FEATURE ENHANCEMENT:

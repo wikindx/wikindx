@@ -26,4 +26,10 @@
 	{/if}
 	{* END EMAIL CONTACT DISPLAY *}
 </div>
+
+{if isset($impressum) and $impressum != ''}
+<div class="impressum">
+    {$impressum}
+</div>
+{/if}
 <!-- end footer template -->

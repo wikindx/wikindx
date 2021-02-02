@@ -157,6 +157,16 @@ img {
  color: #3C579D;
 }
 
+.impressum {
+ margin:0;
+ padding:0;
+ margin-bottom:0.5em;
+ padding-top:0.5em;
+ text-align:right;
+ font-size: 0.6em;
+ color: #3C579D;
+}
+
 .helplink {
  text-align:right;
 }

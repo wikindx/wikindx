@@ -282,10 +282,6 @@ define('WIKINDX_USER_PAGING_STYLE_DEFAULT', 'N');
 define('WIKINDX_USER_LANGUAGE_DEFAULT', 'auto');
 
 
-// Impressum page
-define('WIKINDX_IMPRESSUM_PAGE', '/index.php?action=impressum_IMPRESSUM_CORE');
-
-
 // RSS feed
 define('WIKINDX_RSS_PAGE', '/index.php?action=rss_RSS_CORE');
 

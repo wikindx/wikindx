@@ -152,6 +152,15 @@ img {
  color: gray;
 }
 
+.impressum {
+ margin:0;
+ padding:0;
+ margin-bottom:0.5em;
+ text-align:right;
+ font-size: 0.6em;
+ color: gray;
+}
+
 .helplink {
  text-align:right;
 }

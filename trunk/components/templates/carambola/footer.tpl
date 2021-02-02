@@ -24,4 +24,10 @@
 <div class="contactBlock">Contact: {mailto address="$contactEmail" encode="javascript"}</div>
 {/if}
 {* END EMAIL CONTACT DISPLAY *}
+
+{if isset($impressum) and $impressum != ''}
+<div class="impressum">
+    {$impressum}
+</div>
+{/if}
 <!-- end footer.tpl -->

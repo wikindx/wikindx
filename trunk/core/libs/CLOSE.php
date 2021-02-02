@@ -75,10 +75,6 @@ class CLOSE
         $footer['username'] = $this->messages->text("user", "username") . ":&nbsp;" . $usersUsername;
         $footer['bibliography'] = $this->messages->text("footer", "bib") . "&nbsp;" . $bib;
         $footer['style'] = $this->messages->text("footer", "style") . "&nbsp;" . $styleName;
-        
-        if (WIKINDX_IMPRESSUM != "") {
-        	$footer['impressum'] = \html\a("", "Impressum", WIKINDX_URL_BASE . WIKINDX_IMPRESSUM_PAGE);
-        }
 
         // Assigning values to the template and rendering
         $this->template = FACTORY_TEMPLATE::getInstance();
@@ -134,6 +130,7 @@ class CLOSE
         GLOBALS::addTplVar('wkx_link', WIKINDX_URL);
         GLOBALS::addTplVar('wkx_appname', 'WIKINDX');
         GLOBALS::addTplVar('wkx_mimetype_rss', WIKINDX_MIMETYPE_RSS);
+        GLOBALS::addTplVar('impressum', WIKINDX_IMPRESSUM);
 
         // Get the time elapsed before template rendering
         GLOBALS::stopPageTimer();

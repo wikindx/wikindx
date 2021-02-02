@@ -33,6 +33,8 @@ class PARSEPHRASE
     public $andsFT = [];
     /** array */
     public $notsFT = [];
+    /** string */
+    public $firstAnd;
     /** object */
     private $db;
     /** object */
@@ -165,6 +167,7 @@ class PARSEPHRASE
         $singleFirst = $notFirst = FALSE;
         $phrase = '';
         $lastControl = FALSE;
+        $firstWord = TRUE;
         foreach ($split as $fragment)
         {
             $fragment = stripslashes(trim($fragment));
@@ -287,6 +290,9 @@ class PARSEPHRASE
 
                     break;
             }
+            if (!$count) {
+            	$this->firstAnd = '+' . trim($string);
+            }
             ++$count;
         }
         if (!empty($this->orsFT))
@@ -331,7 +337,6 @@ class PARSEPHRASE
                 GLOBALS::setTempStorage(['search_HighlightIdea' => $searchHighlight]);
             }
         }
-
         return trim($phrase);
     }
     /**

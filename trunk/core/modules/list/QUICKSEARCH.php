@@ -479,7 +479,10 @@ class QUICKSEARCH
             // Deal with AND strings next
             foreach ($this->parsePhrase->ands as $and)
             { // we use array_intersect . . .
-                $this->getInitialIds($and, array_shift($this->parsePhrase->andsFT), 'and');
+				if (empty($this->parsePhrase->andsFT)) {
+					$this->parsePhrase->andsFT[] = $this->parsePhrase->firstAnd;
+				}
+				$this->getInitialIds($and, array_shift($this->parsePhrase->andsFT), 'and');
             }
             // Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
             // If there are no ANDs or ORs, we must first get all existing resource ids
@@ -570,7 +573,7 @@ class QUICKSEARCH
     private function parseWord()
     {
         $this->words = $this->parsePhrase->parse($this->input);
-        $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE);
+        $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE); // Needed to get FULLTEXT searches (abstract, notes etc.)
         if ((is_array($this->words) && empty($this->words)) || !$this->parsePhrase->validSearch)
         {
             GLOBALS::setTplVar('resourceListSearchForm', FALSE);

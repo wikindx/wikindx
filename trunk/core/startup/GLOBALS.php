@@ -233,6 +233,16 @@ class GLOBALS
         return self::$userVars;
     }
     /**
+     * Empty user variable array – used in /office.php to clear any existing user variables ready for a read-only access from Word add-in etc.
+     *
+     * @return array
+     */
+    public static function deleteUserVarsArray()
+    {
+    	self::$userVars = [];
+        return self::$userVars;
+    }
+    /**
      * Increment the DB query counter
      */
     public static function incrementDbQueries()

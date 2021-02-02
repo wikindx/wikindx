@@ -8,6 +8,7 @@ BUG FIXES:
 1. When adding a new resource form, if a duplicate title is detected, the form is now re-presented with the filled-in form data intact [#313].
 2. Fix SQL formatting.
 3. Rearrange the order of some default function fields in readiness for PHP 8 [#312].
+4. In some cases, QUICKSEARCH searched on an empty field in FULLTEXT mode (abstracts, notes, etc.) – fixed.
 
 
 FEATURE ENHANCEMENT:

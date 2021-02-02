@@ -27,6 +27,7 @@ class SEARCH
     private $parsePhrase;
     private $subQ;
     public $order;
+    public $ascDesc;
     /** array */
     private $listFields = ['resourceId', 'creatorSurname', 'resourceType', 'resourceTitle', 'resourceSubtitle', 'resourceShortTitle',
         'resourceTransTitle', 'resourceTransSubtitle', 'resourceTransShortTitle', 'resourceField1', 'resourceField2', 'resourceField3',
@@ -46,7 +47,6 @@ class SEARCH
         $this->metadata = FACTORY_METADATA::getInstance();
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
         $this->parsePhrase->quickSearch = TRUE;
-        $this->order = 'creator';
     }
     /**
      * Process the search
@@ -54,13 +54,13 @@ class SEARCH
      */
     public function process()
     {
-        $this->stmt->listMethodAscDesc = 'search_AscDesc';
-        $this->db->ascDesc = $this->db->desc;
+        $this->db->ascDesc = $this->ascDesc;
         $this->stmt->listType = 'search';
         $this->input['Partial'] = TRUE;
         if (!$this->getIds()) {
             return FALSE;
         }
+        $this->db->ascDesc = $this->ascDesc;
         return $this->getFinalSql();
         
     }
@@ -101,13 +101,6 @@ class SEARCH
         $this->db->formatConditions($matchAgainst);
         $this->db->formatConditions(['resourcemetadataResourceId' => 'IS NOT NULL']);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_metadata', [['resourcemetadataResourceId' => 'rId']]));
-        // usertagsTag
-        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'usertagsTag', $search));
-        $result = $this->db->formatFields('usertagsUserId') . $this->db->equal . '1';
-        $userCond = $this->db->caseWhen('usertagsId', 'IS NOT NULL', $result, FALSE, FALSE);
-        $this->db->formatConditions($userCond);
-        $this->db->leftJoin('user_tags', 'resourceusertagsTagId', 'usertagsId');
-        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_user_tags', [['resourceusertagsResourceId' => 'rId']]));
         // resourcecustomShort
         $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'resourcecustomShort', $search));
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_custom', [['resourcecustomResourceId' => 'rId']]));
@@ -143,6 +136,9 @@ class SEARCH
 		}
 		// Deal with AND strings next
 		foreach ($this->parsePhrase->ands as $and) { // we use array_intersect . . .
+			if (empty($this->parsePhrase->andsFT)) {
+				$this->parsePhrase->andsFT[] = $this->parsePhrase->firstAnd;
+			}
 			$this->getInitialIds($and, array_shift($this->parsePhrase->andsFT), 'and');
 		}
 		// Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
@@ -194,10 +190,38 @@ class SEARCH
 		$this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
         $this->db->leftJoin('publisher', 'publisherId', 'resourcemiscPublisher');
         $this->db->leftJoin('collection', 'collectionId', 'resourcemiscCollection');
-		$this->db->limit(10, 0);
+        $this->db->groupBy('resourceId');
+//		$this->db->limit(10, 0);
 		switch ($this->order) {
 			case 'creator' :
-				$this->db->orderBy('creatorSurname', TRUE);
+            	$this->db->orderBy('resourcecreatorCreatorSurname', TRUE, FALSE);
+            	$this->db->orderBy('resourceTitleSort', TRUE, FALSE);
+            	$this->db->orderBy($this->stmt->yearOrder(), FALSE);
+				break;
+			case 'title' :
+            	$this->db->orderBy('resourceTitleSort', TRUE, FALSE);
+            	$this->db->orderBy('resourcecreatorCreatorSurname', TRUE, FALSE);
+            	$this->db->orderBy($this->stmt->yearOrder(), FALSE);
+				break;
+			case 'year' :
+            	$this->db->orderBy($this->stmt->yearOrder(), FALSE);
+				$this->db->orderBy($this->db->ifClause(
+					$this->db->formatFields('resourcecreatorCreatorSurname'),
+					'IS NOT NULL',
+					$this->db->formatFields('resourcecreatorCreatorSurname'),
+					$this->db->formatFields('resourceTitleSort')
+				), FALSE, FALSE);
+            	$this->db->orderBy('resourceTitleSort', TRUE, FALSE);
+				break;
+			case 'timestamp' :
+            	$this->db->orderBy('resourcetimestampTimestamp', TRUE);
+				$this->db->orderBy($this->db->ifClause(
+					$this->db->formatFields('resourcecreatorCreatorSurname'),
+					'IS NOT NULL',
+					$this->db->formatFields('resourcecreatorCreatorSurname'),
+					$this->db->formatFields('resourceTitleSort')
+				), FALSE, FALSE);
+            	$this->db->orderBy('resourceTitleSort', TRUE, FALSE);
 				break;
 			break;
 		}
@@ -211,6 +235,7 @@ class SEARCH
     private function parseWord()
     {
         $this->words = $this->parsePhrase->parse($this->input);
+        $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE); // Needed to get FULLTEXT searches (abstract, notes etc.)
         if ((is_array($this->words) && empty($this->words)) || !$this->parsePhrase->validSearch)
         {
 
@@ -266,7 +291,6 @@ class SEARCH
     }
     /**
      * Create subquery initial order SELECT statement with minimal fields.
-     * Function specific to core/modules/list/QUICKSEARCH.php
      *
      * @param false|string $totalSubQuery Default is FALSE
      * @param false|string $type (default FALSE) otherwise 'or', 'and', 'not', 'final'
@@ -298,7 +322,7 @@ class SEARCH
 				return TRUE;
 			case 'not':
 				if (!empty($this->ids)) {
-					$ids = array_diff($this->ds, $ids);
+					$ids = array_diff($this->ids, $ids);
 				}
 				$this->ids = $ids;
 

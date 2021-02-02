@@ -53,7 +53,7 @@ class RIS
         {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
-        if (!$this->common->openFile(FALSE, '.ris'))
+        if (!$this->common->openFile('.ris'))
         {
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }

@@ -97,7 +97,7 @@ class ENDNOTEEXPORT
         {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
-        if (!$this->common->openFile(FALSE, '.xml', 'a'))
+        if (!$this->common->openFile('.xml', 'a'))
         {
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }

@@ -246,7 +246,6 @@ class ENDNOTEIMPORT
                 $this->inputTypes,
                 $this->map,
                 $this->invalidFieldNames,
-                FALSE,
                 $this->formData
             );
             if ($error)

@@ -565,8 +565,8 @@ class IMPORTBIBTEX
                 $inputTypes,
                 $this->map,
                 $this->invalidFieldNames,
-                $this->strings,
-                $this->formData
+                $this->formData,
+                $this->strings
             );
             if ($error)
             {

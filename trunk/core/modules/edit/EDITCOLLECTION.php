@@ -356,10 +356,10 @@ class EDITCOLLECTION
         $title = $this->formData['collectionTitle'];
         $titleShort = $this->formData['collectionTitleShort'];
         if ($collectionExistId = $this->collection->checkExists(
-            $this->formData['collectionId'],
             $title,
             $titleShort,
-            $this->formData['collectionType']
+            $this->formData['collectionType'], 
+            $this->formData['collectionId']
         ))
         {
             if ($collectionExistId != $this->formData['collectionId'])

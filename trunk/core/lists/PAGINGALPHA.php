@@ -62,11 +62,11 @@ class PAGINGALPHA
      * @param array $conditions
      * @param array $joins
      * @param bool $conditionsOneField
-     * @param string $table
      * @param string $subQ Optional SQL subquery for input to COUNT operations - default is FALSE
+     * @param string $table – default is 'resource'
      * @param bool $QS From QUICKSEARCH or not - default is FALSE
      */
-    public function getPaging($conditions, $joins, $conditionsOneField, $table = 'resource', $subQ, $QS = FALSE)
+    public function getPaging($conditions, $joins, $conditionsOneField, $subQ, $table = 'resource', $QS = FALSE)
     {
         if (!$this->total = GLOBALS::getTempStorage('setup_PagingTotal'))
         {

@@ -323,7 +323,7 @@ class RESOURCEWRITE
                 $this->formData['collection']['collectionTitleShort'] : FALSE;
             $type = array_key_exists($this->formData['resourceType'], $this->collectionMap->collectionTypes) ?
                 $this->collectionMap->collectionTypes[$this->formData['resourceType']] : FALSE;
-            if ($title && !$collectionId = $this->collection->checkExists(FALSE, $title, $short, $type))
+            if ($title && !$collectionId = $this->collection->checkExists($title, $short, $type))
             {
                 $writeArray = $this->formData['collection'];
                 if ($type)

@@ -83,7 +83,7 @@ class EDITKEYWORDGROUP
         $pString .= \HTML\trStart();
         if (!empty($groups))
         {
-            $pString .= \HTML\td($this->displayEditForm(TRUE, $groups));
+            $pString .= \HTML\td($this->displayEditForm($groups, TRUE));
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -685,11 +685,11 @@ class EDITKEYWORDGROUP
     /**
      * Display keyword group edit form
      *
+     * @param array $groiups keyword groups
      * @param bool $initialDisplay
-     * @param array of keyword groups
-     * @param mixed $groups
+     * @return mixed string
      */
-    private function displayEditForm($initialDisplay = FALSE, $groups)
+    private function displayEditForm($groups, $initialDisplay = FALSE)
     {
         $blank = '';
         $kgId = FALSE;

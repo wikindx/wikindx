@@ -878,7 +878,7 @@ class IMPORTCOMMON
         {
             $writeArray['collectionType'] = $type = $this->collectionMap->collectionTypes[$wkType];
         }
-        if ($title && (!$collectionId = $this->collection->checkExists(FALSE, $title, $titleShort, $type)))
+        if ($title && (!$collectionId = $this->collection->checkExists($title, $titleShort, $type)))
         {
             $this->db->insert('collection', array_keys($writeArray), array_values($writeArray));
             $collectionId = $this->db->lastAutoID();
@@ -1205,12 +1205,12 @@ class IMPORTCOMMON
      * @param array $inputTypes
      * @param array $map
      * @param array $invalidFieldNames
-     * @param mixed $strings array|FALSE. Default is FALSE
      * @param array $formData
+     * @param mixed $strings array|FALSE. Default is FALSE
      *
      * @return array 1st element is error message or FALSE, 2nd element is string for display, 3rd element is the temp_storage table id
      */
-    public function promptFieldNames($entries, $inputTypes, $map, $invalidFieldNames, $strings = FALSE, $formData)
+    public function promptFieldNames($entries, $inputTypes, $map, $invalidFieldNames, $formData, $strings = FALSE)
     {
         // Do some system management
         FILE\tidyFiles();

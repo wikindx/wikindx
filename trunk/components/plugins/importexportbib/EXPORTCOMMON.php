@@ -59,13 +59,13 @@ class EXPORTCOMMON
     /**
      * Open/create a file
      *
-     * @param false|string $string
      * @param string $extension
-     * @param string $mode
+     * @param string $mode – default 'w'
+     * @param false|string $string – default FALSE
      *
      * @return bool
      */
-    public function openFile($string = FALSE, $extension, $mode = 'w')
+    public function openFile($extension, $mode = 'w', $string = FALSE)
     {
         if (!$string)
         {

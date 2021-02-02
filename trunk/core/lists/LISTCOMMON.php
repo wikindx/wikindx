@@ -479,7 +479,7 @@ class LISTCOMMON
             $this->pagingObject->listType = $listType;
             $this->pagingObject->order = $order;
             $this->pagingObject->queryString = $queryString;
-            $this->pagingObject->getPaging($conditions, $joins, $conditionsOneField, $table, $subQ, $QS);
+            $this->pagingObject->getPaging($conditions, $joins, $conditionsOneField, $subQ, $table, $QS);
         }
         else
         {

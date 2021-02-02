@@ -184,14 +184,14 @@ class COLLECTION
     /**
      * check to see if collection title already exists
      *
-     * @param int $id Collection ID. Default is FALSE
      * @param string $title
      * @param string $titleShort
      * @param string $type
+     * @param int $id Collection ID. Default is FALSE
      *
      * @return mixed FALSE or ID
      */
-    public function checkExists($id = FALSE, $title, $titleShort, $type)
+    public function checkExists($title, $titleShort, $type, $id = FALSE)
     {
         if ($id && !$type)
         {

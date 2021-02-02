@@ -75,7 +75,7 @@ class BIBTEX
         {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
-        if (!$this->common->openFile(FALSE, '.bib'))
+        if (!$this->common->openFile('.bib'))
         {
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }

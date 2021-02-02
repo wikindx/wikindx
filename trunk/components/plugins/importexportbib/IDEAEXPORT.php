@@ -146,7 +146,7 @@ class IDEAEXPORT
             'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
         $this->getData($resultset);
-        if (!$this->common->openFile(FALSE, '.rtf', 'a'))
+        if (!$this->common->openFile('.rtf', 'a'))
         {
             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
         }

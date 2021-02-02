@@ -147,7 +147,7 @@ class RTFEXPORT
             $this->getData($recordset);
         }
 
-        if (!$this->common->openFile(FALSE, '.rtf', 'a'))
+        if (!$this->common->openFile('.rtf', 'a'))
         {
             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
         }

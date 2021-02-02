@@ -87,7 +87,7 @@ class HTMLEXPORT
             $link = $wikindxTitle = FALSE;
             $this->session->delVar("exportHyperlink");
         }
-        if (!$this->common->openFile(FALSE, '.html'))
+        if (!$this->common->openFile('.html'))
         {
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }

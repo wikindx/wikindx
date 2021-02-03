@@ -62,7 +62,12 @@ class OFFICE
      */
     private function heartbeat()
     {
+    	if (WIKINDX_DENY_READONLY) { // not allowed!
+    		echo json_encode("access denied");
+    		die;
+    	}
     	echo json_encode("It's alive!");
+    	die;
     }
     /**
      * Get the resource list from the search

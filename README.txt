@@ -78,7 +78,7 @@ Repository layout
 
      - trunk/docs/          public and internal documentation sources of Wikindx
 
-     - website/             contains the sources of the project website
+     - website/             contains the sources of the project website and docs
 
 
 - Tools scripts
@@ -108,6 +108,8 @@ Repository layout
 
      - website/downloads/ stores the components list of each version released in
        a subfolder named after their version number for Wikindx 5.9.1 to 6.3.5
+
+     - website/web/src stores the source files of the website generated with Hugo (v0.80)
 
      - The API manual is not stored in SVN but build at the release time.
 

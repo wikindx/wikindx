@@ -1,0 +1,139 @@
+baseurl = "https://wikindx.sourceforge.io/web/trunk/"
+languageCode = "en-gb"
+title = "Wikindx"
+theme = "hugo-theme-learn"
+publishDir = "../trunk"
+
+[author]
+name = "Wikindx Team"
+email = "sirfragalot@users.sourceforge.net"
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-tags'></i> Tags"
+url = "/tags"
+weight = 4
+
+[[menu.shortcuts]] 
+name = "<i class='fas fa-fire-alt' style='color:orange'></i> SourceForge"
+identifier = "sf"
+url = "https://sourceforge.net/projects/wikindx/"
+weight = 5
+
+[[menu.shortcuts]] 
+name = "<i class='fas fa-file-download' style='color:white'></i> Donwload latest"
+identifier = "dla"
+url = "https://sourceforge.net/projects/wikindx/files/latest/download"
+weight = 6
+
+[[menu.shortcuts]] 
+name = "<i class='fas fa-download' style='color:#04B404'></i> Donwload"
+identifier = "dl"
+url = "https://sourceforge.net/projects/wikindx/files/"
+weight = 7
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-camera' style='color:#BDBDBD'></i> Screenshots"
+identifier = "sc"
+url = "/screenshots"
+weight = 8
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-camera' style='color:#BDBDBD'></i> Test-Drive"
+identifier = "td"
+url = "https://testdrive.wikindx.com/"
+weight = 9
+
+[[menu.shortcuts]] 
+name = "<i class='fas fa-code-branch' style='color:#81BEF7'></i> SVN repo"
+identifier = "svn"
+url = "https://sourceforge.net/p/wikindx/svn/HEAD/tree/"
+weight = 10
+
+[[menu.shortcuts]] 
+name = "<i class='fab fa-github'></i> Github repo"
+identifier = "git"
+url = "https://github.com/wikindx/wikindx"
+weight = 11
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-bug' style='color:#F5D0A9'></i> Bug tracker"
+identifier = "bt"
+url = "https://sourceforge.net/p/wikindx/v5bugs/"
+weight = 12
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-plus' style='color:#FE2E2E'></i> Get support"
+identifier = "su"
+url = "https://sourceforge.net/p/wikindx/discussion/"
+weight = 13
+
+[[menu.shortcuts]]
+name = "<i class='fas fa-bullhorn'></i> Credits & License"
+identifier = "cr"
+url = "/credits"
+weight = 14
+
+
+# For search functionality
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+
+
+[params]
+# Prefix URL to edit current page. Will display an "Edit this page" button on top right hand corner of every page.
+# Useful to give opportunity to people to create merge request for your doc.
+# See the config.toml file from this documentation site to have an example.
+editURL = ""
+
+# Author of the site, will be used in meta information
+author = "Wikindx Team"
+
+# Description of the site, will be used in meta information
+description = "Wikindx documentation"
+
+# Shows a checkmark for visited pages on the menu
+showVisitedLinks = false
+
+# Disable search function. It will hide search bar
+disableSearch = false
+
+# Javascript and CSS cache are automatically busted when new version of site is generated.
+# Set this to true to disable this behavior (some proxies don't handle well this optimization)
+disableAssetsBusting = false
+
+# Set this to true to disable copy-to-clipboard button for inline code.
+disableInlineCopyToClipBoard = false
+
+# A title for shortcuts in menu is set by default. Set this to true to disable it.
+disableShortcutsTitle = false
+
+# If set to false, a Home button will appear below the search bar on the menu.
+# It is redirecting to the landing page of the current language if specified. (Default is "/")
+disableLandingPageButton = true
+
+# When using mulitlingual website, disable the switch language button.
+disableLanguageSwitchingButton = true
+
+# Hide breadcrumbs in the header and only show the current page title
+disableBreadcrumb = true
+
+# If set to true, prevents Hugo from including the mermaid module if not needed (will reduce load times and traffic)
+disableMermaid = true
+
+# Specifies the remote location of the mermaid js
+customMermaidURL = "https://unpkg.com/mermaid@8.8.0/dist/mermaid.min.js"
+
+# Hide Next and Previous page buttons normally displayed full height beside content
+disableNextPrev = true
+
+# Order sections in menu by "weight" or "title". Default to "weight"
+ordersectionsby = "weight"
+
+# Change default color scheme with a variant one. Can be "red", "blue", "green".
+themeVariant = "blue"
+
+# Provide a list of custom css files to load relative from the `static/` folder in the site root.
+custom_css = ["css/foo.css", "css/bar.css"]
+
+# Change the title separator. Default to "::".
+titleSeparator = "-"

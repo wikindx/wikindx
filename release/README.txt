@@ -22,13 +22,13 @@ I. Code preparation and checks
    - The list of ignored files.
    - All php scripts that are used for a release
 
-2. Build the manual of the trunk with the release script release/make.php.
+2. Build the manual of the trunk with the release script release/cli-make-package.php.
    Is everything that has changed documented? Does the manual build
    without crashing? Does the release script execute without errors? Fix
    all issues.
 
    $ cd release
-   $ php make.php
+   $ php cli-make-package.php
 
 3. Check the release number in WIKINDX_PUBLIC_VERSION and the changelog.
 
@@ -102,7 +102,7 @@ I. Code preparation and checks
     $ php cli-sign-components.php
 
 23. When the components are up to date, build their packages from the
-    trunk with the release script release/make.php.
+    trunk with the release script release/cli-make-package.php.
 
 24. Upload the content of release/trunk/files in the
     /home/pfs/project/wikindx/ directory of the SourceForge Wikindx
@@ -175,12 +175,12 @@ IV. Public Release
    switching on the last commit of this release. Don't forget to switch again
    to HEAD after the release!
 
-1. cd in the release directory and execute the packaging script make.php
+1. cd in the release directory and execute the packaging script cli-make-package.php
    from the CLI. Answer questions from the script (version=X.Y.Z and
    manual building=Y).
 
    $ cd release
-   $ php make.php
+   $ php cli-make-package.php
 
    The layout created by this scripit matchs exactly the layout of FTP.
 

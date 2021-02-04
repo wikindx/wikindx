@@ -53,6 +53,11 @@ $VersionPackaged = promptListUser("Which version do you want to pack?", $Version
 $VersionPackaged = mb_strtolower($VersionPackaged);
 echo "Version selected: $VersionPackaged\n";
 
+$ManualRebuildingFlag = promptListUser("Rebuild the manual?", ["N", "Y"], "Y");
+$ManualRebuildingFlag = mb_strtoupper($ManualRebuildingFlag);
+echo "Manual rebuilding: $ManualRebuildingFlag\n";
+$ManualRebuildingFlag = ($ManualRebuildingFlag == "Y");
+
 
 switch ($VersionPackaged)
 {
@@ -170,6 +175,35 @@ echo "Replicate source code of $VersionPackaged\n";
 
 
 $signatures = "algo;hash;file\n";
+
+///////////////////////////////////////////////////////////////////////
+/// Build the phpdoc manual
+///////////////////////////////////////////////////////////////////////
+echo "\n";
+echo "Build manual package\n";
+$pkg = APP_PKG_PREFIX . '_api_manual';
+echo "Package " . $pkg . "\n";
+
+if ($ManualRebuildingFlag) build_manual(DIR_DST_SRC, 'WIKINDX Documentation ' . $VersionPackaged);
+
+\FILE\recurse_ChangeDateOfFiles(DIR_DST_SRC, WIKINDX_RELEASE_TIMESTAMP);
+
+//foreach (["ZIP"] as $archformat)
+foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
+{                
+    $pkgarch = \FILE\createComponentPackage(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual', DIR_DST_COR_ARC, $pkg, $archformat);
+    copy($pkgarch, DIR_DST_COR . DIRECTORY_SEPARATOR . basename($pkgarch));
+    echo " - $archformat arch: " . $pkgarch . "\n";
+    
+    $pkghash = \UTILS\hash_path($pkgarch, WIKINDX_PACKAGE_HASH_ALGO);
+    echo " - $archformat hash: " . $pkghash . "\n";
+    
+    $signatures .= WIKINDX_PACKAGE_HASH_ALGO . ";" . $pkghash . ";" . basename($pkgarch) . "\n";
+}
+
+// Remove the manual from sources after packaging it
+\FILE\recurse_rmdir(DIR_DST_SRC . DIRECTORY_SEPARATOR . "docs" . DIRECTORY_SEPARATOR . "manual");
+
 
 
 ///////////////////////////////////////////////////////////////////////
@@ -472,6 +506,33 @@ function promptListUser($promptStr, $AvailableValues, $defaultVal = NULL)
     
     // Return user input or the default value
     return empty($CapturedValue) ? $defaultVal : $CapturedValue;
+}
+
+function build_manual($Appdir, $ManualTitle)
+{
+    // Go to the package directory (required by PHPDOCUMENTOR to run smoothly)
+    echo "\n";
+    echo "CD " . $Appdir . "\n";
+    $oldCurrentDir = getcwd();
+    chdir($Appdir);
+    
+    echo "Buiding manual with phpDocumentor\n";
+    $cmd = 'php cli-make-manual.php 2>&1';
+    echo $cmd;
+    
+    $fp = popen($cmd, 'r');
+    
+    while (!feof($fp))
+    {
+        $buffer = fgets($fp, 4096);
+        echo $buffer;
+    }
+    
+    pclose($fp);
+    
+    // Restores current directory
+    echo "CD " . $oldCurrentDir . "\n";
+    chdir($oldCurrentDir);
 }
 
 function formatParagraph($str, $lenght, $padlenght)

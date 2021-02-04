@@ -2,3 +2,59 @@
     <img src="{{ .Site.BaseURL }}/images/favicon.svg" style="border:none;vertical-align:middle" width="48" height="48" alt="" style="vertical-align:baseline">
     Wikindx
 </a>
+
+<!-- Version dropdown list: onchange go to the website version selected -->
+<script>
+    function switchWebsiteVersion(currentUrl, version)
+    {
+        currentUrl = currentUrl.trim();
+
+        // Remove the last slash
+        if (currentUrl.lastIndexOf('/') + 1 != currentUrl.length)
+            targetUrl = currentUrl;
+        else
+            targetUrl = currentUrl.slice(0, currentUrl.lastIndexOf('/'));
+        
+        // Add the version part
+        targetUrl = targetUrl.slice(0, targetUrl.lastIndexOf('/')) + '/' + version + '/';
+        
+        // Redirect
+        window.location = targetUrl;
+    }
+
+    function getCurrentVersion(url)
+    {
+        url = url.trim();
+
+        // Remove the last slash
+        if (url.lastIndexOf('/') + 1 == url.length)
+        {
+            url = url.slice(0, url.lastIndexOf('/'));
+        }
+
+        // Extract the version number
+        return url.slice(url.lastIndexOf('/') + 1);
+    }
+
+    // Build the dropdown list
+    $.getJSON( '{{ .Site.BaseURL }}' + 'version-switch.php', function( data ) {
+        // Add an option for the current version and select it
+        var version = getCurrentVersion('{{ .Site.BaseURL }}');
+        $('#verSwitch').append(new Option(value, text));
+        $('#verSwitch option[value="' + version + '"]').prop('selected', true);
+
+        // Add other options
+        $.each( data, function( value, text ) {
+            // Skip the trunk version (always pre-included)
+            if (value != 'trunk' && value != version)
+            {
+                $('#verSwitch').append(new Option(value, text));
+            }
+        });
+    });
+</script>
+
+<label for="verSwitch" style="color:white">Version
+<select id="verSwitch" name="verSwitch" onchange="switchWebsiteVersion('{{ .Site.BaseURL }}', this.value);" style="display:inline">
+    <option value="trunk" selected>trunk</option>
+</select>

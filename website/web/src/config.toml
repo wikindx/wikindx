@@ -89,7 +89,7 @@ editURL = ""
 author = "Wikindx Team"
 
 # Description of the site, will be used in meta information
-description = "Wikindx documentation"
+description = "Wikindx"
 
 # Shows a checkmark for visited pages on the menu
 showVisitedLinks = false

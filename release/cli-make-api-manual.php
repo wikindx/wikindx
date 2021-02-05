@@ -74,6 +74,60 @@ echo "Set the current date\n";
 echo "\n";
 echo "Insert a link to return to the website\n";
 
+$menu = <<<EOT
+    <ul class="phpdocumentor-topnav__menu">
+        <li class="phpdocumentor-topnav__menu-item">
+            <a href="https://wikindx.sourceforge.io/web/{$VersionPackaged}/"><span>Return to the website</span></a>
+        </li>
+        <li class="phpdocumentor-topnav__menu-item">
+            <script>
+                function switchWebsiteVersion(currentUrl, version)
+                {
+                    currentUrl = currentUrl.trim();
+            
+                    // Remove the last slash
+                    if (currentUrl.lastIndexOf('/') + 1 != currentUrl.length)
+                        targetUrl = currentUrl;
+                    else
+                        targetUrl = currentUrl.slice(0, currentUrl.lastIndexOf('/'));
+                    
+                    // Add the version part
+                    targetUrl = targetUrl.slice(0, targetUrl.lastIndexOf('/')) + '/' + version + '/';
+                    
+                    // Redirect
+                    window.location = targetUrl;
+                }
+            
+                // Build the dropdown list
+                $.getJSON( 'https:\/\/wikindx.sourceforge.io\/api-manual\/' + 'version-switch.php', function( data ) {
+                    // Add other options
+                    $.each( data, function( value, text ) {
+                        // Skip the trunk version (always pre-included)
+                        if (value != 'trunk' && value != '{$VersionPackaged}')
+                        {
+                            $('#verSwitch').append(new Option(value, text));
+                        }
+                    });
+                });
+            </script>
+            
+            <label for="verSwitch" style="color:white">Version</label>
+            <select id="verSwitch" name="verSwitch" onchange="switchWebsiteVersion('https:\/\/wikindx.sourceforge.io\/api-manual\/{$VersionPackaged}\/', this.value);" style="display:inline">
+EOT;
+
+if ($VersionPackaged == "trunk")
+{
+    $menu .= '<option value="trunk" selected>trunk</option>' . "\n";
+}
+else
+{
+    $menu .= '<option value="trunk">trunk</option>' . "\n";
+    $menu .= '<option value="' . $VersionPackaged . '" selected>' . $VersionPackaged . '</option>' . "\n";
+}
+
+$menu .= '</select>' . "\n";
+$menu .= '</li>' . "\n";
+
 foreach(\FILE\recurse_fileInDirToArray(DIR_DST) as $v)
 {
     if (\UTILS\matchSuffix($v, ".html"))
@@ -83,8 +137,7 @@ foreach(\FILE\recurse_fileInDirToArray(DIR_DST) as $v)
         $html = file_get_contents($file);
         
         $html = preg_replace("//ui", "", $html);
-        $html = str_replace('<ul class="phpdocumentor-topnav__menu">', '<ul class="phpdocumentor-topnav__menu">
-        <li class="phpdocumentor-topnav__menu-item"><a href="https://wikindx.sourceforge.io/web/' . $VersionPackaged . '/"><span>Return to the website</span></a></li>', $html);
+        $html = str_replace('<ul class="phpdocumentor-topnav__menu">', $menu, $html);
         
         file_put_contents($file, $html);
     }

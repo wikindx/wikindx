@@ -31,47 +31,53 @@ identifier = "dl"
 url = "https://sourceforge.net/projects/wikindx/files/"
 weight = 7
 
+[[menu.shortcuts]] 
+name = "<i class='fas fa-cubes' style='color:blue'></i> API Manual"
+identifier = "api"
+url = "https://wikindx.sourceforge.io/api-manual/trunk/"
+weight = 8
+
 [[menu.shortcuts]]
 name = "<i class='fas fa-camera' style='color:#BDBDBD'></i> Screenshots"
 identifier = "sc"
 url = "/screenshots"
-weight = 8
+weight = 9
 
 [[menu.shortcuts]]
 name = "<i class='fas fa-camera' style='color:#BDBDBD'></i> Test-Drive"
 identifier = "td"
 url = "https://testdrive.wikindx.com/"
-weight = 9
+weight = 10
 
 [[menu.shortcuts]] 
 name = "<i class='fas fa-code-branch' style='color:#81BEF7'></i> SVN repo"
 identifier = "svn"
 url = "https://sourceforge.net/p/wikindx/svn/HEAD/tree/"
-weight = 10
+weight = 11
 
 [[menu.shortcuts]] 
 name = "<i class='fab fa-github'></i> Github repo"
 identifier = "git"
 url = "https://github.com/wikindx/wikindx"
-weight = 11
+weight = 12
 
 [[menu.shortcuts]]
 name = "<i class='fas fa-bug' style='color:#F5D0A9'></i> Bug tracker"
 identifier = "bt"
 url = "https://sourceforge.net/p/wikindx/v5bugs/"
-weight = 12
+weight = 13
 
 [[menu.shortcuts]]
 name = "<i class='fas fa-plus' style='color:#FE2E2E'></i> Get support"
 identifier = "su"
 url = "https://sourceforge.net/p/wikindx/discussion/"
-weight = 13
+weight = 14
 
 [[menu.shortcuts]]
 name = "<i class='fas fa-bullhorn'></i> Credits & License"
 identifier = "cr"
 url = "/credits"
-weight = 14
+weight = 15
 
 
 # For search functionality

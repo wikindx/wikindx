@@ -65,7 +65,30 @@ echo " - Version: " . $VersionPackaged . "\n";
 
 build_manual(DIR_SRC, DIR_DST, $VersionPackaged, 'WIKINDX API ' . $VersionPackaged);
 
+echo "\n";
+echo "Set the current date\n";
+
 \FILE\recurse_ChangeDateOfFiles(DIR_DST, WIKINDX_RELEASE_TIMESTAMP);
+
+
+echo "\n";
+echo "Insert a link to return to the website\n";
+
+foreach(\FILE\recurse_fileInDirToArray(DIR_DST) as $v)
+{
+    if (\UTILS\matchSuffix($v, ".html"))
+    {
+        $file = DIR_DST . DIRECTORY_SEPARATOR . $v;
+        echo $file . "\n";
+        $html = file_get_contents($file);
+        
+        $html = preg_replace("//ui", "", $html);
+        $html = str_replace('<ul class="phpdocumentor-topnav__menu">', '<ul class="phpdocumentor-topnav__menu">
+        <li class="phpdocumentor-topnav__menu-item"><a href="https://wikindx.sourceforge.io/web/' . $VersionPackaged . '/"><span>Return to the website</span></a></li>', $html);
+        
+        file_put_contents($file, $html);
+    }
+}
 
 
 ///////////////////////////////////////////////////////////////////////

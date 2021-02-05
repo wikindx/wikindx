@@ -114,7 +114,15 @@ function promptListUser($promptStr, $AvailableValues, $defaultVal = NULL)
 
 function build_web($dirsrc, $dirdst, $APIVersion, $ManualTitle)
 {
-    $cmd = '"' . BIN_HUGO . '" -v --baseURL "' . BASE_URL . '" --cleanDestinationDir --source "' . $dirsrc . '" --destination "' . $dirdst . '" 2>&1';
+    // Patch the config file with the target version number
+    $fileconf_src = $dirsrc . DIRECTORY_SEPARATOR . "config.toml";
+    $fileconf_dst = __DIR__ . DIRECTORY_SEPARATOR . "hugo_config_" . $APIVersion . ".toml";
+    
+    $conf = file_get_contents($fileconf_src);
+    $conf = str_replace("trunk", $APIVersion, $conf);
+    file_put_contents($fileconf_dst, $conf);
+    
+    $cmd = '"' . BIN_HUGO . '" -v --baseURL "' . BASE_URL . '" --cleanDestinationDir --environment ' . $APIVersion . ' --config "' . $fileconf_dst . '" --source "' . $dirsrc . '" --destination "' . $dirdst . '" 2>&1';
     echo $cmd;
     
     $fp = popen($cmd, 'r');
@@ -126,4 +134,6 @@ function build_web($dirsrc, $dirdst, $APIVersion, $ManualTitle)
     }
     
     pclose($fp);
+    
+    unlink($fileconf_dst);
 }

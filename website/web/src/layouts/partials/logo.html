@@ -22,31 +22,12 @@
         window.location = targetUrl;
     }
 
-    function getCurrentVersion(url)
-    {
-        url = url.trim();
-
-        // Remove the last slash
-        if (url.lastIndexOf('/') + 1 == url.length)
-        {
-            url = url.slice(0, url.lastIndexOf('/'));
-        }
-
-        // Extract the version number
-        return url.slice(url.lastIndexOf('/') + 1);
-    }
-
     // Build the dropdown list
     $.getJSON( '{{ .Site.BaseURL }}' + 'version-switch.php', function( data ) {
-        // Add an option for the current version and select it
-        var version = getCurrentVersion('{{ .Site.BaseURL }}');
-        $('#verSwitch').append(new Option(value, text));
-        $('#verSwitch option[value="' + version + '"]').prop('selected', true);
-
         // Add other options
         $.each( data, function( value, text ) {
             // Skip the trunk version (always pre-included)
-            if (value != 'trunk' && value != version)
+            if (value != 'trunk' && value != '{{ .Hugo.Environment }}')
             {
                 $('#verSwitch').append(new Option(value, text));
             }
@@ -54,7 +35,12 @@
     });
 </script>
 
-<label for="verSwitch" style="color:white">Version
+<label for="verSwitch" style="color:white">Version</label>
 <select id="verSwitch" name="verSwitch" onchange="switchWebsiteVersion('{{ .Site.BaseURL }}', this.value);" style="display:inline">
+{{ if eq .Hugo.Environment "trunk" }}
     <option value="trunk" selected>trunk</option>
+{{ else }}
+    <option value="trunk">trunk</option>
+    <option value="{{ .Hugo.Environment }}" selected>{{ .Hugo.Environment }}</option>
+{{ end }}
 </select>

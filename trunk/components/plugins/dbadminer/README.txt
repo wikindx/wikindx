@@ -19,6 +19,7 @@ Adminer website: https://www.adminer.org/
 
 CHANGELOG:
 
+2021-02-07 : CHG : Update adminer to 4.7.9 (https://github.com/vrana/adminer/releases/tag/v4.7.9).
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
 2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
 2020-12-21 : CHG : update Adminer to version 4.7.8 (PHP 8.0 support).

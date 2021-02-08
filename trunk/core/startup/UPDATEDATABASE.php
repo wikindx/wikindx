@@ -153,7 +153,7 @@ class UPDATEDATABASE
      */
     private function CheckDatabaseEngineVersion()
     {
-        $EngineVersionRaw = $this->queryFetchFirstField("SELECT version() AS EngineVersion;");
+        $EngineVersionRaw = $this->db->queryFetchFirstField("SELECT version() AS EngineVersion;");
         $EngineVersionRaw = $EngineVersionRaw ?? "";
         $EngineVersion = strtolower($EngineVersionRaw);
         

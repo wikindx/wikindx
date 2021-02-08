@@ -34,6 +34,7 @@ var searchURL;
 var visibleElements = [];
 var selectedURL;
 var selectedName;
+var storedIDs = new Object();
 
 
 /* global document, Office, Word */
@@ -617,15 +618,31 @@ function insertCitation() {
 }
 
 function storeID(id) {
-  var jsonString = JSON.stringify([1, 2, 3, 4]);
+
+  var office = Office.context.document;
+/** 
+ * Comment out this line in production
+*/
+// office.settings.remove('wikindx-id');
+
+  readIDs(office);
+
   Word.run(function (context) {
-    var office = Office.context.document;
-    office.settings.set('wikindx-id', jsonString);
+    if (Object.keys(storedIDs).length === 0) { // Nothing stored yet for this URL
+      storedIDs[selectedURL] = [id];
+    } else { // Need to append – to new WIKINDX URL or existing one?
+      if (!(selectedURL in storedIDs)) { // new
+        storedIDs[selectedURL] = [id]; 
+      } else { // append – but check id does not already exist
+        if (!storedIDs[selectedURL].includes(id)) {
+          storedIDs[selectedURL].push(id);
+        }
+      }
+    }
+    office.settings.set('wikindx-id', storedIDs);
     office.settings.saveAsync(function (asyncResult) {
       if (asyncResult.status == Office.AsyncResultStatus.Failed) {
           console.log('Settings save failed. Error: ' + asyncResult.error.message);
-      } else {
-          console.log('Settings saved.');
       }
     });
     return context.sync();
@@ -638,15 +655,13 @@ function storeID(id) {
   });
 }
 
-function readID(id) {
+function readIDs(office) {
   Word.run(function (context) {
-    var doc = context.document;
-    var office = Office.context.document;
-    var storedID = office.settings.get('wikindx-id');
-    var array = JSON.parse(storedID);
-    console.log(array.length);
+    if (office.settings.get('wikindx-id') === null) { // Nothing stored yet
+      return context.sync();
+    }
+    storedIDs = office.settings.get('wikindx-id');
 //    createCustomXmlPartAndStoreID();
- //   console.log(office.settings.get('ReviewersID'));
     return context.sync();
   })
   .catch(function (error) {

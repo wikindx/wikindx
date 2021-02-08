@@ -1,0 +1,204 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WIKINDX</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <!-- For more information on Office UI Fabric, visit https://developer.microsoft.com/fabric. -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css"/>
+
+    <!-- Template styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+    <script>
+        function displayReference() {
+            var rsb = document.getElementById("wikindx-refSelectBox");
+            var id = rsb.value;
+            var hiddenRef = "hiddenRef" + id;
+            var hr = document.getElementById(hiddenRef);
+            var dr = document.getElementById("wikindx-display-ref");
+            dr.innerHTML = '</br>' + decodeURIComponent(escape(atob(hr.value)));
+            return true;
+        }
+    </script>
+</head>
+
+<body class="ms-font-m ms-welcome ms-Fabric">
+<!--    <header class="ms-welcome__header ms-bgColor-neutralLighter">
+        </br>
+    </header>
+-->
+    <section id="sideload-msg" class="ms-welcome__main" style="display:none">
+        <h2 class="ms-font-xl"></h2>Please sideload your add-in to see app body</h2>
+    </section>
+
+    <a href="https://wikindx.sourceforge.io/" target="_new"><img width="112" height="27" src="../../assets/wikindx-filled.png" alt="WIKINDX" title="WIKINDX" /></a>
+    <input type="image" class="bulb" alt="About WIKINDX" id="wikindx-display-about" width="16" height="16" src="../../assets/lightbulb_off.png" alt="About WIKINDX" title="About WIKINDX"/>
+    <br/><br>
+
+ <!--   <main id="app-body" class="ms-welcome__main" style="display: none;"> -->
+
+    <!-- ABOUT section START -->
+    <section id="wikindx-about" style="display:none">
+      <table class="wikindx-table"><tr><td class="wikindx-td">
+        <strong>Welcome to the WIKINDX citation tool!</strong><br/>
+        v. beta 0.9 (&copy;Mark Grimshaw-Aagaard 2021)
+        <p>If you have a WIKINDX, you can import formatted in-text citations and references into your Word document. The WIKINDX 
+        must be accessed through SSL (i.e. the URL starts with 'https://') and the WIKINDX admin must have enabled read-only 
+        mode. If your WIKINDX is normally accessed through a browser as, for example, 'www.mywikindx.com', then URL here should be 
+        'https://www.mywikindx.com'.</p>
+        <p>In this initial version of the tool, only citation format styles available on the WIKINDX that are neither endnote nor footnote type 
+        can be used (i.e. styles such as APA, Harvard, MLA) – this might change in the future.</p>
+        <p>In the search field, you can use combinations of: <em>AND</em>, <em>OR</em>, <em>NOT</em>, and <em>''exact phrase''</em> as well as the wildcards <em>?</em> and <em>*</em></p>
+        <p>The search is conducted on the following fields:
+        <ul class="wikindx-list">
+            <li>Author names</li>
+            <li>Title</li>
+            <li>Abstract and notes</li>
+            <li>Keywords</li>
+            <li>Quotations and paraphrases</li>
+            <li>Custom fields</li>
+        </ul>
+        </p>
+        <section id="wikindx-about-begin">
+        <p>To get started, close this help by clicking on the lightbulb icon above and enter the URL and name of the WIKINDX you 
+            wish to search.</p>
+        </section>
+      </td></tr></table>
+    </section>
+    <!-- ABOUT section END -->
+
+    <!-- URL MANAGEMENT section START -->
+    <section id="wikindx-url-management" style="display:none">
+        <table class="wikindx-table"><tr><td class="wikindx-td">
+        <!-- URL ENTRY section START -->
+        <section id="wikindx-url-entry">
+            WIKINDX URL (https://...):
+            <input class="inputText" type="text" id="wikindx-new-url" placeholder="Enter new WIKINDX URL here (https://...)"></input>
+            </br></br>
+            WIKINDX name:
+            <input class="inputText" type="text" id="wikindx-new-url-name" placeholder="Enter new WIKINDX name here"></input>
+            <button class="button" id="wikindx-url-store" alt="Store URL" title="Store URL">Store URL</button>
+            <button class="button" id="wikindx-close-url-entry" alt="Close" title="Close">Close</button>
+        </section>
+        <!-- URL ENTRY section END -->
+
+        <!-- URL EDIT section START -->
+        <section id="wikindx-url-edit">
+            WIKINDX URL (https://...):
+            <input class="inputText" type="text" id="wikindx-edit-url" placeholder="Enter new WIKINDX URL here (https://...)"></input>
+            </br></br>
+            WIKINDX name:
+            <input class="inputText" type="text" id="wikindx-edit-name" placeholder="Enter new WIKINDX name here"></input>
+            <button class="button" id="wikindx-url-edit2" alt="Edit URL" title="Edit URL">Edit URL</button>
+            <button class="button" id="wikindx-close-url-edit" alt="Close" title="Close">Close</button>
+        </section>
+        <!-- URL EDIT section END -->
+
+        <!-- URL DELETE section START -->
+        <section id="wikindx-urls-remove">
+        </section>
+        <!-- URL DELETE section END -->
+    </td></tr></table>
+    </section>
+    <!-- URL MANAGEMENT section END -->
+
+    <!-- SEARCH PARAMETERS section START -->
+    <section id="wikindx-search-parameters" style="display:none">
+        <!-- WIKINDX URL -->
+        <table class="wikindx-table"><tr><td class="wikindx-td">
+            WIKINDX:</br>
+            <select class="select" id="wikindx-url">
+            </select>
+            </br>
+            <section id="wikindx-manage-urls">
+            <table class="wikindx-table-button"><tr><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-add" alt="Add URL . . ." title="Add URL . . ." width="16" height="16" src="../../assets/add.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-edit1" alt="Edit URL . . ." title="Edit URL . . ." width="16" height="16" src="../../assets/edit.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-delete" alt="Delete URLs . . ." title="Delete URLs . . ." width="16" height="16" src="../../assets/delete.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-heartbeat" alt="Check pulse" title="Check pulse" width="16" height="16" src="../../assets/heart.png"/>
+                </td><td class="wikindx-td-button">
+                <a href="" target="_new" id="wikindx-url-visit" ><img width="16" height="16" src="../../assets/plane.png" alt="Open in browser" title="Open in browser" /></a>
+            </td></tr></table>
+<!--
+<button class="button-2" id="wikindx-url-add" alt="Add URL . . ." title="Add URL . . ."> + </button>
+<button class="button-2" id="wikindx-url-delete" alt="Delete URLs . . ." title="Delete URLs . . ."> - </button>
+-->
+            </section>
+        </td><td class="wikindx-td">
+            <!-- Search text -->
+            <a href="#" target="" class="anchor" title="You can use combinations of: AND, OR, NOT and ''exact phrase'' as well as the wildcards '?' and '*'.">Search text:</a></br>
+            <input class="inputText" type="text" id="wikindx-search-text" placeholder="Enter search here"></input>
+        </td></tr>
+        <tr><td class="wikindx-td">
+            Search order:</br>
+            <select class="select" id="wikindx-search-params">
+                <option value="creator_ASC" selected>Creator ascending</option></option>
+                <option value="creator_DESC">Creator descending</option>
+                <option value="year_DESC">Year descending</option>
+                <option value="year_ASC">Year ascending</option>
+                <option value="title_ASC">Title ascending</option>
+                <option value="title_DESC">Title descending</option>
+                <option value="timestamp_DESC">Timestamp descending</option>
+                <option value="timestamp_ASC">Timestamp ascending</option>
+            </select>
+        </td><td class="wikindx-td">
+            Style:</br>
+            <section id="wikindx-styles">
+            </section>
+        </td></tr></table>
+        <button class="button" id="wikindx-search" alt="Search" title="Search">Search</button>
+        <section id="wikindx-searching" style="display:none">&nbsp;&nbsp;Searching . . .</section><br/><br/>
+    </section>
+    <!-- SEARCH PARAMETERS section END -->
+
+    <!-- DISPLAY RESULTS section START -->
+    <section id="wikindx-display-results" style="display:none">
+    <table class="wikindx-table"><tr><td class="wikindx-td">
+        <!-- SEARCH RESULTS section START -->
+        <section id="wikindx-search-results">
+
+        </section>
+        <!-- SEARCH RESULTS section END -->
+
+        <!-- DISPLAY REFERENCE section START -->
+        <section id="wikindx-display-ref">
+
+        </section>
+        <!-- DISPLAY REFERENCE section END -->
+
+        <!-- INSERT CITATION section START -->
+        <section>
+        <button class="button" id="wikindx-insert-citation" alt="Insert citation" title="Insert citation">Insert&nbsp;Citation</button>
+        </section>
+        <!-- INSERT CITATION section END -->
+    </td></tr></table>
+    </section>
+    <!-- DISPLAY RESULTS section END -->
+
+    <!-- MESSAGES section START -->
+    <br/><br/>
+    <section id="wikindx-messages" style="display:none">
+    <table class="wikindx-table"><tr><td class="wikindx-td">
+        <section class="wikindx-error" id="wikindx-error">
+        </section>
+        <section class="wikindx-success" id="wikindx-success">
+        </section>
+    </td></tr></table>
+    </section>
+    <!-- MESSAGES section END -->
+
+</body>
+
+</html>

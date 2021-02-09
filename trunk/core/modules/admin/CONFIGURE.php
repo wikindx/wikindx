@@ -83,9 +83,7 @@ class CONFIGURE
         {
             return FALSE;
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('configure'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('configure'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "configure"));
         $jsonArray = [];
         $jScript = 'index.php?action=admin_CONFIGURE_CORE&method=initConfigDiv';

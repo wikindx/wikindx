@@ -39,9 +39,7 @@ class CATEGORYTREE
      */
     public function init()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('categoryTree'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('categoryTree'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "categoryTree"));
         $this->categories->sum = $this->categories->category = [];
         $this->categories->getCategories();

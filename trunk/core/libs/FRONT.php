@@ -60,9 +60,7 @@ class FRONT
         $this->listCommon->navigate = 'front';
         $this->browserTabID = GLOBALS::getBrowserTabID();
         GLOBALS::setTplVar('heading', ''); // blank
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('front'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('front'));
         $this->init();
         $this->session->setVar("bookmark_DisplayAdd", FALSE);
     }

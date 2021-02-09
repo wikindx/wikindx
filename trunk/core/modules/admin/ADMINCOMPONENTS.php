@@ -49,9 +49,7 @@ class ADMINCOMPONENTS
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('plugins'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('plugins'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminComponents"));
     }
     /**

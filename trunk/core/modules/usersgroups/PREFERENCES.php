@@ -49,9 +49,7 @@ class PREFERENCES
             $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('preferences'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('preferences'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "preferences"));
         $pString .= $this->display();
         GLOBALS::addTplVar('content', $pString);

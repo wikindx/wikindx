@@ -77,15 +77,6 @@ class adminstyle_MODULE
         $this->creators = ['creator1', 'creator2', 'creator3', 'creator4', 'creator5'];
     }
     /**
-     * display the help file
-     */
-    public function help()
-    {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "help.php"]));
-        $help = new adminstyle_help();
-        $help->init();
-    }
-    /**
      * display options for styles
      *
      * @param false|string $message
@@ -116,10 +107,7 @@ class adminstyle_MODULE
         $this->session->clearArray("style");
         $this->session->clearArray("partial");
         $this->session->clearArray("footnote");
-        $icons = FACTORY_LOADICONS::getInstance('help');
-        $jScript = "javascript:coreOpenPopup('index.php?action=adminstyle_help&amp;message=Help', 80)";
-        $link = HTML\a($icons->getClass("help"), $icons->getHTML("help"), $jScript);
-        GLOBALS::setTplVar('help', $link);
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('adminstyle'));
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('addStyle'));
         $pString = '';
         if ($error)
@@ -184,10 +172,7 @@ class adminstyle_MODULE
      */
     public function editDisplay($error = FALSE)
     {
-        $icons = FACTORY_LOADICONS::getInstance('help');
-        $jScript = "javascript:coreOpenPopup('index.php?action=adminstyle_help&amp;message=Help', 80)";
-        $link = HTML\a($icons->getClass("help"), $icons->getHTML("help"), $jScript);
-        GLOBALS::setTplVar('help', $link);
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('adminstyle'));
         if (!$error)
         {
             $this->loadEditSession();
@@ -241,10 +226,7 @@ class adminstyle_MODULE
      */
     public function copyDisplay($error = FALSE)
     {
-        $icons = FACTORY_LOADICONS::getInstance('help');
-        $jScript = "javascript:coreOpenPopup('index.php?action=adminstyle_help&amp;message=Help', 80)";
-        $link = HTML\a($icons->getClass("help"), $icons->getHTML("help"), $jScript);
-        GLOBALS::setTplVar('help', $link);
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('adminstyle'));
         if (!$error)
         {
             $this->loadEditSession(TRUE);

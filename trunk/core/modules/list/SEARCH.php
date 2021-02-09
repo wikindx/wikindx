@@ -132,9 +132,7 @@ class SEARCH
 	        $this->input = $this->session->getArray('advancedSearch');
 	    }
         $this->checkAvailableFields();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('search'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('search'));
         if (!$returnString)
         {
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));

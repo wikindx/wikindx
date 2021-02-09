@@ -68,11 +68,9 @@ class RESOURCEVIEW
         $this->meta = new RESOURCEMETA();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCECUSTOM.php"]));
         $this->custom = new RESOURCECUSTOM();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
         $this->languageClass = FACTORY_CONSTANTS::getInstance();
         $this->browserTabID = GLOBALS::getBrowserTabID();
-        GLOBALS::setTplVar('help', $help->createLink('resource'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('resource'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "resources"));
     }
     /**

@@ -96,9 +96,7 @@ class QUICKSEARCH
         // If QUICKSEARCH is called by the special string $QUICKSEARCH$ on the front page, there is already a help icon being used.
         if (!GLOBALS::getTplVar('help'))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-            $help = new HELPMESSAGES();
-            GLOBALS::setTplVar('help', $help->createLink('search'));
+            GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('search'));
         }
         if (!$returnString)
         {

@@ -47,9 +47,7 @@ class IDEAS
         $this->success = FACTORY_SUCCESS::getInstance();
 
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('ideas'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('ideas'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "ideas"));
         if ($this->session->getVar("setup_ReadOnly"))
         {

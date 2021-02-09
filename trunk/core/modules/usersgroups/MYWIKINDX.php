@@ -99,9 +99,7 @@ class MYWIKINDX
         {
             return FALSE;
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('myWikindx'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('preferences'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "myWikindx", $this->userNameDisplay));
         $jsonArray = [];
         $jScript = 'index.php?action=usersgroups_MYWIKINDX_CORE&method=initConfigDiv';

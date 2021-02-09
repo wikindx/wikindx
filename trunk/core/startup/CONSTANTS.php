@@ -128,6 +128,13 @@ define('WIKINDX_URL', 'https://wikindx.sourceforge.io');
  * @name WIKINDX_COMPONENTS_UPDATE_SERVER
  */
 define('WIKINDX_COMPONENTS_UPDATE_SERVER', 'https://wikindx.sourceforge.io/cus/index.php');
+
+/**
+ * URL of the Help Topics on the website
+ *
+ * @name WIKINDX_URL_HELP_TOPICS
+ */
+define('WIKINDX_URL_HELP_TOPICS', 'https://wikindx.sourceforge.io/web/' . WIKINDX_PUBLIC_VERSION . '/help-topics');
 /**
  * Algo used for hashing the packages released by the project
  *

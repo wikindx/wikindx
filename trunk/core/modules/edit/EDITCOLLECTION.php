@@ -46,9 +46,7 @@ class EDITCOLLECTION
     public function init($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('collection'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" . $this->messages->text("resources", "collection") . ")"));
         $this->db->groupBy('collectionType');
         $recordset = $this->db->select('collection', 'collectionType');
@@ -88,9 +86,7 @@ class EDITCOLLECTION
     public function editChooseCollection($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('collection'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "collection") . ")"));
         if (array_key_exists('success', $this->vars) && $this->vars['success']) {
@@ -153,9 +149,7 @@ class EDITCOLLECTION
     public function editDisplayCollection($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('collection'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "collection") . ")"));
         if (!array_key_exists('collectionId', $this->vars) || !$this->vars['collectionId'])

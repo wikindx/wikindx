@@ -1048,4 +1048,26 @@ namespace UTILS
             return $defaultValue;
         }
     }
+    
+    /**
+     * Create a popup link for a Help Topic on the website
+     *
+     * @param mixed $topicPage
+     *
+     * @return string HTML link tag
+     */
+    function createHelpTopicLink($helpTopic)
+    {
+        $icons = \FACTORY_LOADICONS::getInstance('help');
+        
+        // Hugo always build a lowercase url
+        $url = WIKINDX_URL_HELP_TOPICS . "/" . mb_strtolower($helpTopic);
+
+        if (WIKINDX_IS_TRUNK)
+        {
+            $url = str_replace("/" . WIKINDX_PUBLIC_VERSION . "/", "/trunk/", $url);
+        }
+
+        return \HTML\a($icons->getClass("help"), $icons->getHTML("help"), $url, "_blank");
+    }
 }

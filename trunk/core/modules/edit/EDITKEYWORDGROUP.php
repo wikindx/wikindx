@@ -42,9 +42,7 @@ class EDITKEYWORDGROUP
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->user = FACTORY_USER::getInstance();
 
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('keywordGroups'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('keywordGroups'));
         GLOBALS::setTplVar('heading', $this->messages->text("resources", "keywordGroup"));
         $this->userId = $this->session->getVar('setup_UserId');
     }

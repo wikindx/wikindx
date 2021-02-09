@@ -67,10 +67,7 @@ class wordprocessor_MODULE
 
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->checkTable();
-        $icons = FACTORY_LOADICONS::getInstance('help');
-        $jScript = "javascript:coreOpenPopup('index.php?action=wordprocessor_help&amp;message=Help', 80)";
-        $link = HTML\a($icons->getClass("help"), $icons->getHTML("help"), $jScript);
-        GLOBALS::setTplVar('help', $link);
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('wordprocessor'));
     }
     
     /**
@@ -108,16 +105,6 @@ class wordprocessor_MODULE
         }
     }
     
-    /**
-     * display the help file
-     */
-    public function help()
-    {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $help = new PLUGINMESSAGES('wordprocessor', 'wordprocessorHelp');
-        GLOBALS::addTplVar('content', $help->text('help'));
-        FACTORY_CLOSEPOPUP::getInstance();
-    }
     /**
      * Open a new WP paper
      */

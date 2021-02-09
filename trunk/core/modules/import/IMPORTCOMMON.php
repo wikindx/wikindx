@@ -104,9 +104,7 @@ class IMPORTCOMMON
         }
         elseif ($this->importType == 'pasteBibtex')
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-            $help = new HELPMESSAGES();
-            GLOBALS::setTplVar('help', $help->createLink('pasteBibtex'));
+            GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('pasteBibtex'));
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexPaste"));
         }
         $category = FACTORY_CATEGORY::getInstance();

@@ -233,9 +233,7 @@ class ADMINCREATOR
      */
     public function groupInit($message = FALSE)
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-        $help = new HELPMESSAGES();
-        GLOBALS::setTplVar('help', $help->createLink('creatorGroups'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('creatorGroups'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "groupCreators"));
         if (array_key_exists('success', $this->vars) && $this->vars['success']) {
             $message = $this->success->text($this->vars['success']);

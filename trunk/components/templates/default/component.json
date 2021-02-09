@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "default",
-    "component_version": "337",
+    "component_version": "395",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "Default",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "111b1f43a1b6380032ec181dcdfe548c33dc6fcac8ef85433b31a03b82b70d77"
+    "component_sha256": "484245eb9454b9cb432c7d8cf4a591d6cc54bd19ea92f42e80208c1c280b1873"
 }

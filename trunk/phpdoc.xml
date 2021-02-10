@@ -31,10 +31,9 @@
 		<path>core/tiny_mce/util</path>
 		<path>data</path>
 		<path>dbschema</path>
-		<path>docs</path>
 		<path>index.php</path>
+		<path>office.php</path>
 		<path>phpdoc.xml</path>
-		<path>tools</path>
       </ignore>
       <!--Optional:-->
       <extensions>

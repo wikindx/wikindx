@@ -17,9 +17,9 @@ Thus, plugins/adminstyle/index.php etc.
 
 CHANGELOG:
 
-2021-02-10 : CHG : move the help on the website [294].
-2021-01-08 : FIX : restore temporarily the old languages list for style components (bug #305).
-2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2021-02-10 : CHG : move the help on the website [#294].
+2021-01-08 : FIX : restore temporarily the old languages list for style components [#305].
+2020-12-21 : CHG : make PHP includes independent of the web server layout [#244].
 2020-12-21 : FIX : error reading a bibliographic style for editing.
 2020-12-21 : ADD : create the component.json file when creating or copying a style.
 2020-12-21 : CHG : enable by default private styles.

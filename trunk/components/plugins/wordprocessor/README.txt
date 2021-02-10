@@ -24,11 +24,11 @@ Papers can be imported from earlier versions by using the 'Import paper' functio
 
 CHANGELOG:
 
-2021-02-10 : CHG : move the help on the website [294].
+2021-02-10 : CHG : move the help on the website [#294].
 2020-12-21 : CHG : remove the unused tinymce compressor loader.
 2020-12-21 : SEC : extends safely LOADTINYMCE.
 2020-12-21 : CHG : reset tinyMCE_mode for the wordprocessor after the parent loading.
-2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : CHG : make PHP includes independent of the web server layout [#244].
 2020-12-21 : CHG : remove the type attribut of script elements (discouraged in HTML 5).
 2020-12-21 : CHG : convert UTF8 class to a namespace.
 2020-12-21 : CHG : reformat source code to the prefered if/then/else style.

@@ -38,8 +38,14 @@ class OFFICE
     {
     	if (array_key_exists('method', $this->vars)) {
     		switch ($this->vars['method']) {
-    			case 'getResources':
-    				$this->getResources();
+    			case 'getReferences':
+    				$this->getReferences();
+    				break;
+    			case 'getReference':
+    				$this->getReference();
+    				break;
+    			case 'getCitations':
+    				$this->getCitations();
     				break;
     			case 'getCitation':
     				$this->getCitation();
@@ -70,26 +76,54 @@ class OFFICE
     	die;
     }
     /**
-     * Get the resource list from the search
+     * Get the reference list from the search
      *
      */
-    private function getResources()
+    private function getReferences()
     {
     	GLOBALS::setUserVar("Style", $this->vars['style']);
         include_once(implode(DIRECTORY_SEPARATOR, ["core", "modules", "office", "SEARCH.php"]));
         $search = new SEARCH();
-    	$id = array_key_exists('searchWord', $this->vars) ? $this->vars['searchWord'] : 1119; // for test purposes . . .
     	$search->input['Word'] = \UTF8\mb_trim($this->vars['searchWord']);
     	$split = explode('_', $this->vars['searchParams']);
     	$search->order = $split[0];
     	$search->ascDesc = $split[1];
-    	$sql = $search->process();
-    	$json = $this->formatResults($sql);
+    	$sql = $search->processResources();
+    	$json = $this->formatResultsReferences($sql);
     	echo $json;
     	die;
     }
     /**
-     * Get single citation from a resource id
+     * Get single reference from a resource id
+     *
+     */
+    private function getReference()
+    {
+    	GLOBALS::setUserVar("Style", $this->vars['style']);
+        $res = FACTORY_RESOURCECOMMON::getInstance();
+        $bibStyle = FACTORY_BIBSTYLE::getInstance(); // HTML
+        $bibStyle->ooxml = TRUE;
+        $citeStyle = FACTORY_CITESTYLE::getInstance(); // HTML
+        $citeStyle->ooxml = TRUE;
+    	$resultSet = $res->getResource($this->vars['id']);
+    	if (!$this->db->numRows($resultSet)) {
+    		echo json_encode("Bad ID");
+    		die;
+    	}
+    	$row = $this->db->fetchRow($resultSet);
+    	$bibEntry = $bibStyle->process($row);
+    	$reference = trim($citeStyle->start('[cite]' . $this->vars['id'] . '[/cite]', FALSE));
+    	if (!$this->vars['withHtml']) {
+    		$bibEntry = strip_tags($bibEntry);
+    		$reference = strip_tags($reference);
+    	}
+    	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference];
+    	$json = json_encode($jsonArray);
+    	echo $json;
+    	die;
+    }
+    /**
+     * Get single citation from a resourcemetadata id
      *
      */
     private function getCitation()
@@ -100,22 +134,52 @@ class OFFICE
         $bibStyle->ooxml = TRUE;
         $citeStyle = FACTORY_CITESTYLE::getInstance(); // HTML
         $citeStyle->ooxml = TRUE;
-    	$id = array_key_exists('id', $this->vars) ? $this->vars['id'] : 1119; // for test purposes . . .
-    	$resultSet = $res->getResource($id);
+    	$this->db->formatConditions(['resourcemetadataId' => $this->vars['id']]);
+    	$resultSet = $this->db->select('resource_metadata', ['resourcemetadataText', 'resourcemetadataPageStart', 'resourcemetadataPageEnd', 
+    		'resourcemetadataResourceId']);
+    	if (!$this->db->numRows($resultSet)) {
+    		echo json_encode("Bad ID");
+    		die;
+    	}
+    	$row = $this->db->fetchRow($resultSet);
+    	$citation = $row['resourcemetadataText'];
+    	// Remove all images
+    	$citation = preg_replace("/<img[^>]+\>/i", "(image removed)", $citation);
+    	// Remove all in-text citations – maybe deal with at a later date
+    	$citation = preg_replace("/(\\[cite])(.*)(\\[\\/cite\\])/Uus", '(citation removed)', $citation);
+    	$citeEndTag = '[/cite]';
+    	if ($row['resourcemetadataPageStart']) {
+    		if ($row['resourcemetadataPageEnd']) {
+	    		$citeEndTag = ':' . $row['resourcemetadataPageStart'] . '-' . $row['resourcemetadataPageEnd'] . $citeEndTag;
+    		} else {
+	    		$citeEndTag = ':' . $row['resourcemetadataPageStart'] . $citeEndTag;
+	    	}
+    	}
+    	$pageS = $row['resourcemetadataPageStart'];
+    	$pageE = $row['resourcemetadataPageEnd'];
+    	$resultSet = $res->getResource($row['resourcemetadataResourceId']);
+    	if (!$this->db->numRows($resultSet)) {
+    		echo json_encode("Bad ID");
+    		die;
+    	}
     	$row = $this->db->fetchRow($resultSet);
     	$bibEntry = $bibStyle->process($row);
-    	$citation = trim($citeStyle->start('[cite]' . $id . '[/cite]', FALSE));
-    	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'citation' => $citation];
+    	$reference = trim($citeStyle->start('[cite]' . $row['resourceId'] . $citeEndTag, FALSE));
+    	if (!$this->vars['withHtml']) {
+    		$bibEntry = strip_tags($bibEntry);
+    		$citation = strip_tags($citation);
+    	}
+    	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 'citation' => $citation];
     	$json = json_encode($jsonArray);
     	echo $json;
     	die;
     }
     /**
-     * Format and return the results
+     * Format and return the reference search results
      *
      * @param string $sql
      */
-    private function formatResults($sql)
+    private function formatResultsReferences($sql)
     {
     	GLOBALS::setUserVar("Style", $this->vars['style']);
         $bibStyle = FACTORY_BIBSTYLE::getInstance(); // HTML
@@ -125,11 +189,56 @@ class OFFICE
     	$jsonArray = [];
     	$resultSet = $this->db->query($sql);
     	while ($row = $this->db->fetchRow($resultSet)) {
-    		$bibEntry = $bibStyle->process($row);
-    		$citation = trim($citeStyle->start('[cite]' . $row['resourceId'] . '[/cite]', FALSE));
-    		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'citation' => $citation];
+    		$bibEntry = strip_tags($bibStyle->process($row)); 
+    		if (mb_strlen($bibEntry) > 69) {// For the add-in select box which has c. 70 chars/option
+	    		$bibEntry = mb_substr($bibEntry, 0, 70);
+	    	}
+    		$reference = trim($citeStyle->start('[cite]' . $row['resourceId'] . '[/cite]', FALSE));
+    		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference];
     	}
     	return json_encode($jsonArray);
+    }
+    /**
+     * Format and return the citation search results
+     *
+     * @param string $sql
+     */
+    private function formatResultsCitations($sql)
+    {
+    	GLOBALS::setUserVar("Style", $this->vars['style']);
+        $bibStyle = FACTORY_BIBSTYLE::getInstance(); // HTML
+        $bibStyle->ooxml = TRUE;
+    	$jsonArray = [];
+    	$resultSet = $this->db->query($sql);
+    	while ($row = $this->db->fetchRow($resultSet)) {
+			$citation = strip_tags($row['resourcemetadataText']);
+    		if (mb_strlen($citation) > 69) {// For the add-in select box which has c. 70 chars/option
+	    		$citation = mb_substr($citation, 0, 70);
+	    	}
+    		// Remove all in-text citations – maybe deal with at a later date
+    		$citation = preg_replace("/(\\[cite])(.*)(\\[\\/cite\\])/Uus", '', $citation);
+    		$jsonArray[] = ['id' => $row['resourcemetadataId'], 'citation' => $citation];
+    	}
+    	return json_encode($jsonArray);
+    }
+    
+    /**
+     * Get the citation list from the search
+     *
+     */
+    private function getCitations()
+    {
+    	GLOBALS::setUserVar("Style", $this->vars['style']);
+        include_once(implode(DIRECTORY_SEPARATOR, ["core", "modules", "office", "SEARCH.php"]));
+        $search = new SEARCH();
+    	$search->input['Word'] = \UTF8\mb_trim($this->vars['searchWord']);
+    	$split = explode('_', $this->vars['searchParams']);
+    	$search->order = $split[0];
+    	$search->ascDesc = $split[1];
+    	$sql = $search->processCitations();
+    	$json = $this->formatResultsCitations($sql);
+    	echo $json;
+    	die;
     }
     /*
      * Return a list of available bibliographic styles

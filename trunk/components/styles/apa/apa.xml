@@ -23,7 +23,7 @@
 <creatorListSubsequentLimit>1</creatorListSubsequentLimit>
 <consecutiveCreatorTemplate>##[i]title[/i], #|year%, %|^p.^pp.^pages</consecutiveCreatorTemplate>
 <consecutiveCreatorSep>, </consecutiveCreatorSep>
-<template>creator|$$, [i]title[/i]$|, year|, ^p.^pp.^pages</template>
+<template>creator|$,$ [i]title[/i]$,| year|, ^p.^pp.^pages</template>
 <useInitials>on</useInitials>
 <consecutiveCitationSep>; </consecutiveCitationSep>
 <yearFormat>0</yearFormat>

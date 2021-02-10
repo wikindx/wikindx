@@ -73,6 +73,7 @@ for their work:
 * [SmartyMenu](https://www.phpinsider.com/php/code/SmartyMenu/), menu plugin for Smarty ([LGPL 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html))
 * [TinyMCE Compressor PHP](https://github.com/tinymce/tinymce_compressor) ([LGPL 3.0](https://www.gnu.org/licenses/lgpl-3.0.en.html))
 * [TinyMCE](https://www.tiny.cloud/), JavaScript WYSIWYG HTML Editor ([LGPL 2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html))
+* [Title Logo Generator](http://www.webestools.com/web20-title-generator-logo-title-maker-online-web20-effect-reflect-free-photoshop.html), title on image generator
 
 ### Tooling
 

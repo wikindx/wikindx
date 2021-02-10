@@ -2,7 +2,7 @@
 
     ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 
-The software documentation is in the docs folder.
+The software documentation is at https://wikindx.sourceforge.io/web/trunk/index.html
 
 For prerequisites and other general information, read docs/README.md.
 
@@ -24,5 +24,5 @@ There is no substitute for reading the complete bibliographic resource.
 
 -- 
 Mark Grimshaw-Aagaard
-The WIKINDX Team 2020
+The WIKINDX Team 2021
 sirfragalot@users.sourceforge.net

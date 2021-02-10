@@ -394,7 +394,10 @@ class SQL
                     {
                         // Keep only columns compatible with te features of the minimum MySQL Version required (5.7.5)
                         // and remove unused info
-                        if (in_array($k, ["Table", "Non_unique", "Key_name", "Seq_in_index", "Column_name", "Collation", "Sub_part", "Index_type"]))
+                        // Fix#318(LkpPo): the Index_Type option is unreliable for InnoDB due to functionality of bug #22632
+                        // Let the engine choose the type of index it prefers.
+                        // cf. https://bugs.mysql.com/bug.php?id=22632
+                        if (in_array($k, ["Table", "Non_unique", "Key_name", "Seq_in_index", "Column_name", "Collation", "Sub_part"]))
                         {
                             $def[$k] = $v;
                         }

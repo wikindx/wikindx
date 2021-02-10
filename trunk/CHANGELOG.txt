@@ -10,7 +10,7 @@ BUG FIXES:
 3. Rearrange the order of some default function fields in readiness for PHP 8 [#312].
 4. In some cases, QUICKSEARCH searched on an empty field in FULLTEXT mode (abstracts, notes, etc.) – fixed.
 5. Recreate the usersUsernameUnique index with a BTREE type (bugfix #318).
-
+6. Index_Type option is unreliable for InnoDB due to functionality of [bug #22632](https://bugs.mysql.com/bug.php?id=22632).
 
 FEATURE ENHANCEMENT:
 1. Added the ability to add an impressum/legal notice at the footer of each page – see Admin|Configure|Miscellaneous.
@@ -20,7 +20,6 @@ MAINTENANCE:
 1. Blocks install/upgrade if the db engine does not meet the requirements [#311].
 2. Move technical details in debug mode [#301].
 3. Move the documentation on the website [#294].
-
 
 SECURITY
 

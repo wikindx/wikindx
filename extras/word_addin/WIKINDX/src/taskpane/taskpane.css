@@ -16,6 +16,10 @@
      padding: 0;
  }
 
+ .hidden {
+  visibility: hidden;
+ }
+
  .inputText {
     width: 100%;
     padding: 1px 1px;

@@ -18,17 +18,7 @@
 
     <!-- Template styles -->
     <link href="taskpane.css" rel="stylesheet" type="text/css" />
-    <script>
-        function displayReference() {
-            var rsb = document.getElementById("wikindx-refSelectBox");
-            var id = rsb.value;
-            var hiddenRef = "hiddenRef" + id;
-            var hr = document.getElementById(hiddenRef);
-            var dr = document.getElementById("wikindx-display-ref");
-            dr.innerHTML = '</br>' + decodeURIComponent(escape(atob(hr.value)));
-            return true;
-        }
-    </script>
+
 </head>
 
 <body class="ms-font-m ms-welcome ms-Fabric">
@@ -40,9 +30,28 @@
         <h2 class="ms-font-xl"></h2>Please sideload your add-in to see app body</h2>
     </section>
 
+    <table class="wikindx-table"><tr><td class="wikindx-td">
     <a href="https://wikindx.sourceforge.io/" target="_new"><img width="112" height="27" src="../../assets/wikindx-filled.png" alt="WIKINDX" title="WIKINDX" /></a>
     <input type="image" class="bulb" alt="About WIKINDX" id="wikindx-display-about" width="16" height="16" src="../../assets/lightbulb_off.png" alt="About WIKINDX" title="About WIKINDX"/>
-    <br/><br>
+    </td><td class="wikindx-td">
+    <select class="select" id="wikindx-action">
+        <option value="references" selected>Search references</option></option>
+        <option value="citations">Search citations</option>
+        <option value="finalize">Finalize document</option>
+    </select>
+    </td></tr></table>
+    <br/>
+    <!-- ACTION TITLE section START -->
+    <section id="wikindx-action-title-references">
+        <strong>Search and insert references</strong>
+    </section>
+    <section id="wikindx-action-title-citations" style="display:none">
+        <strong>Search and insert quotations or paraphrases</strong>
+    </section>
+    <section id="wikindx-action-title-finalize" style="display:none">
+        <strong>Finalize the document</strong>
+    </section>
+    <!-- ACTION TITLE section END -->
 
  <!--   <main id="app-body" class="ms-welcome__main" style="display: none;"> -->
 
@@ -53,12 +62,13 @@
         v. beta 0.9 (&copy;Mark Grimshaw-Aagaard 2021)
         <p>If you have a WIKINDX, you can import formatted in-text citations and references into your Word document. The WIKINDX 
         must be accessed through SSL (i.e. the URL starts with 'https://') and the WIKINDX admin must have enabled read-only 
-        mode. If your WIKINDX is normally accessed through a browser as, for example, 'www.mywikindx.com', then URL here should be 
+        mode. If your WIKINDX is normally accessed through a browser as, for example, 'www.mywikindx.com', then the URL here should be 
         'https://www.mywikindx.com'.</p>
         <p>In this initial version of the tool, only citation format styles available on the WIKINDX that are neither endnote nor footnote type 
         can be used (i.e. styles such as APA, Harvard, MLA) – this might change in the future.</p>
-        <p>In the search field, you can use combinations of: <em>AND</em>, <em>OR</em>, <em>NOT</em>, and <em>''exact phrase''</em> as well as the wildcards <em>?</em> and <em>*</em></p>
-        <p>The search is conducted on the following fields:
+        <p>In the search field, you can use combinations of: <em>AND</em>, <em>OR</em>, <em>NOT</em>, and <em>''exact phrase''</em> as 
+        well as the wildcards <em>?</em> and <em>*</em></p>
+        <p>A search on references is conducted on the following fields:
         <ul class="wikindx-list">
             <li>Author names</li>
             <li>Title</li>
@@ -67,6 +77,17 @@
             <li>Quotations and paraphrases</li>
             <li>Custom fields</li>
         </ul>
+        </p>
+        <p>A search on citations is conducted on the following fields:
+            <ul class="wikindx-list">
+                <li>Keywords</li>
+                <li>Quotations and paraphrases</li>
+            </ul>
+            </p>
+        <p>
+        Once you have inserted your references and citations, you can then finalize your document. This produces in-text citations and 
+        the reference list formatted to the chosen citation format style. If you have inserted citations and references from more than 
+        one WIKINDX, then the list of available citation format styles will comprise those that are common to the wikindices.
         </p>
         <section id="wikindx-about-begin">
         <p>To get started, close this help by clicking on the lightbulb icon above and enter the URL and name of the WIKINDX you 
@@ -129,7 +150,7 @@
                 </td><td class="wikindx-td-button">
                 <input type="image" class="buttonIcon" id="wikindx-url-heartbeat" alt="Check pulse" title="Check pulse" width="16" height="16" src="../../assets/heart.png"/>
                 </td><td class="wikindx-td-button">
-                <a href="" target="_new" id="wikindx-url-visit" ><img width="16" height="16" src="../../assets/plane.png" alt="Open in browser" title="Open in browser" /></a>
+                <a href="" target="_new" id="wikindx-url-visit" ><img width="16" height="16" src="../../assets/plane.png" alt="Open WIKINDX in browser" title="Open in browser" /></a>
             </td></tr></table>
 <!--
 <button class="button-2" id="wikindx-url-add" alt="Add URL . . ." title="Add URL . . ."> + </button>
@@ -143,7 +164,8 @@
         </td></tr>
         <tr><td class="wikindx-td">
             Search order:</br>
-            <select class="select" id="wikindx-search-params">
+            <section id="wikindx-reference-order">
+            <select class="select" id="wikindx-reference-params">
                 <option value="creator_ASC" selected>Creator ascending</option></option>
                 <option value="creator_DESC">Creator descending</option>
                 <option value="year_DESC">Year descending</option>
@@ -153,22 +175,45 @@
                 <option value="timestamp_DESC">Timestamp descending</option>
                 <option value="timestamp_ASC">Timestamp ascending</option>
             </select>
+            </section>
+            <section id="wikindx-citation-order" style="display:none">
+            <select class="select" id="wikindx-citation-params">
+                <option value="creator_ASC" selected>Creator ascending</option></option>
+                <option value="creator_DESC">Creator descending</option>
+                <option value="year_DESC">Year descending</option>
+                <option value="year_ASC">Year ascending</option>
+                <option value="title_ASC">Title ascending</option>
+                <option value="title_DESC">Title descending</option>
+            </select>
+            </section>
         </td><td class="wikindx-td">
-            Style:</br>
-            <section id="wikindx-styles">
+            <section id="wikindx-styles" style="display:none">
+                Style:</br>
+                <select class="selectStyle" id="wikindx-styleSelectBox">
+
+                </select>
             </section>
         </td></tr></table>
         <button class="button" id="wikindx-search" alt="Search" title="Search">Search</button>
-        <section id="wikindx-searching" style="display:none">&nbsp;&nbsp;Searching . . .</section><br/><br/>
+        <br/><br/>
     </section>
     <!-- SEARCH PARAMETERS section END -->
+
+    <!-- DOCUMENT FINALIZE section START -->
+    <section id="wikindx-finalize" style="display:none">
+        <table class="wikindx-table"><tr><td class="wikindx-td">
+            here
+        </td></tr></table>
+    </section>
+    <!-- DOCUMENT FINALIZE section END -->
 
     <!-- DISPLAY RESULTS section START -->
     <section id="wikindx-display-results" style="display:none">
     <table class="wikindx-table"><tr><td class="wikindx-td">
         <!-- SEARCH RESULTS section START -->
         <section id="wikindx-search-results">
-
+            <select class="selectResults" id="wikindx-refSelectBox">
+            </select>
         </section>
         <!-- SEARCH RESULTS section END -->
 
@@ -178,11 +223,28 @@
         </section>
         <!-- DISPLAY REFERENCE section END -->
 
-        <!-- INSERT CITATION section START -->
-        <section>
-        <button class="button" id="wikindx-insert-citation" alt="Insert citation" title="Insert citation">Insert&nbsp;Citation</button>
+
+        <select class="selectResults" id="wikindx-citeSelectBox" style="display:none">
+        </select>
+        <!-- DISPLAY CITATION section START -->
+        <section id="wikindx-display-cite">
+
         </section>
-        <!-- INSERT CITATION section END -->
+        <!-- DISPLAY CITATION section END -->
+
+        <!-- INSERT REFERENCE section START -->
+        <section id="wikindx-insert-refSection">
+            <button class="button" id="wikindx-insert-reference" alt="Insert reference" title="Insert reference">Insert&nbsp;Reference</button>&nbsp;
+            <input type="checkbox" id="wikindx-reference-html">&nbsp;Remove all HTML formatting
+        </section>
+        <!-- INSERT REFERENCE section END -->
+
+        <!-- INSERT CITATION section START -->
+        <section id="wikindx-insert-citeSection">
+            <button class="button" id="wikindx-insert-citation" alt="Insert citation" title="Insert citation">Insert&nbsp;Citation</button>&nbsp;
+            <input type="checkbox" id="wikindx-citation-html">&nbsp;Remove all HTML formatting
+        </section>
+            <!-- INSERT CITATION section END -->
     </td></tr></table>
     </section>
     <!-- DISPLAY RESULTS section END -->

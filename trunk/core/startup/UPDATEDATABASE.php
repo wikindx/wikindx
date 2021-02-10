@@ -1666,6 +1666,17 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+
+    /**
+     * Upgrade database schema to version 42 (6.4.2)
+     *
+     * Recreate the usersUsernameUnique index with a BTREE type (bugfix #318)
+     * The HASH type seems not well supported by InnoDB
+     */
+    private function upgradeTo42()
+    {
+        $this->upgradeToTargetVersion();
+    }
     
     /**
      * Flush the temp_storage table

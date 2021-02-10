@@ -50,6 +50,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersHomeBib` tinyint(1) NOT NULL DEFAULT 0,
   `usersBrowseBibliography` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`usersId`),
-  UNIQUE KEY `usersUsernameUnique` (`usersUsername`) USING HASH
+  UNIQUE KEY `usersUsernameUnique` (`usersUsername`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 

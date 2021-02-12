@@ -25,12 +25,13 @@ var errorNoResultsReferences = "No references found matching your search.";
 var errorNoResultsCitations = "No citations found matching your search.";
 // var errorXMLTimeout = "ERROR: The search timed out. Consider reformulating your search."
 var errorJSON = "ERROR: Unspecified error. This could be any number of things from not being able to connect to the WIKINDX to no resources found matching your search.";
-var errorMissingID = "ERROR: Resource not found in the selected WIKINDX.";
+var errorMissingID = "ERROR: Resource or citation ID not found in the selected WIKINDX.";
 var errorNoInserts = "You have not inserted any references or citations yet so there is nothing to finalize.";
 var successNewUrl = "Stored new WIKINDX: ";
 var successEditUrl = "Edited WIKINDX URL.";
 var successRemoveUrl = "Deleted WIKINDX URL(s).";
 var successRemoveAllUrls = "Deleted all WIKINDX URLs.";
+var successPreferredUrl = "Preference stored.";
 var successHeartbeat = "Yes, I am alive and kicking. Try searching me . . .";
 var xml;
 var xmlResponse = null;
@@ -38,10 +39,15 @@ var docSelection;
 var searchURL;
 var visibleElements = [];
 var selectedURL;
+var numStoredURLs = 0;
 var selectedName;
 var storedIDs = new Object();
-var ooxmlVanishStart = "<w:p xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'><w:r><w:rPr><w:vanish/></w:rPr><w:t>";
-var ooxmlVanishEnd = "</w:t></w:r></w:p>";
+var ooxmlInsertInit = "<w:p xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'>"; // Tried others - only 2003 works for vanish . . .
+var ooxmlVanishStart = "<w:r><w:rPr><w:vanish/></w:rPr><w:t>";
+var ooxmlVanishEnd = "</w:t></w:r>";
+var ooxmlTextStart = "<w:r><w:t>";
+var ooxmlTextEnd = "</w:t></w:r>";
+var ooxmlInsertEnd = "</w:p>";
 
 
 /* global document, Office, Word */
@@ -82,17 +88,21 @@ Office.onReady(info => {
     document.getElementById("wikindx-url-edit2").onclick = urlEdit;
     document.getElementById("wikindx-close-url-entry").onclick = wikindxClose;
     document.getElementById("wikindx-close-url-edit").onclick = wikindxClose;
+    document.getElementById("wikindx-url-preferred").onclick = urlPreferredDisplay;
     document.getElementById("wikindx-url-delete").onclick = urlDeleteDisplay;
     document.getElementById("wikindx-display-about").onclick = wikindxDisplayAbout;
     document.getElementById("wikindx-url-heartbeat").onclick = userCheckHeartbeat;
 
 //
 // For debugging only, uncomment. Otherwise, leave commented out. Uncommented, it will remove all stored URLs from the Office environment. . .
- //     window.localStorage.removeItem('wikindx-localStorage');
+//     window.localStorage.removeItem('wikindx-localStorage');
 //
 
 // Check we have localStorage set up
     checkLocalStorage(false);
+    if (numStoredURLs) {
+      document.getElementById("wikindx-action").style.display = "block";
+    }
   }
   readIDs();
 });
@@ -161,7 +171,17 @@ function finalize()
 }
 
 function wrapCitation(text) {
-  return ooxmlVanishStart + text + ooxmlVanishEnd + ' ' + ooxmlVanishStart + text + ooxmlVanishEnd;
+  return ooxmlInsertInit 
+    + ooxmlVanishStart 
+    + text 
+    + ooxmlVanishEnd
+    + ooxmlTextStart
+    + "Visible text"
+    + ooxmlTextEnd
+    + ooxmlVanishStart 
+    + "new Vanish" 
+    + ooxmlVanishEnd
+    + ooxmlInsertEnd;
 }
 
 function displayReference() {
@@ -221,7 +241,7 @@ function hideVisible(idArray) {
 function retrieveVisible() {
   // Retrieve what was visible and show again
   for (var i = 0; i < visibleElements.length; i++) {
-    document.getElementById(visibleElements[i]).style.display = "block";
+    document.getElementById(visibleElements[i]).style.display = "block";console.log(visibleElements[i]);
   }
 }
 
@@ -230,8 +250,8 @@ function checkLocalStorage(displayUrlEntry) {
     document.getElementById("wikindx-search-parameters").style.display = "none";
     document.getElementById("wikindx-close-url-entry").style.display = "none";
     if (displayUrlEntry){
-      document.getElementById("wikindx-url-management").style.display = "block";
-      document.getElementById("wikindx-url-entry").style.display = "block";
+      document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Add WIKINDX';
+      urlManagementDisplay("wikindx-url-entry");
       document.getElementById("wikindx-about").style.display = "none";
     } else {
       document.getElementById("wikindx-url-management").style.display = "none";
@@ -260,14 +280,10 @@ function wikindxClose() {
 }
 
 function urlEditDisplay() {
-  hideVisible(["wikindx-search-parameters", "wikindx-display-results"]);
-  document.getElementById("wikindx-urls-remove").style.display = "none";
-  document.getElementById("wikindx-url-entry").style.display = "none";
-  document.getElementById("wikindx-messages").style.display = "none";
+  document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Edit WIKINDX';
   document.getElementById("wikindx-edit-url").value = selectedURL;
   document.getElementById("wikindx-edit-name").value = selectedName;
-  document.getElementById("wikindx-url-edit").style.display = "block";
-  document.getElementById("wikindx-url-management").style.display = "block";
+  urlManagementDisplay("wikindx-url-edit");
 }
 function urlEdit() {
   var editUrl = document.getElementById("wikindx-edit-url");
@@ -333,12 +349,8 @@ function urlEdit() {
 }
 
 function urlAddDisplay() {
-  hideVisible(["wikindx-search-parameters", "wikindx-display-results"]);
-  document.getElementById("wikindx-urls-remove").style.display = "none";
-  document.getElementById("wikindx-url-edit").style.display = "none";
-  document.getElementById("wikindx-messages").style.display = "none";
-  document.getElementById("wikindx-url-entry").style.display = "block";
-  document.getElementById("wikindx-url-management").style.display = "block";
+  document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Add WIKINDX';
+  urlManagementDisplay("wikindx-url-entry");
 }
 function urlRegister() {
   var newUrl = document.getElementById("wikindx-new-url");
@@ -379,13 +391,83 @@ function urlRegister() {
     }
     jsonArray.push([url, name]);
   }
+  ++numStoredURLs;
+  if (numStoredURLs > 1) {
+    document.getElementById("wikindx-url-preferred").style.display = "block";
+  }
   window.localStorage.setItem('wikindx-localStorage', JSON.stringify(jsonArray));
   getUrlSelectBox(jsonArray);
   visibleElements.push("wikindx-search-parameters");
+  visibleElements.push("wikindx-action");
   retrieveVisible();
   document.getElementById("wikindx-url-management").style.display = "none";
   styleSelectBox(); // Preload with first value from wikindx-url select box
   displaySuccess(successNewUrl + name + ' (' + url + ')');
+  return;
+}
+
+function urlManagementDisplay(turnOn) {
+  var displays = ["wikindx-url-entry", "wikindx-url-edit", "wikindx-urls-remove", "wikindx-urls-preferred"];
+  for (var i = 0; i < displays.length; i++) {
+    if (displays[i] != turnOn) {
+      document.getElementById(displays[i]).style.display = "none";
+    }
+  }
+
+  hideVisible(["wikindx-search-parameters", "wikindx-display-results"]);
+  document.getElementById("wikindx-messages").style.display = "none";
+  document.getElementById(turnOn).style.display = "block";
+  document.getElementById("wikindx-url-management").style.display = "block";
+}
+
+function urlPreferredDisplay() {
+  var jsonArray = JSON.parse(window.localStorage.getItem('wikindx-localStorage'));
+  var len = jsonArray.length;
+  var i, id;
+  var text = '';
+  var checked = 'checked';
+  for (i = 0; i < len; i++) {
+    if (i) {
+      checked = '';
+    }
+    id = jsonArray[i][1]; // The WIKINDX name
+    text += '<input type="radio" id="' + id + '" name="wikindx-preferred" value="' + id + '"' + checked + '>' 
+      + '<label for="' + id + '"> ' + jsonArray[i][1] + ': ' + jsonArray[i][0] + '</label><br/>';
+  }
+  text += '<button class="button" id="wikindx-url-prefer" alt="Set preferred WIKINDX" title="Set preferred WIKINDX">Store</button>';
+  text += '<button class="button" id="wikindx-close-url-preferred" alt="Close" title="Close">Close</button>';
+  document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Preferred WIKINDX';
+  document.getElementById("wikindx-urls-preferred").innerHTML = text;
+  urlManagementDisplay("wikindx-urls-preferred");
+  document.getElementById("wikindx-url-prefer").onclick = urlPrefer;
+  document.getElementById("wikindx-close-url-preferred").onclick = wikindxClose;
+}
+
+function urlPrefer() {
+  // What is in position [0] of the array is the preferrred URL . . .
+  var jsonArray = JSON.parse(window.localStorage.getItem('wikindx-localStorage'));
+  var name = document.querySelector('input[name="wikindx-preferred"]:checked').value;
+  var newArray = [];
+  var zeroth = [];
+
+  if (name != jsonArray[0][1]) { // Selected value not yet in position 0
+    zeroth = jsonArray[0];
+    for (var i = 1; i < jsonArray.length; i++) {
+      if (name == jsonArray[i][1]) {
+        newArray[0] = jsonArray[i];
+      } else {
+        newArray[i] = jsonArray[i];
+      }
+    }
+    newArray.push(zeroth);
+    window.localStorage.setItem('wikindx-localStorage', JSON.stringify(newArray));
+    getUrlSelectBox(newArray);
+    styleSelectBox();
+  }
+  retrieveVisible();
+  document.getElementById("wikindx-url-management").style.display = "none";
+  document.getElementById("wikindx-search-parameters").style.display = "block";
+  displaySuccess(successPreferredUrl);
   return;
 }
 
@@ -401,13 +483,9 @@ function urlDeleteDisplay() {
   }
   text += '<button class="button" id="wikindx-url-remove" alt="Delete URLs" title="Delete URLs">Delete URLs</button>';
   text += '<button class="button" id="wikindx-close-url-remove" alt="Close" title="Close">Close</button>';
+  document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Delete WIKINDX';
   document.getElementById("wikindx-urls-remove").innerHTML = text;
-  hideVisible(["wikindx-search-parameters", "wikindx-display-results"]);
-  document.getElementById("wikindx-url-entry").style.display = "none";
-  document.getElementById("wikindx-url-edit").style.display = "none";
-  document.getElementById("wikindx-messages").style.display = "none";
-  document.getElementById("wikindx-urls-remove").style.display = "block";
-  document.getElementById("wikindx-url-management").style.display = "block";
+  urlManagementDisplay("wikindx-urls-remove");
   document.getElementById("wikindx-url-remove").onclick = urlRemove;
   document.getElementById("wikindx-close-url-remove").onclick = wikindxClose;
 }
@@ -419,7 +497,7 @@ function urlRemove() {
   var removeCount = 0;
   var split = [];
   var keep = [];
-  var newArray = [];
+
   // First compare
   for (i = 0; i < len; i++) {
       id = jsonArray[i][0] + '--WIKINDX--' + jsonArray[i][1];
@@ -428,17 +506,21 @@ function urlRemove() {
         keep.push([split[0], split[1]]);
       } else {
           ++removeCount;
+          --numStoredURLs;
       }
   }
   if (!removeCount) {
     urlDeleteDisplay();
     return;
   }
-
+  if (numStoredURLs < 2) {
+    document.getElementById("wikindx-url-preferred").style.display = "none";
+  }
   if (removeCount == len) { // Have we completely emptied the list?
     window.localStorage.removeItem('wikindx-localStorage');
     document.getElementById("wikindx-about-begin").style.display = "block";
     document.getElementById("wikindx-urls-remove").style.display = "none";
+    document.getElementById("wikindx-action").style.display = "none";
     urlAddDisplay();
     document.getElementById("wikindx-close-url-entry").style.display = "none";
     displaySuccess(successRemoveAllUrls);
@@ -454,10 +536,14 @@ function urlRemove() {
 }
 
 function localStorage() {
-    if (window.localStorage.getItem('wikindx-localStorage') == null) {console.log('HERE');
+    if (window.localStorage.getItem('wikindx-localStorage') == null) {
         return false;
     }
     var jsonArray = JSON.parse(window.localStorage.getItem('wikindx-localStorage'));
+    numStoredURLs = jsonArray.length;
+    if (numStoredURLs > 1) {
+      document.getElementById("wikindx-url-preferred").style.display = "block";
+    }
     getUrlSelectBox(jsonArray);
     return true;
 }
@@ -700,7 +786,6 @@ function getSearchInputCitations(searchText) {
     + '&searchWord=' + encodeURI(searchText)
     + '&style=' + encodeURI(styleSelectBox.value)
     + '&searchParams=' + encodeURI(searchParams.value);
-  console.log(searchURL);
   doXml();
 }
 
@@ -870,7 +955,7 @@ function insertCitation() {
 function storeID(id) {
   var office = Office.context.document;
   
-  readIDs();
+ // readIDs(); // Check if necessary as readIDs() is called at add-in initialization and IDs are then put in storedIDs object
   Word.run(function (context) {
     if (Object.keys(storedIDs).length === 0) { // Nothing stored yet for this URL
       storedIDs[selectedURL] = [id];

@@ -33,25 +33,16 @@
     <table class="wikindx-table"><tr><td class="wikindx-td">
     <a href="https://wikindx.sourceforge.io/" target="_new"><img width="112" height="27" src="../../assets/wikindx-filled.png" alt="WIKINDX" title="WIKINDX" /></a>
     <input type="image" class="bulb" alt="About WIKINDX" id="wikindx-display-about" width="16" height="16" src="../../assets/lightbulb_off.png" alt="About WIKINDX" title="About WIKINDX"/>
-    </td><td class="wikindx-td">
-    <select class="select" id="wikindx-action">
-        <option value="references" selected>Search references</option></option>
-        <option value="citations">Search citations</option>
-        <option value="finalize">Finalize document</option>
-    </select>
-    </td></tr></table>
+    </td>
+        <td class="wikindx-td">
+        <select class="select" id="wikindx-action" style="display:none">
+            <option value="references" selected>Search references</option>
+            <option value="citations">Search citations</option>
+            <option value="finalize">Finalize document</option>
+        </select>
+        </td>
+    </tr></table>
     <br/>
-    <!-- ACTION TITLE section START -->
-    <section id="wikindx-action-title-references">
-        <strong>Search and insert references</strong>
-    </section>
-    <section id="wikindx-action-title-citations" style="display:none">
-        <strong>Search and insert quotations or paraphrases</strong>
-    </section>
-    <section id="wikindx-action-title-finalize" style="display:none">
-        <strong>Finalize the document</strong>
-    </section>
-    <!-- ACTION TITLE section END -->
 
  <!--   <main id="app-body" class="ms-welcome__main" style="display: none;"> -->
 
@@ -99,6 +90,7 @@
 
     <!-- URL MANAGEMENT section START -->
     <section id="wikindx-url-management" style="display:none">
+        <strong>Manage URLs: <span id="wikindx-url-management-subtitle"></span></strong>
         <table class="wikindx-table"><tr><td class="wikindx-td">
         <!-- URL ENTRY section START -->
         <section id="wikindx-url-entry">
@@ -124,6 +116,11 @@
         </section>
         <!-- URL EDIT section END -->
 
+        <!-- PREFERRED URL section START -->
+        <section id="wikindx-urls-preferred">
+        </section>
+        <!-- PREFERRED URL section END -->
+
         <!-- URL DELETE section START -->
         <section id="wikindx-urls-remove">
         </section>
@@ -134,6 +131,14 @@
 
     <!-- SEARCH PARAMETERS section START -->
     <section id="wikindx-search-parameters" style="display:none">
+        <!-- ACTION TITLE section START -->
+        <section id="wikindx-action-title-references">
+            <strong>Search and insert references</strong>
+        </section>
+        <section id="wikindx-action-title-citations" style="display:none">
+            <strong>Search and insert quotations or paraphrases</strong>
+        </section>
+        <!-- ACTION TITLE section END -->
         <!-- WIKINDX URL -->
         <table class="wikindx-table"><tr><td class="wikindx-td">
             WIKINDX:</br>
@@ -141,10 +146,13 @@
             </select>
             </br>
             <section id="wikindx-manage-urls">
+            
             <table class="wikindx-table-button"><tr><td class="wikindx-td-button">
                 <input type="image" class="buttonIcon" id="wikindx-url-add" alt="Add URL . . ." title="Add URL . . ." width="16" height="16" src="../../assets/add.png"/>
                 </td><td class="wikindx-td-button">
                 <input type="image" class="buttonIcon" id="wikindx-url-edit1" alt="Edit URL . . ." title="Edit URL . . ." width="16" height="16" src="../../assets/edit.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-preferred" alt="Preferred WIKINDX . . ." title="Preferred WIKINDX . . ." width="16" height="16" src="../../assets/rosette.png" style="display:none"/>
                 </td><td class="wikindx-td-button">
                 <input type="image" class="buttonIcon" id="wikindx-url-delete" alt="Delete URLs . . ." title="Delete URLs . . ." width="16" height="16" src="../../assets/delete.png"/>
                 </td><td class="wikindx-td-button">
@@ -152,10 +160,6 @@
                 </td><td class="wikindx-td-button">
                 <a href="" target="_new" id="wikindx-url-visit" ><img width="16" height="16" src="../../assets/plane.png" alt="Open WIKINDX in browser" title="Open in browser" /></a>
             </td></tr></table>
-<!--
-<button class="button-2" id="wikindx-url-add" alt="Add URL . . ." title="Add URL . . ."> + </button>
-<button class="button-2" id="wikindx-url-delete" alt="Delete URLs . . ." title="Delete URLs . . ."> - </button>
--->
             </section>
         </td><td class="wikindx-td">
             <!-- Search text -->
@@ -201,6 +205,11 @@
 
     <!-- DOCUMENT FINALIZE section START -->
     <section id="wikindx-finalize" style="display:none">
+        <!-- ACTION TITLE section START -->
+        <section id="wikindx-action-title-finalize" style="display:none">
+            <strong>Finalize the document</strong>
+        </section>
+        <!-- ACTION TITLE section END -->
         <table class="wikindx-table"><tr><td class="wikindx-td">
             here
         </td></tr></table>

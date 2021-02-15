@@ -589,13 +589,13 @@ class BIBFORMAT
                 }
                 else
                 { // intervening fields not found - do we have an alternative?
-                    if (array_key_exists($firstKey - 1, $itemArray) && $preAlternative)
+                    if (array_key_exists(intval($firstKey) - 1, $itemArray) && $preAlternative)
                     {
-                        $itemArray[$firstKey - 1] .= $preAlternative;
+                        $itemArray[intval($firstKey) - 1] .= $preAlternative;
                     }
-                    if (array_key_exists($secondKey + 1, $itemArray) && $postAlternative)
+                    if (array_key_exists(intval($secondKey) + 1, $itemArray) && $postAlternative)
                     {
-                        $itemArray[$secondKey + 1] = $postAlternative . $itemArray[$secondKey + 1];
+                        $itemArray[intval($secondKey) + 1] = $postAlternative . $itemArray[intval($secondKey) + 1];
                     }
                 }
             }
@@ -2009,7 +2009,7 @@ class BIBFORMAT
         {
             foreach ($this->{$type}['independent'] as $key => $value)
             {
-                $tempInd[$key - 1] = $value;
+                $tempInd[intval($key) - 1] = $value;
             }
             $this->{$type}['independent'] = $tempInd;
         }

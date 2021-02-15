@@ -18,7 +18,7 @@ class SEARCH
     public $words = '';
     public $unions = [];
     public $input = [];
-    private $ids = [];
+    public $ids = [];
     private $allIds = [];
     private $db;
     private $stmt;
@@ -63,7 +63,6 @@ class SEARCH
         if (!$this->getIds()) {
             return FALSE;
         }
-        $this->db->ascDesc = $this->ascDesc;
         return $this->getFinalSqlResources();
         
     }
@@ -80,7 +79,6 @@ class SEARCH
         if (!$this->getIds()) {
             return FALSE;
         }
-        $this->db->ascDesc = $this->ascDesc;
         return $this->getFinalSqlCitations();
         
     }
@@ -247,6 +245,7 @@ class SEARCH
      */
     public function getFinalSqlResources()
     {
+        $this->db->ascDesc = $this->ascDesc;
 		$this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
 		$this->db->leftJoin('resource_page', 'resourcepageId', 'resourceId');
 		$this->db->leftJoin('resource_year', 'resourceyearId', 'resourceId');
@@ -300,6 +299,7 @@ class SEARCH
      */
     public function getFinalSqlCitations()
     {
+        $this->db->ascDesc = $this->ascDesc;
 		$this->db->leftJoin('resource_metadata', 'resourcemetadataResourceId', 'resourceId');
 		$this->db->leftJoin('resource_year', 'resourceyearId', 'resourceId');
 		$this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');

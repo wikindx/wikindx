@@ -50,6 +50,9 @@ class OFFICE
     			case 'getCitation':
     				$this->getCitation();
     				break;
+    			case 'getBib':
+    				$this->getBib();
+    				break;
     			case 'getStyles':
     				$this->getStyles();
     				break;
@@ -73,6 +76,24 @@ class OFFICE
     		die;
     	}
     	echo json_encode("It's alive!");
+    	die;
+    }
+    /**
+     * Get the finalized bibliography
+     *
+     */
+    private function getBib()
+    {
+    	GLOBALS::setUserVar("Style", $this->vars['style']);
+        include_once(implode(DIRECTORY_SEPARATOR, ["core", "modules", "office", "SEARCH.php"]));
+        $search = new SEARCH();
+    	$split = explode('_', $this->vars['searchParams']);
+    	$search->order = $split[0];
+    	$search->ascDesc = $split[1];
+    	$search->ids = json_decode($this->vars['ids']);
+    	$sql = $search->getFinalSqlResources();
+    	$json = $this->formatResultsReferences($sql, FALSE);
+    	echo $json;
     	die;
     }
     /**
@@ -169,7 +190,8 @@ class OFFICE
     		$bibEntry = strip_tags($bibEntry);
     		$citation = strip_tags($citation);
     	}
-    	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 'citation' => $citation];
+    	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 'citation' => $citation, 
+    		'metaId' => $this->vars['id']];
     	$json = json_encode($jsonArray);
     	echo $json;
     	die;
@@ -178,8 +200,9 @@ class OFFICE
      * Format and return the reference search results
      *
      * @param string $sql
+     * @param bool $short = TRUE
      */
-    private function formatResultsReferences($sql)
+    private function formatResultsReferences($sql, $short = TRUE)
     {
     	GLOBALS::setUserVar("Style", $this->vars['style']);
         $bibStyle = FACTORY_BIBSTYLE::getInstance(); // HTML
@@ -189,8 +212,12 @@ class OFFICE
     	$jsonArray = [];
     	$resultSet = $this->db->query($sql);
     	while ($row = $this->db->fetchRow($resultSet)) {
-    		$bibEntry = strip_tags($bibStyle->process($row)); 
-    		if (mb_strlen($bibEntry) > 69) {// For the add-in select box which has c. 70 chars/option
+    		if ($short) {
+	    		$bibEntry = strip_tags($bibStyle->process($row));
+	    	} else {
+    			$bibEntry = $bibStyle->process($row); 
+    		}
+    		if ($short && (mb_strlen($bibEntry) > 69)) {// For the add-in select box which has c. 70 chars/option
 	    		$bibEntry = mb_substr($bibEntry, 0, 70);
 	    	}
     		$reference = trim($citeStyle->start('[cite]' . $row['resourceId'] . '[/cite]', FALSE));

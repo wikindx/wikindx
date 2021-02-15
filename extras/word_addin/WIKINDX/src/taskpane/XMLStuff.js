@@ -204,3 +204,53 @@ async function tryCatch(callback) {
     console.error(error);
   }
 }
+
+
+function storeID(id) {
+  var office = Office.context.document;
+  
+  Word.run(function (context) {
+    if (Object.keys(storedIDs).length === 0) { // Nothing stored yet for this URL
+      storedIDs[selectedURL] = [id];
+    } else { // Need to append – to new WIKINDX URL or existing one?
+      if (!(selectedURL in storedIDs)) { // new
+        storedIDs[selectedURL] = [id]; 
+      } else { // append – but check id does not already exist
+        if (!storedIDs[selectedURL].includes(id)) {
+          storedIDs[selectedURL].push(id);
+        }
+      }
+    }
+    office.settings.set('wikindx-id', storedIDs);
+    office.settings.saveAsync(function (asyncResult) {
+      if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+          console.log('Settings save failed. Error: ' + asyncResult.error.message);
+      }
+    });
+    return context.sync();
+  })
+  .catch(function (error) {
+      console.log("Error: " + error);
+      if (error instanceof OfficeExtension.Error) {
+          console.log("Debug info: " + JSON.stringify(error.debugInfo));
+      }
+  });
+}
+
+function readIDs() {
+  var office = Office.context.document;
+
+  Word.run(function (context) {
+    if (office.settings.get('wikindx-id') === null) { // Nothing stored yet
+      return context.sync();
+    }
+    storedIDs = office.settings.get('wikindx-id');
+    return context.sync();
+  })
+  .catch(function (error) {
+      console.log("Error: " + error);
+      if (error instanceof OfficeExtension.Error) {
+          console.log("Debug info: " + JSON.stringify(error.debugInfo));
+      }
+  });
+}

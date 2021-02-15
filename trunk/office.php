@@ -53,6 +53,9 @@ class OFFICE
     			case 'getBib':
     				$this->getBib();
     				break;
+    			case 'getCiteCCs':
+    				$this->getCiteCCs();
+    				break;
     			case 'getStyles':
     				$this->getStyles();
     				break;
@@ -94,6 +97,40 @@ class OFFICE
     	$sql = $search->getFinalSqlResources();
     	$json = $this->formatResultsReferences($sql, FALSE);
     	echo $json;
+    	die;
+    }
+    /**
+     * Get in-text citations for citations (pnossibly inc.uding page numbers . . .)
+     *
+     */
+    private function getCiteCCs()
+    {
+    	GLOBALS::setUserVar("Style", $this->vars['style']);
+        $bibStyle = FACTORY_BIBSTYLE::getInstance(); // HTML
+        $bibStyle->ooxml = TRUE;
+        $citeStyle = FACTORY_CITESTYLE::getInstance(); // HTML
+        $citeStyle->ooxml = TRUE;
+    	$jsonArray = [];
+    	$citeEndTag = '[/cite]';
+    	$this->db->formatConditionsOneField(json_decode($this->vars['ids']), 'resourcemetadataId');
+    	$resultSet = $this->db->select('resource_metadata', ['resourcemetadataPageStart', 'resourcemetadataPageEnd', 
+    		'resourcemetadataResourceId', 'resourcemetadataId']);
+    	if (!$this->db->numRows($resultSet)) {
+    		echo json_encode("Bad ID");
+    		die;
+    	}
+    	while ($row = $this->db->fetchRow($resultSet)) {
+			if ($row['resourcemetadataPageStart']) {
+				if ($row['resourcemetadataPageEnd']) {
+					$citeEndTag = ':' . $row['resourcemetadataPageStart'] . '-' . $row['resourcemetadataPageEnd'] . $citeEndTag;
+				} else {
+					$citeEndTag = ':' . $row['resourcemetadataPageStart'] . $citeEndTag;
+				}
+			}
+			$reference = trim($citeStyle->start('[cite]' . $row['resourcemetadataResourceId'] . $citeEndTag, FALSE));
+    		$jsonArray[] = ['metaId' => $row['resourcemetadataId'], 'inTextReference' => $reference, 'id' => $row['resourcemetadataResourceId']];
+    	}
+    	echo json_encode($jsonArray);
     	die;
     }
     /**
@@ -176,8 +213,6 @@ class OFFICE
 	    		$citeEndTag = ':' . $row['resourcemetadataPageStart'] . $citeEndTag;
 	    	}
     	}
-    	$pageS = $row['resourcemetadataPageStart'];
-    	$pageE = $row['resourcemetadataPageEnd'];
     	$resultSet = $res->getResource($row['resourcemetadataResourceId']);
     	if (!$this->db->numRows($resultSet)) {
     		echo json_encode("Bad ID");

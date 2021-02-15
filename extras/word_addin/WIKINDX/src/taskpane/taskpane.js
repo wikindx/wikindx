@@ -42,17 +42,14 @@ var selectedURL;
 var numStoredURLs = 0;
 var selectedName;
 var storedIDs = new Object();
-var ooxmlInsertInit = "<w:p xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'>"; // Tried others - only 2003 works for vanish . . .
-var ooxmlVanishStart = "<w:r><w:rPr><w:vanish/></w:rPr><w:t>";
-var ooxmlVanishEnd = "</w:t></w:r>";
-var ooxmlTextStart = "<w:r><w:t>";
-var ooxmlTextEnd = "</w:t></w:r>";
-var ooxmlInsertEnd = "</w:p>";
+
 
 
 /* global document, Office, Word */
 
 Office.onReady(info => {
+
+OfficeExtension.config.extendedErrorLogging = true;
   if (info.host === Office.HostType.Word) {
   // Determine if the user's version of Office supports all the Office.js APIs that are used in the tutorial.
     if (!Office.context.requirements.isSetSupported('WordApi', '1.3')) {
@@ -72,8 +69,9 @@ Office.onReady(info => {
 // Office.context.document.settings.remove('wikindx-id');
 
 // Assign event handlers and other initialization logic.
-    document.getElementById("wikindx-action").onchange = displayInit;
     document.getElementById("wikindx-search").onclick = wikindxSearch;
+    document.getElementById("wikindx-action").onchange = displayInit;
+    document.getElementById("wikindx-finalize-run").onclick = finalizeRun;
     document.getElementById("wikindx-url").onchange = styleSelectBox;
     document.getElementById("wikindx-styleSelectBox").onchange = reset;
     document.getElementById("wikindx-reference-params").onchange = reset;
@@ -144,22 +142,142 @@ function finalizeDisplay() {
       return false;
   }
   console.table(storedIDs);
-  finalize();
 }
 
-function finalize()
-{ 
-  Word.run(function (context) {
-    docSelection = context.document.getSelection();
-    var text = '<w:rPr><w:rFonts w:eastAsia="Times New Roman" w:cs="Times New Roman (Body CS)"/><w:vanish/></w:rPr><w:t>NOW HIDDEN</w:t>';
-    text = "<w:p xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'><w:r><w:rPr><w:vanish/></w:rPr><w:t>blah</w:t></w:r></w:p>";
- //   text = "<w:p xmlns:w='http://schemas.microsoft.com/office/word/2003/wordml'><w:r><w:rPr><w:b/><w:b-cs/><w:color w:val='FF0000'/><w:sz w:val='28'/><w:sz-cs w:val='28'/></w:rPr><w:t>Hello world (this should be bold, red, size 14).</w:t></w:r></w:p>";
+async function finalizeRun()
+{
+  await finalizeCleanUp();
+  return;
+  await finalizeStartProcess();
+  
+  finalizeWriteBibliography();
+}
 
-    docSelection.insertOoxml(wrapCitation('A Citation!'), "Replace");  
-      return context.sync().then(function () {
-        console.log('Text insertion complete');
-      });
-    })
+async function finalizeCleanUp() {
+  var finalizeReferences = [];
+  var cleanIDs = new Object();
+  var allIDs = [];
+  var foundBibliography = false;
+  var item, split, urls, i, j, k, tag, cc;
+  var bibliography = '';
+
+  Word.run(async function (context) {
+    cc = context.document.contentControls.load("items");
+    await context.sync();
+    for (i = 0; i < cc.items.length; i++) {
+      if (cc.items[i].tag == 'wikindx-bibliography') {
+        foundBibliography = true;
+        continue;
+      }
+      split = cc.items[i].tag.split('-');
+      if ((split.length < 3) // 'looking for wikindx-id-{[JSON string/array]}'
+        || (split[0] != 'wikindx')) {
+          continue;
+      }
+      if (split[1] != 'id') {
+        continue;
+      }
+      item = JSON.parse(atob(split[2]));
+      if (!(item[0] in cleanIDs)) {
+        cleanIDs[item[0]] = [item[1]];
+      } else if (!cleanIDs[item[0]].includes(item[1])) {
+          cleanIDs[item[0]].push(item[1]);
+      }
+      if (!allIDs.includes(item[1])) {
+        allIDs.push(item[1]);
+      }
+    }
+    // get references from WIKINDX
+    urls = Object.keys(cleanIDs);
+    for (i = 0; i < urls.length; i++) {
+      finalizeGetReferences(urls[i], JSON.stringify(cleanIDs[urls[i]]));
+  // Replace in-text references
+      for (j = 0; j < xmlResponse.length; j++) {
+        tag = 'wikindx-id-' + btoa(JSON.stringify([urls[i], xmlResponse[j].id]));
+        var cc = context.document.contentControls.getByTag(tag);
+        cc.load('items');
+        await context.sync();
+        for (k = 0; k < cc.items.length; k++) {
+          cc.items[k].insertHtml(xmlResponse[j].inTextReference, 'Replace');
+        }
+      }
+    }
+    if (xmlResponse == 'Bad ID') {
+      displayError(errorMissingID);
+      return false;
+    }
+    for (i = 0; i < xmlResponse.length; i++) {
+      if (!finalizeReferences.includes(xmlResponse[i].id)) {
+        finalizeReferences.push(xmlResponse[i].id);
+        bibliography += '<p>' + xmlResponse[i].bibEntry + '</p>';
+      }
+    }console.log(bibliography);
+    // Bibliography
+    if (foundBibliography) {
+      cc = context.document.contentControls.getByTag('wikindx-bibliography');
+      cc.load('items');
+      await context.sync();
+      cc.items[0].insertHtml(bibliography, "Replace");
+    } else {
+      context.document.body.paragraphs.getLast().select("End");
+      var sel = context.document.getSelection();
+      sel.insertBreak("Line", "After");
+      sel.insertBreak("Line", "After");
+      context.document.body.paragraphs.getLast().select("End");
+      sel = context.document.getSelection();
+      cc = sel.insertContentControl();
+      cc.color = 'orange';
+      cc.tag = 'wikindx-bibliography';
+      cc.title = 'Bibliography';
+      cc.insertHtml(bibliography, "End");
+    }
+    console.log('FINALREFS 1:');console.table(cleanIDs);
+    console.log('FINALREFS 2:');console.table(finalizeReferences);
+    return context.sync();
+  })
+  .catch(function (error) {
+    console.log("Error: " + error);
+    if (error instanceof OfficeExtension.Error) {
+        console.log("Debug info: " + JSON.stringify(error.debugInfo));
+        displayError(JSON.stringify(error));
+        return false;
+    }
+  });
+}
+
+async function finalizeWriteBibliography() {
+  var bibliography = '';
+//  for (var i = 0; i < finalizeReferences.length; i++) {
+//    bibliography += '<p>' + finalizeReferences[i] + '</p>';
+ // }
+  Word.run(async function (context) {
+  // Do we already have a bibliography?
+  //  cc = context.document.contentControls.getByTag("wikindxBibliography");
+    var allCC = context.document.contentControls.load("items");
+    await context.sync();
+    for (var i = 0; i < allCC.items.length; i++) {console.log('HERE');
+      if (allCC.items[i].tag == 'wikindx-bibliography') {
+        foundBibliography = true;
+        var cc = allCC.items[i];
+        cc.insertHtml(bibliography, "Replace");
+        break;
+      }
+    }
+    if (!foundBibliography) {
+      context.document.body.paragraphs.getLast().select("End");
+      var sel = context.document.getSelection();console.log('HERE');
+      sel.insertBreak("Line", "After");
+      sel.insertBreak("Line", "After");
+      context.document.body.paragraphs.getLast().select("End");
+      sel = context.document.getSelection();
+      var cc = sel.insertContentControl();
+      cc.color = 'orange';
+      cc.tag = 'wikindx-bibliography';
+      cc.title = 'Bibliography';
+      cc.insertHtml(bibliography, "End");
+    }
+    await context.sync();
+  })
   .catch(function (error) {
       console.log("Error: " + error);
       if (error instanceof OfficeExtension.Error) {
@@ -170,18 +288,56 @@ function finalize()
   });
 }
 
-function wrapCitation(text) {
-  return ooxmlInsertInit 
-    + ooxmlVanishStart 
-    + text 
-    + ooxmlVanishEnd
-    + ooxmlTextStart
-    + "Visible text"
-    + ooxmlTextEnd
-    + ooxmlVanishStart 
-    + "new Vanish" 
-    + ooxmlVanishEnd
-    + ooxmlInsertEnd;
+async function finalizeStartProcess() {
+  var urls = Object.keys(storedIDs);
+  for (var i = 0; i < urls.length; i++) {
+    finalizeGetReferences(urls[i], JSON.stringify(storedIDs[urls[i]]));
+    if (xmlResponse == 'Bad ID') {
+      displayError(errorMissingID);
+      return false;
+    }
+    for (var i = 0; i < xmlResponse.length; i++) {
+      if (!finalizeReferences.includes(xmlResponse[i].bibEntry)) {
+        finalizeReferences.push(xmlResponse[i].bibEntry);
+      }
+    }
+    await finalizeReplaceCitations();
+  }
+}
+
+function finalizeGetReferences(wikindxURL, ids) {
+  xmlResponse = null;
+  var searchParams = document.getElementById("wikindx-reference-params");
+  var styleSelectBox = document.getElementById("wikindx-styleSelectBox");
+  searchURL = wikindxURL 
+    + "office.php" + '?method=getBib' 
+    + '&style=' + encodeURI(styleSelectBox.value) 
+    + '&searchParams=' + encodeURI(searchParams.value)
+    + '&ids=' + encodeURI(ids);
+  doXml();
+}
+
+async function finalizeReplaceCitations() {
+  await Word.run(async function (context) {
+    for (var i = 0; i < xmlResponse.length; i++) {
+ //     console.log('HERE: ' + xmlResponse[i].bibEntry);
+      var cc = context.document.contentControls.getByTag(xmlResponse[i].id);
+      cc.load();
+      await context.sync();
+      for (var j = 0; j < cc.items.length; j++) {
+        cc.items[j].insertHtml(xmlResponse[i].inTextReference, 'Replace');
+      }
+    }
+    await context.sync();
+  })
+  .catch(function (error) {
+      console.log("Error: " + error);
+      if (error instanceof OfficeExtension.Error) {
+          console.log("Debug info: " + JSON.stringify(error.debugInfo));
+          displayError(JSON.stringify(error));
+          return false;
+      }
+  });
 }
 
 function displayReference() {
@@ -189,6 +345,7 @@ function displayReference() {
   getReference();
   if (xmlResponse == 'Bad ID') {
     displayError(errorMissingID);
+    return false;
   }
   bibEntry = xmlResponse.bibEntry;
   document.getElementById("wikindx-display-ref").innerHTML = '</br>' + bibEntry;
@@ -199,6 +356,7 @@ function displayCitation() {
   getCitation();
   if (xmlResponse == 'Bad ID') {
     displayError(errorMissingID);
+    return false;
   }
   citation = xmlResponse.citation;
   bibEntry = xmlResponse.bibEntry;
@@ -868,47 +1026,30 @@ function makeHttpObject() {
   throw new Error("Could not create HTTP request object.");
 }
 
-function insertParagraph() {
-  Word.run(function (context) {
-
-    var docBody = context.document.body;
-    docBody.insertParagraph("Office has several versions, including Office 2016, Microsoft 365 subscription, and Office on the web!",
-                            "Start");
-    docBody.insertParagraph("Another paragraph",
-                            "Start");
-
-      return context.sync();
-  })
-  .catch(function (error) {
-      console.log("Error: " + error);
-      if (error instanceof OfficeExtension.Error) {
-          console.log("Debug info: " + JSON.stringify(error.debugInfo));
-      }
-  });
-}
-
 function insertReference() {
-  Word.run(function (context) {
+  Word.run(async function (context) {
     var hrReturn = heartbeat(false);
     if (hrReturn !== true) {
       displayError(hrReturn);
-      return context.sync();
+      return await context.sync();
     }
     xmlResponse = null;
     getReference();
     if (xmlResponse == 'Bad ID') {
       displayError(errorMissingID);
-      return context.sync();
+      return await context.sync();
     }
-//    bibEntry = xmlResponse.bibEntry;
+    bibEntry = xmlResponse.bibEntry;
     inTextReference = xmlResponse.inTextReference;
     storeID(xmlResponse.id);
     docSelection = context.document.getSelection();
-    docSelection.insertHtml("&nbsp;" + inTextReference, "After");
-//    docSelection.insertHtml(bibEntry, "End");
-//    docSelection.insertBreak("Line", "After");
-    return context.sync();
-    })
+    var cc = docSelection.insertContentControl();
+    cc.color = 'orange';
+    cc.tag = 'wikindx-id-' + btoa(JSON.stringify([selectedURL, xmlResponse.id]));
+    cc.title = bibEntry.replace(/<[^>]*>?/gm, ''); // contextControl title doesn't accept HTML
+    cc.insertHtml(inTextReference, "Replace");
+    await context.sync();
+  })
   .catch(function (error) {
       console.log("Error: " + error);
       if (error instanceof OfficeExtension.Error) {
@@ -920,27 +1061,32 @@ function insertReference() {
 }
 
 function insertCitation() {
-  Word.run(function (context) {
+  Word.run(async function (context) {
     var hrReturn = heartbeat(false);
     if (hrReturn !== true) {
       displayError(hrReturn);
-      return context.sync();
+      return await context.sync();
     }
     xmlResponse = null;
     getCitation();
     if (xmlResponse == 'Bad ID') {
       displayError(errorMissingID);
-      return context.sync();
+      return await context.sync();
     }
-//    bibEntry = xmlResponse.bibEntry;
+    bibEntry = xmlResponse.bibEntry;
     inTextReference = xmlResponse.inTextReference;
     citation = xmlResponse.citation;
     storeID(xmlResponse.id);
     docSelection = context.document.getSelection();
-    docSelection.insertHtml("&nbsp;" + citation + "&nbsp;" + inTextReference, "After");
-//    docSelection.insertHtml(bibEntry, "End");
-//    docSelection.insertBreak("Line", "After");
-    return context.sync();
+    var cc = docSelection.insertContentControl();
+    cc.color = 'orange';
+    cc.tag = 'wikindx-id-' + btoa(JSON.stringify([selectedURL, '_' + xmlResponse.metaId]));
+    cc.title = bibEntry.replace(/<[^>]*>?/gm, ''); // contextControl title doesn't accept HTML
+    cc.insertHtml(inTextReference, "Replace");
+ //   await context.sync();
+    var ccRange = cc.getRange('Whole');
+    ccRange.insertHtml(citation + '&nbsp;', "Before");
+    await context.sync();
     })
   .catch(function (error) {
       console.log("Error: " + error);

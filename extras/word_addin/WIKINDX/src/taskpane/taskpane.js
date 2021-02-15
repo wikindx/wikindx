@@ -41,7 +41,6 @@ var visibleElements = [];
 var selectedURL;
 var numStoredURLs = 0;
 var selectedName;
-var storedIDs = new Object();
 
 
 
@@ -102,7 +101,6 @@ OfficeExtension.config.extendedErrorLogging = true;
       document.getElementById("wikindx-action").style.display = "block";
     }
   }
-  readIDs();
 });
 
 function displayInit() {
@@ -137,28 +135,50 @@ function displayInit() {
 }
 
 function finalizeDisplay() {
-  if (Object.keys(storedIDs).length === 0) { // Nothing stored yet for this document
+// Before displaying the pane, check we have references and remove any empty wikindx-based custom contexts
+  var found = false;
+  Word.run(async function (context) {
+    var cc = context.document.contentControls.load();
+    var split;
+    await context.sync();
+    for (var i = 0; i < cc.items.length; i++) {
+      split = cc.items[i].tag.split('-');
+      if ((split.length > 1) && (split[0] === 'wikindx') && (cc.items[i].text.trim() === '')) {
+        cc.items[i].delete();
+        continue;
+      }
+      // 'looking for wikindx-id-{[JSON string/array]}'
+      if ((split.length < 3) 
+        || (split[0] != 'wikindx')) {
+          continue;
+      }
+      if (split[1] != 'id') {
+        continue;
+      }
+      // If we get here, we have references
+      found = true;
+    }
+    if (!found) { // Nothing stored yet for this document
       displayError(errorNoInserts);
       return false;
-  }
-  console.table(storedIDs);
+    }
+  })
+  .catch(function (error) {
+    console.log("Error: " + error);
+    if (error instanceof OfficeExtension.Error) {
+        console.log("Debug info: " + JSON.stringify(error.debugInfo));
+        displayError(JSON.stringify(error));
+        return false;
+    }
+  });
 }
 
-async function finalizeRun()
-{
-  await finalizeCleanUp();
-  return;
-  await finalizeStartProcess();
-  
-  finalizeWriteBibliography();
-}
-
-async function finalizeCleanUp() {
+function finalizeRun() {
   var finalizeReferences = [];
   var cleanIDs = new Object();
-  var allIDs = [];
+  var citeIDs = new Object();
   var foundBibliography = false;
-  var item, split, urls, i, j, k, tag, cc;
+  var item, split, urls, i, j, k, tag, cc, id, metaId;
   var bibliography = '';
 
   Word.run(async function (context) {
@@ -178,23 +198,34 @@ async function finalizeCleanUp() {
         continue;
       }
       item = JSON.parse(atob(split[2]));
-      if (!(item[0] in cleanIDs)) {
-        cleanIDs[item[0]] = [item[1]];
-      } else if (!cleanIDs[item[0]].includes(item[1])) {
-          cleanIDs[item[0]].push(item[1]);
+      id = item[1];
+      if (item.length == 3) { // citation
+        metaId = item[2];
+        if (!(item[0] in citeIDs)) {
+          citeIDs[item[0]] = [metaId];
+        } else if (!citeIDs[item[0]].includes(metaId)) {
+            citeIDs[item[0]].push(metaId);
+        }
       }
-      if (!allIDs.includes(item[1])) {
-        allIDs.push(item[1]);
+      if (!(item[0] in cleanIDs)) {
+        cleanIDs[item[0]] = [id];
+      } else if (!cleanIDs[item[0]].includes(id)) {
+          cleanIDs[item[0]].push(id);
       }
     }
+    console.log('CLEAN IDs:');console.table(cleanIDs);
     // get references from WIKINDX
     urls = Object.keys(cleanIDs);
     for (i = 0; i < urls.length; i++) {
       finalizeGetReferences(urls[i], JSON.stringify(cleanIDs[urls[i]]));
+      if (xmlResponse == 'Bad ID') {
+        displayError(errorMissingID);
+        return false;
+      }
   // Replace in-text references
       for (j = 0; j < xmlResponse.length; j++) {
         tag = 'wikindx-id-' + btoa(JSON.stringify([urls[i], xmlResponse[j].id]));
-        var cc = context.document.contentControls.getByTag(tag);
+        cc = context.document.contentControls.getByTag(tag);
         cc.load('items');
         await context.sync();
         for (k = 0; k < cc.items.length; k++) {
@@ -202,16 +233,32 @@ async function finalizeCleanUp() {
         }
       }
     }
-    if (xmlResponse == 'Bad ID') {
-      displayError(errorMissingID);
-      return false;
-    }
     for (i = 0; i < xmlResponse.length; i++) {
       if (!finalizeReferences.includes(xmlResponse[i].id)) {
         finalizeReferences.push(xmlResponse[i].id);
         bibliography += '<p>' + xmlResponse[i].bibEntry + '</p>';
       }
-    }console.log(bibliography);
+    }
+    // get citation references from WIKINDX
+    urls = Object.keys(citeIDs);
+    for (i = 0; i < urls.length; i++) {
+      finalizeGetCitations(urls[i], JSON.stringify(citeIDs[urls[i]]));
+      if (xmlResponse == 'Bad ID') {
+        displayError(errorMissingID);
+        return false;
+      }
+  // Replace in-text references
+      for (j = 0; j < xmlResponse.length; j++) {
+        tag = 'wikindx-id-' + btoa(JSON.stringify([urls[i], xmlResponse[j].id, xmlResponse[j].metaId]));
+        cc = context.document.contentControls.getByTag(tag);
+        cc.load('items');
+        await context.sync();
+        for (k = 0; k < cc.items.length; k++) {
+          cc.items[k].insertHtml(xmlResponse[j].inTextReference, 'Replace');
+        }
+      }
+    }
+    console.log(bibliography);
     // Bibliography
     if (foundBibliography) {
       cc = context.document.contentControls.getByTag('wikindx-bibliography');
@@ -231,7 +278,6 @@ async function finalizeCleanUp() {
       cc.title = 'Bibliography';
       cc.insertHtml(bibliography, "End");
     }
-    console.log('FINALREFS 1:');console.table(cleanIDs);
     console.log('FINALREFS 2:');console.table(finalizeReferences);
     return context.sync();
   })
@@ -243,66 +289,6 @@ async function finalizeCleanUp() {
         return false;
     }
   });
-}
-
-async function finalizeWriteBibliography() {
-  var bibliography = '';
-//  for (var i = 0; i < finalizeReferences.length; i++) {
-//    bibliography += '<p>' + finalizeReferences[i] + '</p>';
- // }
-  Word.run(async function (context) {
-  // Do we already have a bibliography?
-  //  cc = context.document.contentControls.getByTag("wikindxBibliography");
-    var allCC = context.document.contentControls.load("items");
-    await context.sync();
-    for (var i = 0; i < allCC.items.length; i++) {console.log('HERE');
-      if (allCC.items[i].tag == 'wikindx-bibliography') {
-        foundBibliography = true;
-        var cc = allCC.items[i];
-        cc.insertHtml(bibliography, "Replace");
-        break;
-      }
-    }
-    if (!foundBibliography) {
-      context.document.body.paragraphs.getLast().select("End");
-      var sel = context.document.getSelection();console.log('HERE');
-      sel.insertBreak("Line", "After");
-      sel.insertBreak("Line", "After");
-      context.document.body.paragraphs.getLast().select("End");
-      sel = context.document.getSelection();
-      var cc = sel.insertContentControl();
-      cc.color = 'orange';
-      cc.tag = 'wikindx-bibliography';
-      cc.title = 'Bibliography';
-      cc.insertHtml(bibliography, "End");
-    }
-    await context.sync();
-  })
-  .catch(function (error) {
-      console.log("Error: " + error);
-      if (error instanceof OfficeExtension.Error) {
-          console.log("Debug info: " + JSON.stringify(error.debugInfo));
-          displayError(JSON.stringify(error));
-          return false;
-      }
-  });
-}
-
-async function finalizeStartProcess() {
-  var urls = Object.keys(storedIDs);
-  for (var i = 0; i < urls.length; i++) {
-    finalizeGetReferences(urls[i], JSON.stringify(storedIDs[urls[i]]));
-    if (xmlResponse == 'Bad ID') {
-      displayError(errorMissingID);
-      return false;
-    }
-    for (var i = 0; i < xmlResponse.length; i++) {
-      if (!finalizeReferences.includes(xmlResponse[i].bibEntry)) {
-        finalizeReferences.push(xmlResponse[i].bibEntry);
-      }
-    }
-    await finalizeReplaceCitations();
-  }
 }
 
 function finalizeGetReferences(wikindxURL, ids) {
@@ -317,27 +303,14 @@ function finalizeGetReferences(wikindxURL, ids) {
   doXml();
 }
 
-async function finalizeReplaceCitations() {
-  await Word.run(async function (context) {
-    for (var i = 0; i < xmlResponse.length; i++) {
- //     console.log('HERE: ' + xmlResponse[i].bibEntry);
-      var cc = context.document.contentControls.getByTag(xmlResponse[i].id);
-      cc.load();
-      await context.sync();
-      for (var j = 0; j < cc.items.length; j++) {
-        cc.items[j].insertHtml(xmlResponse[i].inTextReference, 'Replace');
-      }
-    }
-    await context.sync();
-  })
-  .catch(function (error) {
-      console.log("Error: " + error);
-      if (error instanceof OfficeExtension.Error) {
-          console.log("Debug info: " + JSON.stringify(error.debugInfo));
-          displayError(JSON.stringify(error));
-          return false;
-      }
-  });
+function finalizeGetCitations(wikindxURL, ids) {
+  xmlResponse = null;
+  var styleSelectBox = document.getElementById("wikindx-styleSelectBox");
+  searchURL = wikindxURL 
+    + "office.php" + '?method=getCiteCCs' 
+    + '&style=' + encodeURI(styleSelectBox.value) 
+    + '&ids=' + encodeURI(ids);
+  doXml();
 }
 
 function displayReference() {
@@ -399,7 +372,7 @@ function hideVisible(idArray) {
 function retrieveVisible() {
   // Retrieve what was visible and show again
   for (var i = 0; i < visibleElements.length; i++) {
-    document.getElementById(visibleElements[i]).style.display = "block";console.log(visibleElements[i]);
+    document.getElementById(visibleElements[i]).style.display = "block";
   }
 }
 
@@ -1041,7 +1014,6 @@ function insertReference() {
     }
     bibEntry = xmlResponse.bibEntry;
     inTextReference = xmlResponse.inTextReference;
-    storeID(xmlResponse.id);
     docSelection = context.document.getSelection();
     var cc = docSelection.insertContentControl();
     cc.color = 'orange';
@@ -1076,11 +1048,10 @@ function insertCitation() {
     bibEntry = xmlResponse.bibEntry;
     inTextReference = xmlResponse.inTextReference;
     citation = xmlResponse.citation;
-    storeID(xmlResponse.id);
     docSelection = context.document.getSelection();
     var cc = docSelection.insertContentControl();
     cc.color = 'orange';
-    cc.tag = 'wikindx-id-' + btoa(JSON.stringify([selectedURL, '_' + xmlResponse.metaId]));
+    cc.tag = 'wikindx-id-' + btoa(JSON.stringify([selectedURL, xmlResponse.id, xmlResponse.metaId]));
     cc.title = bibEntry.replace(/<[^>]*>?/gm, ''); // contextControl title doesn't accept HTML
     cc.insertHtml(inTextReference, "Replace");
  //   await context.sync();
@@ -1101,7 +1072,6 @@ function insertCitation() {
 function storeID(id) {
   var office = Office.context.document;
   
- // readIDs(); // Check if necessary as readIDs() is called at add-in initialization and IDs are then put in storedIDs object
   Word.run(function (context) {
     if (Object.keys(storedIDs).length === 0) { // Nothing stored yet for this URL
       storedIDs[selectedURL] = [id];

@@ -17,6 +17,7 @@ var initialId = false;
 var errorAccess = 'The WIKINDX admin has not enabled read-only access.';
 var errorXMLHTTP = "ERROR: XMLHTTP error – could not connect to the WIKINDX.  <br/><br/>There could be any number of reasons for this including an incorrect WIKINDX URL, an incompatibility between this add-in and the WIKINDX, the WIKINDX admin has not enabled read-only access, a network error . . .";
 var errorStyles = "ERROR: Either no styles are defined on the selected WIKINDX or there are no available in-text citation styles.";
+var errorStylesFinalize = "ERROR: There are no common in-text citation styles across the multiple wikindices used in the document.";
 var errorSearch = "ERROR: Missing search input.";
 var errorNewUrl = "ERROR: Missing URL or name input.";
 var errorDuplicateUrl = "ERROR: Duplicate URL input.";
@@ -130,7 +131,6 @@ function displayInit() {
     document.getElementById("wikindx-action-title-references").style.display = "none";
     document.getElementById("wikindx-action-title-citations").style.display = "none";
     document.getElementById("wikindx-action-title-finalize").style.display = "block";
-    document.getElementById("wikindx-finalize").style.display = "block";
     finalizeDisplay();
   }
 }
@@ -170,7 +170,9 @@ function finalizeDisplay() {
       return false;
     }
     // If we get here, there is something to finalize . . .
-    finalizeGetStyles(wikindices);
+    if (finalizeGetStyles(wikindices)) {
+    document.getElementById("wikindx-finalize").style.display = "block";
+    }
   })
   .catch(function (error) {
     console.log("Error: " + error);
@@ -183,7 +185,6 @@ function finalizeDisplay() {
 }
 
 function finalizeGetStyles(wikindices) {
-  var finalStyles = new Object();
   var finalArray = [];
   var tempLongNames = new Object();
   var styleLong, styleShort, i, j, len, key;
@@ -199,7 +200,7 @@ function finalizeGetStyles(wikindices) {
     }
     len = xmlResponse.length;
     if (!len) {
-      displayError(errorStyles);
+      displayError(errorStylesFinalize);
       return false;
     }
     // first run through – gather all styles from first WIKINDX
@@ -232,7 +233,7 @@ function finalizeRun() {
   var cleanIDs = new Object();
   var citeIDs = new Object();
   var foundBibliography = false;
-  var item, split, urls, i, j, k, tag, cc, id, metaId;
+  var item, split, urls, i, j, k, tag, cc, id, metaId, multipleWikindices, key;
   var bibliography = '';
 
   Word.run(async function (context) {
@@ -269,6 +270,15 @@ function finalizeRun() {
     }
     // get references from WIKINDX
     urls = Object.keys(cleanIDs);
+    multipleWikindices = false;
+    if (urls.length > 1) {
+      multipleWikindices = true;
+      var params = document.getElementById("wikindx-finalize-order").value;
+      split = params.split('_');
+      var order = split[0];
+      var ascDesc = split[1];
+      var multipleOrder = [];
+    }
     for (i = 0; i < urls.length; i++) {
       finalizeGetReferences(urls[i], JSON.stringify(cleanIDs[urls[i]]));
   // Replace in-text references
@@ -280,10 +290,18 @@ function finalizeRun() {
           cc: cc,
           text: xmlResponse[j].inTextReference
         } 
-        allItemObjects.push(items);
+        allItemObjects.push(items);console.table(xmlResponse[j]);
         if (!finalizeReferences.includes(xmlResponse[j].bibEntry)) {
           finalizeReferences.push(xmlResponse[j].bibEntry);
-          bibliography += '<p>' + xmlResponse[j].bibEntry + '</p>';
+          if (multipleWikindices) {
+            key = finalizeReferences.indexOf(xmlResponse[j].bibEntry);
+            multipleOrder.push({
+              "index": key,
+              "creator": xmlResponse[j].creatorOrder, 
+              "title": xmlResponse[j].titleOrder,
+              "year": xmlResponse[j].yearOrder
+            });
+          }
         }
       }
     }
@@ -324,6 +342,40 @@ function finalizeRun() {
       }
     }
     // Bibliography
+    console.table(multipleOrder);
+    if (!multipleWikindices) {
+      for (i = 0; i < finalizeReferences.length; i++) {
+        bibliography += '<p>' + finalizeReferences[i] + '</p>';
+      }
+    }
+    if (!multipleWikindices) {
+      for (i = 0; i < finalizeReferences.length; i++) {
+        bibliography += '<p>' + finalizeReferences[i] + '</p>';
+      }
+    } else {
+      if (order == 'creator') {
+        multipleOrder.sort(function (a, b) {
+          return a.creator.localeCompare(b.creator) || a.year - b.year || a.title.localeCompare(b.title);
+        })
+      }
+      else if (order == 'title') {
+        multipleOrder.sort(function (a, b) {
+          return a.title.localeCompare(b.title) || a.creator.localeCompare(b.creator) || a.year - b.year;
+        })
+      } else { // year
+        multipleOrder.sort(function (a, b) {
+          return a.year - b.year || a.creator.localeCompare(b.creator) || a.title.localeCompare(b.title);
+        })
+      }
+      if (ascDesc == 'DESC') {
+          multipleOrder.reverse();
+      }
+      console.table(finalizeReferences);
+      for (i = 0; i < multipleOrder.length; i++) {
+        key = multipleOrder[i].index;
+        bibliography += '<p>' + finalizeReferences[key] + '</p>';
+      }
+    }
     if (foundBibliography) {
       cc = context.document.contentControls.getByTag('wikindx-bibliography');
       cc.load('items');
@@ -341,8 +393,8 @@ function finalizeRun() {
       cc.tag = 'wikindx-bibliography';
       cc.title = 'Bibliography';
       cc.insertHtml(bibliography, "End");
+      await context.sync();
     }
-    return await context.sync();
   })
   .catch(function (error) {
     console.log("Error: " + error);

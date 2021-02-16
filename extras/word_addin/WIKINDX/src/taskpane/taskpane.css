@@ -33,7 +33,7 @@
       text-decoration: none;
   }
   .anchor:hover {
-    cursor: progress;
+    cursor: help;
   }
 
   .select select {

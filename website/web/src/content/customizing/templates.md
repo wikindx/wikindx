@@ -2,22 +2,18 @@
 title = "Templates"
 date = 2021-01-30T00:08:41+01:00
 weight = 5
-chapter = true
 #pre = "<b>1. </b>"
 +++
 
-                          --o TEMPLATES o--
-
- ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 
 WIKINDX gives the template designer greater control over the visual
 design than did previous templates. It uses a combination of CSS and the
 Smarty HTML Templating System -- documentation on Smarty can be found at
-https://www.smarty.net/ but you will also find comments and help in the
-various .tpl files in wikindx/templates/default/.
+<https://www.smarty.net/> but you will also find comments and help in the
+various .tpl files in `wikindx/components/templates/default/`.
 
 Certain files must be present for the template to be available to the
-user in Wikindx|Preferences:
+user in _Wikindx > Preferences_:
 
  * display.tpl
    * header.tpl (optional if merged with display.tpl)
@@ -49,7 +45,7 @@ user in Wikindx|Preferences:
      you must follow the same names as default theme)
 
 To create a template, a good starting point is to copy the
-components/templates/default/ files to components/templates/xxxx/ where xxxx
+`components/templates/default/` files to `components/templates/xxxx/` where xxxx
 is a unique folder name for your template.
 
 Edit component.json and change its fields accordingly. After that go to
@@ -61,7 +57,7 @@ you can start its customization.
 The "images" folder must contain the images that you want to include
 directly by a hardcoded link in a .tpl file. For example:
 
-{$tplPath}/images/wikindx-logo-anim.gif, where {$tplPath} is the
+`{$tplPath}/images/wikindx-logo.png`, where `{$tplPath}` is the
 resource location see by the browser to the root dir of the template.
 
 The icons folder contains the images of icons (for buttons for example)
@@ -84,7 +80,7 @@ designers can edit lines 1 and 2 of config.txt.
 
 Line 1:
 
-This can be 0, 1, 2, 0$, 1$, or 2$ where 
+This can be 0, 1, 2, 0$, 1$, or 2$ where
 
  - 0 indicates that all menu levels should be used.
  - 1 indicates that the number of levels should be reduced by 1.
@@ -93,7 +89,7 @@ This can be 0, 1, 2, 0$, 1$, or 2$ where
      no choice --useful where the template is to be used in special
      circumstances such as on mobile devices. Without a '$', read-only
      users will initially be presented with the number of menu levels set by
-     the template designer and this can be overridden in Wikindx|Preferences.
+     the template designer and this can be overridden in _Wikindx > Preferences_.
 
 If there is only one line in config.txt or the value of the line 1
 is wrong, then 0 is assumed for line 1.
@@ -153,11 +149,11 @@ other .tpl files. The core uses only this model. All the others are
 pieces of this first for easy reading and maintenance.
 
 The template's .css file is linked to in display.tpl. You have the option
-to override any CSS in the template's own .css file. To do this, create 
-a components/templates/override.css file and add CSS there. Custom template 
+to override any CSS in the template's own .css file. To do this, create
+a components/templates/override.css file and add CSS there. Custom template
 designers should add:
 <link rel="stylesheet" href="{$tplPath}/../override.css" type="text/css">
-in their display.tpl following the template.css link. CSS in override.css acts 
+in their display.tpl following the template.css link. CSS in override.css acts
 as global CSS overwriting any CSS styling in any template.css.
 
 >>>>>header.tpl<<<<<
@@ -180,12 +176,3 @@ displayed in an HTML table element with class 'mainTable'.
 >>>>>footer.tpl<<<<<
 
 Secondary information displayed at the bottom of the page.
-
-
- ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-
---
-The WIKINDX Team 2020
-sirfragalot@users.sourceforge.net
-lkppo@users.sourceforge.net

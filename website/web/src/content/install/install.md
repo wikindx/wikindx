@@ -1,66 +1,36 @@
 +++
-title = "Install & Upgrade"
+title = "Install"
 date = 2021-01-30T00:08:41+01:00
-weight = 1
-chapter = true
+weight = 2
+chapter = false
 #pre = "<b>1. </b>"
 +++
 
+## Preamble
 
-Wikindx is a web application written in PHP and is intended to be OS independent.
+The versions are numbered for the history and semi-automatic update
+system of the data and the database (each change is applied between the installed
+version and the target version).  However, always read the UPGRADE.txt
+file for the steps to be done by hand when upgrading.
 
-This chapter will explain how to install and upgrade it, and what are the requirements for proper operation.
+So we recommend that you regularly update to the latest version from the
+tarball version available in the [SourceForge File](https://sourceforge.net/projects/wikindx/files/) section,
+especially if your wikindx is hosted on the web.
 
-Support is provided through SourceForge's project tracking tools:
-[forum](https://sourceforge.net/p/wikindx/discussion/),
-[bug tracker](https://sourceforge.net/p/wikindx/v5bugs/),
-[mailing list](https://sourceforge.net/p/wikindx/mailman/).
+If you prefer an installation from a source management client, __we
+strongly recommand__ that you use one of the __point release__ described
+in the README.txt file at the root of SVN with the __trunk__ branch on a
+__production__ server.
 
-
-A test database (wikindxX_Y_testDatabase.sql, with X_Y the major version
-targeted by the schema of this base) is provided in docs/.
-
-Use PhpMyAdmin (or similar) to create a database and
-add a username/password to it then import the file
-wikindxX_Y_testDatabase.sql. Add the database name and
-username/password to wikindx/config.php and then run WIKINDX.
-
-Three users (username/password):
-
- * Administrator -- super/super
- * user1/user1
- * user2/user2
-
-There are 83 resources entered with categories, keywords, abstracts,
-notes and metadata (quotations, paraphrases, musings) and at least two
-resources per resource type.
-
-user2 has a private bibliography. There is a user group which has two
-members (super and user1) and which has a private group bibliography
-(superBibliography).
-
-Some maturity indices have been set and there are some popularity
-ratings/number of views.
-
-No attachments have been added to any resource.
-
-
-
-
-
-
-
-
-
-
-
+The __trunk__ branch (for developers and testers) can be broken at any
+(and for a long) time and damage your database.
 
 
 
 WIKINDX requires a web server environment comprising a web server (typically apache), PHP scripting, and a MySQL or MariaDB server. Most web-hosting providers can provide this configuration. Placing WIKINDX on such a remote web server means that it can be accessed from any machine and/or by multiple people. WIKINDX can also be installed locally for a single user on one desktop or laptop computer. There are a variety of packages that can be downloaded to create the required web server environment including <a href="http://www.wampserver.com/en/" target="_blank">WAMP</a> for Windows and <a href="http://www.apachefriends.org/en/xampp.html" target="_blank">XAMPP</a> for Windows/Linux/MacOS (further instructions on downloading and configuring XAMPP for MacOS are at the bottom of the page).
 
 ## In all cases, the following steps need to be taken once the web server environment is up and running.
- 
+
 The details may be slightly different (especially steps 4/ to 7/) depending on the version of phpMyAdmin that is available or whether running WIKINDX on a hosted web environment or locally but the principles are the same.
 
 1. If you haven't already, unzip wikindx into the web server environment folder (typically 'www/' or 'httpd/') where it will create the folder 'wikindx6/' – and copy config.php.dist to config.php. Depending on your Operating System, you might be prompted at stage 8/ below to change the permissions of various folders and files.
@@ -81,10 +51,10 @@ Assuming you won't change these, we'll use these values in phpMyAdmin. NB, the p
 4. Launch PhpMyAdmin in a web browser. There might be a link to this in your web server control panel or, if running locally, try 'http://localhost/phpmyadmin/' in the web browser address bar.
 5. In the 'Databases' tab of PhpMyAdmin, type in 'wikindx6' as the name of a new database, set 'utf8mb4_unicode_520_ci' as the collation, and click 'Create'.
 6. Go back to the 'Databases' tab, click on 'Check privileges' for the new database, and select 'Add user account'.
-7. In the field 'User name', type in 'wikindx' and type 'wikindx' into the two password fields. If running WIKINDX locally, select 'local' for host. Check the checkbox for 'Grant all privileges on database wikindx6' then click on the 'Go' button. 
+7. In the field 'User name', type in 'wikindx' and type 'wikindx' into the two password fields. If running WIKINDX locally, select 'local' for host. Check the checkbox for 'Grant all privileges on database wikindx6' then click on the 'Go' button.
 8. Type in the WIKINDX address in the web browser – if running locally, this will be http://localhost/wikindx6/ – to complete your WIKINDX configuration.
 
-Bon voyage! 
+Bon voyage!
 
 ## Installing and configuring XAMPP on MacOS
 

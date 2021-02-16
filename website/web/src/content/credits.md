@@ -84,8 +84,12 @@ for their work:
 * [Transifex](https://www.transifex.com/) - Translation platform
 
 
-## Licence
+## Licences
 
+Developed under the [ISC License](https://www.isc.org/licenses/) (since v6.3.5) (Creative Commons
+[CC-BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license for v6.0.1 to v6.3.4; [GPL 2.0](https://www.gnu.org/licenses/old-licenses/lgpl-2.0.en.html) before that).
+
+```plain
 ISC License
 
 Copyright (c) 2003-2021, WIKINDX Team
@@ -101,3 +105,4 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+```

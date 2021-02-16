@@ -1,54 +1,37 @@
 +++
-title = "Customization"
+title = "component.json format"
 date = 2021-01-30T00:08:41+01:00
-weight = 5
-chapter = true
+weight = 4
 #pre = "<b>1. </b>"
 +++
 
-## Developping components
 
-[TODO]
-
-In addition to creating new bibliographic styles, and languages,
-the visual display of WIKINDX (the template) can also be changed.
-Furthermore, PHP developers can write plug-in modules for various
-database-related tasks. For all matters relating to customization,
-please read the documentation found in docs/. Please consider contacting
-the WIKINDX team through the sourceforge.net site in order to have your
-contribution made available for download.
-
-
-
-
-### component.json format
-
-Each component must have a component.json in [JSON] format that
+Each component must have a `component.json` in [JSON](https://www.json.org/json-en.html) format that
 describes the main information about itself. The file must be structured
 as a single object which corresponds to a PHP array once deserialized
-with json_decode(). Each key/value pair of the object is an array
+with `json_decode()`. Each key/value pair of the object is an array
 key/value entry. The format is under development and may change further.
 
 Description of fields:
 
-Field                 Type    O Description
---------------------- ------- - ------------------------------------------------------------------
-component_type        string  Y Name of a type of component. Must be: style, template, or vendor.
-component_id          string  Y Component identifier. Must be identical to the name of the root component directory.
-component_version     string  Y Component public version number: this number is completely free.
-component_builtin     bool    Y If true, the component will be pre-installed/released with the core. Thie field is independent of component_updatable.
-component_updatable   bool    Y If true, the component will be released in a separate package that can be updated via the component admin panel.
-component_name        string  Y Component short name.
-component_description string  Y Component short description (without line break). Use the README.txt file for long description, notes...
-component_licence     string  N Component license name or abbreviation (abbreviation recommended).
-component_website     string  N A single full URL to the vendor or maintainer website to use as a link.
-component_sha256      string  Y Unique signature corresponding to a sha256 hash of the component files. Use cli-sign-components.php to compute it.
-component_authors     array   N An array of objects unserialized as a PHP array of PHP arrays. Each object is an author or contributor.
-author_name           string  Y Name of the author.
-author_role           string  Y Role of the author. Something like: developper, packager, translator, tester, maintainer.
-author_copyright      string  Y Contribution period. E.g. the years: 2004-2017.
-author_email          string  Y A single email address of the author that could be embedded in a href with mailto.
-author_website        string  Y A single full URL to the author website/personnal page to use as a link.
+|Field                | Type   | O| Description
+|---------------------| -------| -| ------------------------------------------------------------------
+|component_type       | string | Y| Name of a type of component. Must be: style, template, or vendor.
+|component_id         | string | Y| Component identifier. Must be identical to the name of the root component directory.
+|component_version    | string | Y| Component public version number: this number is completely free.
+|component_builtin    | bool   | Y| If true, the component will be pre-installed/released with the core. Thie field is independent of component_updatable.
+|component_updatable  | bool   | Y| If true, the component will be released in a separate package that can be updated via the component admin panel.
+|component_name       | string | Y| Component short name.
+|component_description| string | Y| Component short description (without line break). Use the README.txt file for long description, notes...
+|component_licence    | string | N| Component license name or abbreviation (abbreviation recommended).
+|component_website    | string | N| A single full URL to the vendor or maintainer website to use as a link.
+|component_sha256     | string | Y| Unique signature corresponding to a sha256 hash of the component files. Use cli-sign-components.php to compute it.
+|component_authors    | array  | N| An array of objects unserialized as a PHP array of PHP arrays. Each object is an author or contributor.
+|author_name          | string | Y| Name of the author.
+|author_role          | string | Y| Role of the author. Something like: developper, packager, translator, tester, maintainer.
+|author_copyright     | string | Y| Contribution period. E.g. the years: 2004-2017.
+|author_email         | string | Y| A single email address of the author that could be embedded in a href with mailto.
+|author_website       | string | Y| A single full URL to the author website/personnal page to use as a link.
 
 
 Column O indicates a mandatory field: Y=Yes, N=No.
@@ -56,51 +39,51 @@ Column O indicates a mandatory field: Y=Yes, N=No.
 Any additional fields will be ignored.
 
 For the exact syntax of each data type, consult the official format
-specifications [JSON].
+specifications JSON.
 
 When WIKINDX starts or the components admin panel is opened a
-components.json file is created in the cache folder, and a
-components.json file is created in the data folder.
+`components.json` file is created in the cache folder, and a
+`components.json` file is created in the data folder.
 
 The file in cache folder, listing all components installed, is an array
-of object in [JSON] format. Each object is the content of a
-component.json file with additional fields. Original component.json
+of object in JSON format. Each object is the content of a
+component.json file with additional fields. Original `component.json`
 fields remain inchanged.
 
-Field                 Type    O Description
---------------------- ------- - ------------------------------------------------------------------
-component_integrity   integer Y Error code returned when the component is checked. 0 is OK. Not 0 is an error.
+|Field                | Type   | O| Description
+|---------------------| -------| -| ------------------------------------------------------------------
+|component_integrity  | integer| Y| Error code returned when the component is checked. 0 is OK. Not 0 is an error.
 
 The file in data folder, listing persistent data of some components, is
-an array of object in [JSON] format. Each object is a short component
-description (component_type + component_id) like a component.json file
+an array of object in JSON format. Each object is a short component
+description (component_type + component_id) like a `component.json` file
 with additionnal persistent fields. This list can contain data about
 components that are no longer installed but that we want to keep for a
 future reinstallation. Original component.json fields remain inchanged.
 
-Field                 Type    O Description
---------------------- ------- - ------------------------------------------------------------------
-component_status      string  Y Code status value: enabled or disabled. "enabled", if the component is executed on WIKINDX startup.
+|Field                | Type   | O| Description
+|---------------------| -------| -| ------------------------------------------------------------------
+|component_status     | string | Y| Code status value: enabled or disabled. "enabled", if the component is executed on WIKINDX startup.
 
-When the release script release/make.php script is executed it create
-also a components.json, listing all components released with the current
+When the release script `release/cli-make-package.php` script is executed it create
+also a `components.json`, listing all components released with the current
 core.
 
-As the previous file, it is an array of object in [JSON] format. Each
-object is the content of a component.json file with additional fields,
-but different. Original component.json fields remain inchanged.
+As the previous file, it is an array of object in JSON format. Each
+object is the content of a `component.json` file with additional fields,
+but different. Original `component.json` fields remain inchanged.
 
-Field                 Type    O Description
---------------------- ------- - ------------------------------------------------------------------
-component_packages    array   N Array of object. Each object is the description of a downloadable package of the component.
-package_location      string  Y A single full URL to a downloadable package in zip, tar.gz, or tar.bz2 format.
-package_sha256        string  Y Unique signature corresponding to a sha256 hash of the package generated by make.php.
-package_size          integer Y Size in bytes of the package.
+|Field                | Type   | O| Description
+|---------------------| -------| -| ------------------------------------------------------------------
+|component_packages   | array  | N| Array of object. Each object is the description of a downloadable package of the component.
+|package_location     | string | Y| A single full URL to a downloadable package in zip, tar.gz, or tar.bz2 format.
+|package_sha256       | string | Y| Unique signature corresponding to a sha256 hash of the package generated by make.php.
+|package_size         | integer| Y| Size in bytes of the package.
 
 
-Example of a single component.json file for the smarty vendor component:
+Example of a single `component.json` file for the smarty vendor component:
 
-~~~~
+~~~~json
 {
     "component_type": "vendor",
     "component_id": "smarty",
@@ -137,9 +120,9 @@ Example of a single component.json file for the smarty vendor component:
 ~~~~
 
 
-Example of a data/components.json file:
+Example of a `data/components.json` file:
 
-~~~~
+~~~~json
 [
     {
         "component_type": "style",
@@ -160,9 +143,9 @@ Example of a data/components.json file:
 ~~~~
 
 
-Example of a cache/components.json file extract:
+Example of a `cache/components.json` file extract:
 
-~~~~
+~~~~json
 [
     {
         "component_type": "plugin",
@@ -211,10 +194,10 @@ Example of a cache/components.json file extract:
 ~~~~
 
 
-Example of a component.json file extract from the update server
+Example of a `component.json` file extract from the update server
 generated by the make.php script:
 
-~~~~
+~~~~json
 [
     {
         "component_version": "181",

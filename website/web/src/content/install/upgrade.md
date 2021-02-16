@@ -1,18 +1,11 @@
 +++
 title = "Upgrade"
 date = 2021-01-30T00:08:41+01:00
-weight = 5
-chapter = true
+weight = 3
+chapter = false
 #pre = "<b>1. </b>"
 +++
 
-                           --o UPGRADE o--
-
-    ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-////////////////////////////////////////////////////////////////////////////
-For installing a fresh WIKINDX with a blank database, read docs/INSTALL.txt.
-////////////////////////////////////////////////////////////////////////////
 
 If you are upgrading, read this document carefully.
 
@@ -56,7 +49,7 @@ introduced a components compatibility check and a components manager.
 
 The CURL PHP extension is not mandatory in WIKINDX but is used in some
 circumstances. For example, from v5.9.1, components such as plugins and
-languages can be managed from the Admin|Components interface if CURL is
+languages can be managed from the _Admin > Components_ interface if CURL is
 installed – without CURL, components must be installed manually by
 downloading them from the Sourceforge server. It's not recommend to
 disable CURL and manage components by hand.
@@ -183,10 +176,3 @@ paper links to these images fails when the src attribute of the HTML img
 tag does not appear first.
 
 >> UPGRADING
-
-    ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
---
-Mark Grimshaw-Aagaard
-The WIKINDX Team 2020
-sirfragalot@users.sourceforge.net

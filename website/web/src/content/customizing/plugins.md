@@ -2,37 +2,34 @@
 title = "Plugins"
 date = 2021-01-30T00:08:41+01:00
 weight = 5
-chapter = true
 #pre = "<b>1. </b>"
 +++
 
           --o Programming third party plugins in WIKINDX o--
 
- ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-There are two types of plugin, menu plugins and in-line plugins. Menu   
-plugins are accessed via the WIKINDX menu system while in-line plugins  
-appear in the main body of the WIKINDX.                                 
+There are two types of plugin, menu plugins and in-line plugins. Menu
+plugins are accessed via the WIKINDX menu system while in-line plugins
+appear in the main body of the WIKINDX.
 
 To get your plugins working, a few conditions are required:
 
- * All modules must go in a folder within the wikindx/components/plugins/      
-   directory.                                                          
+ * All modules must go in a folder within the `wikindx/components/plugins/`
+   directory.
 
- * This module folder must have a main PHP file called index.php, a  
-   config.php file and a plugintype.txt file -- you add further files  
-   as you like.                                                        
+ * This module folder must have a main PHP file called index.php, a
+   config.php file and a plugintype.txt file -- you add further files
+   as you like.
 
- * If the folder is called 'test', the class name in                 
-   wikindx/components/plugins/test/index.php must be called test_MODULE.         
+ * If the folder is called 'test', the class name in
+   `wikindx/components/plugins/test/index.php` must be called test_MODULE.
 
- * plugintype.txt should have one line which comprises either of the 
-   case-sensitive words 'menu' or 'inline'.                            
+ * plugintype.txt should have one line which comprises either of the
+   case-sensitive words 'menu' or 'inline'.
 
- * index.php and config.php must be writeable by the web server      
-   user (this allows administrators to manage plugins via the wikindx  
+ * index.php and config.php must be writeable by the web server
+   user (this allows administrators to manage plugins via the wikindx
    interface rather than having to edit the files directly).
-   
+
  * config.php should have the public variable $wikindxVersion.  e.g.  public
    $wikindxVersion = 8; From WIKINDX 5.8, compatible plugins are required to
    explicitly state their compatibility with the constant
@@ -41,19 +38,19 @@ To get your plugins working, a few conditions are required:
    In the plugin's config.php, set $wikindxVersion to match
    WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] in order to state compatibility.
    Incompatible plugins will not load. They will still be present
-   and editable in the Admin|Components interface.
+   and editable in the _Admin > Components_ interface.
 
-The plugin directory may optionally have a file called description.txt  
-which may be used as a README providing instructions and credits. The   
-first line of this file must be the title of the plugin (and is used to 
-display available plugins when administering plugins in WIKINDX) but    
+The plugin directory may optionally have a file called description.txt
+which may be used as a README providing instructions and credits. The
+first line of this file must be the title of the plugin (and is used to
+display available plugins when administering plugins in WIKINDX) but
 the remaining lines can be whatever you wish.
 
-If you have your message texts in a separate file, then users can opt to 
-change language localization as for other parts of WIKINDX.  In the example 
-given below, both the file and the class are called 'testMessages_en'.  The 
-'_xx' suffix of a new file and class for another language should follow the 
-name of a language folder in wikindx/components/languages/. New localization
+If you have your message texts in a separate file, then users can opt to
+change language localization as for other parts of WIKINDX.  In the example
+given below, both the file and the class are called 'testMessages_en'.  The
+'_xx' suffix of a new file and class for another language should follow the
+name of a language folder in `wikindx/components/languages/`. New localization
  files should go into the same plugin folder as the xxx_en file.
 
 For creating or upgrading the db structure of the objects used by your plugin,
@@ -63,27 +60,28 @@ mysqli only). In each driver directory, create one directory "full" (lowercase)
 and one directory "update" (lowercase).
 
 Full and update directories may contain one or more SQL files to run on the first
-execution of Wikindx or on upgrade stage, in alphabetical order. If you do create 
+execution of Wikindx or on upgrade stage, in alphabetical order. If you do create
 a database table that stores user IDs, then that field should be named
-'pluginxxxxUserId' (when a user is deleted from the WIKINDX, the delete routines 
+'pluginxxxxUserId' (when a user is deleted from the WIKINDX, the delete routines
 check plugin database tables for fields that follow that convention).
 
 To run the SQL code for a creation call the function
-createDbSchema(<plugindirrame>) of the UPDATEDATABASE class.
+`createDbSchema(<plugindirrame>)` of the UPDATEDATABASE class.
 
 To run the SQL code for an upgrade call the function
-updateDbSchema(<plugindirrame>, <versionnumberstring>) of the UPDATEDATABASE class.
+`updateDbSchema(<plugindirrame>, <versionnumberstring>)` of the UPDATEDATABASE class.
 
-###############################
-MENU PLUGINS
 
-Menu plugins have one or more menu items inserted in the WIKINDX menu   
-specified in the plugin. These types of plugins are intended for cases  
-where the main display table of the WIKINDX is completely dedicated to  
-the plugin.                                                             
+## Menu plugins
+
+Menu plugins have one or more menu items inserted in the WIKINDX menu
+specified in the plugin. These types of plugins are intended for cases
+where the main display table of the WIKINDX is completely dedicated to
+the plugin.
 
   * The constructor of a menu plugin must appear as:
 
+~~~~php
    public function __construct($menuInit = FALSE)
    {
       if($menuInit)
@@ -94,48 +92,49 @@ the plugin.
       }
       // Do something else
    }
+~~~~
 
-  * The constructor must set $this->menus. This is a multi-dimensional  
-    public array where you define which menu(s) the module should insert  
-    itself into, what is the label for the menu item and which method     
-    within our class do we run when the menu option is selected.          
+  * The constructor must set $this->menus. This is a multi-dimensional
+    public array where you define which menu(s) the module should insert
+    itself into, what is the label for the menu item and which method
+    within our class do we run when the menu option is selected.
 
-  * The constructor must set the public parameter $this->authorize as   
-    either 0 (public readonly access), 1 (login required) or 2 (admin only). 
-    This should come from your config.php file (see below). 
+  * The constructor must set the public parameter $this->authorize as
+    either 0 (public readonly access), 1 (login required) or 2 (admin only).
+    This should come from your config.php file (see below).
 
-  * Both $this-Menus and $this->authorize should only be set when       
-    $menuInit is TRUE in which case the constructor should return after   
-    they have been set without doing anything else ($menuInit is set      
-    automatically to TRUE by the wikindx/core/navigation/MENU class).    
+  * Both $this-Menus and $this->authorize should only be set when
+    $menuInit is TRUE in which case the constructor should return after
+    they have been set without doing anything else ($menuInit is set
+    automatically to TRUE by the MENU class in `wikindx/core/navigation/MENU.php`).
 
-You should also have a config.php file (see the example below) which    
-defines the access level for the plugin and in which menu(s) the plugin 
-is displayed. These values can be altered through the WIKINDX Admin|Components 
-interface and so you must have a public $menus array and a public       
-$authorize variable.                                                    
+You should also have a config.php file (see the example below) which
+defines the access level for the plugin and in which menu(s) the plugin
+is displayed. These values can be altered through the WIKINDX _Admin > Components_
+interface and so you must have a public $menus array and a public
+$authorize variable.
 
-Unless using the basic GLOBALS::buildOutputString() method, you must    
-use the templating system that WIKINDX uses and return the template     
-string to the calling process. Furthermore, in the interests of         
-compatibility and future WIKINDX upgrades, you should use the WIKINDX   
-functions where possible.                                               
+Unless using the basic GLOBALS::buildOutputString() method, you must
+use the templating system that WIKINDX uses and return the template
+string to the calling process. Furthermore, in the interests of
+compatibility and future WIKINDX upgrades, you should use the WIKINDX
+functions where possible.
 
-Constructor parameters could be $db and $vars that are the database object (see   
-the wikindx/core/sql/SQL class) and an array of all input values from  
-the web browser form or querystring.                                   
+Constructor parameters could be $db and $vars that are the database object (see
+the SQL class in `wikindx/core/libs/SQL.php`) and an array of all input values from
+the web browser form or querystring.
 
 $this->authorize controls the display of the module item in the menu
 system according to user permissions.
 
 An example of a menu plugin is given below.
 
-###############################
-IN-LINE PLUGINS
 
-WIKINDX provides four in-line plugin containers -- these are inserted   
-as per the template design and so are dependent for positioning, and    
-indeed appearance, upon the template designer.                          
+## In-line plugins
+
+WIKINDX provides four in-line plugin containers -- these are inserted
+as per the template design and so are dependent for positioning, and
+indeed appearance, upon the template designer.
 
 The four containers are:
 
@@ -146,8 +145,8 @@ The four containers are:
 
 An example of an in-line plugin is given below.
 
-########################
-
+~~~~php
+<?php
 /*
 **********************
 *
@@ -159,13 +158,13 @@ An example of an in-line plugin is given below.
 /**
 * EXAMPLE: wikindx/components/plugins/test/config.php
 */
-<?php
+
 class test_CONFIG
 {
-	public $menus = array('plugin2', 'wikindx');
+	public $menus = array('plugin1');
 /**
 * $authorize
-* 
+*
 * 0 (public readonly access)
 * 1 (login required)
 * 2 (admin only)
@@ -173,60 +172,66 @@ class test_CONFIG
 	public $authorize = 1;
 	public $wikindxVersion = 5.8;
 }
-?>
+~~~~
 
+
+~~~~php
+<?php
 /*****
 *	TEST plugin -- English messages.
 *
 * '###' is dynamic text to be inserted. e.g. $this->messages->text('helpMePlease', 'method') will replace '###' with 'method' in $this->text['helpMePlease'].
 *
 *****/
-class testMessages_en
-{
-public $text;
 
-// Constructor
-	public function __construct()
-	{
-		$this->loadMessages();
-	}
-	public function loadMessages()
-	{
-		$this->text = array(
+class testMessages
+{
+    /** array */
+    public $text = [];
+
+    public function __construct()
+    {
+        $domain = mb_strtolower(basename(__DIR__));
+        
+        $this->text = [
 /**
 * Menu items
 */
-		"testSub"	=>		"Test plugin...",
-		"menu1"		=>		"Test Command 1",
-		"menu2"		=>		"Test Command 2",
-		"menuHelp"	=>		"Test plugin Help",
+            "testSub" => dgettext($domain, "Test plugin..."),
+            "menu1" => dgettext($domain, "Test Command 1"),
+            "menu2" => dgettext($domain, "Test Command 2"),
+            "menuHelp" => dgettext($domain, "Test plugin Help"),
+            
 /**
 * Other messages
 */
-		'heading'	=>	'Test Plugin Example',
-		'command1'	=>	'This is command 1',
-		'command2'	=>	'This is command 2',
-		'noMethod'	=>	'No method was input. Try the Wikindx menu instead',
-		'thisModule'	=>	'this module',
-		'noHelp'	=>	'No help here. Try ### instead.',
-		"helpMePlease"	=>	'The method is ### and here I am.  Sadly, I cannot help.',	
-		);
-	}
+            "heading" => dgettext($domain, "Test Plugin Example"),
+            "command1" => dgettext($domain, "This is command 1"),
+            "command2" => dgettext($domain, "This is command 2"),
+            "noMethod" => dgettext($domain, "No method was input. Try the Wikindx menu instead"),
+            "thisModule" => dgettext($domain, "this module"),
+            "noHelp" => dgettext($domain, "No help here. Try ### instead."),
+            "helpMePlease" => dgettext($domain, "The method is ### and here I am.  Sadly, I cannot help."),
+        ];
+    }
 }
-?>
+~~~~
 
+
+~~~~php
+<?php
 /**
 * EXAMPLE: wikindx/components/plugins/test/index.php
 */
-<?php
+
 class test_MODULE
 {
-private $db;
-private $vars;
-private $html;
-private $messages;
-public $authorize;
-public $menus;
+    private $db;
+    private $vars;
+    private $html;
+    private $messages;
+    public $authorize;
+    public $menus;
 
 // constructor
 	public function __construct($menuInit = FALSE)
@@ -260,8 +265,8 @@ public $menus;
 * 2. a menu of one submenu or more.
 *
 * Top level menu labels are: "wikindx", "res", "search", "text", "admin", "plugin1", "plugin2", "plugin3".
-* "admin" is only available when logged in as admin, "text" will only show if there are metadata (quotes etc.) 
-* and the three 'pluginX' menu trees only show if they are populated.  
+* "admin" is only available when logged in as admin, "text" will only show if there are metadata (quotes etc.)
+* and the three 'pluginX' menu trees only show if they are populated.
 * Typically, you will insert a submenu into one of the pluginX menus.
 *
 * The command to be executed when the user selects that option is the value of each member of the sub array and must be a public method (see below).
@@ -283,7 +288,7 @@ public $menus;
 // This second example shows 3 commands appearing under one menu as a submenu -- the example uses this configuration
 // 'xxxpluginSub' must be a unique name otherwise you risk overwriting other plugins
 		$menus2 = array(
-			$menuArray[0] => 
+			$menuArray[0] =>
 				array('testpluginSub' => array(
 				$this->messages->text('testSub') => FALSE,
 				$this->messages->text('menu1')		=>	"command1",
@@ -321,7 +326,7 @@ public $menus;
 	public function helpMe()
 	{
 		GLOBALS::setTplVar('heading', $this->messages->text('heading'));
-		$link = \HTML\a("link", $this->messages->text('thisModule'), 
+		$link = \HTML\a("link", $this->messages->text('thisModule'),
 			htmlentities("index.php?action=test_command1&method=helpMePlease"));
 		$pString = $this->messages->text('noHelp', $link);
 		GLOBALS::setTplVar('content', $pString);
@@ -334,9 +339,11 @@ public $menus;
 		return $this->messages->text('helpMePlease', \HTML\em($this->vars['method']));
 	}
 }
-?>
+~~~~
 
 
+~~~~php
+<?php
 /*
 **********************
 *
@@ -345,11 +352,10 @@ public $menus;
 **********************
 */
 
-<?php
 /*
-* Example of an in-line plugin.  This inserts the phrase 'Hello sailor!' wherever the template 
-* designer has placed the 'inline1' container. In the default template that comes with WIKINDX, 
-* 'inline1' appears in content.tpl in the paging display and will print 'Hello sailor!' in bold in front 
+* Example of an in-line plugin.  This inserts the phrase 'Hello sailor!' wherever the template
+* designer has placed the 'inline1' container. In the default template that comes with WIKINDX,
+* 'inline1' appears in content.tpl in the paging display and will print 'Hello sailor!' in bold in front
 * of paging links when displaying lists.
 */
 class inline1_MODULE
@@ -360,12 +366,4 @@ class inline1_MODULE
 		GLOBALS::setTplVar('inline1', \HTML\strong('Hello sailor!'));
 	}
 }
-?>
-
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-
--- 
-Mark Grimshaw-Aagaard
-The WIKINDX Team February 2020
-sirfragalot@users.sourceforge.net
+~~~~

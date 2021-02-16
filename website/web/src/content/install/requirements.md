@@ -1,47 +1,10 @@
 +++
 title = "Requirements"
 date = 2021-01-30T00:08:41+01:00
-weight = 5
-chapter = true
+weight = 1
+chapter = false
 #pre = "<b>1. </b>"
 +++
-
-
-# Support, requirements, and compatibility
-
-Wikindx is a web application written in PHP tested on:
-
- * Linux (Debian), Mac, Windows (and is intended to be OS independent)
- * [Apache] >= 2.x or [nginx] >= 1.11 (or any web Server able to run PHP
-   scripts)
-
-Support is provided through SourceForge's project tracking tools: [forum],
-[bug tracker], [mailing list].
-
-The development style is [Trunk-Based], but sometimes an important
-development is the subject of an ephemeral branch.
-
-The version system is not a branch system with long term support for
-each one.  Only the trunk gets new features, security and bug fixes that
-are not backported.  These developments are made available to the public
-at each release of a new version.
-
-The versions are numbered for the history and semi-automatic update
-system of the data and the database (each change is applied between your
-version and the target version).  However, always read the UPGRADE.txt
-file for the steps to be done by hand when upgrading.
-
-So we recommend that you regularly update to the latest version from the
-tarball version available in the [SourceForge File] section, especially
-if your wikindx is hosted on the web.
-
-If you prefer an installation from a source management client, __we
-strongly recommand__ that you use one of the __point release__ described
-in the README.txt file at the root of SVN with the __trunk__ branch on a
-__production__ server.
-
-The __trunk__ branch (for developers and testers) can be broken at any
-(and for a long) time and damage your database.
 
 
 ## Components compatibility
@@ -70,15 +33,15 @@ of Wikindx.
 
 ## PHP & MySQL versions
 
-Wikindx         [PHP]             [MySQL]  [MariaDB]
---------------- ----------------- -------- ---------
-6.4.0 and later >= 7.3 and <= 7.4 >= 5.7.5 >= 10.2
-6.1.0 to 6.3.10 >= 7.0 and <= 7.4 >= 5.7.5 >= 10.2
-5.7.2 to 6.0.8  >= 5.6 and <= 7.3 >= 5.7.5 >= 10.2
-5.7.0 to 5.7.1  >= 5.6 and <= 7.2 >= 5.7.5 >= 10.2
-5.3.1 to 5.3.2  >= 5.5 and <= 7.1 >= 5.7.5 >= 10.2
-5.2.1 to 5.2.2  >= 5.5 and <= 5.6 >= 5.7.5 >= 10.2
-5.2.0           >= 5.1 and <= 5.6 >= 5.7.5 >= 10.2
+|Wikindx        | [PHP]            | [MySQL] | [MariaDB]
+|---------------| -----------------| --------| ---------
+|6.4.0 and later| >= 7.3 and <= 7.4| >= 5.7.5| >= 10.2
+|6.1.0 to 6.3.10| >= 7.0 and <= 7.4| >= 5.7.5| >= 10.2
+|5.7.2 to 6.0.8 | >= 5.6 and <= 7.3| >= 5.7.5| >= 10.2
+|5.7.0 to 5.7.1 | >= 5.6 and <= 7.2| >= 5.7.5| >= 10.2
+|5.3.1 to 5.3.2 | >= 5.5 and <= 7.1| >= 5.7.5| >= 10.2
+|5.2.1 to 5.2.2 | >= 5.5 and <= 5.6| >= 5.7.5| >= 10.2
+|5.2.0          | >= 5.1 and <= 5.6| >= 5.7.5| >= 10.2
 
 PHP support is tested for the core, extentions, and third party software
 included. For security purpose we recommend you use an [officialy

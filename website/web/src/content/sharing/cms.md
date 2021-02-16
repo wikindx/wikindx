@@ -2,28 +2,27 @@
 title = "CMS API/Access"
 date = 2021-01-30T00:08:41+01:00
 weight = 5
-chapter = true
 #pre = "<b>1. </b>"
 +++
 
                --o Content Management System hooks o--
 
- ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+## History
 
-WIKINDX v5, 2016 -- Added language parameter.
-WIKINDX v4, 2011 -- Part 2 added below.
+* WIKINDX v5, 2016 -- Added language parameter.
+* WIKINDX v4, 2011 -- Part 2 added below.
 
 This is for users wishing to display various output from a WIKINDX
 database into a CMS (Content Management System). It requires some
 minimal configuration in the WIKINDX admin panel.
 
-The following is required in the php.ini of the CMS system if you use   
-file_get_contents() as in the examples below: allow_url_fopen = On      
+The following is required in the php.ini of the CMS system if you use
+file_get_contents() as in the examples below: allow_url_fopen = On
 
-If you cannot do this, you will need to use the PHP extension           
-CURL as a replacement for file_get_contents(URL). Some help in          
-using CURL for use with WIKINDX's CMS hooks may be found at:            
-http://www.phpwcms.de/forum/viewtopic.php?t=15067                       
+If you cannot do this, you will need to use the PHP extension
+CURL as a replacement for file_get_contents(URL). Some help in
+using CURL for use with WIKINDX's CMS hooks may be found at:
+http://www.phpwcms.de/forum/viewtopic.php?t=15067
 
 This README is in three parts. PART 1 deals with the display of single
 or multiple resources from a WIKINDX in a CMS. PART 2 deals with sending
@@ -32,13 +31,7 @@ deals with the parsing and formatting of citations in a block of text
 sent from the CMS to the WIKINDX.
 
 
-/////*****//////////*****//////////*****//////////*****/////
-
-						PART 1
-
-  DISPLAYING SINGLE OR MULTIPLE WIKINDX RESOURCES IN A CMS
-  
-/////*****//////////*****//////////*****//////////*****/////
+## Displaying single or multiple wikindx resources in a cms
 
 In all cases, the return from WIKINDX comprises one or more resources
 matching the queryString parameter you have set.
@@ -49,12 +42,12 @@ matching the queryString parameter you have set.
 
 NB.
 
-1/ The following assumes the path to the WIKINDX is                     
-http://localhost/wikindx/ -- if not, adjust the path accordingly.      
+1/ The following assumes the path to the WIKINDX is
+http://localhost/wikindx/ -- if not, adjust the path accordingly.
 
 2/ 'action' and 'id' are required and must have valid values. 'action'
 may be 'getResource', 'getCategory', 'getKeyword', 'getCreator',
-'getPublisher', 'getCollection', 'getAbstract', 'getNotes', 'getQuote', 
+'getPublisher', 'getCollection', 'getAbstract', 'getNotes', 'getQuote',
 'getParaphrase', 'getMusing', 'getRecent'  ('id' is not required
 for this last one). The 'id' you wish to use may be found directly
 in WIKINDX (if you've set your WIKINDX Preferences to view the CMS
@@ -109,10 +102,10 @@ To display a publisher list ('id' == publisher ID):
 
 To display a collection list ('id' == collection ID):
    $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getCollection&id=13');
-   
+
 To display an abstract ('id' == resource ID):
    $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getAbstract&id=242');
-   
+
 To display all quotes and comments for a resource ('id' == resource ID):
    $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getQuote&id=242');
 
@@ -122,7 +115,7 @@ To display a list of any of the above, use a comma-separated list of the appropr
 To display up to 5 resources by two particular creators (where they are co-authors), ordered by publication year:
    $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getCreator&id=4,5&limit=5&order=year&sqlMethod=and');
 
-Additionally, you may also use the following ('order' will be ignored and, if no 'limit', the default is 10 resources returned):              
+Additionally, you may also use the following ('order' will be ignored and, if no 'limit', the default is 10 resources returned):
 
 To display the 10 most recently added resources:
    $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getRecent&limit=10');
@@ -132,7 +125,7 @@ To display at most 15 resources added within the last 5 days:
 
 
 ***********************
-  OUTPUT FROM WIKINDX  
+  OUTPUT FROM WIKINDX
 ***********************
 
 The output from cmsprint.php ($string above) is a string representing
@@ -145,11 +138,13 @@ will need to use the following:
 
 The contents of $array may be like the following example:
 
+~~~~plain
 	[13] => Back, M., &amp; Des, D. (1996). Micro-narratives in sound design: Context and caricature in waveform manipulation. Retrieved March 12, 2004, from <a href="http://www2.hku.nl/~audiogam/ag/articles/micronaratives.htm" target="_blank">http://www2.hku.nl/~aud&nbsp;...&nbsp;cles/micronaratives.htm</a>.
-	[54] => Carr, D. (2003). Play dead: Genre and affect in silent hill and planescape torment. <em>Game Studies</em><em>, 3</em>(1). Retrieved September 16, 2003, from <a href="http://www.gamestudies.org/0301/carr/" target="_blank">http://www.gamestudies.org/0301/carr/</a>. 
+	[54] => Carr, D. (2003). Play dead: Genre and affect in silent hill and planescape torment. <em>Game Studies</em><em>, 3</em>(1). Retrieved September 16, 2003, from <a href="http://www.gamestudies.org/0301/carr/" target="_blank">http://www.gamestudies.org/0301/carr/</a>.
 	[2] => Chion, M. (1992). Wasted words. In R. Altman (Ed.), <em>Sound Theory Sound Practice</em> (pp. 104&ndash;110). New York: Routledge.
 	[103] => Chion, M. (1994). <em>Audio-vision: Sound on screen</em> (C. Gorbman, Trans.) New York: Columbia University Press.
 	[4] => Truppin, A. (1992). And then there was sound: The films of Andrei Tarkovsky. In R. Altman (Ed.), <em>Sound Theory Sound Practice</em> (pp. 235&ndash;248). New York: Routledge.
+~~~~
 
 Note that, depending upon the bibliographic style chosen, the results
 may contain HTML tags and entities (as in the above example). The key of
@@ -161,58 +156,54 @@ individual items as you wish. An example might be:
    foreach($array as $resourceId => $item)
       print $item . "<br>";
 
-The output for a command such as 
+The output for a command such as
 $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getQuote&id=242');
-, after processing as above, may be an array 
+, after processing as above, may be an array
 such as:
 
+~~~~php
 	[242] => Array
 			(
 				[quotes] => Array
 					(
-						[0] => Array 
+						[0] => Array
 						(
-							[quote] => Quote 1 
-							[keywords] => 
-							[details] => p.1 
+							[quote] => Quote 1
+							[keywords] =>
+							[details] => p.1
 							[comments] => Array ( )
 						)
 						[1] => Array
 						(
-							[quote] => Quote 2 
+							[quote] => Quote 2
 							[keywords] => Array
 							(
 								[0] => 04 - Alpes-de-Haute-Provence
 							)
-							[details] => p.2 
+							[details] => p.2
 							[comments] => Array
 							(
 								[0] => Array
 								(
-									[comment] => Comment 2 
+									[comment] => Comment 2
 									[timestamp] => 2013-01-19 09:54:15
 								)
 							)
 						)
 					)
 				)
-			) 
-	
-/////*****//////////*****//////////*****//////////*****/////
-
-						PART 2
-
-  DISPLAYING MULTIPLE WIKINDX RESOURCES IN A CMS FROM SQL
-  
-/////*****//////////*****//////////*****//////////*****/////
+			)
+~~~~
 
 
-If the WIKINDX admin allows it, you can send a complex 
-SQL statement to WIKINDX and receive an array of resources in return.   
-This array is in the same format as described in PART 1. The SQL        
-statement is a base64-encoded string that can be copied and pasted from 
-the WIKINDX 'cms' link if you have enabled this link in your WIKINDX    
-preferences. The 'cms' link is displayed when viewing WIKINDX lists.    
+## Displaying multiple wikindx resources in a cms from sql
+
+If the WIKINDX admin allows it, you can send a complex
+SQL statement to WIKINDX and receive an array of resources in return.
+This array is in the same format as described in PART 1. The SQL
+statement is a base64-encoded string that can be copied and pasted from
+the WIKINDX 'cms' link if you have enabled this link in your WIKINDX
+preferences. The 'cms' link is displayed when viewing WIKINDX lists.
 
 1/ Formulate your WIKINDX list first.
 
@@ -232,6 +223,7 @@ the only extra parameter accepted.
 
 Example (in your CMS code and assuming both CMS and WIKINDX are on localhost):
 
+~~~~php
    $string = file_get_contents(http://localhost/wikindx/cmsprint.php?action=parseSql&address=http://localhost/cms/temp/tempfile.txt);
    if($string)
    {
@@ -240,15 +232,10 @@ Example (in your CMS code and assuming both CMS and WIKINDX are on localhost):
    }
    else
       print 'No resources';
+~~~~
 
-/////*****//////////*****//////////*****//////////*****/////
 
-						PART 3
-					
-   PARSING AND FORMATTING CITATIONS IN TEXT USING WIKINDX
-					
-/////*****//////////*****//////////*****//////////*****/////
-
+## Parsing and formatting citations in text using wikindx
 
 WIKINDX may be used to format a series of citations within a block of
 CMS text that uses the CMS replacement tags. The CMS replacement tag may
@@ -276,14 +263,19 @@ CMS, sending the text block to WIKINDX and receiving it back:
 1/ For efficiency, first check to see if there are any replacement tags
 in the text block and, if not, return immediately. For example:
 
+~~~~php
    if(strpos($text, "{ADD_BIB_ITEM:") === FALSE)
       return;
+~~~~
 
-2/ Use php_replace() to reformat your particular CMS replacement        
-tags to a format WIKINDX will recognize (using [cite]...[/cite]).       
-For example, with the CMS replacement tags in the example above,        
-you should use: $text = preg_replace("/\{ADD_BIB_ITEM:(.*)\}/Ui",       
-"[cite]$1[/cite]", $text);                                              
+2/ Use php_replace() to reformat your particular CMS replacement
+tags to a format WIKINDX will recognize (using [cite]...[/cite]).
+For example, with the CMS replacement tags in the example above,
+you should use:
+
+~~~~php
+$text = preg_replace("/\{ADD_BIB_ITEM:(.*)\}/Ui", "[cite]$1[/cite]", $text);
+~~~~
 
 Using the example above, this code will produce:
 
@@ -294,7 +286,9 @@ Chion states that:  "Blah, blah, blah" [cite]3:314[/cite] but in a later article
 4/ Contact the WIKINDX and give it the address where $text is stored.
 For example (assuming both CMS and WIKINDX are on localhost):
 
+~~~~php
    $string = file_get_contents(http://localhost/wikindx/cmsprint.php?action=parseText&wikindxLink=1&address=http://localhost/cms/temp/tempfile.txt);
+~~~~
 
 5/ Print $string back to your CMS.
 
@@ -327,6 +321,7 @@ of three members, the first being the text block, the second being the
 footnotes and the third being the bibliography. For example, you might
 use the following code:
 
+~~~~php
 $text = preg_replace("/\{ADD_BIB_ITEM:(.*)\}/Ui", "[cite]$1[/cite]", $text);
 $text = str_replace('<br>', 'IAMAUNIQUESTRING', $text);
 <... write $text to cms/temp/tempfile.txt ...>
@@ -335,12 +330,13 @@ $split = preg_split("/(<br \/>){2,2}/i", $string);
 $text = str_replace('IAMAUNIQUESTRING', '<br>', $split[0]);
 $footnotes = $split[1];
 $bibliography = $split[2];
+~~~~
 
 
 The following is example code (kindly provided by John Weare) for
 formatting citations in a block of text in the CMS phpWcms:
 
->>>>>>>>>>>>>>>>>>>>>>>>>>>>
+~~~~php
 <?php
 // Example PHP code developed to produce WIKINDX citations in phpWcms.
 // This code assumes adding additional css stylesheet definitions
@@ -350,6 +346,7 @@ formatting citations in a block of text in the CMS phpWcms:
 // {SHOW_FULL_BIB} outputs full bibliography<br>
 // PLEASE NOTE!! <!--MAIN_START//--> AND <!--MAIN_END//--> opening and closing tags need to be in page source
 // sustitute instance of http://www.domain.com/ with actual domain or localhost
+
 function citeText($contentString)
 {
 	// Temp file must be written with unique filename espeically
@@ -372,7 +369,7 @@ function citeText($contentString)
 	// instances of that in the source text with a temporary string which
 	// will be re-replaced later on.
 	$contentString = str_replace('<br>', '_TEMP_', $contentString);
-	// Convert this CMS' replacement tag structure with the [cite] tags that WIKINDX recognises. 
+	// Convert this CMS' replacement tag structure with the [cite] tags that WIKINDX recognises.
 	$contentString = preg_replace("/\{ADD_BIB_ITEM:(.*)\}/Uiu", "[cite]$1[/cite]", $contentString);
 	if (fwrite($handle, $contentString) === FALSE) {
 		echo "Cannot write to file ($filename)"; // or handle your error
@@ -404,7 +401,7 @@ function citeText($contentString)
 	}
 	// remove temp file
 	unlink($oldPathFileName);
-	
+
 	// phpWcms tag indicating whether and where to print the full bibliography.
 	// Otherwise, you could use $citedText . 'br /' . $bibliography.
 	if (!(strpos($citedText, '{SHOW_FULL_BIB}') === false)) {
@@ -423,14 +420,5 @@ if (!(strpos($content["all"], '{ADD_BIB_ITEM:') === false)) {
 	$lPattern = preg_quote("<!--MAIN_START//-->");
 	$rPattern = preg_quote("<!--MAIN_END//-->");
 	$content['all'] = preg_replace("#($lPattern)(.*)($rPattern)#seu", "'\\1' . citeText('\\2') . '\\3'", $content['all']);
-} 
-?>
-<<<<<<<<<<<<<<<<<
-
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-
---
-Mark Grimshaw-Aagaard
-The WIKINDX Team 2020
-sirfragalot@users.sourceforge.net
+}
+~~~~

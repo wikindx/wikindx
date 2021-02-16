@@ -1,24 +1,23 @@
 +++
 title = "Translation Guide"
 date = 2021-01-30T00:08:41+01:00
-weight = 5
-chapter = true
+weight = 3
+chapter = false
 #pre = "<b>1. </b>"
 +++
 
 
----
-title : WIKINDX's Translation Guide
-subtitle: Internationalisation (i18n) and Localisation (l10n)
-author:
- - Stéphane Aulery, <lkppo@users.sourceforge.net>
- - Mark Grimshaw-Aagaard, <sirfragalot@users.sourceforge.net>
- - The WIKINDX Team
-lang: en
-date: 2020-10-25
----
+We are looking for translators. If you want to see Wikindx in your
+native language do not hesitate to join us on [Transifex].
 
-# Introduction
+If you only want to report an error without committing yourself to fixing it,
+post it on the [forum](https://sourceforge.net/p/wikindx/discussion/)
+or the wikindx-developers [mailing list](https://sourceforge.net/p/wikindx/mailman/).
+
+A _Translation Guide_ is available in the software documentation.
+
+
+## Introduction
 
 This document is intended for developers and translators of WIKINDX.
 
@@ -28,7 +27,7 @@ call to PHP [Intl] library) for the display, PHP 7.3 (or higher) and the
 tools of the [GNU Gettext suite] for the maintenance of the
 translations.
 
-## Prepare your environment
+### Prepare your environment
 
 If you are not only translating but also testing the translation in
 WIKINDX, you will need the above programs. We do not explain how to
@@ -48,7 +47,7 @@ your PATH environment variable.
 You might also need a tool like [Poedit] for translation.
 
 
-# Localisation (l10n)
+## Localisation (l10n)
 
 Translation is, in fact, about [localisation] (l10n) in the broad sense
 because other elements can be adapted according to time, place,
@@ -110,7 +109,7 @@ translation.
 You must also use only UTF-8 encoding because WIKINDX uses it being the
 only encoding capable of providing good interoperability.
 
-## Translating
+### Translating
 
 The latest version of the translations is online on [Transifex], a
 translation project management system. Before your first contribution,
@@ -227,14 +226,14 @@ For translation difficulties and help resources you can contact groups
 of translators of your languages as indicated on this page of the
 [Translation Project].
 
-## Using or testing a new translation
+### Using or testing a new translation
 
 You have completed the translation and you want to test the result in
 the software.
 
 In the `core/languages` directory of your WIKINDX installation, create
 a folder named with the __locale code__ for the new language in lowercase
-(each plugin has also its own folders). The _locale code__ have to be taken
+(each plugin has also its own folders). The __locale code__ have to be taken
 from the __getAllLocales()__ function of __core/libs/LOCALES.php__ file.
 For example, create a __sl__ code for Slovenian. Do the same thing
 for each plugin if you have a file for it.
@@ -260,11 +259,11 @@ It does the same thing in `components/plugin/<id>/languages/src` folder
 of each plugin. `<id>` id the id / root folder name of a plugin. Following
 description about the core translation works the same way for plugins.
 
-The first subdirectories (core/languages/<ll_CC>) also contain
+The first subdirectories (`core/languages/<ll_CC>`) also contain
 an LC_MESSAGES subdirectory that contains Gettext catalogs compiled in a
 binary format (__MO__ file).
 
-The second subdirectories (core/languages/src/<ll_CC>) contain
+The second subdirectories (`core/languages/src/<ll_CC>`) contain
 Gettext catalogs in a text source format (__PO__ file).
 
 Example of languages tree:
@@ -304,7 +303,7 @@ Finally, you can choose your language in WIKINDX to see your translation
 into action.  (Sometimes it is also necessary to restart the web server
 for this to take effect.)
 
-## Packaging and distribution
+### Packaging and distribution
 
 If you have translated on transifex, your contribution will be
 distributed with the next version of the core/plugins. If you have
@@ -317,9 +316,9 @@ For non official plugins, you have to send your translations to its
 developper.
 
 
-# Internationalisation (i18n)
+## Internationalisation (i18n)
 
-## Operation
+### Operation
 
 _This is a quick introduction, for details read the code._
 
@@ -414,7 +413,7 @@ browser.
 The language code returned in the HTML source code of the pages IS NOT a
 locale but that which corresponds to it in the [BCP47] encoding.
 
-## Limitations
+### Limitations
 
 It is up to the user to choose a locale and not a language to benefit
 from all the culture-related behaviors even if there is no translation

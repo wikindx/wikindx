@@ -10,7 +10,7 @@ These styles are stored as XML files each within its own directory in the compon
 
 If you develop new styles yourself, you are strongly encouraged to contact the WIKINDX developers at https://sourceforge.net/projects/wikindx/ to make them available to other users.
 
-You can create a new style based on an existing one by copying the existing style. To remove a style from the list available to your users, disable that style in the Admin|Components menu.
+You can create a new style based on an existing one by copying the existing style. To remove a style from the list available to your users, disable that style in the _Admin > Components_ menu.
 
 Please note, to edit a style, you should do it from the same browser window as you use to view a bibliographic list.  This is because, in order to save processing the style definition file each time you list a bibliography, WIKINDX will check to see if the style definition file has been edited and therefore needs reprocessing. This information is stored in a PHP session variable; each browser window has its own separate set of session variables with no cross-interrogation available. If you edit the style definition file from another browser window then you are unlikely to see changes when you refresh your bibliographic list.
 

@@ -260,13 +260,13 @@ class SEARCH
 		switch ($this->order) {
 			case 'creator' :
             	$this->db->orderBy('resourcecreatorCreatorSurname', TRUE, FALSE);
-            	$this->db->orderBy('resourceTitleSort', TRUE, FALSE);
             	$this->db->orderBy($this->stmt->yearOrder(), FALSE);
+            	$this->db->orderBy('resourceTitleSort', TRUE, FALSE);
 				break;
 			case 'title' :
             	$this->db->orderBy('resourceTitleSort', TRUE, FALSE);
-            	$this->db->orderBy('resourcecreatorCreatorSurname', TRUE, FALSE);
             	$this->db->orderBy($this->stmt->yearOrder(), FALSE);
+            	$this->db->orderBy('resourcecreatorCreatorSurname', TRUE, FALSE);
 				break;
 			case 'year' :
             	$this->db->orderBy($this->stmt->yearOrder(), FALSE);

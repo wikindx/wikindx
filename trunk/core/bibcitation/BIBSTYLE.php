@@ -25,8 +25,14 @@ class BIBSTYLE
     public $coinsCreators = [];
     /** string */
     public $output = 'html';
-    /** string */
+    /** boolean */
     public $ooxml = FALSE;
+    /** string */
+    public $creatorOrderString = '';
+    /** string */
+    public $titleOrderString = '';
+    /** string */
+    public $yearOrderString = '';
     /** string */
     public $shortOutput;
     /** boolean */
@@ -99,7 +105,11 @@ class BIBSTYLE
 
             unset($year2);
         }
-
+        if ($this->row['resourceyearYear1'] && is_numeric($this->row['resourceyearYear1'])) {
+			$this->yearOrderString = intval($this->row['resourceyearYear1']);
+		} else {
+			$this->yearOrderString = 0;
+		}
         if ($singleResource)
         {
             // Grab all creator IDs for this resource and normalize to OsBib's expected array keys for creators
@@ -412,7 +422,9 @@ class BIBSTYLE
      */
     private function createTitle()
     {
+    	$this->titleOrderString = '';
         $pString = $this->row['resourceNoSort'] . ' ' . $this->row['resourceTitle'];
+        $this->titleOrderString .= mb_strtolower($this->row['resourceTitle']);
         // If title ends in a sentence-end marker, don't add titleSubtitleSeparator
         if ($this->row['resourceSubtitle'])
         {
@@ -430,6 +442,7 @@ class BIBSTYLE
             {
                 $pString .= $this->bibformat->style['titleSubtitleSeparator'];
             }
+            $this->titleOrderString .= mb_strtolower($this->row['resourceSubtitle']);
         }
         // anything enclosed in {...} is to be left as is
         $this->bibformat->formatTitle($pString, "{", "}"); // title
@@ -656,10 +669,9 @@ class BIBSTYLE
         $nameIds = \UTF8\mb_explode(",", $this->row[$nameType]);
         foreach ($nameIds as $nameId)
         {
-            if (array_key_exists($nameId, $this->creators))
+            if (array_key_exists($nameId, $this->creators)) // Already gathered.
             {
                 $rowSql[$nameId] = $this->creators[$nameId];
-
                 continue;
             }
             $conditions[] = $this->db->formatFields("creatorId") . $this->db->equal . $this->db->tidyInput($nameId);
@@ -668,7 +680,9 @@ class BIBSTYLE
         {
             $this->bibformat->formatNames($rowSql, $nameType);
             $this->coinsCreators = $rowSql;
-
+            foreach ($rowSql as $array) {
+				$this->creatorOrderString .= mb_strtolower($array['surname']);
+            }
             return;
         }
         if ($singleResource)
@@ -692,6 +706,7 @@ class BIBSTYLE
             if (array_key_exists($id, $rowSql))
             {
                 $rowTemp[] = $this->coinsCreators[] = $rowSql[$id];
+				$this->creatorOrderString .= mb_strtolower($rowSql[$id]['surname']);
             }
         }
         $this->bibformat->formatNames($rowTemp, $nameType);

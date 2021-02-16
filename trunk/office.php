@@ -256,7 +256,19 @@ class OFFICE
 	    		$bibEntry = mb_substr($bibEntry, 0, 70);
 	    	}
     		$reference = trim($citeStyle->start('[cite]' . $row['resourceId'] . '[/cite]', FALSE));
-    		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference];
+    		if ($short) {
+	    		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference];
+    		} else {
+    			$tos = html_entity_decode(strip_tags($bibStyle->titleOrderString));
+    			$tos = str_replace(['{', '}'], '', $tos);
+    			if (!$bibStyle->creatorOrderString) {
+        			$bibStyle->creatorOrderString = $tos; // default for ordering in ooxml javascript with no creators
+        		}
+	    		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 
+    				'creatorOrder' =>  html_entity_decode($bibStyle->creatorOrderString), 'titleOrder' => $tos, 
+    				'yearOrder' => $bibStyle->yearOrderString];
+    		}
+    		$bibStyle->creatorOrderString = ''; // Reset concatenation string
     	}
     	return json_encode($jsonArray);
     }

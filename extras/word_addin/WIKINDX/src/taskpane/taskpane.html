@@ -198,8 +198,25 @@
                 </select>
             </section>
         </td></tr></table>
-        <button class="button" id="wikindx-search" alt="Search" title="Search">Search</button>&nbsp;<span id="wikindx-working" style="display:none">Searching . . .</span>
+
+        <table class="wikindx-table" style="width:100%;border:0px"><tr> 
+            <td class="wikindx-td" style="width:50%;border:0px">
+                <button class="button" id="wikindx-search" alt="Finalize" title="Finalize" style="width:80%">Search</button>
+            </td>
+            <td class="wikindx-td" style="border:0px">
+            <section id="wikindx-search-working" style="display:none">
+                <div class="lds-hourglass"></div>
+            </section>
+            <section id="wikindx-search-completed" style="display:none">
+                <img width="25" height="25" src="../../assets/tick.png" alt="Completed" title="Completed" />
+            </section>
+            </td>
+        </tr></table>
+<!--
+        <button class="button" id="wikindx-search" alt="Search" title="Search">Search</button>
+        <span id="wikindx-working" style="color:green;display:none">&nbsp;&nbsp;Searching. Please wait . . .</span>
         <br/><br/>
+-->
     </section>
     <!-- SEARCH PARAMETERS section END -->
 
@@ -239,7 +256,21 @@
             </select>
             </td>
         </tr></table>
-        <button class="button" id="wikindx-finalize-run" alt="Finalize" title="Finalize">Finalize</button>
+        
+        <table class="wikindx-table" style="width:100%;border:0px"><tr> 
+            <td class="wikindx-td" style="width:50%;border:0px">
+                <button class="button" id="wikindx-finalize-run" alt="Finalize" title="Finalize" style="width:80%">Finalize</button>
+            </td>
+            <td class="wikindx-td" style="border:0px">
+    <!--    <span id="wikindx-finalize-working" style="color:green;display:none">&nbsp;&nbsp;Finalizing. Please wait . . .</span>-->
+            <section id="wikindx-finalize-working" style="display:none">
+                <div class="lds-hourglass"></div>
+            </section>
+            <section id="wikindx-finalize-completed" style="display:none">
+                <img width="25" height="25" src="../../assets/tick.png" alt="Completed" title="Completed" />
+            </section>
+            </td>
+        </tr></table>
     </section>
     <!-- DOCUMENT FINALIZE section END -->
 

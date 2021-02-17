@@ -7,6 +7,7 @@
 import "../../assets/wikindx-16.png";
 import "../../assets/wikindx-32.png";
 import "../../assets/wikindx-80.png";
+//import { testPromise } from "./testPromise";
 
 /* global vars */
 var bibEntry = '';
@@ -110,6 +111,7 @@ function displayInit() {
   document.getElementById("wikindx-display-about").src = "../../assets/lightbulb_off.png";
   if (document.getElementById("wikindx-action").value == 'references') {
     hideVisible(["wikindx-messages", "wikindx-display-results", "wikindx-citation-order"]);
+    document.getElementById("wikindx-search-completed").style.display = "none";
     document.getElementById("wikindx-url-management").style.display = "none";
     document.getElementById("wikindx-action-title-citations").style.display = "none";
     document.getElementById("wikindx-action-title-finalize").style.display = "none";
@@ -117,8 +119,11 @@ function displayInit() {
     document.getElementById("wikindx-action-title-references").style.display = "block";
     document.getElementById("wikindx-reference-order").style.display = "block";
     document.getElementById("wikindx-search-parameters").style.display = "block";
+    document.getElementById("wikindx-search-completed").style.display = "none";
+    document.getElementById("wikindx-search-working").style.display = "none"; 
   } else if (document.getElementById("wikindx-action").value == 'citations') {
     hideVisible(["wikindx-messages", "wikindx-display-results", "wikindx-reference-order"]);
+    document.getElementById("wikindx-search-completed").style.display = "none";
     document.getElementById("wikindx-url-management").style.display = "none";
     document.getElementById("wikindx-action-title-references").style.display = "none";
     document.getElementById("wikindx-action-title-finalize").style.display = "none";
@@ -126,8 +131,11 @@ function displayInit() {
     document.getElementById("wikindx-action-title-citations").style.display = "block";
     document.getElementById("wikindx-citation-order").style.display = "block";
     document.getElementById("wikindx-search-parameters").style.display = "block";
+    document.getElementById("wikindx-search-completed").style.display = "none";
+    document.getElementById("wikindx-search-working").style.display = "none"; 
   } else if (document.getElementById("wikindx-action").value == 'finalize') {
     hideVisible(["wikindx-messages", "wikindx-display-results", "wikindx-url-management", "wikindx-search-parameters"]);
+    document.getElementById("wikindx-finalize-completed").style.display = "none";
     document.getElementById("wikindx-action-title-references").style.display = "none";
     document.getElementById("wikindx-action-title-citations").style.display = "none";
     document.getElementById("wikindx-action-title-finalize").style.display = "block";
@@ -235,6 +243,9 @@ function finalizeRun() {
   var foundBibliography = false;
   var item, split, urls, i, j, k, tag, cc, id, metaId, multipleWikindices, key;
   var bibliography = '';
+
+  document.getElementById("wikindx-finalize-working").style.display = "block";
+  document.getElementById("wikindx-finalize-completed").style.display = "none";
 
   Word.run(async function (context) {
     cc = context.document.contentControls.load("items");
@@ -395,6 +406,10 @@ function finalizeRun() {
       cc.insertHtml(bibliography, "End");
       await context.sync();
     }
+  })
+  .then(function() {
+    document.getElementById("wikindx-finalize-working").style.display = "none";
+    document.getElementById("wikindx-finalize-completed").style.display = "block";
   })
   .catch(function (error) {
     console.log("Error: " + error);
@@ -809,7 +824,7 @@ function getUrlSelectBox(jsonArray) {
   document.getElementById("wikindx-url-visit").href = selectedURL;
 }
 
-function styleSelectBox() {
+function styleSelectBox() {console.log('HERE');
   var hrReturn = heartbeat(false);
   if (hrReturn !== true) {
     displayError(hrReturn);
@@ -840,28 +855,25 @@ function styleSelectBox() {
     text += '<option value="' + styleShort + '">' + styleLong + '</option>';
   }
   styleSelectBox.innerHTML = text;
+  reset();
   styles.style.display = "block";
-  document.getElementById("wikindx-messages").style.display = "none";
-  document.getElementById("wikindx-display-results").style.display = "none";
   return true;
 }
 
 function reset() {
   document.getElementById("wikindx-display-results").style.display = "none";
   document.getElementById("wikindx-messages").style.display = "none";
+  document.getElementById("wikindx-search-working").style.display = "none"; 
+  document.getElementById("wikindx-search-completed").style.display = "none"; 
 }
 
-function wikindxSearch() {
-  var hrReturn = heartbeat(false);
+async function wikindxSearch() {
+/*  var hrReturn = heartbeat(false);
   if (hrReturn !== true) {
     displayError(hrReturn);
     return false;
-  } 
-  // Check a style is available
-//  if (document.getElementById("wikindx-search-results").style.display == "none") {
-//    return styleSelectBox();
-//  }
-  var searchText = document.getElementById("wikindx-search-text").value;
+  }
+*/  var searchText = document.getElementById("wikindx-search-text").value;
   searchText = searchText.trim();
   searchText = searchText.replace(/[\u201C\u201D]/g, '"'); // Really!!!!! Ensure smart quotes are standard double quotes!!!!!
   if (!searchText) {
@@ -869,10 +881,30 @@ function wikindxSearch() {
     return false;
   }
   if (document.getElementById("wikindx-action").value == 'references') {
-    return searchReferences(searchText);
+    await search('references', searchText);
   } else if (document.getElementById("wikindx-action").value == 'citations') {
-    return searchCitations(searchText);
+    search('citations', searchText);
   }
+}
+/**
+ * After DAYS of trying, this is the best I can do.... TODO - remove the sleep promise thingamjig and still have it working!
+ * 
+ */
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function search(type, searchText) {
+  document.getElementById("wikindx-search-completed").style.display = "none";
+  document.getElementById("wikindx-search-working").style.display = "block"; 
+  await sleep(13); // seems to be the smallest value possible . . .
+  if (type == 'references') {
+    searchReferences(searchText);
+  } else {
+    searchCitations(searchText);
+  }
+  document.getElementById("wikindx-search-working").style.display = "none";
+  document.getElementById("wikindx-search-completed").style.display = "block";
 }
 
 function searchCitations(searchText) {
@@ -1119,13 +1151,13 @@ function insertReference() {
     var hrReturn = heartbeat(false);
     if (hrReturn !== true) {
       displayError(hrReturn);
-      return await context.sync();
+      return;
     }
     xmlResponse = null;
     getReference();
     if (xmlResponse == 'Bad ID') {
       displayError(errorMissingID);
-      return await context.sync();
+      return;
     }
     bibEntry = xmlResponse.bibEntry;
     inTextReference = xmlResponse.inTextReference;
@@ -1152,13 +1184,13 @@ function insertCitation() {
     var hrReturn = heartbeat(false);
     if (hrReturn !== true) {
       displayError(hrReturn);
-      return await context.sync();
+      return ;
     }
     xmlResponse = null;
     getCitation();
     if (xmlResponse == 'Bad ID') {
       displayError(errorMissingID);
-      return await context.sync();
+      return;
     }
     bibEntry = xmlResponse.bibEntry;
     inTextReference = xmlResponse.inTextReference;

@@ -100,7 +100,7 @@ class OFFICE
     	die;
     }
     /**
-     * Get in-text citations for citations (pnossibly inc.uding page numbers . . .)
+     * Get in-text citations for citations (possibly including page numbers . . .)
      *
      */
     private function getCiteCCs()

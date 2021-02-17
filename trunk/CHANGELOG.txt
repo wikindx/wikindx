@@ -20,6 +20,7 @@ MAINTENANCE:
 1. Blocks install/upgrade if the db engine does not meet the requirements [#311].
 2. Move technical details in debug mode [#301].
 3. Move the documentation on the website [#294].
+4. Update Smarty (v3.1.39).
 
 SECURITY
 

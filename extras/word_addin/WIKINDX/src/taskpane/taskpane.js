@@ -55,7 +55,7 @@ OfficeExtension.config.extendedErrorLogging = true;
   if (info.host === Office.HostType.Word) {
   // Determine if the user's version of Office supports all the Office.js APIs that are used in the tutorial.
     if (!Office.context.requirements.isSetSupported('WordApi', '1.3')) {
-        console.log('Sorry. The tutorial add-in uses Word.js APIs that are not available in your version of Office.');
+        console.log('Sorry. The WIKINDX citation tool uses Word.js APIs that are not available in your version of Office.');
     }
   
 // Prepare for XMLHTTP connections
@@ -91,6 +91,9 @@ OfficeExtension.config.extendedErrorLogging = true;
     document.getElementById("wikindx-url-preferred").onclick = urlPreferredDisplay;
     document.getElementById("wikindx-url-delete").onclick = urlDeleteDisplay;
     document.getElementById("wikindx-display-about").onclick = wikindxDisplayAbout;
+    document.getElementById("wikindx-display-references-help").onclick = wikindxDisplayReferencesHelp;
+    document.getElementById("wikindx-display-citations-help").onclick = wikindxDisplayCitationsHelp;
+    document.getElementById("wikindx-display-finalize-help").onclick = wikindxDisplayFinalizeHelp;
     document.getElementById("wikindx-url-heartbeat").onclick = userCheckHeartbeat;
 
 //
@@ -116,11 +119,15 @@ function displayInit() {
     document.getElementById("wikindx-action-title-citations").style.display = "none";
     document.getElementById("wikindx-action-title-finalize").style.display = "none";
     document.getElementById("wikindx-finalize").style.display = "none";
+    document.getElementById("wikindx-search-completed").style.display = "none";
+    document.getElementById("wikindx-search-working").style.display = "none";
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "../../assets/lightbulb_off.png";
+    document.getElementById("wikindx-display-finalize-help").src = "../../assets/lightbulb_off.png";
     document.getElementById("wikindx-action-title-references").style.display = "block";
     document.getElementById("wikindx-reference-order").style.display = "block";
     document.getElementById("wikindx-search-parameters").style.display = "block";
-    document.getElementById("wikindx-search-completed").style.display = "none";
-    document.getElementById("wikindx-search-working").style.display = "none"; 
   } else if (document.getElementById("wikindx-action").value == 'citations') {
     hideVisible(["wikindx-messages", "wikindx-display-results", "wikindx-reference-order"]);
     document.getElementById("wikindx-search-completed").style.display = "none";
@@ -128,16 +135,24 @@ function displayInit() {
     document.getElementById("wikindx-action-title-references").style.display = "none";
     document.getElementById("wikindx-action-title-finalize").style.display = "none";
     document.getElementById("wikindx-finalize").style.display = "none";
+    document.getElementById("wikindx-search-completed").style.display = "none";
+    document.getElementById("wikindx-search-working").style.display = "none"; 
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-references-help").src = "../../assets/lightbulb_off.png";
+    document.getElementById("wikindx-display-finalize-help").src = "../../assets/lightbulb_off.png";
     document.getElementById("wikindx-action-title-citations").style.display = "block";
     document.getElementById("wikindx-citation-order").style.display = "block";
     document.getElementById("wikindx-search-parameters").style.display = "block";
-    document.getElementById("wikindx-search-completed").style.display = "none";
-    document.getElementById("wikindx-search-working").style.display = "none"; 
   } else if (document.getElementById("wikindx-action").value == 'finalize') {
     hideVisible(["wikindx-messages", "wikindx-display-results", "wikindx-url-management", "wikindx-search-parameters"]);
     document.getElementById("wikindx-finalize-completed").style.display = "none";
     document.getElementById("wikindx-action-title-references").style.display = "none";
     document.getElementById("wikindx-action-title-citations").style.display = "none";
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "../../assets/lightbulb_off.png";
+    document.getElementById("wikindx-display-references-help").src = "../../assets/lightbulb_off.png";
     document.getElementById("wikindx-action-title-finalize").style.display = "block";
     finalizeDisplay();
   }
@@ -465,6 +480,54 @@ function displayCitation() {
   bibEntry = xmlResponse.bibEntry;
   document.getElementById("wikindx-display-cite").innerHTML = '</br>' + citation + '<br/><br/>' + bibEntry;
   return true;
+}
+
+function wikindxDisplayReferencesHelp() {
+// Show Help
+  if (document.getElementById("wikindx-references-help").style.display == "none") {
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "../../assets/lightbulb_off.png";
+    document.getElementById("wikindx-display-finalize-help").src = "../../assets/lightbulb_off.png";
+    document.getElementById("wikindx-references-help").style.display = "block";
+    document.getElementById("wikindx-display-references-help").src = "../../assets/lightbulb.png";
+  } else {
+// Hide Help
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-display-references-help").src = "../../assets/lightbulb_off.png";
+  }
+}
+
+function wikindxDisplayCitationsHelp() {
+// Show Help
+  if (document.getElementById("wikindx-citations-help").style.display == "none") {
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-references-help").src = "../../assets/lightbulb_off.png";
+    document.getElementById("wikindx-display-finalize-help").src = "../../assets/lightbulb_off.png";
+    document.getElementById("wikindx-citations-help").style.display = "block";
+    document.getElementById("wikindx-display-citations-help").src = "../../assets/lightbulb.png";
+  } else {
+// Hide Help
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "../../assets/lightbulb_off.png";
+  }
+}
+
+function wikindxDisplayFinalizeHelp() {
+// Show Help
+  if (document.getElementById("wikindx-finalize-help").style.display == "none") {
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "../../assets/lightbulb_off.png";
+    document.getElementById("wikindx-display-references-help").src = "../../assets/lightbulb_off.png";
+    document.getElementById("wikindx-finalize-help").style.display = "block";
+    document.getElementById("wikindx-display-finalize-help").src = "../../assets/lightbulb.png";
+  } else {
+// Hide Help
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-finalize-help").src = "../../assets/lightbulb_off.png";
+  }
 }
 
 function wikindxDisplayAbout() {
@@ -824,7 +887,7 @@ function getUrlSelectBox(jsonArray) {
   document.getElementById("wikindx-url-visit").href = selectedURL;
 }
 
-function styleSelectBox() {console.log('HERE');
+function styleSelectBox() {
   var hrReturn = heartbeat(false);
   if (hrReturn !== true) {
     displayError(hrReturn);
@@ -868,12 +931,12 @@ function reset() {
 }
 
 async function wikindxSearch() {
-/*  var hrReturn = heartbeat(false);
+  var hrReturn = heartbeat(false);
   if (hrReturn !== true) {
     displayError(hrReturn);
     return false;
   }
-*/  var searchText = document.getElementById("wikindx-search-text").value;
+  var searchText = document.getElementById("wikindx-search-text").value;
   searchText = searchText.trim();
   searchText = searchText.replace(/[\u201C\u201D]/g, '"'); // Really!!!!! Ensure smart quotes are standard double quotes!!!!!
   if (!searchText) {

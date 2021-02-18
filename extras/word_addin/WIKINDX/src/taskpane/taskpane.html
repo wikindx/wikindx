@@ -32,7 +32,7 @@
 
     <table class="wikindx-table"><tr><td class="wikindx-td">
     <a href="https://wikindx.sourceforge.io/" target="_new"><img width="112" height="27" src="../../assets/wikindx-filled.png" alt="WIKINDX" title="WIKINDX" /></a>
-    <input type="image" class="bulb" alt="About WIKINDX" id="wikindx-display-about" width="16" height="16" src="../../assets/lightbulb_off.png" alt="About WIKINDX" title="About WIKINDX"/>
+    <input type="image" class="bulb" id="wikindx-display-about" width="16" height="16" src="../../assets/lightbulb_off.png" alt="About WIKINDX" title="About WIKINDX"/>
     </td>
         <td class="wikindx-td">
         <select class="select" id="wikindx-action" style="display:none">
@@ -133,12 +133,41 @@
     <section id="wikindx-search-parameters" style="display:none">
         <!-- ACTION TITLE section START -->
         <section id="wikindx-action-title-references">
-            <strong>Search and insert references</strong>
+            <strong>Search and insert references</strong>&nbsp;
+            <input type="image" class="bulb" id="wikindx-display-references-help" width="16" height="16" src="../../assets/lightbulb_off.png" alt="Help" title="Help"/>
         </section>
         <section id="wikindx-action-title-citations" style="display:none">
-            <strong>Search and insert quotations or paraphrases</strong>
+            <strong>Search and insert quotations or paraphrases</strong>&nbsp;
+            <input type="image" class="bulb" id="wikindx-display-citations-help" width="16" height="16" src="../../assets/lightbulb_off.png" alt="Help" title="Help"/>
         </section>
         <!-- ACTION TITLE section END -->
+        <section id="wikindx-references-help" style="display:none">
+            <table class="wikindx-table"><tr>
+            <td class="wikindx-td">
+            You can import references from one or more WIKINDICES by searching on text then selecting the desired reference from the resulting 
+            select box.
+            <p>In the search field, you can use combinations of: AND, OR, NOT and "exact phrase" as well as the wildcards '?' and '*'.</p>
+            <p>Wait for the search to finish before clicking on the button again.</p>
+            <p>Once you have chosen the reference you wish to insert, position the cursor in the document where you wish to insert the in-text 
+            reference, then click on 'Insert Reference'. You can optionally remove any HTML formatting before inserting. Inserted references 
+            only show as in-text references – a bibliography will be produced when you finalize the document.</p>
+            </td>
+            </tr></table>
+        </section>
+        <section id="wikindx-citations-help" style="display:none">
+            <table class="wikindx-table"><tr>
+            <td class="wikindx-td">
+            You can import citations (quotations or paraphrases) from one or more WIKINDICES by searching on text then selecting the 
+            desired citation from the resulting select box.
+            <p>In the search field, you can use combinations of: AND, OR, NOT and "exact phrase" as well as the wildcards '?' and '*'.</p>
+            <p>Wait for the search to finish before clicking on the button again.</p>
+            <p>Once you have chosen the citation you wish to insert, position the cursor in the document where you wish to insert the 
+            citation and the following in-text reference, then click on 'Insert Citation'. You can optionally remove any HTML formatting 
+            before inserting. Only the citation and the in-text references are inserted – a bibliography will be produced when you 
+            finalize the document.</p>
+            </td>
+            </tr></table>
+        </section>
         <!-- WIKINDX URL -->
         <table class="wikindx-table"><tr><td class="wikindx-td">
             WIKINDX:<br/>
@@ -163,7 +192,7 @@
             </section>
         </td><td class="wikindx-td">
             <!-- Search text -->
-            <a href="#" target="" class="anchor" title="You can use combinations of: AND, OR, NOT and ''exact phrase'' as well as the wildcards '?' and '*'.">Search text:</a><br/>
+            Search text:<br/>
             <input class="inputText" type="text" id="wikindx-search-text" placeholder="Enter search here"></input>
         </td></tr>
         <tr><td class="wikindx-td">
@@ -208,15 +237,10 @@
                 <div class="lds-hourglass"></div>
             </section>
             <section id="wikindx-search-completed" style="display:none">
-                <img width="25" height="25" src="../../assets/tick.png" alt="Completed" title="Completed" />
+                <img width="20" height="20" src="../../assets/tick.png" alt="Completed" title="Completed" />
             </section>
             </td>
         </tr></table>
-<!--
-        <button class="button" id="wikindx-search" alt="Search" title="Search">Search</button>
-        <span id="wikindx-working" style="color:green;display:none">&nbsp;&nbsp;Searching. Please wait . . .</span>
-        <br/><br/>
--->
     </section>
     <!-- SEARCH PARAMETERS section END -->
 
@@ -224,17 +248,28 @@
     <section id="wikindx-finalize" style="display:none">
         <!-- ACTION TITLE section START -->
         <section id="wikindx-action-title-finalize" style="display:none">
-            <strong>Finalize the document</strong>
+            <strong>Finalize the document</strong>&nbsp;
+            <input type="image" class="bulb" id="wikindx-display-finalize-help" width="16" height="16" src="../../assets/lightbulb_off.png" alt="Help" title="Help"/>
         </section>
         <!-- ACTION TITLE section END -->
-        <table class="wikindx-table">
-        <tr><td class="wikindx-td" colspan="2">
+        <section id="wikindx-finalize-help" style="display:none">
+            <table class="wikindx-table"><tr>
+            <td class="wikindx-td">
             With references and citations now inserted in your document, you can now finalize it. A bibliography will be appended, your in-text 
             references and bibliography will be formatted, and the bibliography ordered, all according to the options you select below. If your 
-            document has references from more than one WIKINDX, then the only available citation styles will be those that are common to both. 
-            You can 'finalize' your document as often as you like – if you finalize once, then decide on a different citation style or 
-            bibliography ordering, just choose the options you want then click on the button again . . .
-            </td></tr>
+            document has references from more than one WIKINDX, then the only available citation styles will be those that are common to both.
+            <p>Any in-text references inserted in the document appear in a 'context control' box that can be moved where you want. You can certainly 
+            edit the text within a box, but when you click on 'Finalize' those edits will be lost and the original in-text reference from the WIKINDX 
+            will be used. Equally, you can edit the contents of the Bibliography content control box (which will be appended to the end of the 
+            document the first time you click on the finalize button), but any edits will be lost if you click on 'Finalize' again.</p>
+            <p>To delete an in-text reference, select and delete the appropriate content control box – simply removing the text will not work and the 
+            reference will be replaced once you click on 'Finalize'.</p>
+            <p>You can 'finalize' your document as often as you like – if you finalize once, then decide on a different citation style or 
+            bibliography ordering, just choose the options you want then click on the button again . . .</p>
+            </td>
+            </tr></table>
+        </section>
+        <table class="wikindx-table">
             <section id="wikindx-finalize-params">
             <tr>
             <td class="wikindx-td">
@@ -267,7 +302,7 @@
                 <div class="lds-hourglass"></div>
             </section>
             <section id="wikindx-finalize-completed" style="display:none">
-                <img width="25" height="25" src="../../assets/tick.png" alt="Completed" title="Completed" />
+                <img width="20" height="20" src="../../assets/tick.png" alt="Completed" title="Completed" />
             </section>
             </td>
         </tr></table>

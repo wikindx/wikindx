@@ -27,7 +27,7 @@
     box-sizing: border-box;
     border-radius: 4px;
   }
-
+/*
   .anchor {
       color: green;
       text-decoration: none;
@@ -37,8 +37,9 @@
   }
 
   .select select {
-    display: none; /*hide original SELECT element: */
+    display: none;
   }
+*/
  .select {
      width: 100%;
      padding: 1px 1px;

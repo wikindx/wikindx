@@ -90,7 +90,7 @@
 
     <!-- URL MANAGEMENT section START -->
     <section id="wikindx-url-management" style="display:none">
-        <strong>Manage URLs: <span id="wikindx-url-management-subtitle"></span></strong>
+        <strong>Manage wikindices: <span id="wikindx-url-management-subtitle"></span></strong>
         <table class="wikindx-table"><tr><td class="wikindx-td">
         <!-- URL ENTRY section START -->
         <section id="wikindx-url-entry">
@@ -137,7 +137,7 @@
             <input type="image" class="bulb" id="wikindx-display-references-help" width="16" height="16" src="../../assets/lightbulb_off.png" alt="Help" title="Help"/>
         </section>
         <section id="wikindx-action-title-citations" style="display:none">
-            <strong>Search and insert quotations or paraphrases</strong>&nbsp;
+            <strong>Search and insert citations</strong>&nbsp;
             <input type="image" class="bulb" id="wikindx-display-citations-help" width="16" height="16" src="../../assets/lightbulb_off.png" alt="Help" title="Help"/>
         </section>
         <!-- ACTION TITLE section END -->
@@ -148,9 +148,13 @@
             select box.
             <p>In the search field, you can use combinations of: AND, OR, NOT and "exact phrase" as well as the wildcards '?' and '*'.</p>
             <p>Wait for the search to finish before clicking on the button again.</p>
-            <p>Once you have chosen the reference you wish to insert, position the cursor in the document where you wish to insert the in-text 
-            reference, then click on 'Insert Reference'. You can optionally remove any HTML formatting before inserting. Inserted references 
-            only show as in-text references – a bibliography will be produced when you finalize the document.</p>
+            <p>Once you have chosen the reference you wish to insert, position the cursor in the document where you wish to place the in-text 
+            reference, then click on 'Insert Reference'. Inserted references only show as in-text references – a bibliography will be produced 
+            when you finalize the document. If you insert in-text references in different citation styles, when you finalize, these 
+            references will be changed to the chosen finalization style.</p>
+            <p>The reference is inserted in a 'content control' box in the document. Clicking on the box will display the bibliographic reference – 
+            the display length is limited by Word (as it is in the select box of references found after searching). While you can edit and even delete 
+            the text within such a box, when you finalize the document, the original reference from the WIKINDX will be restored.</p>
             </td>
             </tr></table>
         </section>
@@ -161,10 +165,16 @@
             desired citation from the resulting select box.
             <p>In the search field, you can use combinations of: AND, OR, NOT and "exact phrase" as well as the wildcards '?' and '*'.</p>
             <p>Wait for the search to finish before clicking on the button again.</p>
-            <p>Once you have chosen the citation you wish to insert, position the cursor in the document where you wish to insert the 
-            citation and the following in-text reference, then click on 'Insert Citation'. You can optionally remove any HTML formatting 
-            before inserting. Only the citation and the in-text references are inserted – a bibliography will be produced when you 
-            finalize the document.</p>
+            <p>Once you have chosen the citation you wish to insert, position the cursor in the document where you wish to place the 
+            citation and its in-text reference, then click on 'Insert Citation'. You can optionally remove any HTML formatting in the citation 
+            itself before inserting. Only the citation and the in-text references are inserted – a bibliography will be produced when you 
+            finalize the document. If you insert citations and their in-text references in different citation styles, when you finalize, these 
+            references will be changed to the chosen finalization style.</p>
+            <p>The citation's in-text reference is inserted in a 'content control' box in the document immediately following the citation 
+            itself. Clicking on the box will 
+            display the bibliographic reference – the display length is limited by Word (as it is in the select box of references found 
+            after searching). While you can edit and even delete the text within such a box, when you finalize the document, the original 
+            in-text reference from the WIKINDX will be restored.</p>
             </td>
             </tr></table>
         </section>
@@ -177,17 +187,17 @@
             <section id="wikindx-manage-urls">
             
             <table class="wikindx-table-button"><tr><td class="wikindx-td-button">
-                <input type="image" class="buttonIcon" id="wikindx-url-add" alt="Add URL . . ." title="Add URL . . ." width="16" height="16" src="../../assets/add.png"/>
+                <input type="image" class="buttonIcon" id="wikindx-url-add" alt="Add WIKINDX . . ." title="Add WIKINDX . . ." width="16" height="16" src="../../assets/add.png"/>
                 </td><td class="wikindx-td-button">
-                <input type="image" class="buttonIcon" id="wikindx-url-edit1" alt="Edit URL . . ." title="Edit URL . . ." width="16" height="16" src="../../assets/edit.png"/>
+                <input type="image" class="buttonIcon" id="wikindx-url-edit1" alt="Edit WIKINDX . . ." title="Edit WIKINDX . . ." width="16" height="16" src="../../assets/edit.png"/>
                 </td><td class="wikindx-td-button">
                 <input type="image" class="buttonIcon" id="wikindx-url-preferred" alt="Preferred WIKINDX . . ." title="Preferred WIKINDX . . ." width="16" height="16" src="../../assets/rosette.png" style="display:none"/>
                 </td><td class="wikindx-td-button">
-                <input type="image" class="buttonIcon" id="wikindx-url-delete" alt="Delete URLs . . ." title="Delete URLs . . ." width="16" height="16" src="../../assets/delete.png"/>
+                <input type="image" class="buttonIcon" id="wikindx-url-delete" alt="Delete WIKINDX . . ." title="Delete WIKINDX . . ." width="16" height="16" src="../../assets/delete.png"/>
                 </td><td class="wikindx-td-button">
-                <input type="image" class="buttonIcon" id="wikindx-url-heartbeat" alt="Check pulse" title="Check pulse" width="16" height="16" src="../../assets/heart.png"/>
+                <input type="image" class="buttonIcon" id="wikindx-url-heartbeat" alt="Check WIKINDX pulse" title="Check WIKINDX pulse" width="16" height="16" src="../../assets/heart.png"/>
                 </td><td class="wikindx-td-button">
-                <a href="" target="_new" id="wikindx-url-visit" ><img width="16" height="16" src="../../assets/plane.png" alt="Open WIKINDX in browser" title="Open in browser" /></a>
+                <a href="" target="_new" id="wikindx-url-visit" ><img width="16" height="16" src="../../assets/plane.png" alt="Open WIKINDX in browser" title="Open WIKINDX in browser" /></a>
             </td></tr></table>
             </section>
         </td><td class="wikindx-td">
@@ -257,15 +267,17 @@
             <td class="wikindx-td">
             With references and citations now inserted in your document, you can now finalize it. A bibliography will be appended, your in-text 
             references and bibliography will be formatted, and the bibliography ordered, all according to the options you select below. If your 
-            document has references from more than one WIKINDX, then the only available citation styles will be those that are common to both.
-            <p>Any in-text references inserted in the document appear in a 'context control' box that can be moved where you want. You can certainly 
+            document has references from more than one WIKINDX, then the only available citation styles will be those that are in common. If you have 
+            inserted in-text references in different citation styles, when you finalize, these references will be changed to the chosen finalization style.
+            <p>Any in-text reference inserted in the document appears in a 'content control' box that can be moved where you want. You can certainly 
             edit the text within a box, but when you click on 'Finalize' those edits will be lost and the original in-text reference from the WIKINDX 
-            will be used. Equally, you can edit the contents of the Bibliography content control box (which will be appended to the end of the 
+            will be pasted in. Equally, you can edit the contents of the Bibliography content control box (which will be appended to the end of the 
             document the first time you click on the finalize button), but any edits will be lost if you click on 'Finalize' again.</p>
-            <p>To delete an in-text reference, select and delete the appropriate content control box – simply removing the text will not work and the 
-            reference will be replaced once you click on 'Finalize'.</p>
+            <p>To delete an in-text reference, select and delete the appropriate content control box – simply removing the text will not work as the 
+            reference will be pasted back in when you click on 'Finalize'. Ensure then, that any final polishing of the document's references 
+            (including the addition of non-WIKINDX references to the bibliography) is only undertaken <em>after</em> you really have finalized the document.</p>
             <p>You can 'finalize' your document as often as you like – if you finalize once, then decide on a different citation style or 
-            bibliography ordering, just choose the options you want then click on the button again . . .</p>
+            bibliography ordering, simply choose the options you want then click on the button again . . .</p>
             </td>
             </tr></table>
         </section>
@@ -337,7 +349,6 @@
         <!-- INSERT REFERENCE section START -->
         <section id="wikindx-insert-refSection">
             <button class="button" id="wikindx-insert-reference" alt="Insert reference" title="Insert reference">Insert&nbsp;Reference</button>&nbsp;
-            <input type="checkbox" id="wikindx-reference-html">&nbsp;Remove all HTML formatting
         </section>
         <!-- INSERT REFERENCE section END -->
 

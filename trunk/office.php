@@ -171,10 +171,6 @@ class OFFICE
     	$row = $this->db->fetchRow($resultSet);
     	$bibEntry = $bibStyle->process($row);
     	$reference = trim($citeStyle->start('[cite]' . $this->vars['id'] . '[/cite]', FALSE));
-    	if (!$this->vars['withHtml']) {
-    		$bibEntry = strip_tags($bibEntry);
-    		$reference = strip_tags($reference);
-    	}
     	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference];
     	$json = json_encode($jsonArray);
     	echo $json;
@@ -222,7 +218,6 @@ class OFFICE
     	$bibEntry = $bibStyle->process($row);
     	$reference = trim($citeStyle->start('[cite]' . $row['resourceId'] . $citeEndTag, FALSE));
     	if (!$this->vars['withHtml']) {
-    		$bibEntry = strip_tags($bibEntry);
     		$citation = strip_tags($citation);
     	}
     	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 'citation' => $citation, 

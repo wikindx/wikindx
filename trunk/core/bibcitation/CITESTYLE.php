@@ -153,7 +153,7 @@ class CITESTYLE
             // For each element of $bibliography, process title, creator names etc.
             if (array_key_exists($id, $bibliography))
             {
-                $this->process($bibliography[$id], $id);
+                $this->process($bibliography[$id], $id);print_r($this->citeFormat->items); print BR;
             }
             // $this->rowSingle is set in $this->process().  'type' is the type of resource (book, journal article etc.).  In WIKINDX, this is part of the row returned by SQL:  you may
             // need to set this manually if this is not the case for your system.  'type' is used in CITEFORMAT::prependAppend() to add any special strings to the citation within
@@ -218,6 +218,29 @@ class CITESTYLE
         }
 
         return $pString . $bib;
+    }
+    /**
+     * Special start function for ooxml processing from e.g. a Word add-in
+     *
+     * @param int $id
+     * @param array $row
+     */
+    public function startOoxml($id, $row)
+    {
+        $this->init();
+        $this->citeFormat->count = 0;
+        $this->citeFormat->processEndnoteBibliography([$row], [$id]);
+        $this->citeFormat->count = 1;
+		$this->citeFormat->item = []; // must be reset each time.
+		$this->process($row, $id);
+		$this->citeFormat->items[$this->citeFormat->count]['id'] = $id;
+		$this->citeFormat->items[$this->citeFormat->count]['type'] = $row['resourceType'];
+		$this->citeFormat->items[$this->citeFormat->count]['text'] = ''; // must be present
+		
+        $pString = $this->citeFormat->inTextStyleOoxml();
+        // bibTeX ordinals such as 5$^{th}$
+        $pString = preg_replace_callback("/(\\d+)\\$\\^\\{(.*)\\}\\$/u", [$this, "ordinals"], $pString);
+        return $pString;
     }
     /**
      * Gather bibliography of citations.

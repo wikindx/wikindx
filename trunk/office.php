@@ -25,7 +25,7 @@ class OFFICE
      * Constructor
      */
     public function __construct()
-    {
+    {GLOBALS::startPageTimer();
 		GLOBALS::deleteUserVarsArray();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
@@ -254,7 +254,7 @@ class OFFICE
     		if ($short && (mb_strlen($bibEntry) > 69)) {// For the add-in select box which has c. 70 chars/option
 	    		$bibEntry = mb_substr($bibEntry, 0, 70);
 	    	}
-    		$reference = trim($citeStyle->start('[cite]' . $row['resourceId'] . '[/cite]', FALSE));
+    		$reference = trim($citeStyle->startOoxml($row['resourceId'], $row));
     		if ($short) {
 	    		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference];
     		} else {
@@ -269,6 +269,9 @@ class OFFICE
     		}
     		$bibStyle->creatorOrderString = ''; // Reset concatenation string
     	}
+GLOBALS::stopPageTimer();
+$scriptExecutionTimeAfterRendering = GLOBALS::getPageElapsedTime();
+//echo $scriptExecutionTimeAfterRendering . 's';die;
     	return json_encode($jsonArray);
     }
     /**

@@ -831,6 +831,71 @@ class CITEFORMAT
         }
 
         return $pString;
+    }    /**
+     * In-text style citations
+     *
+     * @return string Complete string ready for printing to the output medium.
+     */
+    public function inTextStyleOoxml()
+    {
+        $pString = '';
+        foreach ($this->items as $count => $this->item)
+        {
+            if (isset($tempTemplate))
+            {
+                $this->template = $tempTemplate;
+                unset($tempTemplate);
+            }
+            $text = '';
+
+            // Replacement templates for particular resource types.  Need to match this template to other replacement templates by removing fields if necessary
+            $type = $this->item['type'] . "Template";
+            if (isset($this->$type))
+            {
+                $tempTypeTemplate = $this->$type;
+				if ($this->checkTemplateFields($this->$type))
+				{
+					$tempTemplate = $this->template;
+					$this->template = $this->$type;
+				}
+            }
+			// Remove title and shortTitle fields from template if either of those fields is in same sentence as citation
+			$matchArray = [];
+			if (array_key_exists('title', $this->item))
+			{
+				$title = preg_quote(trim($this->item['mainTitle']));
+				$matchArray[] = "(&nbsp;){1}$title|\\s{1}$title";
+			}
+			if (array_key_exists('shortTitle', $this->item))
+			{
+				$shortTitle = preg_quote(trim($this->item['shortTitle']));
+				$matchArray[] = "(&nbsp;){1}$shortTitle|\\s{1}$shortTitle";
+			}
+			if (!empty($matchArray))
+			{
+				$match = preg_quote(implode('|', $matchArray), '/');
+				if (preg_match("/$match/iuU", $text))
+				{
+					if (array_key_exists('title', $this->template))
+					{
+						unset($this->template['title']);
+					}
+					if (array_key_exists('shortTitle', $this->template))
+					{
+						unset($this->template['shortTitle']);
+					}
+				}
+			}
+			$citation = $this->map($this->template);
+			$pString .= $text . ' ' . $this->export->format($this->style['firstChars'] .
+                $citation . $this->export->format($this->style['lastChars']));
+            // Reset temporary replcement type template
+            if (isset($this->$type))
+            {
+                $this->$type = $tempTypeTemplate;
+            }
+        }
+        return $pString;
     }
     /**
      * Use subsequentTemplate only if creator surname, title or shortTitle exists in same sentence as citation

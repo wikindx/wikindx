@@ -15,20 +15,20 @@ import * as Xml from "./wikindxXml";
 import * as LocalStorage from "./wikindxLocalStorage";
 import * as Styles from "./wikindxStyles";
 import * as UrlManagement from "./wikindxUrlManagement";
+import * as Finalize from "./wikindxFinalize";
 //import { testPromise } from "./testPromise";
 
 /* global vars */
 var bibEntry = '';
 var inTextReference = '';
 var citation = '';
-var id = '';
+export var id = '';
 var initialId = false;
 var errorSearch = "ERROR: Missing search input.";
 var errorNoResultsReferences = "No references found matching your search.";
 var errorNoResultsCitations = "No citations found matching your search.";
 // var errorXMLTimeout = "ERROR: The search timed out. Consider reformulating your search."
 var errorMissingID = "ERROR: Resource or citation ID not found in the selected WIKINDX.";
-var errorNoInserts = "You have not inserted any references or citations yet so there is nothing to finalize.";
 var docSelection;
 
 
@@ -57,7 +57,7 @@ OfficeExtension.config.extendedErrorLogging = true;
 // Assign event handlers and other initialization logic.
     document.getElementById("wikindx-search").onclick = wikindxSearch;
     document.getElementById("wikindx-action").onchange = displayInit;
-    document.getElementById("wikindx-finalize-run").onclick = finalizeRun;
+    document.getElementById("wikindx-finalize-run").onclick = Finalize.finalizeRun;
     document.getElementById("wikindx-url").onchange = Styles.styleSelectBox;
     document.getElementById("wikindx-styleSelectBox").onchange = Visible.reset;
     document.getElementById("wikindx-reference-params").onchange = Visible.reset;
@@ -102,243 +102,8 @@ function displayInit() {
     Visible.displayCitationPane();
   } else if (document.getElementById("wikindx-action").value == 'finalize') {
     Visible.displayFinalizePane();
-    finalizeDisplay();
+    Finalize.finalizeDisplay();
   }
-}
-
-function finalizeDisplay() {
-// Before displaying the pane, check we have references and remove any empty wikindx-based custom contexts
-  var found = false;
-  var url;
-
-  Word.run(async function (context) {
-    var cc = context.document.contentControls.load();
-    var split;
-    await context.sync();
-    for (var i = 0; i < cc.items.length; i++) {
-      split = cc.items[i].tag.split('-');
-      if ((split.length > 1) && (split[0] === 'wikindx') && (cc.items[i].text.trim() === '')) {
-        cc.items[i].delete();
-        continue;
-      }
-      // 'looking for wikindx-id-{[JSON string/array]}'
-      if ((split.length < 3) 
-        || (split[0] != 'wikindx')) {
-          continue;
-      }
-      if (split[1] != 'id') {
-        continue;
-      }
-      // If we get here, we have references
-      found = true;
-      url = JSON.parse(atob(split[2]))[0];
-      if (!Styles.wikindices.includes(url)) {
-        Styles.wikindicesPush(url);
-      }
-    }
-    if (!found) { // Nothing stored yet for this document
-      displayError(errorNoInserts);
-      return false;
-    }
-    // If we get here, there is something to finalize . . .
-    if (Styles.finalizeGetStyles()) {
-    document.getElementById("wikindx-finalize").style.display = "block";
-    }
-  })
-  .catch(function (error) {
-    console.log("Error: " + error);
-    if (error instanceof OfficeExtension.Error) {
-        console.log("Debug info: " + JSON.stringify(error.debugInfo));
-        displayError(JSON.stringify(error));
-        return false;
-    }
-  });
-}
-
-function finalizeRun() {
-  var finalizeReferences = [];
-  var allItemObjects = [];
-  var cleanIDs = new Object();
-  var citeIDs = new Object();
-  var foundBibliography = false;
-  var item, split, urls, i, j, k, tag, cc, id, metaId, multipleWikindices, key;
-  var bibliography = '';
-
-  document.getElementById("wikindx-finalize-working").style.display = "block";
-  document.getElementById("wikindx-finalize-completed").style.display = "none";
-
-  Word.run(async function (context) {
-    cc = context.document.contentControls.load("items");
-    await context.sync();
-    for (i = 0; i < cc.items.length; i++) {
-      if (cc.items[i].tag == 'wikindx-bibliography') {
-        foundBibliography = true;
-        continue;
-      }
-      split = cc.items[i].tag.split('-');
-      if ((split.length < 3) // 'looking for wikindx-id-{[JSON string/array]}'
-        || (split[0] != 'wikindx')) {
-          continue;
-      }
-      if (split[1] != 'id') {
-        continue;
-      }
-      item = JSON.parse(atob(split[2]));
-      id = item[1];
-      if (item.length == 3) { // citation
-        metaId = item[2];
-        if (!(item[0] in citeIDs)) {
-          citeIDs[item[0]] = [metaId];
-        } else if (!citeIDs[item[0]].includes(metaId)) {
-            citeIDs[item[0]].push(metaId);
-        }
-      }
-      if (!(item[0] in cleanIDs)) {
-        cleanIDs[item[0]] = [id];
-      } else if (!cleanIDs[item[0]].includes(id)) {
-          cleanIDs[item[0]].push(id);
-      }
-    }
-    // get references from WIKINDX
-    urls = Object.keys(cleanIDs);
-    multipleWikindices = false;
-    if (urls.length > 1) {
-      multipleWikindices = true;
-      var params = document.getElementById("wikindx-finalize-order").value;
-      split = params.split('_');
-      var order = split[0];
-      var ascDesc = split[1];
-      var multipleOrder = [];
-    }
-    for (i = 0; i < urls.length; i++) {
-      Xml.finalizeGetReferences(urls[i], JSON.stringify(cleanIDs[urls[i]]));
-  // Replace in-text references
-      for (j = 0; j < Xml.xmlResponse.length; j++) {
-        tag = 'wikindx-id-' + btoa(JSON.stringify([urls[i], Xml.xmlResponse[j].id]));
-        cc = context.document.contentControls.getByTag(tag);
-        cc.load('items');
-        let items = {
-          cc: cc,
-          text: Xml.xmlResponse[j].inTextReference
-        } 
-        allItemObjects.push(items);console.table(Xml.xmlResponse[j]);
-        if (!finalizeReferences.includes(Xml.xmlResponse[j].bibEntry)) {
-          finalizeReferences.push(Xml.xmlResponse[j].bibEntry);
-          if (multipleWikindices) {
-            key = finalizeReferences.indexOf(Xml.xmlResponse[j].bibEntry);
-            multipleOrder.push({
-              "index": key,
-              "creator": Xml.xmlResponse[j].creatorOrder, 
-              "title": Xml.xmlResponse[j].titleOrder,
-              "year": Xml.xmlResponse[j].yearOrder
-            });
-          }
-        }
-      }
-    }
-    await context.sync();
-    for (j = 0; j < allItemObjects.length; j++) {
-      let itemObject = allItemObjects[j];
-      for (k = 0; k < itemObject.cc.items.length; k++) {
-        let item = itemObject.cc.items[k];
-        let itemText = itemObject.text;
-        item.insertHtml(itemText, 'Replace');
-      }
-    }
-    await context.sync();
-    // get citation references from WIKINDX
-    urls = Object.keys(citeIDs);
-    for (i = 0; i < urls.length; i++) {
-      Xml.finalizeGetCitations(urls[i], JSON.stringify(citeIDs[urls[i]]));
-  // Replace in-text references
-      allItemObjects = []; // Reset . . .
-      for (j = 0; j < Xml.xmlResponse.length; j++) {
-        tag = 'wikindx-id-' + btoa(JSON.stringify([urls[i], Xml.xmlResponse[j].id, Xml.xmlResponse[j].metaId]));
-        cc = context.document.contentControls.getByTag(tag);
-        cc.load('items');
-        let items = {
-          cc: cc,
-          text: Xml.xmlResponse[j].inTextReference
-        } 
-        allItemObjects.push(items);
-      }
-    }
-    await context.sync();
-    for (j = 0; j < allItemObjects.length; j++) {
-      let itemObject = allItemObjects[j];
-      for (k = 0; k < itemObject.cc.items.length; k++) {
-        let item = itemObject.cc.items[k];
-        let itemText = itemObject.text;
-        item.insertHtml(itemText, 'Replace');
-      }
-    }
-    // Bibliography
-    console.table(multipleOrder);
-    if (!multipleWikindices) {
-      for (i = 0; i < finalizeReferences.length; i++) {
-        bibliography += '<p>' + finalizeReferences[i] + '</p>';
-      }
-    }
-    if (!multipleWikindices) {
-      for (i = 0; i < finalizeReferences.length; i++) {
-        bibliography += '<p>' + finalizeReferences[i] + '</p>';
-      }
-    } else {
-      if (order == 'creator') {
-        multipleOrder.sort(function (a, b) {
-          return a.creator.localeCompare(b.creator) || a.year - b.year || a.title.localeCompare(b.title);
-        })
-      }
-      else if (order == 'title') {
-        multipleOrder.sort(function (a, b) {
-          return a.title.localeCompare(b.title) || a.creator.localeCompare(b.creator) || a.year - b.year;
-        })
-      } else { // year
-        multipleOrder.sort(function (a, b) {
-          return a.year - b.year || a.creator.localeCompare(b.creator) || a.title.localeCompare(b.title);
-        })
-      }
-      if (ascDesc == 'DESC') {
-          multipleOrder.reverse();
-      }
-      console.table(finalizeReferences);
-      for (i = 0; i < multipleOrder.length; i++) {
-        key = multipleOrder[i].index;
-        bibliography += '<p>' + finalizeReferences[key] + '</p>';
-      }
-    }
-    if (foundBibliography) {
-      cc = context.document.contentControls.getByTag('wikindx-bibliography');
-      cc.load('items');
-      await context.sync();
-      cc.items[0].insertHtml(bibliography, "Replace");
-    } else {
-      context.document.body.paragraphs.getLast().select("End");
-      var sel = context.document.getSelection();
-      sel.insertBreak("Line", "After");
-      sel.insertBreak("Line", "After");
-      context.document.body.paragraphs.getLast().select("End");
-      sel = context.document.getSelection();
-      cc = sel.insertContentControl();
-      cc.color = 'orange';
-      cc.tag = 'wikindx-bibliography';
-      cc.title = 'Bibliography';
-      cc.insertHtml(bibliography, "End");
-      await context.sync();
-    }
-  })
-  .then(function() {
-    document.getElementById("wikindx-finalize-working").style.display = "none";
-    document.getElementById("wikindx-finalize-completed").style.display = "block";
-  })
-  .catch(function (error) {
-    console.log("Error: " + error);
-    if (error instanceof OfficeExtension.Error) {
-        console.log("Debug info: " + JSON.stringify(error.debugInfo));
-        displayError(JSON.stringify(error));
-        return false;
-    }
-  });
 }
 
 async function wikindxSearch() {

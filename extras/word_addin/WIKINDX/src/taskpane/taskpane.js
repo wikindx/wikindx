@@ -22,7 +22,7 @@ import * as Finalize from "./wikindxFinalize";
 var bibEntry = '';
 var inTextReference = '';
 var citation = '';
-export var id = '';
+var id = '';
 var initialId = false;
 var errorSearch = "ERROR: Missing search input.";
 var errorNoResultsReferences = "No references found matching your search.";
@@ -259,13 +259,13 @@ function insertReference() {
       displayError(errorMissingID);
       return;
     }
-    bibEntry = Xml.xmlResponse.bibEntry;
     inTextReference = Xml.xmlResponse.inTextReference;
     docSelection = context.document.getSelection();
     var cc = docSelection.insertContentControl();
     cc.color = 'orange';
     cc.tag = 'wikindx-id-' + btoa(JSON.stringify([Xml.selectedURL, Xml.xmlResponse.id]));
-    cc.title = HtmlEntities.decode(bibEntry.replace(/<[^>]*>?/gm, '')); // contextControl title doesn't accept HTML
+    cc.title = Xml.xmlResponse.titleCC;
+    console.log(Xml.xmlResponse.titleCC);
     cc.insertHtml(inTextReference, "Replace");
     await context.sync();
   })
@@ -291,7 +291,6 @@ function insertCitation() {
       displayError(errorMissingID);
       return;
     }
-    bibEntry = Xml.xmlResponse.bibEntry;
     inTextReference = Xml.xmlResponse.inTextReference;
     citation = Xml.xmlResponse.citation;
     docSelection = context.document.getSelection();
@@ -300,14 +299,18 @@ function insertCitation() {
     var cc = docSelection.insertContentControl();
     cc.color = 'orange';
     cc.tag = 'wikindx-id-' + btoa(JSON.stringify([Xml.selectedURL, Xml.xmlResponse.id, Xml.xmlResponse.metaId]));
-    cc.title = HtmlEntities.decode(bibEntry.replace(/<[^>]*>?/gm, '')); // contextControl title doesn't accept HTML
+    cc.title = Xml.xmlResponse.titleCC;
     cc.insertHtml(inTextReference, "Replace");
     var ccRange = cc.getRange('Whole');
-    ccRange.insertHtml(citation + '&nbsp;', "Before").font.set({
-      size: docSelection.font.size,
-      color: docSelection.font.color,
-      name: docSelection.font.name
-    });
+    if (document.getElementById("wikindx-citation-html").checked) {
+      ccRange.insertHtml(citation + '&nbsp;', "Before").font.set({
+        size: docSelection.font.size,
+        color: docSelection.font.color,
+        name: docSelection.font.name
+      });
+    } else {
+      ccRange.insertHtml(citation + '&nbsp;', "Before");
+    }
     await context.sync();
     })
   .catch(function (error) {

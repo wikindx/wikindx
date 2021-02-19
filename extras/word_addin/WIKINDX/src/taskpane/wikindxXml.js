@@ -120,31 +120,6 @@ export function getSearchInputCitations(searchText) {
   doXml();
 }
 
-export function doXml() {
-  console.log('doXml(): ' + searchURL);
-  xmlResponse = null;
-  xml.open("GET", searchURL, false);
-  xml.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xml.onerror = function() {displayError(errorXMLHTTP); return false;};
-  xml.send("format=json");
-}
-
-export function prepareXml() {
-  xml = new makeHttpObject();
-  xml.onreadystatechange = function () {
-    if (xml.readyState == 4 && xml.status == 200) {
-      try {
-        xmlResponse = JSON.parse(xml.responseText);
-      }
-      catch (e) {
-        displayError(errorJSON);
-        return false;
-      }
-    }
-  };
-  return true;
-}
-
 export function userCheckHeartbeat() {
   if (heartbeat(document.getElementById("wikindx-url").value) !== true) {
     displayError(errorXMLHTTP);
@@ -168,6 +143,29 @@ export function heartbeat(url) {
   return true;
 }
 
+export function doXml() {
+//  console.log('doXml(): ' + searchURL);
+  xmlResponse = null;
+  xml.open("POST", searchURL, false);
+  xml.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xml.onerror = function() {displayError(errorXMLHTTP); return false;};
+  xml.send();
+}
+export function prepareXml() {
+  xml = new makeHttpObject();
+  xml.onreadystatechange = function () {
+    if (xml.readyState == 4 && xml.status == 200) {
+      try {
+        xmlResponse = JSON.parse(xml.responseText);
+      }
+      catch (e) {
+        displayError(errorJSON);
+        return false;
+      }
+    }
+  };
+  return true;
+}
 function makeHttpObject() {
   try { return new XMLHttpRequest(); }
   catch (error) { }

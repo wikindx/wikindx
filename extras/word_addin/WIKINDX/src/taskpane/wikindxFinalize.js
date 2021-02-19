@@ -89,11 +89,7 @@ export function finalizeRun() {
       ascDesc = split[1];
     }
     for (i = 0; i < urls.length; i++) {
-      console.log(cleanIDs[urls[i]].length);
-      //      if (cleanIDs[urls[i]].length > 4) { // Ensure we are well under GET max legth
-      //      }
       finalizeGetReferencesXML(context, urls[i], JSON.stringify(cleanIDs[urls[i]]));
-
     }
     await context.sync();
     for (j = 0; j < allItemObjects.length; j++) {
@@ -120,12 +116,12 @@ export function finalizeRun() {
       }
     }
     finalizeGetBibliography();
-    if (foundBibliography) {console.log('BIB found');
+    if (foundBibliography) {
       cc = context.document.contentControls.getByTag('wikindx-bibliography');
       cc.load('items');
       await context.sync();
       cc.items[0].insertHtml(bibliography, "Replace");
-    } else {console.log('BIB NOT found');
+    } else {
       context.document.body.paragraphs.getLast().select("End");
       var sel = context.document.getSelection();
       sel.insertBreak("Line", "After");
@@ -156,7 +152,6 @@ export function finalizeRun() {
 function getCleanIDs(cc) {
   var i, item, metaId;
   var split = [];
-console.log(1);
   for (i = 0; i < cc.items.length; i++) {
     if (cc.items[i].tag == 'wikindx-bibliography') {
       foundBibliography = true;
@@ -186,10 +181,8 @@ console.log(1);
       cleanIDs[item[0]].push(id);
     }
   }
-  console.log(2);
 }
 function finalizeGetBibliography() {
-console.log(7);
   var i, key;
   if (!multipleWikindices) {
     for (i = 0; i < finalizeReferences.length; i++) {
@@ -223,10 +216,8 @@ console.log(7);
       bibliography += '<p>' + finalizeReferences[key] + '</p>';
     }
   }
-  console.log(8);
 }
 function finalizeGetCitationsXML(context, url, idString) {
-  console.log(5);
   var tag, cc, j;
   Xml.finalizeGetCitations(url, idString);
   // Replace in-text references
@@ -241,13 +232,11 @@ function finalizeGetCitationsXML(context, url, idString) {
     };
     allItemObjects.push(items);
   }
-  console.log(6);
 }
 
 function finalizeGetReferencesXML(context, url, idString) {
   var key, tag, cc, j;
 
-  console.log(3);
   Xml.finalizeGetReferences(url, idString);
   // Replace in-text references
   for (j = 0; j < Xml.xmlResponse.length; j++) {
@@ -272,6 +261,4 @@ function finalizeGetReferencesXML(context, url, idString) {
       }
     }
   }
-
-console.log(4);
 }

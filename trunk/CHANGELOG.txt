@@ -21,6 +21,7 @@ MAINTENANCE:
 2. Move technical details in debug mode [#301].
 3. Move the documentation on the website [#294].
 4. Update Smarty (v3.1.39).
+5. Update PHPMailer (v6.3.0).
 
 SECURITY
 

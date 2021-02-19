@@ -171,7 +171,9 @@ class OFFICE
     	$row = $this->db->fetchRow($resultSet);
     	$bibEntry = $bibStyle->process($row);
     	$reference = trim($citeStyle->start('[cite]' . $this->vars['id'] . '[/cite]', FALSE));
-    	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference];
+    	$titleString = html_entity_decode(strip_tags($bibStyle->titleString));
+    	$titleString = str_replace(['{', '}'], '', $titleString);
+    	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 'titleCC' => $titleString];
     	$json = json_encode($jsonArray);
     	echo $json;
     	die;
@@ -217,11 +219,13 @@ class OFFICE
     	$row = $this->db->fetchRow($resultSet);
     	$bibEntry = $bibStyle->process($row);
     	$reference = trim($citeStyle->start('[cite]' . $row['resourceId'] . $citeEndTag, FALSE));
+    	$titleString = html_entity_decode(strip_tags($bibStyle->titleString));
+    	$titleString = str_replace(['{', '}'], '', $titleString);
     	if (!$this->vars['withHtml']) {
     		$citation = strip_tags($citation);
     	}
-    	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 'citation' => $citation, 
-    		'metaId' => $this->vars['id']];
+    	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 
+    		'citation' => $citation, 'titleCC' => $titleString, 'metaId' => $this->vars['id']];
     	$json = json_encode($jsonArray);
     	echo $json;
     	die;

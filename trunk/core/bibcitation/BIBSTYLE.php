@@ -32,6 +32,8 @@ class BIBSTYLE
     /** string */
     public $titleOrderString = '';
     /** string */
+    public $titleString = '';
+    /** string */
     public $yearOrderString = '';
     /** string */
     public $shortOutput;
@@ -422,8 +424,9 @@ class BIBSTYLE
      */
     private function createTitle()
     {
-    	$this->titleOrderString = '';
+    	$this->titleOrderString = $this->titleString = '';
         $pString = $this->row['resourceNoSort'] . ' ' . $this->row['resourceTitle'];
+        $this->titleString = $this->row['resourceTitle'];
         $this->titleOrderString .= mb_strtolower($this->row['resourceTitle']);
         // If title ends in a sentence-end marker, don't add titleSubtitleSeparator
         if ($this->row['resourceSubtitle'])
@@ -442,6 +445,7 @@ class BIBSTYLE
             {
                 $pString .= $this->bibformat->style['titleSubtitleSeparator'];
             }
+            $this->titleString .= ': ' . $this->row['resourceSubtitle'];
             $this->titleOrderString .= mb_strtolower($this->row['resourceSubtitle']);
         }
         // anything enclosed in {...} is to be left as is

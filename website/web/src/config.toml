@@ -9,87 +9,67 @@ name = "Wikindx Team"
 email = "sirfragalot@users.sourceforge.net"
 
 [[menu.shortcuts]]
-pre = "icon-price-tags"
-name = "Tags"
-url = "/tags"
-weight = 4
-
-[[menu.shortcuts]]
 pre = "icon-sourceforge"
 name = "SourceForge"
 identifier = "sf"
 url = "https://sourceforge.net/projects/wikindx/"
-weight = 5
-
-[[menu.shortcuts]]
-pre = "icon-box-add"
-name = "Download latest"
-identifier = "dla"
-url = "https://sourceforge.net/projects/wikindx/files/latest/download"
-weight = 6
+weight = 1
 
 [[menu.shortcuts]]
 pre = "icon-download3"
 name = "Download"
 identifier = "dl"
 url = "https://sourceforge.net/projects/wikindx/files/"
-weight = 7
+weight = 2
 
 [[menu.shortcuts]]
 pre = "icon-cubes"
 name = "API Manual"
 identifier = "api"
 url = "https://wikindx.sourceforge.io/api-manual/trunk/"
-weight = 8
+weight = 3
 
 [[menu.shortcuts]]
 pre = "icon-camera"
 name = "Screenshots"
 identifier = "sc"
 url = "/screenshots"
-weight = 9
+weight = 4
 
 [[menu.shortcuts]]
 pre = "icon-camera"
 name = "Test-Drive"
 identifier = "td"
 url = "https://testdrive.wikindx.com/"
-weight = 10
+weight = 5
 
 [[menu.shortcuts]]
 pre = "icon-code-fork"
 name = "SVN repo"
 identifier = "svn"
 url = "https://sourceforge.net/p/wikindx/svn/HEAD/tree/"
-weight = 11
-
-[[menu.shortcuts]]
-pre = "icon-github"
-name = "Github repo"
-identifier = "git"
-url = "https://github.com/wikindx/wikindx"
-weight = 12
+weight = 6
 
 [[menu.shortcuts]]
 pre = "icon-bug"
-name = "Bug tracker"
+name = "Bug tracker / Get support"
 identifier = "bt"
 url = "https://sourceforge.net/p/wikindx/v5bugs/"
-weight = 13
+weight = 7
 
 [[menu.shortcuts]]
-pre = "icon-plus"
-name = "Get support"
-identifier = "su"
-url = "https://sourceforge.net/p/wikindx/discussion/"
-weight = 14
+pre = "icon-coin-dollar"
+name = "Support this project"
+identifier = "mo"
+url = "https://sourceforge.net/donate/index.php?group_id=94435"
+weight = 8
 
 [[menu.shortcuts]]
 pre = "icon-bullhorn"
 name = "Credits & License"
 identifier = "cr"
 url = "/credits"
-weight = 15
+weight = 9
 
 
 # For search functionality

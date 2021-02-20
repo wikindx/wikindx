@@ -19,7 +19,7 @@ export function finalizeDisplay() {
   var url;
 
   Word.run(async function (context) {
-    var cc = context.document.contentControls.load();
+    var cc = context.document.contentControls.load('items');
     var split;
     await context.sync();
     for (var i = 0; i < cc.items.length; i++) {
@@ -100,6 +100,9 @@ export function finalizeRun() {
         item.insertHtml(itemText, 'Replace');
       }
     }
+// This is a real performance killer. In a total process of 10 seconds, this context.sync() takes about 9,5 seconds . . .
+// However, putting the context in the loop above slows it down even more as it is called repeatedly.
+// It is unfortunately necessary to have it here . . .
     await context.sync();
     // get citation references from WIKINDX
     urls = Object.keys(citeIDs);
@@ -133,9 +136,8 @@ export function finalizeRun() {
       cc.tag = 'wikindx-bibliography';
       cc.title = 'Bibliography';
       cc.insertHtml(bibliography, "End");
-      await context.sync();
     }
-  })
+  }) // There is an implicit context.sync() when Word.run() closes . . .
     .then(function () {
       document.getElementById("wikindx-finalize-working").style.display = "none";
       document.getElementById("wikindx-finalize-completed").style.display = "block";

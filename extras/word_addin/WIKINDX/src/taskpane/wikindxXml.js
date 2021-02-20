@@ -144,6 +144,7 @@ export function heartbeat(url) {
 }
 
 export function doXml() {
+// For debugging – log message can be copied into a web browser . . .
 //  console.log('doXml(): ' + searchURL);
   xmlResponse = null;
   xml.open("POST", searchURL, false);

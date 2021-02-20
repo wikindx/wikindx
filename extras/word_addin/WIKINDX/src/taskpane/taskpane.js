@@ -107,11 +107,12 @@ function displayInit() {
 }
 
 async function wikindxSearch() {
-  var hrReturn = Xml.heartbeat(false);
+/*  var hrReturn = Xml.heartbeat(false);
   if (hrReturn !== true) {
     displayError(hrReturn);
     return false;
   }
+*/
   var searchText = document.getElementById("wikindx-search-text").value;
   searchText = searchText.trim();
   searchText = searchText.replace(/[\u201C\u201D]/g, '"'); // Really!!!!! Ensure smart quotes are standard double quotes!!!!!
@@ -122,7 +123,7 @@ async function wikindxSearch() {
   if (document.getElementById("wikindx-action").value == 'references') {
     await search('references', searchText);
   } else if (document.getElementById("wikindx-action").value == 'citations') {
-    search('citations', searchText);
+    await search('citations', searchText);
   }
 }
 /**
@@ -249,12 +250,12 @@ function getCitation() {
 
 function insertReference() {
   Word.run(async function (context) {
-    var hrReturn = Xml.heartbeat(false);
+/*    var hrReturn = Xml.heartbeat(false);
     if (hrReturn !== true) {
       displayError(hrReturn);
       return;
     }
-    getReference();
+*/    getReference();
     if (Xml.xmlResponse == 'Bad ID') {
       displayError(errorMissingID);
       return;
@@ -281,12 +282,12 @@ function insertReference() {
 
 function insertCitation() {
   Word.run(async function (context) {
-    var hrReturn = Xml.heartbeat(false);
+/*    var hrReturn = Xml.heartbeat(false);
     if (hrReturn !== true) {
       displayError(hrReturn);
       return ;
     }
-    getCitation();
+*/    getCitation();
     if (Xml.xmlResponse == 'Bad ID') {
       displayError(errorMissingID);
       return;

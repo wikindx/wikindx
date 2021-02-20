@@ -11,7 +11,8 @@
         var baseurl = "{{.Site.BaseURL}}";
     {{ end }}
     
-    var lunrIndex, pagesIndex;
+    var lunrIndex, pagesIndex, loadingGuard;
+    loadingGuard = false;
     
     function endsWith(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -19,12 +20,22 @@
     
     // Initialize lunrjs using our generated index file
     function initLunr() {
+        // Prevent to load the data twice
+        if (loadingGuard)
+        {
+            return;
+        }
+
         if (!endsWith(baseurl,"/")){
             baseurl = baseurl+'/'
         };
-    
-        // First retrieve the index file
-        $.getJSON(baseurl +"index.json")
+
+        // First retrieve the index file (in synchronous mode!!!)
+        $.ajax({
+          dataType: "json",
+          async: false,
+          url: baseurl +"index.json"
+        })
             .done(function(index) {
                 pagesIndex = index;
                 // Set up lunrjs by declaring the fields we use
@@ -46,16 +57,18 @@
     				
                     // Feed lunr with each file and let lunr actually index them
                     pagesIndex.forEach(function(page) {
-    		    this.add(page);
+    		            this.add(page);
                     }, this);
                 })
+
+                loadingGuard = true;
             })
             .fail(function(jqxhr, textStatus, error) {
                 var err = textStatus + ", " + error;
                 console.error("Error getting Hugo index file:", err);
             });
     }
-    
+
     /**
      * Trigger a search in lunr and transform the result
      *
@@ -63,6 +76,9 @@
      * @return {Array}  results
      */
     function search(queryTerm) {
+        // Load data only on the first search
+        initLunr();
+        
         // Find the item in our index corresponding to the lunr one to have more info
         return lunrIndex.search(queryTerm+"^100"+" "+queryTerm+"*^10"+" "+"*"+queryTerm+"^10"+" "+queryTerm+"~2^1").map(function(result) {
                 return pagesIndex.filter(function(page) {
@@ -71,8 +87,6 @@
             });
     }
     
-    // Let's get started
-    initLunr();
     $( document ).ready(function() {
         var searchList = new autoComplete({
             /* selector for the search box element */

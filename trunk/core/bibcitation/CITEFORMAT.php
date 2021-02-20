@@ -832,7 +832,7 @@ class CITEFORMAT
 
         return $pString;
     }    /**
-     * In-text style citations
+     * In-text style citations – Special start function for ooxml processing from e.g. a Word add-in
      *
      * @return string Complete string ready for printing to the output medium.
      */

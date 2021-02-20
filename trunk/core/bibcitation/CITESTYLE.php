@@ -225,17 +225,19 @@ class CITESTYLE
      * @param int $id
      * @param array $row
      */
-    public function startOoxml($id, $row)
+    public function startOoxml($id, $pageStart, $pageEnd, $row)
     {
         $this->init();
         $this->citeFormat->count = 0;
-        $this->citeFormat->processEndnoteBibliography([$row], [$id]);
         $this->citeFormat->count = 1;
 		$this->citeFormat->item = []; // must be reset each time.
 		$this->process($row, $id);
 		$this->citeFormat->items[$this->citeFormat->count]['id'] = $id;
 		$this->citeFormat->items[$this->citeFormat->count]['type'] = $row['resourceType'];
 		$this->citeFormat->items[$this->citeFormat->count]['text'] = ''; // must be present
+		if ($pageStart || $pageEnd) {
+	        $this->citeFormat->formatPages($pageStart, $pageEnd);
+	    }
         $pString = $this->citeFormat->inTextStyleOoxml();
         // bibTeX ordinals such as 5$^{th}$
         $pString = preg_replace_callback("/(\\d+)\\$\\^\\{(.*)\\}\\$/u", [$this, "ordinals"], $pString);

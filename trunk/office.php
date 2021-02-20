@@ -25,7 +25,13 @@ class OFFICE
      * Constructor
      */
     public function __construct()
-    {GLOBALS::startPageTimer();
+    {
+/* Use for debugging . . .
+GLOBALS::startPageTimer();
+GLOBALS::stopPageTimer();
+$scriptExecutionTimeAfterRendering = GLOBALS::getPageElapsedTime();
+echo $scriptExecutionTimeAfterRendering . 's';die;
+*/
 		GLOBALS::deleteUserVarsArray();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
@@ -111,23 +117,21 @@ class OFFICE
         $citeStyle = FACTORY_CITESTYLE::getInstance(); // HTML
         $citeStyle->ooxml = TRUE;
     	$jsonArray = [];
-    	$citeEndTag = '[/cite]';
     	$this->db->formatConditionsOneField(json_decode($this->vars['ids']), 'resourcemetadataId');
+    	$this->db->leftJoin('resource', 'resourceId', 'resourcemetadataResourceId');
+    	$this->db->leftJoin('resource_text', 'resourcetextId', 'resourcemetadataResourceId');
+    	$this->db->leftJoin('resource_year', 'resourceyearId', 'resourcemetadataResourceId');
     	$resultSet = $this->db->select('resource_metadata', ['resourcemetadataPageStart', 'resourcemetadataPageEnd', 
-    		'resourcemetadataResourceId', 'resourcemetadataId']);
+    		'resourcemetadataResourceId', 'resourcemetadataId', 'resourceType', 'resourceTitle', 'resourceSubtitle', 
+    		'resourceShortTitle', 'resourceNoSort', 'resourcetextUrls', 'resourceyearYear1', 'resourceyearYear2', 'resourceyearYear3']);
     	if (!$this->db->numRows($resultSet)) {
     		echo json_encode("Bad ID");
     		die;
     	}
     	while ($row = $this->db->fetchRow($resultSet)) {
-			if ($row['resourcemetadataPageStart']) {
-				if ($row['resourcemetadataPageEnd']) {
-					$citeEndTag = ':' . $row['resourcemetadataPageStart'] . '-' . $row['resourcemetadataPageEnd'] . $citeEndTag;
-				} else {
-					$citeEndTag = ':' . $row['resourcemetadataPageStart'] . $citeEndTag;
-				}
-			}
-			$reference = trim($citeStyle->start('[cite]' . $row['resourcemetadataResourceId'] . $citeEndTag, FALSE));
+			$pageStart = $row['resourcemetadataPageStart'] ? $row['resourcemetadataPageStart'] : FALSE;
+			$pageEnd = $row['resourcemetadataPageEnd'] ? $row['resourcemetadataPageEnd'] : FALSE;
+			$reference = trim($citeStyle->startOoxml($row['resourcemetadataResourceId'], $pageStart, $pageEnd, $row));
     		$jsonArray[] = ['metaId' => $row['resourcemetadataId'], 'inTextReference' => $reference, 'id' => $row['resourcemetadataResourceId']];
     	}
     	echo json_encode($jsonArray);
@@ -170,7 +174,7 @@ class OFFICE
     	}
     	$row = $this->db->fetchRow($resultSet);
     	$bibEntry = $bibStyle->process($row);
-    	$reference = trim($citeStyle->start('[cite]' . $this->vars['id'] . '[/cite]', FALSE));
+    	$reference = trim($citeStyle->startOoxml($this->vars['id'], FALSE, FALSE, $row));
     	$titleString = html_entity_decode(strip_tags($bibStyle->titleString));
     	$titleString = str_replace(['{', '}'], '', $titleString);
     	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 'titleCC' => $titleString];
@@ -203,14 +207,8 @@ class OFFICE
     	$citation = preg_replace("/<img[^>]+\>/i", "(image removed)", $citation);
     	// Remove all in-text citations – maybe deal with at a later date
     	$citation = preg_replace("/(\\[cite])(.*)(\\[\\/cite\\])/Uus", '(citation removed)', $citation);
-    	$citeEndTag = '[/cite]';
-    	if ($row['resourcemetadataPageStart']) {
-    		if ($row['resourcemetadataPageEnd']) {
-	    		$citeEndTag = ':' . $row['resourcemetadataPageStart'] . '-' . $row['resourcemetadataPageEnd'] . $citeEndTag;
-    		} else {
-	    		$citeEndTag = ':' . $row['resourcemetadataPageStart'] . $citeEndTag;
-	    	}
-    	}
+		$pageStart = $row['resourcemetadataPageStart'] ? $row['resourcemetadataPageStart'] : FALSE;
+		$pageEnd = $row['resourcemetadataPageEnd'] ? $row['resourcemetadataPageEnd'] : FALSE;
     	$resultSet = $res->getResource($row['resourcemetadataResourceId']);
     	if (!$this->db->numRows($resultSet)) {
     		echo json_encode("Bad ID");
@@ -218,7 +216,7 @@ class OFFICE
     	}
     	$row = $this->db->fetchRow($resultSet);
     	$bibEntry = $bibStyle->process($row);
-    	$reference = trim($citeStyle->start('[cite]' . $row['resourceId'] . $citeEndTag, FALSE));
+    	$reference = trim($citeStyle->startOoxml($row['resourceId'], $pageStart, $pageEnd, $row));
     	$titleString = html_entity_decode(strip_tags($bibStyle->titleString));
     	$titleString = str_replace(['{', '}'], '', $titleString);
     	if (!$this->vars['withHtml']) {
@@ -254,7 +252,7 @@ class OFFICE
     		if ($short && (mb_strlen($bibEntry) > 69)) {// For the add-in select box which has c. 70 chars/option
 	    		$bibEntry = mb_substr($bibEntry, 0, 70);
 	    	}
-    		$reference = trim($citeStyle->startOoxml($row['resourceId'], $row));
+    		$reference = trim($citeStyle->startOoxml($row['resourceId'], FALSE, FALSE, $row));
     		if ($short) {
 	    		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference];
     		} else {
@@ -269,9 +267,6 @@ class OFFICE
     		}
     		$bibStyle->creatorOrderString = ''; // Reset concatenation string
     	}
-GLOBALS::stopPageTimer();
-$scriptExecutionTimeAfterRendering = GLOBALS::getPageElapsedTime();
-//echo $scriptExecutionTimeAfterRendering . 's';die;
     	return json_encode($jsonArray);
     }
     /**

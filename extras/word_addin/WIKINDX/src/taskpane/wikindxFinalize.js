@@ -18,6 +18,7 @@ export function finalizeDisplay() {
   var found = false;
   var url;
 
+  Styles.initWikindices();
   Word.run(async function (context) {
     var cc = context.document.contentControls.load('items');
     var split;
@@ -39,9 +40,7 @@ export function finalizeDisplay() {
       // If we get here, we have references
       found = true;
       url = JSON.parse(atob(split[2]))[0];
-      if (!Styles.wikindices.includes(url)) {
-        Styles.wikindicesPush(url);
-      }
+      Styles.wikindicesPush(url);
     }
     if (!found) { // Nothing stored yet for this document
       displayError(errorNoInserts);
@@ -186,11 +185,6 @@ function getCleanIDs(cc) {
 }
 function finalizeGetBibliography() {
   var i, key;
-  if (!multipleWikindices) {
-    for (i = 0; i < finalizeReferences.length; i++) {
-      bibliography += '<p>' + finalizeReferences[i] + '</p>';
-    }
-  }
   if (!multipleWikindices) {
     for (i = 0; i < finalizeReferences.length; i++) {
       bibliography += '<p>' + finalizeReferences[i] + '</p>';

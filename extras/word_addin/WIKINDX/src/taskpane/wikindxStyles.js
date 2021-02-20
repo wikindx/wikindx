@@ -4,7 +4,7 @@ import * as Xml from "./wikindxXml";
 
 export var wikindices = [];
 var errorStyles = "ERROR: Either no styles are defined on the selected WIKINDX or there are no available in-text citation styles.";
-var errorStylesFinalize = "ERROR: There are no common in-text citation styles across the multiple wikindices used in the document.";
+var errorStylesFinalize = "ERROR: No available in-text citation styles found in any of the wikindices used in the document.";
 
 export function styleSelectBox() {
   var hrReturn = Xml.heartbeat(false);
@@ -44,11 +44,13 @@ export function styleSelectBox() {
 export function finalizeGetStyles() {
   var finalArray = [];
   var tempLongNames = new Object();
-  var styleLong, styleShort, i, j, len;
+  var styleLong, styleShort, i, j, len, url;
   var text = '';
+  var stylesFound = false;
   for (i = 0; i < wikindices.length; i++) {
     var tempArray = [];
-    Xml.setSearchURL(wikindices[i] + "office.php" + '?method=getStyles');
+    url = wikindices[i][0];
+    Xml.setSearchURL(url + "office.php" + '?method=getStyles');
     Xml.doXml();
     if (Xml.xmlResponse == null) {
       displayError(Xml.errorXMLHTTP);
@@ -56,9 +58,9 @@ export function finalizeGetStyles() {
     }
     len = Xml.xmlResponse.length;
     if (!len) {
-      displayError(errorStylesFinalize);
-      return false;
+      continue;
     }
+    stylesFound = true;
     // first run through – gather all styles from first WIKINDX
     if (!i) {
       for (j = 0; j < len; j++) {
@@ -73,6 +75,24 @@ export function finalizeGetStyles() {
     }
     finalArray = finalArray.filter(value => tempArray.includes(value));
   }
+  if (!stylesFound) {
+    displayError(errorStylesFinalize);
+    return false;
+  }
+  if (!finalArray.length) {
+  // Get styles from wikindx with most intext references
+    wikindices.sort(function (a, b) { return b[1] - a[1]; });
+    url = wikindices[0][0];
+    Xml.setSearchURL(url + "office.php" + '?method=getStyles');
+    Xml.doXml();
+    finalArray = [];
+    tempLongNames = [];
+    len = Xml.xmlResponse.length;
+    for (j = 0; j < len; j++) {
+      finalArray.push(Xml.xmlResponse[j].styleShort);
+      tempLongNames[Xml.xmlResponse[j].styleShort] = Xml.xmlResponse[j].styleLong;
+    }
+  }
   for (i = 0; i < finalArray.length; i++) {
     styleShort = finalArray[i];
     styleLong = tempLongNames[finalArray[i]];
@@ -82,6 +102,16 @@ export function finalizeGetStyles() {
   return true;
 }
 
+export function initWikindices() {
+  wikindices = [];
+}
 export function wikindicesPush(url) {
-  wikindices.push(url);
+  var len = wikindices.length;
+  for (var i = 0; i < len; i++) {
+    if (url == wikindices[i][0]) {
+        wikindices[i][1]++;
+        return;
+    }
+  }
+  wikindices.push([url, 1]);
 }

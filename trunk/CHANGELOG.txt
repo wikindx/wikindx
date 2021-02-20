@@ -14,6 +14,9 @@ BUG FIXES:
 
 FEATURE ENHANCEMENT:
 1. Added the ability to add an impressum/legal notice at the footer of each page – see Admin|Configure|Miscellaneous.
+2. Added code to interface with a Word add-in if the WIKINDX allows read-only access, can be reached through https:// and has 
+in-text citation styles (such as APA, Harvard, MLA etc.). The add-in allows the importation of references and citations (quotations/paraphrases) direct from one or more wikindices. The word document can be 'finalized' in the add-in and this (re)formats the inserted references to the 
+chosen style and appends a bibliography ordered as required.
 
 
 MAINTENANCE:

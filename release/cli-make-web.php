@@ -136,4 +136,8 @@ function build_web($dirsrc, $dirdst, $APIVersion, $ManualTitle)
     pclose($fp);
     
     unlink($fileconf_dst);
+    
+    include($dirdst . DIRECTORY_SEPARATOR . "css/minified.css.php");
+    include($dirdst . DIRECTORY_SEPARATOR . "js/minified_header.js.php");
+    include($dirdst . DIRECTORY_SEPARATOR . "js/minified_footer.js.php");
 }

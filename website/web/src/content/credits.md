@@ -82,6 +82,7 @@ for their work:
 * [phpDocumentor](https://phpdoc.org/) - Build PHP API documentation
 * [Subversion](https://subversion.apache.org/) - Software versioning
 * [Transifex](https://www.transifex.com/) - Translation platform
+* [IcoMoon](https://icomoon.io/app/) - Iconset builder
 
 
 ## Licences

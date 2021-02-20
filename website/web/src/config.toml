@@ -9,72 +9,84 @@ name = "Wikindx Team"
 email = "sirfragalot@users.sourceforge.net"
 
 [[menu.shortcuts]]
-name = "<i class='fas fa-tags'></i> Tags"
+pre = "icon-price-tags"
+name = "Tags"
 url = "/tags"
 weight = 4
 
-[[menu.shortcuts]] 
-name = "<i class='fas fa-fire-alt' style='color:orange'></i> SourceForge"
+[[menu.shortcuts]]
+pre = "icon-sourceforge"
+name = "SourceForge"
 identifier = "sf"
 url = "https://sourceforge.net/projects/wikindx/"
 weight = 5
 
-[[menu.shortcuts]] 
-name = "<i class='fas fa-file-download' style='color:white'></i> Download latest"
+[[menu.shortcuts]]
+pre = "icon-box-add"
+name = "Download latest"
 identifier = "dla"
 url = "https://sourceforge.net/projects/wikindx/files/latest/download"
 weight = 6
 
-[[menu.shortcuts]] 
-name = "<i class='fas fa-download' style='color:#04B404'></i> Download"
+[[menu.shortcuts]]
+pre = "icon-download3"
+name = "Download"
 identifier = "dl"
 url = "https://sourceforge.net/projects/wikindx/files/"
 weight = 7
 
-[[menu.shortcuts]] 
-name = "<i class='fas fa-cubes' style='color:blue'></i> API Manual"
+[[menu.shortcuts]]
+pre = "icon-cubes"
+name = "API Manual"
 identifier = "api"
 url = "https://wikindx.sourceforge.io/api-manual/trunk/"
 weight = 8
 
 [[menu.shortcuts]]
-name = "<i class='fas fa-camera' style='color:#BDBDBD'></i> Screenshots"
+pre = "icon-camera"
+name = "Screenshots"
 identifier = "sc"
 url = "/screenshots"
 weight = 9
 
 [[menu.shortcuts]]
-name = "<i class='fas fa-camera' style='color:#BDBDBD'></i> Test-Drive"
+pre = "icon-camera"
+name = "Test-Drive"
 identifier = "td"
 url = "https://testdrive.wikindx.com/"
 weight = 10
 
-[[menu.shortcuts]] 
-name = "<i class='fas fa-code-branch' style='color:#81BEF7'></i> SVN repo"
+[[menu.shortcuts]]
+pre = "icon-code-fork"
+name = "SVN repo"
 identifier = "svn"
 url = "https://sourceforge.net/p/wikindx/svn/HEAD/tree/"
 weight = 11
 
-[[menu.shortcuts]] 
-name = "<i class='fab fa-github'></i> Github repo"
+[[menu.shortcuts]]
+pre = "icon-github"
+name = "Github repo"
 identifier = "git"
 url = "https://github.com/wikindx/wikindx"
 weight = 12
 
 [[menu.shortcuts]]
-name = "<i class='fas fa-bug' style='color:#F5D0A9'></i> Bug tracker"
+pre = "icon-bug"
+name = "Bug tracker"
 identifier = "bt"
 url = "https://sourceforge.net/p/wikindx/v5bugs/"
 weight = 13
 
 [[menu.shortcuts]]
-name = "<i class='fas fa-plus' style='color:#FE2E2E'></i> Get support"
+pre = "icon-plus"
+name = "Get support"
 identifier = "su"
 url = "https://sourceforge.net/p/wikindx/discussion/"
 weight = 14
 
 [[menu.shortcuts]]
-name = "<i class='fas fa-bullhorn'></i> Credits & License"
+pre = "icon-bullhorn"
+name = "Credits & License"
 identifier = "cr"
 url = "/credits"
 weight = 15
@@ -103,10 +115,6 @@ showVisitedLinks = false
 # Disable search function. It will hide search bar
 disableSearch = false
 
-# Javascript and CSS cache are automatically busted when new version of site is generated.
-# Set this to true to disable this behavior (some proxies don't handle well this optimization)
-disableAssetsBusting = false
-
 # Set this to true to disable copy-to-clipboard button for inline code.
 disableInlineCopyToClipBoard = false
 
@@ -134,9 +142,6 @@ disableNextPrev = true
 
 # Order sections in menu by "weight" or "title". Default to "weight"
 ordersectionsby = "weight"
-
-# Provide a list of custom css files to load relative from the `static/` folder in the site root.
-#custom_css = ["css/foo.css", "css/bar.css"]
 
 # Change the title separator. Default to "::".
 titleSeparator = "-"

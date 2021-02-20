@@ -1,0 +1,61 @@
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+  color: white;
+}
+
+/* ==========================================
+Single-colored icons can be modified like so:
+.icon-name {
+  font-size: 32px;
+  color: red;
+}
+========================================== */
+
+.icon-chevron-left {
+}
+
+.icon-chevron-right {
+}
+
+.icon-price-tags {
+}
+
+.icon-sourceforge {
+}
+
+.icon-box-add {
+  color: green;
+}
+
+.icon-download3 {
+}
+
+.icon-cubes {
+  color: orange;
+}
+
+.icon-camera {
+}
+
+.icon-code-fork {
+  color: #81BEF7;
+}
+
+.icon-github {
+}
+
+.icon-bug {
+  color: #F5D0A9;
+}
+
+.icon-plus {
+  color:#FE2E2E;
+}
+
+.icon-bullhorn {
+}

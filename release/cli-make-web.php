@@ -140,4 +140,25 @@ function build_web($dirsrc, $dirdst, $APIVersion, $ManualTitle)
     include($dirdst . DIRECTORY_SEPARATOR . "css/minified.css.php");
     include($dirdst . DIRECTORY_SEPARATOR . "js/minified_header.js.php");
     include($dirdst . DIRECTORY_SEPARATOR . "js/minified_footer.js.php");
+    
+    foreach (\FILE\recurse_fileInDirToArray($dirdst) as $f)
+    {
+        $file = $dirdst . DIRECTORY_SEPARATOR . $f;
+        
+        if (\UTILS\matchSuffix($f, ".html") == ".html")
+        {
+            echo $file . "\n";
+            $code = "";
+            $code .= file_get_contents($file);
+            
+            do {
+                $len = mb_strlen($code);
+                $code = str_replace("  ", " ", $code);
+                $code = str_replace(" \n", "\n", $code);
+                $code = str_replace("\n\n", "\n", $code);
+            } while ($len > mb_strlen($code));
+            
+            file_put_contents($file, $code);
+        }
+    }
 }

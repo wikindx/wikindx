@@ -1,5 +1,4 @@
 <nav id="sidebar" class="{{if $.Site.Params.showVisitedLinks }}showVisitedLinks{{end}}">
-
 {{ $currentNode := . }}
 {{ $showvisitedlinks := .Site.Params.showVisitedLinks }}
   <div id="header-wrapper">
@@ -10,10 +9,8 @@
         {{ partial "search.html" . }}
     {{end}}
   </div>
-
     <div class="highlightable">
     <ul class="topics">
-
         {{if eq .Site.Params.ordersectionsby "title"}}  
           {{range .Site.Home.Sections.ByTitle}}
           {{ template "section-tree-nav" dict "sect" . "currentnode" $currentNode "showvisitedlinks" $showvisitedlinks}}
@@ -46,7 +43,7 @@
 
     {{ if or .Site.IsMultiLingual $showvisitedlinks }}
     <section id="prefooter">
-      <hr/>
+      <hr>
       <ul>
       {{ if and .Site.IsMultiLingual (not .Site.Params.DisableLanguageSwitchingButton)}}
         <li>

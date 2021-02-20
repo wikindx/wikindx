@@ -137,10 +137,17 @@ function build_web($dirsrc, $dirdst, $APIVersion, $ManualTitle)
     
     unlink($fileconf_dst);
     
+    echo "\n";
+    echo "CSS Minification\n";
     include($dirdst . DIRECTORY_SEPARATOR . "css/minified.css.php");
+    
+    echo "\n";
+    echo "JS Minification\n";
     include($dirdst . DIRECTORY_SEPARATOR . "js/minified_header.js.php");
     include($dirdst . DIRECTORY_SEPARATOR . "js/minified_footer.js.php");
     
+    echo "\n";
+    echo "HTML Minification\n";
     foreach (\FILE\recurse_fileInDirToArray($dirdst) as $f)
     {
         $file = $dirdst . DIRECTORY_SEPARATOR . $f;
@@ -153,7 +160,9 @@ function build_web($dirsrc, $dirdst, $APIVersion, $ManualTitle)
             
             do {
                 $len = mb_strlen($code);
-                $code = str_replace("  ", " ", $code);
+                //$code = str_replace("\t", " ", $code); // Destroy code in pre
+                //$code = str_replace("  ", " ", $code); // Destroy code in pre
+                $code = str_replace(">\n <", ">\n<", $code);
                 $code = str_replace(" \n", "\n", $code);
                 $code = str_replace("\n\n", "\n", $code);
             } while ($len > mb_strlen($code));

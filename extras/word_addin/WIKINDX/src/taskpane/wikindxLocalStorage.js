@@ -9,7 +9,7 @@ export function checkLocalStorage(displayUrlEntry) {
   if (!localStorage()) {
     document.getElementById("wikindx-search-parameters").style.display = "none";
     document.getElementById("wikindx-close-url-entry").style.display = "none";
-    if (displayUrlEntry) {console.log('HERE');
+    if (displayUrlEntry) {
       document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Add WIKINDX';
       UrlManagement.urlManagementDisplay("wikindx-url-entry");
       document.getElementById("wikindx-about").style.display = "none";

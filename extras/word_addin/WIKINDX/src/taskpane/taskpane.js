@@ -10,7 +10,6 @@ import "../../assets/wikindx-80.png";
 import { displayError } from "./wikindxMessages";
 import * as Visible from "./wikindxVisible";
 import * as Help from "./wikindxDisplayHelp";
-import { HtmlEntities } from "./HtmlEntities";
 import * as Xml from "./wikindxXml";
 import * as LocalStorage from "./wikindxLocalStorage";
 import * as Styles from "./wikindxStyles";

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
   <Id>e2fdfd56-a507-4d9c-b96e-00bd3cc4a579</Id>
-  <Version>1.0.0.0</Version>
+  <Version>0.9</Version>
   <ProviderName>Wikindx</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="WIKINDX-Dev"/>
-  <Description DefaultValue="WIKINDX Word Add-in"/>
-  <IconUrl DefaultValue="assets/wikindx-32.png"/>
-  <HighResolutionIconUrl DefaultValue="assets/wikindx-64.png"/>
+  <Description DefaultValue="WIKINDX Word Add-in. Beta 0.9"/>
+  <IconUrl DefaultValue="https://localhost:3000/assets/wikindx-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/wikindx-64.png"/>
   <SupportUrl DefaultValue="https://sourceforge.net/p/wikindx/v5bugs/"/>
   <AppDomains>
   </AppDomains>
@@ -61,9 +61,9 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="assets/wikindx-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="assets/wikindx-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="assets/wikindx-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/wikindx-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/wikindx-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/wikindx-80.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://wikindx.sourceforge.io"/>

@@ -13,16 +13,17 @@ WIKINDX runs on a web server giving you and your research group ownership and gl
 WIKINDX is widely used around the world including at NASA and a range of universities and research institutions. Some WIKINDX users:
 
 
+* [Game Audio](https://gameaudio.wikindx.com)
 * [Institut National de Recherche Pédagogique](http://wikindx.inrp.fr/biblio_vst/index.php), Bibliographies du service Veille et Analyses
-* [University Theses in Russian](http://www.bibliographia.net/wikindx3/index.php), Soviet and East European Studies 1907-2011
-* [University of Bonn](http://www.comicforschung.uni-bonn.de/index.php), Online-Bibliographie zur Comicforschung
+* [Laboratorio Bio Acyl Corp](https://site.bioacyl.com/wikindx/)
+* [Malvern Radar and Technology History Society](https://www.reports.mraths.org.uk)
 * [The Fraunhofer Institute](https://www.ttcn.de//bibliography/), TTCN-3
-
+* [University of Bonn](http://www.comicforschung.uni-bonn.de/index.php), Online-Bibliographie zur Comicforschung
 
 
 ## Features
 
-Listed below are the core features available by default. Functionality can be extended with plug-ins and other add-ins. See the <a href="index.php?page=extensions">Extensions page</a>.
+Listed below are the core features available by default. Functionality can be extended with plug-ins and other add-ins.
 
 ### User
 
@@ -61,6 +62,7 @@ Listed below are the core features available by default. Functionality can be ex
 
 ### Administrator
 
+* Builtin and LDAP auth.
 * Design your own CSS templates for web browser display and integrate WIKINDX into your existing web site.
 * Enable/disable multi-user mode, add users or allow user self-registration.
 * Several levels of write and read only access.

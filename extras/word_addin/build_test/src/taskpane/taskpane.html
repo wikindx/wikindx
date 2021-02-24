@@ -1,0 +1,404 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
+<!-- Icons from https://www.fatcow.com/free-icons -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WIKINDX</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <!-- For more information on Office UI Fabric, visit https://developer.microsoft.com/fabric. -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css"/>
+
+    <!-- Template styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="ms-font-m ms-welcome ms-Fabric">
+<!--    <header class="ms-welcome__header ms-bgColor-neutralLighter">
+        <br/>
+    </header>
+-->
+    <section id="sideload-msg" class="ms-welcome__main" style="display:none">
+        <h2 class="ms-font-xl"></h2>Please sideload your add-in to see app body</h2>
+    </section>
+
+    <table class="wikindx-table"><tr><td class="wikindx-td">
+    <a href="https://wikindx.sourceforge.io/" target="_new"><img width="112" height="27" src="../../assets/wikindx-filled.png" alt="WIKINDX" title="WIKINDX" /></a>
+    <input type="image" class="bulb" id="wikindx-display-about" width="16" height="16" src="../../assets/lightbulb_off.png" alt="About WIKINDX" title="About WIKINDX"/>
+    </td>
+        <td class="wikindx-td">
+        <select class="select" id="wikindx-action" style="display:none">
+            <option value="references" selected>Search references</option>
+            <option value="citations">Search citations</option>
+            <option value="finalize">Finalize document</option>
+        </select>
+        </td>
+    </tr></table>
+    <br/>
+
+ <!--   <main id="app-body" class="ms-welcome__main" style="display: none;"> -->
+
+    <!-- ABOUT section START -->
+    <section id="wikindx-about" style="display:none">
+      <table class="wikindx-table"><tr><td class="wikindx-td">
+        <strong>Welcome to the WIKINDX citation tool!</strong><br/>
+        v. beta 0.9 (&copy;Mark Grimshaw-Aagaard 2021)
+        <p>If you have a WIKINDX, you can import formatted in-text citations and references into your Word document. The WIKINDX 
+        must be accessed through SSL (i.e. the URL starts with 'https://') and the WIKINDX admin must have enabled read-only 
+        mode. If your WIKINDX is normally accessed through a browser as, for example, 'www.mywikindx.com', then the URL here should be 
+        'https://www.mywikindx.com'.</p>
+        <p>In this initial version of the tool, only citation format styles available on the WIKINDX that are neither endnote nor footnote type 
+        can be used (i.e. styles such as APA, Harvard, MLA) – this might change in the future.</p>
+        <p>In the search field, you can use combinations of: <em>AND</em>, <em>OR</em>, <em>NOT</em>, and <em>''exact phrase''</em> as 
+        well as the wildcards <em>?</em> and <em>*</em></p>
+        <p>A search on references is conducted on the following fields:
+        <ul class="wikindx-list">
+            <li>Author names</li>
+            <li>Title</li>
+            <li>Abstract and notes</li>
+            <li>Keywords</li>
+            <li>Quotations and paraphrases</li>
+            <li>Custom fields</li>
+        </ul>
+        </p>
+        <p>A search on citations is conducted on the following fields:
+            <ul class="wikindx-list">
+                <li>Keywords</li>
+                <li>Quotations and paraphrases</li>
+            </ul>
+            </p>
+        <p>
+        Once you have inserted your references and citations, you can then finalize your document. This produces in-text citations and 
+        the reference list formatted to the chosen citation format style. If you have inserted citations and references from more than 
+        one WIKINDX, then the list of available citation format styles will comprise those that are common to the wikindices. If no 
+        styles in common are found, then the style selection box will comprise those from the WIKINDX with the most references in the document, and 
+        references from another WIKINDX will use the default citation style from that WIKINDX. 
+        </p>
+        <section id="wikindx-about-begin">
+        <p>To get started, close this help by clicking on the lightbulb icon above and enter the URL and name of the WIKINDX you 
+            wish to search.</p>
+        </section>
+      </td></tr></table>
+    </section>
+    <!-- ABOUT section END -->
+
+    <!-- URL MANAGEMENT section START -->
+    <section id="wikindx-url-management" style="display:none">
+        <strong>Manage wikindices: <span id="wikindx-url-management-subtitle"></span></strong>
+        <table class="wikindx-table"><tr><td class="wikindx-td">
+        <!-- URL ENTRY section START -->
+        <section id="wikindx-url-entry">
+            WIKINDX URL (https://...):
+            <input class="inputText" type="text" id="wikindx-new-url" placeholder="Enter new WIKINDX URL here (https://...)"></input>
+            <br/><br/>
+            WIKINDX name:
+            <input class="inputText" type="text" id="wikindx-new-url-name" placeholder="Enter new WIKINDX name here"></input>
+            <button class="button" id="wikindx-url-store" alt="Store URL" title="Store URL">Store URL</button>
+            <button class="button" id="wikindx-close-url-entry" alt="Close" title="Close">Close</button>
+        </section>
+        <!-- URL ENTRY section END -->
+
+        <!-- URL EDIT section START -->
+        <section id="wikindx-url-edit">
+            WIKINDX URL (https://...):
+            <input class="inputText" type="text" id="wikindx-edit-url" placeholder="Enter new WIKINDX URL here (https://...)"></input>
+            <br/><br/>
+            WIKINDX name:
+            <input class="inputText" type="text" id="wikindx-edit-name" placeholder="Enter new WIKINDX name here"></input>
+            <button class="button" id="wikindx-url-edit2" alt="Edit URL" title="Edit URL">Edit URL</button>
+            <button class="button" id="wikindx-close-url-edit" alt="Close" title="Close">Close</button>
+        </section>
+        <!-- URL EDIT section END -->
+
+        <!-- PREFERRED URL section START -->
+        <section id="wikindx-urls-preferred">
+        </section>
+        <!-- PREFERRED URL section END -->
+
+        <!-- URL DELETE section START -->
+        <section id="wikindx-urls-remove">
+        </section>
+        <!-- URL DELETE section END -->
+    </td></tr></table>
+    </section>
+    <!-- URL MANAGEMENT section END -->
+
+    <!-- SEARCH PARAMETERS section START -->
+    <section id="wikindx-search-parameters" style="display:none">
+        <!-- ACTION TITLE section START -->
+        <section id="wikindx-action-title-references">
+            <strong>Search and insert references</strong>&nbsp;
+            <input type="image" class="bulb" id="wikindx-display-references-help" width="16" height="16" src="../../assets/lightbulb_off.png" alt="Help" title="Help"/>
+        </section>
+        <section id="wikindx-action-title-citations" style="display:none">
+            <strong>Search and insert citations</strong>&nbsp;
+            <input type="image" class="bulb" id="wikindx-display-citations-help" width="16" height="16" src="../../assets/lightbulb_off.png" alt="Help" title="Help"/>
+        </section>
+        <!-- ACTION TITLE section END -->
+        <section id="wikindx-references-help" style="display:none">
+            <table class="wikindx-table"><tr>
+            <td class="wikindx-td">
+            You can import references from one or more WIKINDICES by searching on text then selecting the desired reference from the resulting 
+            select box.
+            <p>In the search field, you can use combinations of: AND, OR, NOT and "exact phrase" as well as the wildcards '?' and '*'.</p>
+            <p>A search on references is conducted on the following fields:
+                <ul class="wikindx-list">
+                    <li>Author names</li>
+                    <li>Title</li>
+                    <li>Abstract and notes</li>
+                    <li>Keywords</li>
+                    <li>Quotations and paraphrases</li>
+                    <li>Custom fields</li>
+                </ul>
+            </p>
+            <p>Wait for the search to finish before clicking on the button again.</p>
+            <p>Once you have chosen the reference you wish to insert, position the cursor in the document where you wish to place the in-text 
+            reference, then click on 'Insert Reference'. Inserted references only show as in-text references – a bibliography will be produced 
+            when you finalize the document. If you insert in-text references in different citation styles, when you finalize, these 
+            references will be changed to the chosen finalization style.</p>
+            <p>The reference is inserted in a 'content control' box in the document. Clicking on the box will display the title of the reference – 
+            the display length is limited by Word (as it is in the select box of references found after searching). While you can edit and even delete 
+            the text within such a box, when you finalize the document, the original reference from the WIKINDX will be restored.</p>
+            </td>
+            </tr></table>
+        </section>
+        <section id="wikindx-citations-help" style="display:none">
+            <table class="wikindx-table"><tr>
+            <td class="wikindx-td">
+            You can import citations (quotations or paraphrases) from one or more WIKINDICES by searching on text then selecting the 
+            desired citation from the resulting select box.
+            <p>In the search field, you can use combinations of: AND, OR, NOT and "exact phrase" as well as the wildcards '?' and '*'.</p>
+            <p>A search on citations is conducted on the following fields:
+                <ul class="wikindx-list">
+                    <li>Keywords</li>
+                    <li>Quotations and paraphrases</li>
+                </ul>
+                </p>
+            <p>
+            <p>Wait for the search to finish before clicking on the button again.</p>
+            <p>Once you have chosen the citation you wish to insert, position the cursor in the document where you wish to place the 
+            citation and its in-text reference, then click on 'Insert Citation'. You can optionally remove any HTML formatting in the citation 
+            itself before inserting. Only the citation and the in-text references are inserted – a bibliography will be produced when you 
+            finalize the document. If you insert citations and their in-text references in different citation styles, when you finalize, these 
+            references will be changed to the chosen finalization style.</p>
+            <p>The citation's in-text reference is inserted in a 'content control' box in the document immediately following the citation 
+            itself. Clicking on the box will 
+            display the title of the reference – the display length is limited by Word (as it is in the select box of references found 
+            after searching). While you can edit and even delete the text within such a box, when you finalize the document, the original 
+            in-text reference from the WIKINDX will be restored.</p>
+            </td>
+            </tr></table>
+        </section>
+        <!-- WIKINDX URL -->
+        <table class="wikindx-table"><tr><td class="wikindx-td">
+            WIKINDX:<br/>
+            <select class="select" id="wikindx-url">
+            </select>
+            <br/>
+            <section id="wikindx-manage-urls">
+            
+            <table class="wikindx-table-button"><tr><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-add" alt="Add WIKINDX . . ." title="Add WIKINDX . . ." width="16" height="16" src="../../assets/add.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-edit1" alt="Edit WIKINDX . . ." title="Edit WIKINDX . . ." width="16" height="16" src="../../assets/edit.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-preferred" alt="Preferred WIKINDX . . ." title="Preferred WIKINDX . . ." width="16" height="16" src="../../assets/rosette.png" style="display:none"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-delete" alt="Delete WIKINDX . . ." title="Delete WIKINDX . . ." width="16" height="16" src="../../assets/bin.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-heartbeat" alt="Check WIKINDX pulse" title="Check WIKINDX pulse" width="16" height="16" src="../../assets/heart.png"/>
+                </td><td class="wikindx-td-button">
+                <a href="" target="_new" id="wikindx-url-visit" ><img width="16" height="16" alt="Open WIKINDX in browser" title="Open WIKINDX in browser" src="../../assets/plane.png" /></a>
+            </td></tr></table>
+            </section>
+        </td><td class="wikindx-td">
+            <!-- Search text -->
+            Search text:<br/>
+            <input class="inputText" type="text" id="wikindx-search-text" placeholder="Enter search here"></input>
+        </td></tr>
+        <tr><td class="wikindx-td">
+            Search order:<br/>
+            <section id="wikindx-reference-order">
+            <select class="select" id="wikindx-reference-params">
+                <option value="creator_ASC" selected>Creator ascending</option></option>
+                <option value="creator_DESC">Creator descending</option>
+                <option value="year_DESC">Year descending</option>
+                <option value="year_ASC">Year ascending</option>
+                <option value="title_ASC">Title ascending</option>
+                <option value="title_DESC">Title descending</option>
+                <option value="timestamp_DESC">Timestamp descending</option>
+                <option value="timestamp_ASC">Timestamp ascending</option>
+            </select>
+            </section>
+            <section id="wikindx-citation-order" style="display:none">
+            <select class="select" id="wikindx-citation-params">
+                <option value="creator_ASC" selected>Creator ascending</option></option>
+                <option value="creator_DESC">Creator descending</option>
+                <option value="year_DESC">Year descending</option>
+                <option value="year_ASC">Year ascending</option>
+                <option value="title_ASC">Title ascending</option>
+                <option value="title_DESC">Title descending</option>
+            </select>
+            </section>
+        </td><td class="wikindx-td">
+            <section id="wikindx-styles" style="display:none">
+                Style:<br/>
+                <select class="selectStyle" id="wikindx-styleSelectBox">
+
+                </select>
+            </section>
+        </td></tr></table>
+
+        <table class="wikindx-table" style="width:100%;border:0px"><tr> 
+            <td class="wikindx-td" style="width:50%;border:0px">
+                <button class="button" id="wikindx-search" alt="Finalize" title="Finalize" style="width:80%">Search</button>
+            </td>
+            <td class="wikindx-td" style="border:0px">
+            <section id="wikindx-search-working" style="display:none">
+                <div class="lds-hourglass"></div>
+            </section>
+            <section id="wikindx-search-completed" style="display:none">
+                <img width="20" height="20" src="../../assets/tick.png" alt="Completed" title="Completed" />
+            </section>
+            </td>
+        </tr></table>
+    </section>
+    <!-- SEARCH PARAMETERS section END -->
+
+    <!-- DOCUMENT FINALIZE section START -->
+    <section id="wikindx-finalize" style="display:none">
+        <!-- ACTION TITLE section START -->
+        <section id="wikindx-action-title-finalize" style="display:none">
+            <strong>Finalize the document</strong>&nbsp;
+            <input type="image" class="bulb" id="wikindx-display-finalize-help" width="16" height="16" src="../../assets/lightbulb_off.png" alt="Help" title="Help"/>
+        </section>
+        <!-- ACTION TITLE section END -->
+        <section id="wikindx-finalize-help" style="display:none">
+            <table class="wikindx-table"><tr>
+            <td class="wikindx-td">
+            With references and citations now inserted in your document, you can now finalize it. A bibliography will be appended, your in-text 
+            references and bibliography will be formatted, and the bibliography ordered, all according to the options you select below. If your 
+            document has references from more than one WIKINDX, then the only available citation styles will be those that are in common. If no 
+            styles in common are found, then the style selection box will comprise those from the WIKINDX with the most references in the document, and 
+            references from another WIKINDX will use the default citation style from that WIKINDX. If you have 
+            inserted in-text references in different citation styles, when you finalize, these references will be changed to the chosen finalization style.
+            <p>Any in-text reference inserted in the document appears in a 'content control' box that can be moved where you want. You can certainly 
+            edit the text within a box, but when you click on 'Finalize' those edits will be lost and the original in-text reference from the WIKINDX 
+            will be pasted in. Equally, you can edit the contents of the Bibliography content control box (which will be appended to the end of the 
+            document the first time you click on the finalize button), but any edits will be lost if you click on 'Finalize' again.</p>
+            <p>To delete an in-text reference, select and delete the appropriate content control box – simply removing the text will not work as the 
+            reference will be pasted back in when you click on 'Finalize'. Ensure then, that any final polishing of the document's references 
+            (including the addition of non-WIKINDX references to the bibliography) is only undertaken <em>after</em> you really have finalized the document.</p>
+            <p>The more in-text references you have, the longer the finalization process takes. As an example, a document with about 80 in-text 
+            references, will take about 10 seconds to finalize. Of this, about 1 second is used for communication and processing of references and 
+            bibliography between and on the add-in and the wikindices being used. The rest is down to Word and is not something we have control over.</p>
+            <p>You can 'finalize' your document as often as you like – if you finalize once, then decide on a different citation style or 
+            bibliography ordering, simply choose the options you want then click on the button again . . .</p>
+            </td>
+            </tr></table>
+        </section>
+        <table class="wikindx-table">
+            <section id="wikindx-finalize-params">
+            <tr>
+            <td class="wikindx-td">
+                Order:<br/>
+            <select class="select" id="wikindx-finalize-order">
+                <option value="creator_ASC" selected>Creator ascending</option></option>
+                <option value="creator_DESC">Creator descending</option>
+                <option value="year_DESC">Year descending</option>
+                <option value="year_ASC">Year ascending</option>
+                <option value="title_ASC">Title ascending</option>
+                <option value="title_DESC">Title descending</option>
+            </select>
+            </td>
+            </section>
+            <td class="wikindx-td">
+            Style:<br/>
+            <select class="selectStyle" id="wikindx-finalize-styleSelectBox">
+
+            </select>
+            </td>
+        </tr></table>
+        
+        <table class="wikindx-table" style="width:100%;border:0px"><tr> 
+            <td class="wikindx-td" style="width:50%;border:0px">
+                <button class="button" id="wikindx-finalize-run" alt="Finalize" title="Finalize" style="width:80%">Finalize</button>
+            </td>
+            <td class="wikindx-td" style="border:0px">
+    <!--    <span id="wikindx-finalize-working" style="color:green;display:none">&nbsp;&nbsp;Finalizing. Please wait . . .</span>-->
+            <section id="wikindx-finalize-working" style="display:none">
+                <div class="lds-hourglass"></div>
+            </section>
+            <section id="wikindx-finalize-completed" style="display:none">
+                <img width="20" height="20" src="../../assets/tick.png" alt="Completed" title="Completed" />
+            </section>
+            </td>
+        </tr></table>
+    </section>
+    <!-- DOCUMENT FINALIZE section END -->
+
+    <!-- DISPLAY RESULTS section START -->
+    <section id="wikindx-display-results" style="display:none">
+    <table class="wikindx-table"><tr><td class="wikindx-td">
+        <!-- SEARCH RESULTS section START -->
+        <section id="wikindx-search-results">
+            <select class="selectResults" id="wikindx-refSelectBox">
+            </select>
+        </section>
+        <!-- SEARCH RESULTS section END -->
+
+        <!-- DISPLAY REFERENCE section START -->
+        <section id="wikindx-display-ref">
+
+        </section>
+        <!-- DISPLAY REFERENCE section END -->
+
+
+        <select class="selectResults" id="wikindx-citeSelectBox" style="display:none">
+        </select>
+        <!-- DISPLAY CITATION section START -->
+        <section id="wikindx-display-cite">
+
+        </section>
+        <!-- DISPLAY CITATION section END -->
+
+        <!-- INSERT REFERENCE section START -->
+        <section id="wikindx-insert-refSection">
+            <button class="button" id="wikindx-insert-reference" alt="Insert reference" title="Insert reference">Insert&nbsp;Reference</button>&nbsp;
+        </section>
+        <!-- INSERT REFERENCE section END -->
+
+        <!-- INSERT CITATION section START -->
+        <section id="wikindx-insert-citeSection">
+            <button class="button" id="wikindx-insert-citation" alt="Insert citation" title="Insert citation">Insert&nbsp;Citation</button>&nbsp;
+            <input type="checkbox" id="wikindx-citation-html">&nbsp;Remove all HTML formatting
+        </section>
+            <!-- INSERT CITATION section END -->
+    </td></tr></table>
+    </section>
+    <!-- DISPLAY RESULTS section END -->
+
+    <!-- MESSAGES section START -->
+    <br/><br/>
+    <section id="wikindx-messages" style="display:none">
+    <table class="wikindx-table"><tr><td class="wikindx-td">
+        <section class="wikindx-error" id="wikindx-error">
+        </section>
+        <section class="wikindx-success" id="wikindx-success">
+        </section>
+    </td></tr></table>
+    </section>
+    <!-- MESSAGES section END -->
+
+</body>
+
+</html>

@@ -11,6 +11,7 @@ BUG FIXES:
 4. In some cases, QUICKSEARCH searched on an empty field in FULLTEXT mode (abstracts, notes, etc.) – fixed.
 5. Recreate the usersUsernameUnique index with a BTREE type (bugfix #318).
 6. Index_Type option is unreliable for InnoDB due to functionality of [bug #22632](https://bugs.mysql.com/bug.php?id=22632).
+7. Bug 319 fixed: Edit collection did not update the collection's resources.
 
 FEATURE ENHANCEMENT:
 1. Added the ability to add an impressum/legal notice at the footer of each page – see Admin|Configure|Miscellaneous.

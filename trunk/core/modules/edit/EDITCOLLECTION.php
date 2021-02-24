@@ -395,15 +395,15 @@ class EDITCOLLECTION
             if ($value)
             {
                 $temp[$key] = $value;
-                if ($key == 'resourcemisc')
+                if (mb_strpos($key, 'resourcemisc') === 0)
                 {
                     $miscArray[$key] = $value;
                 }
-                elseif ($key == 'resourceyear')
+                elseif (mb_strpos($key, 'resourceyear') === 0)
                 {
                     $yearArray[$key] = $value;
                 }
-                elseif ($key == 'resource')
+                elseif (mb_strpos($key, 'resource') === 0)
                 {
                     $resourceArray[$key] = $value;
                 }

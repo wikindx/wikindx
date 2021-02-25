@@ -233,7 +233,7 @@ namespace UPDATE
     function existsSuperadminAccount($dbo)
     {
         $dbo->formatConditionsOneField(WIKINDX_SUPERADMIN_ID, 'usersId');
-        $recordset = $dbo->queryNoError($dbo->selectNoExecute('users', '*'));
+        $recordset = $dbo->queryNoError($dbo->selectNoExecute('users', 'usersId'));
 
         return ($recordset !== FALSE);
     }

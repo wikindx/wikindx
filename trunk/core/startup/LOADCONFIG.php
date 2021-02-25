@@ -201,7 +201,7 @@ class LOADCONFIG
         $tmp_config = [];
         
         // Load the configuration from the db and destroy unused config options
-        $resultSet = $db->select('config', ["configId", "configName", "configInt", "configVarchar", "configText", "configBoolean", "configDatetime"]);
+        $resultSet = $db->select('config', ["configName", "configInt", "configVarchar", "configText", "configBoolean", "configDatetime"]);
         while ($row = $db->fetchRow($resultSet))
         {
             if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS))

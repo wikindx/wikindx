@@ -628,7 +628,7 @@ class debugtools_MODULE
         $pString .= HTML\tbodyStart();
         
         $db->orderBy("configName");
-        $resultSet = $db->select("config", "*");
+        $resultSet = $db->select("config", ["configId", "configName", "configInt", "configVarchar", "configText", "configBoolean", "configDatetime"]);
         
         while ($row = $db->fetchRow($resultSet))
         {

@@ -343,10 +343,6 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "LOADSTATICCONFIG.php"]));
  */
 FACTORY_LOADCONFIG::getInstance();
 
-// Load auth object but diff. login after upgrade stage
-// Upgrade will request login to superadmin if needed
-$authorize = FACTORY_AUTHORIZE::getInstance();
-
 // Attempt an upgrade only if we are on the main script
 if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE)
 {
@@ -365,6 +361,10 @@ if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['S
         die("Fatal error: upgrade / install had not ended successfully");
     }
 }
+
+// Load auth object but diff. login after upgrade stage
+// Upgrade will request login to superadmin if needed
+$authorize = FACTORY_AUTHORIZE::getInstance();
 
 /**
  *	Initialize the system

@@ -40,26 +40,9 @@ class AUTHORIZE
         $this->success = FACTORY_SUCCESS::getInstance();
         if (!GLOBALS::getUserVar("Language"))
         {
-            $fields = $this->db->listFields('config');
-            // Set the default language prior to displaying the login prompt.
-            // Perhaps this is a first install or upgrade (missing config table)
-            if (count($fields) == 0)
-            {
-                $user = FACTORY_USER::getInstance();
-                $user->writeSessionPreferences(FALSE);
-            // Prior to v5.3
-            }
-            elseif (in_array('configLanguage', $fields) !== FALSE)
-            {
-                GLOBALS::setUserVar('Language', WIKINDX_USER_LANGUAGE_DEFAULT);
-            // From v5.3
-            }
-            else
-            {
-                $configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-                $cnf = $configDbStructure->getData('configLanguage');
-                GLOBALS::setUserVar('Language', $cnf['configLanguage']);
-            }
+            $configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
+            $cnf = $configDbStructure->getData('configLanguage');
+            GLOBALS::setUserVar('Language', $cnf['configLanguage']);
         }
     }
     /**

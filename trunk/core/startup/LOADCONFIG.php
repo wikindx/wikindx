@@ -214,11 +214,7 @@ class LOADCONFIG
                     "configText" => $row['configText'],
                     "configVarchar" => $row['configVarchar'],
                 ];
-            }/* else {
-                // destroy
-                $db->formatConditions(['configName' => $row['configName']]);
-                $db->delete('config');
-            }*/
+            }
         }
         // If an option is missing in the db create it
         // and use its default value

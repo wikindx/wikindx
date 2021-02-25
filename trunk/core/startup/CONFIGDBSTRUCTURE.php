@@ -85,7 +85,7 @@ class CONFIGDBSTRUCTURE
         
         $row = [];
         $this->db->formatConditionsOneField($match, 'configName');
-        $resultSet = $this->db->select('config', '*');
+        $resultSet = $this->db->select('config', ["configId", "configName", "configInt", "configVarchar", "configText", "configBoolean", "configDatetime"]);
         while ($coRow = $this->db->fetchRow($resultSet))
         {
             // NB we grab only basic configuration variables – extra rows are added e.g. by localeDescription plugin

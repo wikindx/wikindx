@@ -18,7 +18,7 @@
 class GLOBALS
 {
     /**
-     * user input as either form data or querystring (normalized in ENVIRONMENT) is all stored in the $vars variable
+     * user input as either form data or querystring is all stored in the $vars variable
      */
     private static $vars = [];
     /** array */

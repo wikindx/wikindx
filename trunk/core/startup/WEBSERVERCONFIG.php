@@ -339,8 +339,6 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "LOADSTATICCONFIG.php"]));
 
 /**
  *	Initialize the system
- *	As ENVIRONMENT starts the session, we must check for 'remember me' cookie requests from MYWIKINDX.php prior to
- *	setting the session.
  *  The static part of the config is loaded.
  */
 FACTORY_LOADCONFIG::getInstance();

@@ -439,7 +439,7 @@ class ADMINCATEGORIES
             {
                 $this->db->formatConditions(['resourcecategoryCategoryId' => $this->formData['categoryId']]);
                 $this->db->formatConditions(['resourcecategoryResourceId' => $row['resourcecategoryResourceId']]);
-                if (!$this->db->numRows($this->db->select('resource_category', '*')))
+                if (!$this->db->numRows($this->db->select('resource_category', ['categoryId', 'categoryCategory'])))
                 {
                     $this->db->insert(
                         'resource_category',

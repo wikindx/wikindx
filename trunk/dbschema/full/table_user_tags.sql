@@ -12,5 +12,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_tags` (
   `usertagsUserId` int(11) DEFAULT NULL,
   `usertagsTag` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`usertagsId`),
-  KEY (`usertagsUserId`)
+  KEY (`usertagsUserId`),
+  FULLTEXT KEY (`usertagsTag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

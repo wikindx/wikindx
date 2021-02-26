@@ -1737,6 +1737,7 @@ END;
      * Add a missing index on usersBlock.
      * Add a missing index on usertagsUserId.
      *
+     * Add a FULLTEXT index on resourcecustomShort.
      * Add a FULLTEXT index on resourceNoSort.
      * Add a FULLTEXT index on resourceShortTitle.
      * Add a FULLTEXT index on resourceSubtitle.
@@ -1746,6 +1747,7 @@ END;
      * Add a FULLTEXT index on resourceTransShortTitle.
      * Add a FULLTEXT index on resourceTransSubtitle.
      * Add a FULLTEXT index on resourceTransTitle.
+     * Add a FULLTEXT index on usertagsTag.
      *
      * Drop old form_data table
      *

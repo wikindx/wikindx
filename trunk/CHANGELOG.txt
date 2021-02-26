@@ -37,7 +37,7 @@ MAINTENANCE:
 4. Update Smarty (v3.1.39).
 5. Update PHPMailer (v6.3.0).
 6. Add a lot of missing indices.
-
+7. Add missing FULLTEXT indices on resources.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

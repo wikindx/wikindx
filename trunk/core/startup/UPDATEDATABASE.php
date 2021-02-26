@@ -1719,6 +1719,9 @@ END;
      * Add a missing index on resourcetextEditUserIdAbstract.
      * Add a missing index on resourcetextEditUserIdNote.
      * Add a missing index on resourceusertagsTagId.
+     * Add a missing index on resourceyearYear2.
+     * Add a missing index on resourceyearYear3.
+     * Add a missing index on resourceyearYear4.
      * Add a missing index on subcategoryCategoryId.
      * Add a missing index on tempstorageTimestamp.
      * Add a missing index on userbibliographyresourceBibliographyId.
@@ -1733,6 +1736,16 @@ END;
      * Add a missing index on userregisterTimestamp.
      * Add a missing index on usersBlock.
      * Add a missing index on usertagsUserId.
+     *
+     * Add a FULLTEXT index on resourceNoSort.
+     * Add a FULLTEXT index on resourceShortTitle.
+     * Add a FULLTEXT index on resourceSubtitle.
+     * Add a FULLTEXT index on resourceTitle.
+     * Add a FULLTEXT index on resourceTitleSort.
+     * Add a FULLTEXT index on resourceTransNoSort.
+     * Add a FULLTEXT index on resourceTransShortTitle.
+     * Add a FULLTEXT index on resourceTransSubtitle.
+     * Add a FULLTEXT index on resourceTransTitle.
      *
      * Drop old form_data table
      *

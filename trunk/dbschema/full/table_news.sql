@@ -15,4 +15,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%news` (
   `newsEmailSent` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   PRIMARY KEY (`newsId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

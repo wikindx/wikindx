@@ -16,4 +16,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_year` (
   PRIMARY KEY (`resourceyearId`),
   KEY `resourceyearYear1` (`resourceyearYear1`(100))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

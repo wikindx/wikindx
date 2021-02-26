@@ -24,4 +24,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%cache` (
   `cacheResourceCollectionTitles` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `cacheResourceCollectionShorts` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

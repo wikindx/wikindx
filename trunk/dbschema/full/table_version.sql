@@ -22,4 +22,3 @@ INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%version (
     'core',
 	0
 );
-

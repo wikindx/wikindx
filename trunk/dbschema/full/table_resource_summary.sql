@@ -14,4 +14,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_summary` (
   `resourcesummaryMusings` int(11) DEFAULT NULL,
   PRIMARY KEY (`resourcesummaryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

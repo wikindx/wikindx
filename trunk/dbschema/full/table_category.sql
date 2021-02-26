@@ -21,4 +21,3 @@ INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%category (
     1,
     'General'
 );
-

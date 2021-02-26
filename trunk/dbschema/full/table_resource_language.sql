@@ -15,4 +15,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_language` (
   KEY `resourcelanguageResourceId` (`resourcelanguageResourceId`),
   KEY `resourcelanguageLanguageId` (`resourcelanguageLanguageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

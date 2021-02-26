@@ -15,4 +15,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_kg_usergroups` (
   KEY `userkgusergroupsUserGroupId` (`userkgusergroupsUserGroupId`),
   KEY `userkgusergroupsKeywordGroupId` (`userkgusergroupsKeywordGroupId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

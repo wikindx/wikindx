@@ -13,4 +13,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%custom` (
   `customSize` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'S',
   PRIMARY KEY (`customId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

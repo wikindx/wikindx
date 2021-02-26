@@ -12,4 +12,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%bibtex_string` (
   `bibtexstringText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`bibtexstringId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

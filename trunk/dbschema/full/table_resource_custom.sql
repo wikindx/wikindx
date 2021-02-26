@@ -20,4 +20,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_custom` (
   KEY `resourcecustomResourceId` (`resourcecustomResourceId`),
   FULLTEXT KEY `resourcecustomLong` (`resourcecustomLong`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

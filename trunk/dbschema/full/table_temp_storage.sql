@@ -13,4 +13,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%temp_storage` (
   `tempstorageTimestamp` datetime DEFAULT current_timestamp() NOT NULL,
   PRIMARY KEY (`tempstorageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

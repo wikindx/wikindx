@@ -20,4 +20,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_creator` (
   KEY `resourcecreatorCreatorId` (`resourcecreatorCreatorId`),
   KEY `resourcecreatorResourceId` (`resourcecreatorResourceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

@@ -14,4 +14,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%import_raw` (
   `importrawImportType` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`importrawId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

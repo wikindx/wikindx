@@ -14,4 +14,3 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%keyword` (
   PRIMARY KEY (`keywordId`),
   KEY `keywordKeyword` (`keywordKeyword`(100))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

@@ -32,5 +32,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource` (
   `resourceBibtexKey` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceDoi` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`resourceId`),
-  KEY `resourceType` (`resourceType`)
+  KEY `resourceType` (`resourceType`),
+  FULLTEXT KEY `resourceTitle` (`resourceTitle`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

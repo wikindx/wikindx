@@ -13,13 +13,22 @@ BUG FIXES:
 6. Index_Type option is unreliable for InnoDB due to functionality of [bug #22632](https://bugs.mysql.com/bug.php?id=22632).
 7. Bug 319 fixed: Edit collection did not update the collection's resources.
 8. Drop old form_data table.
+9. Add a missing index on resourceattachmentsResourceId (previous upgrade code missing).
+10. Add a missing index on resourcecustomCustomId (previous upgrade code missing).
+11. Add a missing index on resourcelanguageLanguageId (previous upgrade code missing).
+12. Add a missing index on resourcelanguageResourceId (previous upgrade code missing).
+13. Add a missing index on resourcemiscCollection (previous upgrade code missing).
+14. Add a missing index on resourcemiscPublisher (previous upgrade code missing).
+15. Add a missing index on resourcetimestampTimestamp (previous upgrade code missing).
+16. Add a missing index on resourcetimestampTimestamp (previous upgrade code missing).
+17. Add a missing index on resourcetimestampTimestampAdd (previous upgrade code missing).
+18. Redefine in FULLTEXT type three indices not well upgraded (categoryCategory, keywordKeyword, resourceTitle).
 
 FEATURE ENHANCEMENT:
 1. Added the ability to add an impressum/legal notice at the footer of each page – see Admin|Configure|Miscellaneous.
 2. Added code to interface with a Word add-in if the WIKINDX allows read-only access, can be reached through https:// and has 
 in-text citation styles (such as APA, Harvard, MLA etc.). The add-in allows the importation of references and citations (quotations/paraphrases) direct from one or more wikindices. The word document can be 'finalized' in the add-in and this (re)formats the inserted references to the 
 chosen style and appends a bibliography ordered as required.
-
 
 MAINTENANCE:
 1. Blocks install/upgrade if the db engine does not meet the requirements [#311].
@@ -28,8 +37,6 @@ MAINTENANCE:
 4. Update Smarty (v3.1.39).
 5. Update PHPMailer (v6.3.0).
 6. Add a lot of missing indices.
-
-SECURITY
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

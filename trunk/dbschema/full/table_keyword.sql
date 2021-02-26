@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%keyword` (
   `keywordKeyword` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `keywordGlossary` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`keywordId`),
-  KEY `keywordKeyword` (`keywordKeyword`(100))
+  FULLTEXT KEY `keywordKeyword` (`keywordKeyword`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

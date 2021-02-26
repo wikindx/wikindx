@@ -1688,6 +1688,16 @@ END;
      * Resize resourcemetadataType field.
      * Resize resourceType field.
      *
+     * Add a missing index on resourceattachmentsResourceId (previous upgrade code missing).
+     * Add a missing index on resourcecustomCustomId (previous upgrade code missing).
+     * Add a missing index on resourcelanguageLanguageId (previous upgrade code missing).
+     * Add a missing index on resourcelanguageResourceId (previous upgrade code missing).
+     * Add a missing index on resourcemiscCollection (previous upgrade code missing).
+     * Add a missing index on resourcemiscPublisher (previous upgrade code missing).
+     * Add a missing index on resourcetimestampTimestamp (previous upgrade code missing).
+     * Add a missing index on resourcetimestampTimestamp (previous upgrade code missing).
+     * Add a missing index on resourcetimestampTimestampAdd (previous upgrade code missing).
+     *
      * Add a missing index on collection.
      * Add a missing index on publisherType.
      * Add a missing index on resourceattachmentsEmbargo.
@@ -1727,6 +1737,7 @@ END;
      * Drop old form_data table
      *
      * Redefine resourceType index.
+     * Redefine in FULLTEXT type three indices not well upgraded (categoryCategory, keywordKeyword, resourceTitle).
      */
     private function upgradeTo43()
     {

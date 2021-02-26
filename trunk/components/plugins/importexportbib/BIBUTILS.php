@@ -15,7 +15,6 @@ class BIBUTILS
     private $vars;
     private $pluginmessages;
     private $coremessages;
-    private $errors;
     private $session;
     private $config;
     private $parentClass;
@@ -40,7 +39,6 @@ class BIBUTILS
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new importexportbib_BIBUTILSCONFIG();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        $this->errors = FACTORY_ERRORS::getInstance();
         if (!$this->config->bibutilsPath)
         {
             $this->config->bibutilsPath = '/usr/local/bin/'; // default *NIX location

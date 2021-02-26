@@ -12,6 +12,7 @@ BUG FIXES:
 5. Recreate the usersUsernameUnique index with a BTREE type (bugfix #318).
 6. Index_Type option is unreliable for InnoDB due to functionality of [bug #22632](https://bugs.mysql.com/bug.php?id=22632).
 7. Bug 319 fixed: Edit collection did not update the collection's resources.
+8. Drop old form_data table.
 
 FEATURE ENHANCEMENT:
 1. Added the ability to add an impressum/legal notice at the footer of each page – see Admin|Configure|Miscellaneous.

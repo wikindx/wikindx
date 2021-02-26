@@ -1724,6 +1724,8 @@ END;
      * Add a missing index on usersBlock.
      * Add a missing index on usertagsUserId.
      *
+     * Drop old form_data table
+     *
      * Redefine resourceType index.
      */
     private function upgradeTo43()

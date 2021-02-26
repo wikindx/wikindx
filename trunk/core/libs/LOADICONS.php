@@ -168,7 +168,7 @@ class LOADICONS
     {
         $link = $basename . 'Link';
 
-        $icon = $this->getIconRealFileName($basename, "");
+        $icon = $this->getIconRealFileName($basename);
 
         if ($icon != "")
         {
@@ -220,7 +220,8 @@ class LOADICONS
         // Search the best icon
         foreach ($tplSearch as $tpl)
         {
-            foreach (["gif", "jpeg", "jpg", "png", "svg", "webp"] as $ext)
+            // Extensions are ordered by frequency
+            foreach (["png", "svg", "jpg", "gif", "webp", "jpeg"] as $ext)
             {
                 $tmp = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES, $tpl, "icons", $basename . "." . $ext]);
                 if (file_exists($tmp))
@@ -228,7 +229,10 @@ class LOADICONS
                     if (is_file($tmp))
                     {
                         $filename = $tmp;
-                        $url = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_COMPONENT_TEMPLATES, $tpl, "icons", $basename . "." . $ext]);
+
+                        // Base64 encoded url
+                        $mime = $ext == "svg" ? "svg+xml" : $ext;
+                        $url = "data:image/{$mime};base64," . base64_encode(file_get_contents($tmp));
 
                         break;
                     }

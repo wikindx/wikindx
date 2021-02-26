@@ -39,6 +39,7 @@ MAINTENANCE:
 6. Add a lot of missing indices.
 7. Add missing FULLTEXT indices on resources.
 8. When the WIKINDX_DEBUG_SQL is TRUE, always die on db error [#289].
+9. Embed icons in HTML with base64 encoding [#321].
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

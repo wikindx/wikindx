@@ -25,6 +25,9 @@
 -- Add a missing index on resourcetextEditUserIdAbstract.
 -- Add a missing index on resourcetextEditUserIdNote.
 -- Add a missing index on resourceusertagsTagId.
+-- Add a missing index on resourceyearYear2.
+-- Add a missing index on resourceyearYear3.
+-- Add a missing index on resourceyearYear4.
 -- Add a missing index on subcategoryCategoryId.
 -- Add a missing index on tempstorageTimestamp.
 -- Add a missing index on userbibliographyresourceBibliographyId.
@@ -61,6 +64,9 @@ CREATE INDEX `resourcetextAddUserIdNote` ON %%WIKINDX_DB_TABLEPREFIX%%resource_t
 CREATE INDEX `resourcetextEditUserIdAbstract` ON %%WIKINDX_DB_TABLEPREFIX%%resource_text (`resourcetextEditUserIdAbstract`);
 CREATE INDEX `resourcetextEditUserIdNote` ON %%WIKINDX_DB_TABLEPREFIX%%resource_text (`resourcetextEditUserIdNote`);
 CREATE INDEX `resourceusertagsTagId` ON %%WIKINDX_DB_TABLEPREFIX%%resource_user_tags (`resourceusertagsTagId`);
+CREATE INDEX `resourceyearYear2` ON %%WIKINDX_DB_TABLEPREFIX%%resource_year (`resourceyearYear2`(100));
+CREATE INDEX `resourceyearYear3` ON %%WIKINDX_DB_TABLEPREFIX%%resource_year (`resourceyearYear3`(100));
+CREATE INDEX `resourceyearYear4` ON %%WIKINDX_DB_TABLEPREFIX%%resource_year (`resourceyearYear4`(100));
 CREATE INDEX `subcategoryCategoryId` ON %%WIKINDX_DB_TABLEPREFIX%%subcategory (`subcategoryCategoryId`);
 CREATE INDEX `tempstorageTimestamp` ON %%WIKINDX_DB_TABLEPREFIX%%temp_storage (`tempstorageTimestamp`);
 CREATE INDEX `userbibliographyresourceBibliographyId` ON %%WIKINDX_DB_TABLEPREFIX%%user_bibliography_resource (`userbibliographyresourceBibliographyId`);

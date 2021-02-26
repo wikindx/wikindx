@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-10 00:53+0100\n"
+"POT-Creation-Date: 2021-02-26 12:02+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -16,35 +16,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: core/libs/sql.php:3057 core/messages/errors.php:92
+#: core/libs/sql.php:3060 core/messages/errors.php:92
 msgid "Unable to open ### database."
 msgstr "Incapaz de abrir la base de datos.###"
 
-#: core/libs/sql.php:3058 core/messages/errors.php:93
+#: core/libs/sql.php:3061 core/messages/errors.php:93
 msgid "Unable to write to database."
 msgstr "Incapaz de escribir en la base de datos."
 
-#: core/libs/sql.php:3059 core/messages/errors.php:94
+#: core/libs/sql.php:3062 core/messages/errors.php:94
 msgid "Unable to read database."
 msgstr "Incapaz de leer en la base de datos."
 
-#: core/libs/sql.php:3060 core/messages/errors.php:95
+#: core/libs/sql.php:3063 core/messages/errors.php:95
 msgid "Missing Configuration Parameter in config.php."
 msgstr "No existe Parámetro de Configuración en el fichero config.php."
 
-#: core/libs/sql.php:3061 core/messages/errors.php:96
+#: core/libs/sql.php:3064 core/messages/errors.php:96
 msgid "Unable to open update/createMySQL.txt."
 msgstr "Incapaz de abrir el fichero update/createMySQL.txt."
 
-#: core/libs/sql.php:3062 core/messages/errors.php:97
+#: core/libs/sql.php:3065 core/messages/errors.php:97
 msgid "No RDBMS type selected in config.php."
 msgstr "No se ha seleccionado ningún tipo de RDBMS en config.php."
 
-#: core/libs/sql.php:3063 core/messages/errors.php:98
+#: core/libs/sql.php:3066 core/messages/errors.php:98
 msgid "Missing subQuery statement."
 msgstr ""
 
-#. translators: When using the word processor how are extra, unnamed authors indicated? 
+#. translators: When using the word processor how are extra, unnamed authors indicated?
 #. In English this would be 'et al.' as in: 'According to Grimshaw et al., "blah blah blah".
 #: core/messages/constants.php:29
 msgid "et al."
@@ -54,10 +54,10 @@ msgstr "et al."
 #. You should not translate this string but establish a list separated by ;
 #. of the singular possessive forms of your language, if they exist.
 #. THAT END BY A POINT AND ONLY A POINT.
-#. 
+#.
 #. If your language does not use it or is incompatible with the operation described
 #. below of the word processor, put a ; in this string empty.
-#. 
+#.
 #. When using the word processor, how is singular possessive defined.
 #. This is only for a single creator's surname and, like 'et al.' above, is used
 #. to detect if a creator name should be removed from the in-text citation
@@ -94,20 +94,20 @@ msgstr "»"
 #. a list separated by ; of the most common abbreviations of your language
 #. or bibliographic styles used in your language (country)
 #. THAT END BY A POINT AND ONLY A POINT.
-#. 
+#.
 #. It is strongly recommended to leave the Latin abbreviations
 #. which are a common place of bibliographies.
-#. 
+#.
 #. Remove the English abbreviations unless they are used in your language.
-#. 
+#.
 #. Abreviations such as U.S.A., U.S.S.R., N.B. are dealt with in the code
 #. (must be capital English characters and no spaces).
 #. '...' and multiple dots consisting of two or more dots are dealt with in the code.
-#. 
+#.
 #. N.B. MATCHING IS CASE SENSITIVE. You must indicate all the possible cases of an abbreviation.
-#. 
+#.
 #. If you have no abbreviations, put a ; in this string.
-#. 
+#.
 #. When using the word processor, for certain styles the text
 #. must be split up into sentences -- e.g. APA requires that year
 #. must follow the author name and page no. follows the citation
@@ -116,7 +116,7 @@ msgstr "»"
 #. This string handles other groups of characters (commonly abbreviations)
 #. that may appear in a sentence // but do not indicate a sentence divider.
 #. If there are no such abbreviations, the string must exist and be empty.
-#. 
+#.
 #. The Latin abbreviations which are a common place of bibliographies
 #. are already included. Do not add them to your list.
 #. Latin abbreviations in order of apparition are:
@@ -137,7 +137,7 @@ msgstr "»"
 #. - sqq. : sequunturque
 #. - v. : versus
 #. - viz. : videre licet
-#. 
+#.
 #. English abbreviations in order of apparition are:
 #. - short for Brothers (as in Warner Bros.)
 #. - company
@@ -3471,7 +3471,7 @@ msgid "Print PHP errors and warnings to the screen"
 msgstr ""
 
 #: core/messages/messages.php:323
-msgid "Display SQL statements"
+msgid "Display SQL statements and die on db error"
 msgstr ""
 
 #: core/messages/messages.php:324
@@ -8494,96 +8494,25 @@ msgstr "La palabra clave ha sido editada correctamente"
 msgid "Successfully approved resource(s)"
 msgstr "Recurso eliminado correctamente del cesto"
 
-#~ msgid "<h3>Category Tree</h3>"
-#~ msgstr "<h3>Árbol de categorías</h3>"
-
-#~ msgid ""
-#~ "<p>The Category Tree displays all categories used in the WIKINDX and, "
-#~ "under each category, the category's subcategories and keywords. The number "
-#~ "in brackets is the number of resources in each category, each category's "
-#~ "subcategory or each category's keyword.</p>"
-#~ msgstr ""
-#~ "<p>The Category Tree displays all categories used in the WIKINDX and, "
-#~ "under each category, the category's subcategories and keywords. The number "
-#~ "in brackets is the number of resources in each category, each category's "
-#~ "subcategory or each category's keyword.</p>"
-
-#~ msgid "<h3>Paste BibTeX</h3>"
-#~ msgstr "<h3>Pegar BibTeX</h3>"
-
-#~ msgid ""
-#~ "<p>If you have a BibTeX bibliography, you can import selected entries, "
-#~ "including @string values, by copying and pasting the entries from your "
-#~ "BibTeX file into the textarea.  If you have non-standard fields in your "
-#~ "BibTeX entries, WIKINDX will provide you with the option to map them to "
-#~ "WIKINDX fields: if you are the administrator, you might like to create "
-#~ "custom fields before pasting.  An administrator can post unlimited numbers "
-#~ "of entries in one go, other users can post <strong>#pasteBibtex#</strong> "
-#~ "entries at a time.</p>"
-#~ msgstr ""
-#~ "<p>If you have a BibTeX bibliography, you can import selected entries, "
-#~ "including @string values, by copying and pasting the entries from your "
-#~ "BibTeX file into the textarea.  If you have non-standard fields in your "
-#~ "BibTeX entries, WIKINDX will provide you with the option to map them to "
-#~ "WIKINDX fields: if you are the administrator, you might like to create "
-#~ "custom fields before pasting.  An administrator can post unlimited numbers "
-#~ "of entries in one go, other users can post <strong>#pasteBibtex#</strong> "
-#~ "entries at a time.</p>"
-
-#~ msgid ""
-#~ "<p>Most of the configuration options are self-explanatory but bear the "
-#~ "following in mind:</p>"
-#~ msgstr ""
-#~ "<p>Most of the configuration options are self-explanatory but bear the "
-#~ "following in mind:</p>"
-
-#~ msgid "<h3>My Wikindx</h3>"
-#~ msgstr "<h3>Mi Wikindx</h3>"
-
-#, fuzzy
-#~| msgid "Preferences"
-#~ msgid "<h3>Preferences</h3>"
-#~ msgstr "Preferencias"
-
-#, fuzzy
-#~| msgid ""
-#~| "<p>Most of the configuration options are self-explanatory but bear the "
-#~| "following in mind:</p>"
-#~ msgid ""
-#~ "<p>Most settings are self-explanatory but some require further explanation:"
-#~ "</p>"
-#~ msgstr ""
-#~ "<p>Most of the configuration options are self-explanatory but bear the "
-#~ "following in mind:</p>"
-
-#, fuzzy
-#~| msgid "<h3>Category Tree</h3>"
-#~ msgid "<h3>Creator Groups</h3>"
-#~ msgstr "<h3>Árbol de categorías</h3>"
-
-#, fuzzy
-#~| msgid "<h3>Category Tree</h3>"
-#~ msgid "<h3>Keyword Groups</h3>"
-#~ msgstr "<h3>Árbol de categorías</h3>"
-
-#, fuzzy
-#~| msgid "<h3>Preferences</h3>"
-#~ msgid "<h3>Components</h3>"
-#~ msgstr "<h3>Preferencias</h3>"
+#~ msgid "Upgrade the database"
+#~ msgstr "Actualizar la base de datos"
 
 #~ msgid "My Bibliographies"
 #~ msgstr "Mis bibliografías"
 
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Mi Wikindx"
+#~ msgid "Upgrade the Database"
+#~ msgstr "Actualizar la base de datos"
 
-#~ msgid "Import BibTeX"
-#~ msgstr "Importar BibTeX"
+#~ msgid "Unable to update database with update/updateMySQL.txt."
+#~ msgstr ""
+#~ "Incapaz de actualizar la base de datos con el fichero update/updateMySQL."
+#~ "txt."
 
 #~ msgid "There is no news available to view"
 #~ msgstr "No hay noticias disponibles para ver"
+
+#~ msgid "<h3>Category Tree</h3>"
+#~ msgstr "<h3>Árbol de categorías</h3>"
 
 #~ msgid ""
 #~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
@@ -8605,27 +8534,6 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ "versión y que es necesario actualizar la base de datos. Esta actualización "
 #~ "es automática pero sólo el administrador de WIKINDX lo puede iniciar."
 
-#, fuzzy
-#~| msgid "Available keywords"
-#~ msgid "Available Languages"
-#~ msgstr "Palabras clave disponibles"
-
-#, fuzzy
-#~| msgid "Reporter"
-#~ msgid "Exporter"
-#~ msgstr "Informe"
-
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Conectarse como superadministrador:"
-
-#~ msgid "Remove users from this group"
-#~ msgstr "Eliminar usuarios de este grupo"
-
-#~ msgid "Unable to update database with update/updateMySQL.txt."
-#~ msgstr ""
-#~ "Incapaz de actualizar la base de datos con el fichero update/updateMySQL."
-#~ "txt."
-
 #~ msgid ""
 #~ "You are not logged on as the superAdmin: please ask that person ### to "
 #~ "carry out the upgrade through their web browser."
@@ -8633,8 +8541,106 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ "No está conectado como superadministrador: contacte con esta persona### "
 #~ "para iniciar la actualización desde su navegador."
 
+#, fuzzy
+#~| msgid "Available keywords"
+#~ msgid "Available Languages"
+#~ msgstr "Palabras clave disponibles"
+
+#~ msgid ""
+#~ "<p>Most of the configuration options are self-explanatory but bear the "
+#~ "following in mind:</p>"
+#~ msgstr ""
+#~ "<p>Most of the configuration options are self-explanatory but bear the "
+#~ "following in mind:</p>"
+
+#, fuzzy
+#~| msgid "Reporter"
+#~ msgid "Exporter"
+#~ msgstr "Informe"
+
 #~ msgid "<h3>Resource</h3>"
 #~ msgstr "<h3>Recursos</h3>"
+
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Conectarse como superadministrador:"
+
+#, fuzzy
+#~| msgid "<h3>Category Tree</h3>"
+#~ msgid "<h3>Creator Groups</h3>"
+#~ msgstr "<h3>Árbol de categorías</h3>"
+
+#~ msgid "Remove users from this group"
+#~ msgstr "Eliminar usuarios de este grupo"
+
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Mi Wikindx"
+
+#~ msgid ""
+#~ "<p>The Category Tree displays all categories used in the WIKINDX and, "
+#~ "under each category, the category's subcategories and keywords. The number "
+#~ "in brackets is the number of resources in each category, each category's "
+#~ "subcategory or each category's keyword.</p>"
+#~ msgstr ""
+#~ "<p>The Category Tree displays all categories used in the WIKINDX and, "
+#~ "under each category, the category's subcategories and keywords. The number "
+#~ "in brackets is the number of resources in each category, each category's "
+#~ "subcategory or each category's keyword.</p>"
+
+#~ msgid "<h3>Paste BibTeX</h3>"
+#~ msgstr "<h3>Pegar BibTeX</h3>"
+
+#~ msgid "<h3>My Wikindx</h3>"
+#~ msgstr "<h3>Mi Wikindx</h3>"
+
+#, fuzzy
+#~| msgid "Preferences"
+#~ msgid "<h3>Preferences</h3>"
+#~ msgstr "Preferencias"
+
+#, fuzzy
+#~| msgid "<h3>Category Tree</h3>"
+#~ msgid "<h3>Keyword Groups</h3>"
+#~ msgstr "<h3>Árbol de categorías</h3>"
+
+#~ msgid ""
+#~ "<p>If you have a BibTeX bibliography, you can import selected entries, "
+#~ "including @string values, by copying and pasting the entries from your "
+#~ "BibTeX file into the textarea.  If you have non-standard fields in your "
+#~ "BibTeX entries, WIKINDX will provide you with the option to map them to "
+#~ "WIKINDX fields: if you are the administrator, you might like to create "
+#~ "custom fields before pasting.  An administrator can post unlimited numbers "
+#~ "of entries in one go, other users can post <strong>#pasteBibtex#</strong> "
+#~ "entries at a time.</p>"
+#~ msgstr ""
+#~ "<p>If you have a BibTeX bibliography, you can import selected entries, "
+#~ "including @string values, by copying and pasting the entries from your "
+#~ "BibTeX file into the textarea.  If you have non-standard fields in your "
+#~ "BibTeX entries, WIKINDX will provide you with the option to map them to "
+#~ "WIKINDX fields: if you are the administrator, you might like to create "
+#~ "custom fields before pasting.  An administrator can post unlimited numbers "
+#~ "of entries in one go, other users can post <strong>#pasteBibtex#</strong> "
+#~ "entries at a time.</p>"
+
+#, fuzzy
+#~| msgid ""
+#~| "<p>Most of the configuration options are self-explanatory but bear the "
+#~| "following in mind:</p>"
+#~ msgid ""
+#~ "<p>Most settings are self-explanatory but some require further explanation:"
+#~ "</p>"
+#~ msgstr ""
+#~ "<p>Most of the configuration options are self-explanatory but bear the "
+#~ "following in mind:</p>"
+
+#~ msgid "Import BibTeX"
+#~ msgstr "Importar BibTeX"
+
+#, fuzzy
+#~| msgid "<h3>Preferences</h3>"
+#~ msgid "<h3>Components</h3>"
+#~ msgstr "<h3>Preferencias</h3>"
 
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
@@ -8680,9 +8686,3 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ "initially required are username, password and email. From the Admin menu, "
 #~ "after configuration, you can add and edit other settings."
 #~ msgstr "Antes de poder utilizar WIKINDX debe configurarlo"
-
-#~ msgid "Upgrade the database"
-#~ msgstr "Actualizar la base de datos"
-
-#~ msgid "Upgrade the Database"
-#~ msgstr "Actualizar la base de datos"

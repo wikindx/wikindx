@@ -191,7 +191,7 @@ class LOADICONS
     }
     
     /**
-     * Return the real path of an icon form its basename
+     * Return the real path of an icon from its basename
      *
      * Return the path of the first icon available in the user's preferred template
      * and in the default template if missing. The file is searched with the extensions

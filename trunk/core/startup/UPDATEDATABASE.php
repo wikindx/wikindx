@@ -1677,6 +1677,59 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+
+    /**
+     * Upgrade database schema to version 43 (6.4.2)
+     *
+     * Resize collectionType field.
+     * Resize publisherType field.
+     * Resize resourceattachmentsFileSize field.
+     * Resize resourceattachmentsHashFilename field.
+     * Resize resourcemetadataType field.
+     * Resize resourceType field.
+     *
+     * Add a missing index on collection.
+     * Add a missing index on publisherType.
+     * Add a missing index on resourceattachmentsEmbargo.
+     * Add a missing index on resourceattachmentsEmbargoUntil.
+     * Add a missing index on resourceattachmentsHashFilename.
+     * Add a missing index on resourceattachmentsPrimary.
+     * Add a missing index on resourceattachmentsTimestamp.
+     * Add a missing index on resourcecategorySubcategoryId.
+     * Add a missing index on resourcecreatorRole.
+     * Add a missing index on resourcekeywordMetadataId.
+     * Add a missing index on resourcemetadataPrivate.
+     * Add a missing index on resourcemetadataType.
+     * Add a missing index on resourcemiscAddUserIdResource.
+     * Add a missing index on resourcemiscEditUserIdResource.
+     * Add a missing index on resourcemiscPeerReviewed.
+     * Add a missing index on resourcemiscQuarantine.
+     * Add a missing index on resourcetextAddUserIdAbstract.
+     * Add a missing index on resourcetextAddUserIdNote.
+     * Add a missing index on resourcetextEditUserIdAbstract.
+     * Add a missing index on resourcetextEditUserIdNote.
+     * Add a missing index on resourceusertagsTagId.
+     * Add a missing index on subcategoryCategoryId.
+     * Add a missing index on tempstorageTimestamp.
+     * Add a missing index on userbibliographyresourceBibliographyId.
+     * Add a missing index on userbibliographyUserGroupId.
+     * Add a missing index on userbibliographyUserId.
+     * Add a missing index on usergroupsAdminId.
+     * Add a missing index on usergroupsusersGroupId.
+     * Add a missing index on usergroupsusersUserId.
+     * Add a missing index on userkeywordgroupsUserId.
+     * Add a missing index on userkgkeywordsKeywordGroupId.
+     * Add a missing index on userregisterConfirmed.
+     * Add a missing index on userregisterTimestamp.
+     * Add a missing index on usersBlock.
+     * Add a missing index on usertagsUserId.
+     *
+     * Redefine resourceType index.
+     */
+    private function upgradeTo43()
+    {
+        $this->upgradeToTargetVersion();
+    }
     
     /**
      * Flush the temp_storage table

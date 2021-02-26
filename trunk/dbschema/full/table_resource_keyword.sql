@@ -14,6 +14,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_keyword` (
   `resourcekeywordKeywordId` int(11) DEFAULT NULL,
   PRIMARY KEY (`resourcekeywordId`),
   KEY `resourcekeywordKeywordId` (`resourcekeywordKeywordId`),
+  KEY `resourcekeywordMetadataId` (`resourcekeywordMetadataId`),
   KEY `resourcekeywordResourceId` (`resourcekeywordResourceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

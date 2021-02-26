@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_groups` (
   `usergroupsTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usergroupsDescription` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `usergroupsAdminId` int(11) NOT NULL,
-  PRIMARY KEY (`usergroupsId`)
+  PRIMARY KEY (`usergroupsId`),
+  KEY (`usergroupsAdminId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

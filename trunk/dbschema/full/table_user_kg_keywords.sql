@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_kg_keywords` (
   `userkgkeywordsKeywordGroupId` int(11) NOT NULL,
   `userkgkeywordsKeywordId` int(11) NOT NULL,
   PRIMARY KEY (`userkgkeywordsId`),
+  KEY `userkgkeywordsKeywordGroupId` (`userkgkeywordsKeywordGroupId`),
   KEY `userkgkeywordsKeywordId` (`userkgkeywordsKeywordId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

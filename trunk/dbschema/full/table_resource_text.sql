@@ -18,6 +18,10 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_text` (
   `resourcetextUrls` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourcetextUrlText` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`resourcetextId`),
+  KEY `resourcetextAddUserIdNote` (`resourcetextAddUserIdNote`),
+  KEY `resourcetextEditUserIdNote` (`resourcetextEditUserIdNote`),
+  KEY `resourcetextAddUserIdAbstract` (`resourcetextAddUserIdAbstract`),
+  KEY `resourcetextEditUserIdAbstract` (`resourcetextEditUserIdAbstract`),
   FULLTEXT KEY `resourcetextAbstract` (`resourcetextAbstract`),
   FULLTEXT KEY `resourcetextNote` (`resourcetextNote`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

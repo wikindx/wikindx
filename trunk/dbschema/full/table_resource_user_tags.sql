@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_user_tags` (
   `resourceusertagsTagId` int(11) DEFAULT NULL,
   `resourceusertagsResourceId` int(11) DEFAULT NULL,
   PRIMARY KEY (`resourceusertagsId`),
+  KEY `resourceusertagsTagId` (`resourceusertagsTagId`),
   KEY `resourceusertagsResourceId` (`resourceusertagsResourceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

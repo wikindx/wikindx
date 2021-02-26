@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_bibliography` (
   `userbibliographyTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `userbibliographyDescription` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`userbibliographyId`),
+  KEY `userbibliographyUserId` (`userbibliographyUserId`),
+  KEY `userbibliographyUserGroupId` (`userbibliographyUserGroupId`),
   KEY `userbibliographyTitle` (`userbibliographyTitle`(100))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

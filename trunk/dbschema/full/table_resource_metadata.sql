@@ -19,13 +19,14 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_metadata` (
   `resourcemetadataChapter` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourcemetadataTimestamp` datetime DEFAULT current_timestamp(),
   `resourcemetadataTimestampEdited` datetime DEFAULT NULL,
-  `resourcemetadataType` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `resourcemetadataType` varchar(2) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `resourcemetadataPrivate` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourcemetadataText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`resourcemetadataId`),
   KEY `resourcemetadataMetadataId` (`resourcemetadataMetadataId`),
   KEY `resourcemetadataResourceId` (`resourcemetadataResourceId`),
   KEY `resourcemetadataAddUserId` (`resourcemetadataAddUserId`),
+  KEY `resourcemetadataType` (`resourcemetadataType`),
+  KEY `resourcemetadataPrivate` (`resourcemetadataPrivate`),
   FULLTEXT KEY `resourcemetadataText` (`resourcemetadataText`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

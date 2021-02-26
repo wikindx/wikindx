@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_groups_users` (
   `usergroupsusersId` int(11) NOT NULL AUTO_INCREMENT,
   `usergroupsusersGroupId` int(11) DEFAULT NULL,
   `usergroupsusersUserId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`usergroupsusersId`)
+  PRIMARY KEY (`usergroupsusersId`),
+  KEY (`usergroupsusersGroupId`),
+  KEY (`usergroupsusersUserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

@@ -25,6 +25,9 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_misc` (
   `resourcemiscQuarantine` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   PRIMARY KEY (`resourcemiscId`),
   KEY `resourcemiscCollection` (`resourcemiscCollection`),
-  KEY `resourcemiscPublisher` (`resourcemiscPublisher`)
+  KEY `resourcemiscPublisher` (`resourcemiscPublisher`),
+  KEY `resourcemiscPeerReviewed` (`resourcemiscPeerReviewed`),
+  KEY `resourcemiscQuarantine` (`resourcemiscQuarantine`),
+  KEY `resourcemiscAddUserIdResource` (`resourcemiscAddUserIdResource`),
+  KEY `resourcemiscEditUserIdResource` (`resourcemiscEditUserIdResource`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_bibliography_resource
   `userbibliographyresourceBibliographyId` int(11) DEFAULT NULL,
   `userbibliographyresourceResourceId` int(11) DEFAULT NULL,
   PRIMARY KEY (`userbibliographyresourceId`),
+  KEY `userbibliographyresourceBibliographyId` (`userbibliographyresourceBibliographyId`),
   KEY `userbibliographyresourceResourceId` (`userbibliographyresourceResourceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-

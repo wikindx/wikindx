@@ -3121,7 +3121,9 @@ class SQL
     }
     
     /**
-     * execute queries and return recordset
+     * Execute queries and return recordset
+     *
+     * If WIKINDX_DEBUG_SQL is TRUE then the script always die on db error.
      *
      * @param string $querystring
      * @param bool $bNoError Default is FALSE
@@ -3177,7 +3179,7 @@ class SQL
             GLOBALS::addTplVar('logsql', '<hr><div>Elapsed time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
         }
 
-        if (!$execOk && !$bNoError)
+        if (!$execOk && (!$bNoError || (defined("WIKINDX_DEBUG_SQL") && WIKINDX_DEBUG_SQL)))
         {
             $this->sqlDie($this->error, $this->beautifySQL($querystring, "SQL ERROR"));
         }

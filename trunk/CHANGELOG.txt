@@ -38,6 +38,7 @@ MAINTENANCE:
 5. Update PHPMailer (v6.3.0).
 6. Add a lot of missing indices.
 7. Add missing FULLTEXT indices on resources.
+8. When the WIKINDX_DEBUG_SQL is TRUE, always die on db error [#289].
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

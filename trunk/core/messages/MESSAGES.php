@@ -320,7 +320,7 @@ class MESSAGES
 				"fileViewLoggedOnOnly" => dgettext($domain, "Allow only registered users to view file attachments"),
 				"debug" => dgettext($domain, "All these should be disabled on a production server"),
 				"errorReport" => dgettext($domain, "Print PHP errors and warnings to the screen"),
-				"sqlStatements" => dgettext($domain, "Display SQL statements"),
+				"sqlStatements" => dgettext($domain, "Display SQL statements and die on db error"),
 				"isTrunk" => dgettext($domain, "Trunk version"),
 				"printSql" => dgettext($domain, "Print SQL statements to the screen"),
 				"forceSmartyCompile" => dgettext($domain, "Force Smarty templates compilation"),

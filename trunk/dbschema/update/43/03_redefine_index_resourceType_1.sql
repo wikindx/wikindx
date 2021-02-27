@@ -4,6 +4,6 @@
 -- @author The WIKINDX Team
 -- @license https://www.isc.org/licenses/ ISC License
 -- 
--- Add a missing index on resourcecustomCustomId (previous upgrade code missing).
+-- Redefine resourceType index.
 
-CREATE INDEX `resourcecustomCustomId` ON %%WIKINDX_DB_TABLEPREFIX%%resource_custom (`resourcecustomCustomId`);
+ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource DROP INDEX resourceType;

@@ -4,6 +4,6 @@
 -- @author The WIKINDX Team
 -- @license https://www.isc.org/licenses/ ISC License
 -- 
--- Add a missing index on resourcemiscPublisher (previous upgrade code missing).
+-- Redefine resourceType index.
 
-CREATE INDEX `resourcemiscPublisher` ON %%WIKINDX_DB_TABLEPREFIX%%resource_misc (`resourcemiscPublisher`);
+CREATE INDEX `resourceType` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceType`);

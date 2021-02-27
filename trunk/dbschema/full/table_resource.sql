@@ -33,13 +33,5 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource` (
   `resourceDoi` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`resourceId`),
   KEY `resourceType` (`resourceType`),
-  FULLTEXT KEY `resourceTitle` (`resourceTitle`),
-  FULLTEXT KEY `resourceSubtitle` (`resourceSubtitle`),
-  FULLTEXT KEY `resourceShortTitle` (`resourceShortTitle`),
-  FULLTEXT KEY `resourceTransTitle` (`resourceTransTitle`),
-  FULLTEXT KEY `resourceTransSubtitle` (`resourceTransSubtitle`),
-  FULLTEXT KEY `resourceTransShortTitle` (`resourceTransShortTitle`),
-  FULLTEXT KEY `resourceTitleSort` (`resourceTitleSort`),
-  FULLTEXT KEY `resourceNoSort` (`resourceNoSort`),
-  FULLTEXT KEY `resourceTransNoSort` (`resourceTransNoSort`)
+  KEY `resourceTitle` (`resourceTitle`(768))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

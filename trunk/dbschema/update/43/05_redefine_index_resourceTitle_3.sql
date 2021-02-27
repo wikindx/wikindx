@@ -4,6 +4,6 @@
 -- @author The WIKINDX Team
 -- @license https://www.isc.org/licenses/ ISC License
 -- 
--- Add a missing index on resourcetimestampTimestamp (previous upgrade code missing).
+-- Redefine resourceTitle index.
 
-CREATE INDEX `resourcetimestampTimestamp` ON %%WIKINDX_DB_TABLEPREFIX%%resource_timestamp (`resourcetimestampTimestamp`);
+CREATE INDEX `resourceTitle` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceTitle`(768));

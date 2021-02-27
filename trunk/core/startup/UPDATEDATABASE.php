@@ -1741,7 +1741,6 @@ END;
      * Add a FULLTEXT index on resourceNoSort.
      * Add a FULLTEXT index on resourceShortTitle.
      * Add a FULLTEXT index on resourceSubtitle.
-     * Add a FULLTEXT index on resourceTitle.
      * Add a FULLTEXT index on resourceTitleSort.
      * Add a FULLTEXT index on resourceTransNoSort.
      * Add a FULLTEXT index on resourceTransShortTitle.
@@ -1751,8 +1750,10 @@ END;
      *
      * Drop old form_data table
      *
+     * Redefine categoryCategory index.
+     * Redefine keywordKeyword index.
      * Redefine resourceType index.
-     * Redefine in FULLTEXT type three indices not well upgraded (categoryCategory, keywordKeyword, resourceTitle).
+     * Redefine resourceTitle index.
      */
     private function upgradeTo43()
     {

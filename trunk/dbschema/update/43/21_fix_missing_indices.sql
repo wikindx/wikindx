@@ -4,6 +4,6 @@
 -- @author The WIKINDX Team
 -- @license https://www.isc.org/licenses/ ISC License
 -- 
--- Redefine in FULLTEXT type three indices not well upgraded (categoryCategory, keywordKeyword, resourceTitle).
+-- Redefine categoryCategory index.
 
-CREATE FULLTEXT INDEX `categoryCategory` ON %%WIKINDX_DB_TABLEPREFIX%%category (`categoryCategory`);
+CREATE INDEX `categoryCategory` ON %%WIKINDX_DB_TABLEPREFIX%%category (`categoryCategory`(768));

@@ -18,12 +18,10 @@
 
 CREATE FULLTEXT INDEX `resourcecustomShort` ON %%WIKINDX_DB_TABLEPREFIX%%resource_custom (`resourcecustomShort`);
 CREATE FULLTEXT INDEX `resourceNoSort` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceNoSort`);
-CREATE FULLTEXT INDEX `resourceShortTitle` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceShortTitle`);
 CREATE FULLTEXT INDEX `resourceSubtitle` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceSubtitle`);
 CREATE FULLTEXT INDEX `resourceTitle` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceTitle`);
 CREATE FULLTEXT INDEX `resourceTitleSort` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceTitleSort`);
 CREATE FULLTEXT INDEX `resourceTransNoSort` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceTransNoSort`);
-CREATE FULLTEXT INDEX `resourceTransShortTitle` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceTransShortTitle`);
 CREATE FULLTEXT INDEX `resourceTransSubtitle` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceTransSubtitle`);
 CREATE FULLTEXT INDEX `resourceTransTitle` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceTransTitle`);
 CREATE FULLTEXT INDEX `usertagsTag` ON %%WIKINDX_DB_TABLEPREFIX%%user_tags (`usertagsTag`);

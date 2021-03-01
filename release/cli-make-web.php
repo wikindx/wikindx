@@ -61,7 +61,7 @@ define('BASE_URL', "https://wikindx.sourceforge.io/web/" . $VersionPackaged . "/
 ///////////////////////////////////////////////////////////////////////
 
 echo "\n";
-echo "Build manual\n";
+echo "Build website\n";
 echo " - Source: " . DIR_SRC . "\n";
 echo " - Destination: " . DIR_DST . "\n";
 echo " - Version: " . $VersionPackaged . "\n";

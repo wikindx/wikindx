@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 29, 2021 at 08:26 AM
+-- Generation Time: Mar 01, 2021 at 08:01 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -94,7 +94,7 @@ CREATE TABLE `wkx_collection` (
   `collectionId` int(11) NOT NULL,
   `collectionTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `collectionTitleShort` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `collectionType` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `collectionType` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `collectionDefault` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -172,7 +172,7 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (29, 'configSearchFilter', NULL, NULL, 'YTo1OntpOjA7czoyOiJhbiI7aToxO3M6MToiYSI7aToyO3M6MzoidGhlIjtpOjM7czozOiJhbmQiO2k6NDtzOjI6InRvIjt9', NULL, NULL),
 (30, 'configListlink', NULL, NULL, NULL, NULL, NULL),
 (31, 'configEmailStatistics', NULL, NULL, NULL, NULL, NULL),
-(32, 'configStatisticsCompiled', NULL, NULL, NULL, NULL, '2020-12-01 00:00:00'),
+(32, 'configStatisticsCompiled', NULL, NULL, NULL, NULL, '2021-03-01 00:00:00'),
 (33, 'configMetadataAllow', NULL, NULL, NULL, 1, NULL),
 (34, 'configMetadataUserOnly', NULL, NULL, NULL, NULL, NULL),
 (35, 'configDenyReadOnly', NULL, NULL, NULL, NULL, NULL),
@@ -222,31 +222,32 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (81, 'configDisplayStatistics', NULL, NULL, NULL, NULL, NULL),
 (82, 'configDisplayUserStatistics', NULL, NULL, NULL, NULL, NULL),
 (83, 'configAuthGate', NULL, NULL, NULL, 0, NULL),
-(84, 'configAuthGateMessage', NULL, '', NULL, NULL, NULL),
+(84, 'configAuthGateMessage', NULL, NULL, NULL, NULL, NULL),
 (85, 'configDebugSql', NULL, NULL, NULL, 0, NULL),
 (86, 'configIsTrunk', NULL, NULL, NULL, 0, NULL),
 (88, 'configLdapPort', 389, NULL, NULL, NULL, NULL),
 (90, 'configLdapServer', NULL, 'localhost', NULL, NULL, NULL),
 (91, 'configLdapUse', NULL, NULL, NULL, 0, NULL),
 (92, 'configListLink', NULL, NULL, NULL, 1, NULL),
-(93, 'configPasswordSize', 6, NULL, NULL, NULL, NULL),
+(93, 'configPasswordSize', 8, NULL, NULL, NULL, NULL),
 (94, 'configPasswordStrength', NULL, 'strong', NULL, NULL, NULL),
 (95, 'configSiteMapAllow', NULL, NULL, NULL, 0, NULL),
 (96, 'configUserRegistrationModerate', NULL, NULL, NULL, 0, NULL),
 (97, 'configBrowserTabID', NULL, NULL, NULL, 0, NULL),
-(98, 'configLdapGroupDn', NULL, '', NULL, NULL, NULL),
+(98, 'configLdapGroupDn', NULL, NULL, NULL, NULL, NULL),
 (99, 'configLdapSearchMethod', NULL, 'tree', NULL, NULL, NULL),
 (100, 'configLdapSearchOperator', NULL, 'and', NULL, NULL, NULL),
-(101, 'configLdapServerBindDomain', NULL, '', NULL, NULL, NULL),
+(101, 'configLdapServerBindDomain', NULL, NULL, NULL, NULL, NULL),
 (102, 'configLdapServerBindDomainFormat', NULL, 'upn', NULL, NULL, NULL),
-(103, 'configLdapServerBindLogin', NULL, '', NULL, NULL, NULL),
-(104, 'configLdapServerBindPassword', NULL, '', NULL, NULL, NULL),
+(103, 'configLdapServerBindLogin', NULL, NULL, NULL, NULL, NULL),
+(104, 'configLdapServerBindPassword', NULL, NULL, NULL, NULL, NULL),
 (105, 'configLdapServerBindType', NULL, 'anonymous', NULL, NULL, NULL),
 (106, 'configLdapServerEncryption', NULL, 'ssl', NULL, NULL, NULL),
 (107, 'configLdapUserAttributLogin', NULL, 'sAMAccountName', NULL, NULL, NULL),
 (108, 'configLdapUserCreate', NULL, NULL, NULL, 1, NULL),
-(109, 'configLdapUserOu', NULL, '', NULL, NULL, NULL),
-(110, 'configResourceUrlPrefix', NULL, '', NULL, NULL, NULL);
+(109, 'configLdapUserOu', NULL, NULL, NULL, NULL, NULL),
+(110, 'configResourceUrlPrefix', NULL, '', NULL, NULL, NULL),
+(111, 'configImpressum', NULL, NULL, '', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -322,18 +323,6 @@ CREATE TABLE `wkx_custom` (
   `customId` int(11) NOT NULL,
   `customLabel` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `customSize` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'S'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `wkx_form_data`
---
-
-CREATE TABLE `wkx_form_data` (
-  `formdataId` varchar(128) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `formdataData` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `formdataTimestamp` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -445,7 +434,7 @@ CREATE TABLE `wkx_publisher` (
   `publisherId` int(11) NOT NULL,
   `publisherName` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `publisherLocation` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `publisherType` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
+  `publisherType` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
@@ -492,7 +481,7 @@ INSERT INTO `wkx_publisher` (`publisherId`, `publisherName`, `publisherLocation`
 
 CREATE TABLE `wkx_resource` (
   `resourceId` int(11) NOT NULL,
-  `resourceType` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourceType` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceTitle` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceSubtitle` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceShortTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -613,11 +602,11 @@ INSERT INTO `wkx_resource` (`resourceId`, `resourceType`, `resourceTitle`, `reso
 
 CREATE TABLE `wkx_resource_attachments` (
   `resourceattachmentsId` int(11) NOT NULL,
-  `resourceattachmentsHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourceattachmentsHashFilename` varchar(40) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceattachmentsResourceId` int(11) DEFAULT NULL,
   `resourceattachmentsFileName` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceattachmentsFileType` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourceattachmentsFileSize` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourceattachmentsFileSize` int(11) NOT NULL DEFAULT 0,
   `resourceattachmentsPrimary` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourceattachmentsTimestamp` datetime DEFAULT current_timestamp(),
   `resourceattachmentsEmbargo` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
@@ -1057,7 +1046,7 @@ CREATE TABLE `wkx_resource_metadata` (
   `resourcemetadataParagraph` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourcemetadataSection` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourcemetadataChapter` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourcemetadataType` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `resourcemetadataType` varchar(2) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `resourcemetadataPrivate` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourcemetadataText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `resourcemetadataTimestamp` datetime DEFAULT current_timestamp(),
@@ -7800,7 +7789,7 @@ CREATE TABLE `wkx_users` (
 --
 
 INSERT INTO `wkx_users` (`usersId`, `usersUsername`, `usersPassword`, `usersFullname`, `usersEmail`, `usersTimestamp`, `usersAdmin`, `usersCookie`, `usersPaging`, `usersPagingMaxLinks`, `usersPagingStyle`, `usersStringLimit`, `usersLanguage`, `usersStyle`, `usersTemplate`, `usersNotify`, `usersNotifyAddEdit`, `usersNotifyThreshold`, `usersNotifyTimestamp`, `usersPagingTagCloud`, `usersPasswordQuestion1`, `usersPasswordAnswer1`, `usersPasswordQuestion2`, `usersPasswordAnswer2`, `usersPasswordQuestion3`, `usersPasswordAnswer3`, `usersUseBibtexKey`, `usersUseWikindxKey`, `usersDisplayBibtexLink`, `usersDisplayCmsLink`, `usersCmsTag`, `usersIsCreator`, `usersListlink`, `usersDepartment`, `usersTemplateMenu`, `usersInstitution`, `usersNotifyDigestThreshold`, `usersGDPR`, `usersBlock`, `usersHomeBib`, `usersBrowseBibliography`) VALUES
-(1, 'super', '$2y$10$ro26Z/o/iU31HnEqjEYOjOZxaB4Qi64TagMjuxTfoWCUkVvqW4VR.', '', '', '2020-12-15 08:39:41', 1, 'N', 15, 11, 'N', 40, 'en_GB', 'apa', 'bryophyta', 'N', 'A', 0, '2010-10-10 11:32:52', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
+(1, 'super', '$2y$10$P8onVyobz06VOGLnrQWQKuR7NTqjZhojdbhRXSX/pOzA6VJq2Tscy', '', 'blah@blah.com', '2021-03-01 19:58:49', 1, 'Y', 15, 11, 'N', 40, 'en_GB', 'apa', 'bryophyta', 'N', 'A', 0, '2010-10-10 11:32:52', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
 (2, 'user1', '$2y$10$fUNsiFxdWCET0ZfG1wKzSudRPrmHkTVdJ.18xe1sh/Eoa6ztcBqSy', '', 'blah@blah.com', '2020-12-15 14:51:15', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:07', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
 (3, 'user2', '$2y$10$UtCjwRv.mIh6Mj4NVXy2fOCohpR06aLLOG4d.MDS.AGLXeWBCO3Wa', '', 'blah@blah.com', '2020-12-15 14:51:38', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:32', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0);
 
@@ -7994,7 +7983,7 @@ CREATE TABLE `wkx_version` (
 --
 
 INSERT INTO `wkx_version` (`versionComponentType`, `versionComponentId`, `versionInternalVersion`) VALUES
-('core', 'core', 41),
+('core', 'core', 43),
 ('plugin', 'localedescription', 1),
 ('plugin', 'soundexplorer', 1);
 
@@ -8013,14 +8002,15 @@ ALTER TABLE `wkx_bibtex_string`
 --
 ALTER TABLE `wkx_category`
   ADD PRIMARY KEY (`categoryId`),
-  ADD KEY `categoryCategory` (`categoryCategory`(100));
+  ADD KEY `categoryCategory` (`categoryCategory`(768));
 
 --
 -- Indexes for table `wkx_collection`
 --
 ALTER TABLE `wkx_collection`
   ADD PRIMARY KEY (`collectionId`),
-  ADD KEY `collectionTitle` (`collectionTitle`(100));
+  ADD KEY `collectionTitle` (`collectionTitle`(100)),
+  ADD KEY `collectionType` (`collectionType`);
 
 --
 -- Indexes for table `wkx_config`
@@ -8044,12 +8034,6 @@ ALTER TABLE `wkx_custom`
   ADD PRIMARY KEY (`customId`);
 
 --
--- Indexes for table `wkx_form_data`
---
-ALTER TABLE `wkx_form_data`
-  ADD PRIMARY KEY (`formdataId`);
-
---
 -- Indexes for table `wkx_import_raw`
 --
 ALTER TABLE `wkx_import_raw`
@@ -8060,7 +8044,7 @@ ALTER TABLE `wkx_import_raw`
 --
 ALTER TABLE `wkx_keyword`
   ADD PRIMARY KEY (`keywordId`),
-  ADD KEY `keywordKeyword` (`keywordKeyword`(100));
+  ADD KEY `keywordKeyword` (`keywordKeyword`(768));
 
 --
 -- Indexes for table `wkx_language`
@@ -8097,21 +8081,27 @@ ALTER TABLE `wkx_plugin_wordprocessor`
 --
 ALTER TABLE `wkx_publisher`
   ADD PRIMARY KEY (`publisherId`),
-  ADD KEY `publisherName` (`publisherName`(100));
+  ADD KEY `publisherName` (`publisherName`(100)),
+  ADD KEY `publisherType` (`publisherType`);
 
 --
 -- Indexes for table `wkx_resource`
 --
 ALTER TABLE `wkx_resource`
   ADD PRIMARY KEY (`resourceId`),
-  ADD KEY `resourceType` (`resourceType`(100));
+  ADD KEY `resourceType` (`resourceType`),
+  ADD KEY `resourceTitle` (`resourceTitle`(768));
 
 --
 -- Indexes for table `wkx_resource_attachments`
 --
 ALTER TABLE `wkx_resource_attachments`
   ADD PRIMARY KEY (`resourceattachmentsId`),
-  ADD KEY `resourceattachmentsResourceId` (`resourceattachmentsResourceId`);
+  ADD KEY `resourceattachmentsResourceId` (`resourceattachmentsResourceId`),
+  ADD KEY `resourceattachmentsEmbargo` (`resourceattachmentsEmbargo`),
+  ADD KEY `resourceattachmentsEmbargoUntil` (`resourceattachmentsEmbargoUntil`),
+  ADD KEY `resourceattachmentsHashFilename` (`resourceattachmentsHashFilename`),
+  ADD KEY `resourceattachmentsPrimary` (`resourceattachmentsPrimary`);
 
 --
 -- Indexes for table `wkx_resource_category`
@@ -8346,7 +8336,7 @@ ALTER TABLE `wkx_collection`
 -- AUTO_INCREMENT for table `wkx_config`
 --
 ALTER TABLE `wkx_config`
-  MODIFY `configId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+  MODIFY `configId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
 -- AUTO_INCREMENT for table `wkx_creator`

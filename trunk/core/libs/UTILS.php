@@ -468,7 +468,7 @@ namespace UTILS
             }
             
             // Check the component type
-            $legal_types = ["language", "plugin", "style", "template", "vendor"];
+            $legal_types = ["plugin", "style", "template", "vendor"];
             if (!in_array($componentMetadata["component_type"], $legal_types))
             {
                 return 5;
@@ -503,40 +503,6 @@ namespace UTILS
             if (!in_array($componentMetadata["component_updatable"], ["false", "true"]))
             {
                 return 8;
-            }
-            
-            // Check the files specific to a language component
-            // SRC is not a standard language component and is used only by translators and developers
-            if ($componentMetadata["component_type"] == "language" && basename($componentDirPath) != "src")
-            {
-                $lcmsgdir = $componentDirPath . DIRECTORY_SEPARATOR . "LC_MESSAGES";
-                if (!file_exists($lcmsgdir))
-                {
-                    return 9;
-                }
-                elseif (!is_readable($lcmsgdir))
-                {
-                    return 10;
-                }
-                elseif (!is_dir($lcmsgdir))
-                {
-                    return 11;
-                }
-                
-                $numMoFiles = 0;
-                foreach (\FILE\fileInDirToArray($lcmsgdir) as $file)
-                {
-                    if (\UTILS\matchSuffix($file, ".mo"))
-                    {
-                        $numMoFiles++;
-
-                        break;
-                    }
-                }
-                if ($numMoFiles == 0)
-                {
-                    return 12;
-                }
             }
             
             // Check the files specific to a plugin component
@@ -685,7 +651,7 @@ namespace UTILS
     function componentIntegrityErrorMessage($error_code)
     {
         $mandatory_properties = ["component_type", "component_id", "component_builtin", "component_updatable", "component_name"];
-        $legal_types = ["language", "plugin", "style", "template", "vendor"];
+        $legal_types = ["plugin", "style", "template", "vendor"];
         $msg = [
             0 => "OK",
             1 => "The component.json file is missing, unreadable or not decodable.",
@@ -696,10 +662,10 @@ namespace UTILS
             6 => "The 'component_type' property is note valid or this component is installed in the wrong folder.",
             7 => "The value of the 'component_builtin' is invalid (legal values: false, true).",
             8 => "The value of the 'component_updatable' is invalid (legal values: false, true).",
-            9 => "The LC_MESSAGES subdirectory is missing.",
-            10 => "The LC_MESSAGES subdirectory is not readable.",
-            11 => "LC_MESSAGES is not a directory.",
-            12 => "The LC_MESSAGES subdirectory does not contain any gettext compiled catalogs (MO files).",
+            9 => "The LC_MESSAGES subdirectory is missing.", // Removed code in 6.3.6: was used for language type components 
+            10 => "The LC_MESSAGES subdirectory is not readable.", // Removed code in 6.3.6: was used for language type components 
+            11 => "LC_MESSAGES is not a directory.", // Removed code in 6.3.6: was used for language type components 
+            12 => "The LC_MESSAGES subdirectory does not contain any gettext compiled catalogs (MO files).", // Removed code in 6.3.6: was used for language type components 
             13 => "The config.php file is missing.",
             14 => "The config.php file is not readable.",
             15 => "config.php is not a file.",

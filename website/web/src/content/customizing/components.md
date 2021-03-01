@@ -8,7 +8,7 @@ weight = 4
 
 Each component must have a `component.json` in [JSON](https://www.json.org/json-en.html) format that
 describes the main information about itself. The file must be structured
-as a single object which corresponds to a PHP array once deserialized
+as a single object which corresponds to a PHP array once unserialized
 with `json_decode()`. Each key/value pair of the object is an array
 key/value entry. The format is under development and may change further.
 

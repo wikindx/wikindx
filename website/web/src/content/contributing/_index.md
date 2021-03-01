@@ -8,7 +8,6 @@ chapter = true
 
 # Contributing
 
-We are happy to welcome new contributors.  You can join us to contribute
+We are happy to welcome new contributors.  Join us to contribute
 to the creation of official components or the development of Wikindx.
-
-There is a lot to do, not just development. Contact us!
+There is a lot to do, not just development.

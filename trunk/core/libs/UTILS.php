@@ -467,6 +467,12 @@ namespace UTILS
                 return 4;
             }
             
+            // Check the component id (34)
+            if (mb_strlen(preg_replace("/[-_a-z0-9]/u", "", $componentMetadata["component_id"])) > 0 || mb_strlen(preg_replace("/[-_a-z0-9]/u", "", $basedir)) > 0)
+            {
+                return 34;
+            }
+            
             // Check the component type
             $legal_types = ["plugin", "style", "template", "vendor"];
             if (!in_array($componentMetadata["component_type"], $legal_types))
@@ -687,6 +693,7 @@ namespace UTILS
             31 => "The compatible_version file is missing.",
             32 => "The compatible_version file is not readable.",
             33 => "compatible_version is not a file.",
+            34 => "The 'component_id' and the folder name of the component must use ASCII characters only in range: a to z, 0 to 9, - (hyphen), or _ (underscore).",
         ];
 
         return array_key_exists($error_code, $msg) ? $msg[$error_code] : "Unknow";

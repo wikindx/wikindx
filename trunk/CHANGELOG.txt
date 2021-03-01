@@ -41,6 +41,7 @@ MAINTENANCE:
 8. When the WIKINDX_DEBUG_SQL is TRUE, always die on db error [#289].
 9. Embed icons in HTML with base64 encoding [#321].
 10. Remove dead code validating components ot type language.
+11. New rule (code 34) about the characters set of the component_id field of the component.json file.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

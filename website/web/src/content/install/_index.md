@@ -26,9 +26,9 @@ username/password to wikindx/config.php and then run WIKINDX.
 
 Three users (username/password):
 
- * Administrator -- super/super
- * user1/user1
- * user2/user2
+ * Administrator -- super/superW!k1ndx
+ * user1/user1W!k1ndx
+ * user2/user2W!k1ndx
 
 There are 83 resources entered with categories, keywords, abstracts,
 notes and metadata (quotations, paraphrases, musings) and at least two

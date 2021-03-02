@@ -260,7 +260,7 @@ define('WIKINDX_LDAP_SEARCH_OPERATOR_LIST', ['or' => 'or', 'and' => 'and']);
 define('WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_LIST', ['none' => 'none', 'sam' => 'sam', 'upn' => 'upn']);
 define('WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL', 'mail');
 define('WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME', 'displayname');
-define('WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN_LIST', ['sAMAccountName' => 'sAMAccountName', 'uid' => 'uid', 'userPrincipalName' => 'userPrincipalName']);
+define('WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN_LIST', ['CN' => 'CN', 'sAMAccountName' => 'sAMAccountName', 'uid' => 'uid', 'userPrincipalName' => 'userPrincipalName']);
 
 
 // Mail system

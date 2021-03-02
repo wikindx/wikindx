@@ -12,19 +12,19 @@
         {
             "author_name": "JS Foundation and other contributors",
             "author_role": "Developers",
-            "author_copyright": "2006-2020"
+            "author_copyright": "2006-2021"
         },
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Packager",
-            "author_copyright": "2017-2016, 2020",
+            "author_copyright": "2017-2016, 2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Packager",
-            "author_copyright": "2017-2020",
+            "author_copyright": "2017-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }

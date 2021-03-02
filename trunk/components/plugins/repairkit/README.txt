@@ -44,6 +44,7 @@ BUGS AND LIMITATIONS
 
 CHANGELOG:
 
+2021-03-02 : FIX : workaround a limitation of MySQL (no self update of a table)
 2021-01-28 : ADD : user account deduplication (#287).
 2021-01-27 : FIX : correctly created multi-field primary key (#281).
 2021-01-27 : FIX : correctly created multi-field indexes (#303).

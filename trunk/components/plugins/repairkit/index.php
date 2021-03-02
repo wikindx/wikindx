@@ -1062,7 +1062,7 @@ class repairkit_MODULE
             $sql = "UPDATE " . $this->db->formatTables("users") . " SET ";
             foreach ($selection as $k => $v)
             {
-                $sql .= " " . $k . " = (SELECT $k FROM " . $this->db->formatTables("users") . " WHERE usersId = $oldusersId), ";
+                $sql .= " " . $k . " = " . $this->db->formatValues($this->db->queryFetchFirstField("SELECT " . $k . " FROM " . $this->db->formatTables("users") . " WHERE usersId = " . $oldusersId)) . ", ";
             }
             $sql = rtrim($sql);
             $sql = rtrim($sql, ",");

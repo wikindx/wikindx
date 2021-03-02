@@ -1370,9 +1370,21 @@ class repairkit_MODULE
                     {
                         if ($fieldCorrect[$key] !== $fieldCurrent[$key] && $key != "Table")
                         {
-                            // Field declaration mismatching
-                            $match = 1;
-                            break;
+                            if (
+                                (mb_strtolower($fieldCorrect["Field"]) == "current_timestamp()" || mb_strtolower($fieldCorrect["Field"]) == "current_timestamp"))
+                                && (mb_strtolower($fieldCurrent["Field"]) == "current_timestamp()" || mb_strtolower($fieldCurrent["Field"]) == "current_timestamp"))
+                                )
+                            {
+                                // current_timestamp() has two syntax (current_timestamp() or CURRENT_TIMESTAMP).
+                                // It depends on whether you are on MySQL or MariaDB.
+                                continue;
+                            }
+                            else
+                            {
+                                // Field declaration mismatching
+                                $match = 1;
+                                break;
+                            }
                         }
                     }
                     

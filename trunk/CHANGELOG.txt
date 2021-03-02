@@ -24,6 +24,7 @@ BUG FIXES:
 17. Add a missing index on resourcetimestampTimestampAdd (previous upgrade code missing).
 18. Fix indices categoryCategory, keywordKeyword, and resourceTitle.
 19. Workaround a limitation of MySQL (no self update of a table).
+20. Allow the two syntax of current_timestamp() for MySQL and MariaDB.
 
 FEATURE ENHANCEMENT:
 1. Added the ability to add an impressum/legal notice at the footer of each page – see Admin|Configure|Miscellaneous.

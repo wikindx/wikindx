@@ -5,7 +5,6 @@ weight = 5
 chapter = true
 +++
 
-# Contributing
 
 We are happy to welcome new contributors.  Join us to contribute
 to the creation of official components or the development of Wikindx.

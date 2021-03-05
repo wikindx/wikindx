@@ -5,10 +5,8 @@ weight = 4
 chapter = true
 +++
 
-# Customizing
 
 Wikindx can be customized through components of four types: plugin, style, template, vendor.
-
 
 Disclaimer : _currently the interface between the components and the core is not mature and we have not set up an infrastructure that would allow a developer to distribute an official component without also being an active developer of the core. The interface is quite unstable from one version to another, however you can develop a component for your private use if you are not put off by the code changes with each version._
 
@@ -25,7 +23,7 @@ It must respect an interface with the core code.
 
 A component of type __style__ is an XML file defining bibliographic style rules.
 
-A component of type __template__ is a collection of Smarty templates, images, CSS and Javascript that customizes the general appearance and major pages.
+A component of type __template__ is a theme made of a collection of Smarty templates, images, CSS and Javascript that customizes the general appearance and major pages.
 
 A component of type __vendor__ is reserved for kernel developers.
 It is used to integrate third-party libraries such as Smarty.

@@ -65,6 +65,8 @@ website/web/src/themes/hugo-theme-learn/static/js/minified_footer.js.php
 
 All custom fonts have been removed and the data of the search engine are loaded only on the first query.
 
+Chapter titles are displayed in the body.
+
 Mermaid JS is not enabled because this JS file is huge but could be used later.
 
 

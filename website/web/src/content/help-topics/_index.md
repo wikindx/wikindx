@@ -6,6 +6,5 @@ chapter = true
 #pre = "<b>2. </b>"
 +++
 
-# Help Topics
 
 This section contains the help topics for the application.

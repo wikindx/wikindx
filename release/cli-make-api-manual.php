@@ -11,7 +11,7 @@
 /**
  * cli-make-api-manual.php
  *
- * Script to build the API manual with phpDocumentor.
+ * Script to build the API manual with phpDocumentor (v3.0.0 only).
  *
  * @package wikindx\release\api-manual
  */

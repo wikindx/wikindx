@@ -23,7 +23,7 @@
     }
 
     // Build the dropdown list
-    $.getJSON( '{{ .Site.BaseURL }}' + 'version-switch.php', function( data ) {
+    $.getJSON( '{{ .Site.BaseURL }}' + '../version-switch.php', function( data ) {
         // Add other options
         $.each( data, function( value, text ) {
             // Skip the trunk version (always pre-included)

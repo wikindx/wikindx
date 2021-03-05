@@ -1,23 +1,23 @@
 <?php
 /**
-* Return a list of available components for a defined version of WIKINDX
-*
-* This script is very simple and just returns a list of components that match
-* components compatible versions of the core version requested.. It can act as
-* a gateway when there is a change in the definition of formats, file locations,
-* or compatibility issues.
-*
-* This script must be installed at https://wikindx.sourceforge.io/cus/index.php
-*
-* WIKINDX : Bibliographic Management system.
-* @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
-*
-* @version 2
-*
-* @author The WIKINDX Team
-* @copyright 2020 Stéphane Aulery <lkppo@users.sourceforge.net>
-* @license https://www.isc.org/licenses/ ISC License
-*/
+ * WIKINDX : Bibliographic Management system.
+ *
+ * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
+ * @author The WIKINDX Team
+ * @license https://www.isc.org/licenses/ ISC License
+ */
+ 
+/**
+ * Return a list of available components for a defined version of WIKINDX
+ *
+ * This script is very simple and just returns a list of components that match
+ * components compatible versions of the core version requested.. It can act as
+ * a gateway when there is a change in the definition of formats, file locations,
+ * or compatibility issues.
+ *
+ * This script must be installed at https://wikindx.sourceforge.io/cus/index.php
+ */
 
 // Config the JSON MIME/Type
 header("Content-type: application/json; charset=UTF-8");

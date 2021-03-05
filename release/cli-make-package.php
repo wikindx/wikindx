@@ -9,7 +9,7 @@
  */
 
 /**
- * make.php
+ * make.php - Packaging script for Wikindx release
  *
  * Release script.
  *

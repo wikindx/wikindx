@@ -1,7 +1,17 @@
 <?php
+/**
+ * WIKINDX : Bibliographic Management system.
+ *
+ * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
+ * @author The WIKINDX Team
+ * @license https://www.isc.org/licenses/ ISC License
+ */
 
 /*
- * Make a bundle of CSS files
+ * Make a bundle of CSS files and destroy source files.
+ *
+ * Called by release/cli-make-web.php
  */
 
 $code = "";

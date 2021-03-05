@@ -2,7 +2,6 @@
 title = "History"
 date = 2021-01-30T00:08:41+01:00
 weight = 1
-chapter = false
 +++
 
 

@@ -1,55 +1,17 @@
 +++
-title = "Install"
+title = "LAMP Server Setup"
 date = 2021-01-30T00:08:41+01:00
-weight = 3
+weight = 2
 +++
 
-## Preamble
-
-The versions are numbered for the history and semi-automatic update
-system of the data and the database (each change is applied between the installed
-version and the target version).  However, always read the UPGRADE.txt
-file for the steps to be done by hand when upgrading.
-
-So we recommend that you regularly update to the latest version from the
-tarball version available in the [SourceForge File](https://sourceforge.net/projects/wikindx/files/) section,
-especially if your wikindx is hosted on the web.
-
-If you prefer an installation from a source management client, __we
-strongly recommand__ that you use one of the __point release__ described
-in the README.txt file at the root of SVN with the __trunk__ branch on a
-__production__ server.
-
-The __trunk__ branch (for developers and testers) can be broken at any
-(and for a long) time and damage your database.
 
 
-## Components compatibility
 
-Wikindx, the core application, and officials components are developped
-together: templates (themes), styles (bibliographic styles) and PHP
-plugins. The additional vendor component type contains third-party
-software.
 
-Wikindx comes with __default__ template, __APA__ style and main vendor
-components pre-installed. No plugins are pre-installed.
-
-All components are available on [SourceForge File] section for a manual
-installation or via the component update system embeded in Wikindx.
-
-Each official vendor component is released with a new version of the
-application and only for the last version. Others components could
-cover many Wikindx versions.
-
-For reasons of immaturity of the system of components it is recommended
-to contribute to the official development team so that the components
-are always compatible with the latest version. If you create your own
-components it is not guaranteed that they will work on a later version
-of Wikindx.
 
 
 ## In all cases, the following steps need to be taken once the web server environment is up and running.
-
+ 
 The details may be slightly different (especially steps 4/ to 7/) depending on the version of phpMyAdmin that is available or whether running WIKINDX on a hosted web environment or locally but the principles are the same.
 
 1. If you haven't already, unzip wikindx into the web server environment folder (typically 'www/' or 'httpd/') where it will create the folder 'wikindx6/' – and copy config.php.dist to config.php. Depending on your Operating System, you might be prompted at stage 8/ below to change the permissions of various folders and files.
@@ -70,10 +32,10 @@ Assuming you won't change these, we'll use these values in phpMyAdmin. NB, the p
 4. Launch PhpMyAdmin in a web browser. There might be a link to this in your web server control panel or, if running locally, try 'http://localhost/phpmyadmin/' in the web browser address bar.
 5. In the 'Databases' tab of PhpMyAdmin, type in 'wikindx6' as the name of a new database, set 'utf8mb4_unicode_520_ci' as the collation, and click 'Create'.
 6. Go back to the 'Databases' tab, click on 'Check privileges' for the new database, and select 'Add user account'.
-7. In the field 'User name', type in 'wikindx' and type 'wikindx' into the two password fields. If running WIKINDX locally, select 'local' for host. Check the checkbox for 'Grant all privileges on database wikindx6' then click on the 'Go' button.
+7. In the field 'User name', type in 'wikindx' and type 'wikindx' into the two password fields. If running WIKINDX locally, select 'local' for host. Check the checkbox for 'Grant all privileges on database wikindx6' then click on the 'Go' button. 
 8. Type in the WIKINDX address in the web browser – if running locally, this will be http://localhost/wikindx6/ – to complete your WIKINDX configuration.
 
-Bon voyage!
+Bon voyage! 
 
 ## Installing and configuring XAMPP on MacOS
 

@@ -131,33 +131,22 @@ for proper functioning, which should be the case for almost all installations.
 | xmlreader  | >= 5.2.0
 
 
-#### Optional extensions
+#### Optional extensions and configuration
 
-   * __curl__ (>= 5.2.0): if allow_url_fopen and curl are disabled Wikindx
-     will be not be able to efficiently extract texts of a PDF and embed an
-     external image in an RTF export.
+| Extensions       | Wikindx version | Note
+|------------------|-----------------|-----------------
+| curl             | >= 5.2.0        | Needed to extract texts of a PDF.
+| enchant / pspell | >= 5.2.0        | Used by the spell checker of [TinyMCE](https://www.tiny.cloud/). It is always disabled under Windows because the pspell is uninstallable in practice on this OS.
+| ldap             | >= 6.4.0        | Needed only for LDAP authentification mode.
+| openssl          | >= 5.2.0        | Needed if you intend to send emails with secure protocols (starttls, tls, ssl) in SMTP mode and encryption (See [PHPMailer](https://github.com/PHPMailer/PHPMailer)).
+| sockets          | >= 5.2.0        | Needed if you intend to send emails with the SMTP protocol.
+| zip              |                 | Without this extension attachments will not be exported in a Zip archive. Also used by the release process.
+| curl + zip       | >= 5.9.1        | if disabled, the update feature of Wikindx components will be disabled.
+| Phar             |                 | Used by the release process.
+| zlib             |                 | Used by the release process.
 
-   * __enchant__ (>= 5.2.0): if disabled, the spell checker incorporated into
-     TinyMCE will be disabled. It is always disabled under Windows
-     because the pspell is uninstallable in practice on this OS.
+If **allow_url_fopen** is disabled Wikindx will be not be able to embed an external image in an RTF export.
 
-   * __ldap__ (>= 6.4.0): if disabled, the LDAP authentification mode will be unavailable.
-
-   * __openssl__ (>= 5.2.0): if disabled, [PHPMailer](https://github.com/PHPMailer/PHPMailer) will not be able to use
-     secure protocols (starttls, tls, ssl) in SMTP mode and encryption.
-
-   * __pspell__ (>= 5.2.0): if disabled, the spell checker incorporated into
-     TinyMCE will be disabled. It is always disabled under Windows
-     because the pspell is uninstallable in practice on this OS.
-
-   * __sockets__ (>= 5.2.0): if disabled, PHPMailer will not be able to use
-     the SMTP protocol.
-
-   * __zip__: if disabled, Wikindx will not be able to export attachments in
-     a Zip archive.
-
-   * __curl + zip__ (>= 5.9.1): if disabled, the update feature of Wikindx
-     components will be disabled.
 
 #### Official plugins requirements
 
@@ -165,9 +154,7 @@ This list only indicates the need of extensions when it is more
 important than those of the core:
 
  * backupMySQL: __zlib__ (optional)
- * dbAdminer: __bz2__ (optional), __openssl__ (optional), __zlib__ (optional),
-   __zip__ (optional)
- * visualize: __bz2__ (optional), __zlib__ (optional)
+ * dbAdminer: __bzi2__ (optional), __openssl__ (optional), __zip__ (optional), __zlib__ (optional)
  * wordProcessor: __enchant__ (optional), __socket__ (optional)
 
 

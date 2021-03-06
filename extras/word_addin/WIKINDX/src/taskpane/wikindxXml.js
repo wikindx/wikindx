@@ -23,6 +23,7 @@ export function getReference(id) {
   searchURL = wikindxURL.value 
     + "office.php" + '?method=getReference' 
     + '&style=' + encodeURI(styleSelectBox.value) 
+    + '&source=' + encodeURI('Word') 
     + '&id=' + encodeURI(id);
   doXml();
 }
@@ -38,6 +39,7 @@ export function getCitation(id) {
   searchURL = wikindxURL.value 
     + "office.php" + '?method=getCitation' 
     + '&style=' + encodeURI(styleSelectBox.value) 
+    + '&source=' + encodeURI('Word') 
     + '&id=' + encodeURI(id)
     + html;
   doXml();
@@ -49,7 +51,8 @@ export function finalizeGetReferences(wikindxURL, ids) {
   searchURL = wikindxURL
     + "office.php" + '?method=getBib' 
     + '&style=' + encodeURI(styleSelectBox.value) 
-    + '&searchParams=' + encodeURI(searchParams.value)
+    + '&searchParams=' + encodeURI(searchParams.value) 
+    + '&source=' + encodeURI('Word') 
     + '&ids=' + encodeURI(ids);
   doXml();
 }
@@ -66,7 +69,8 @@ export function finalizeGetCitations(wikindxURL, ids) {
 export function getStyles() {
   var wikindxURL = document.getElementById("wikindx-url");
   searchURL = wikindxURL.value 
-    + "office.php" + '?method=getStyles';
+    + "office.php" + '?method=getStyles' 
+    + '&source=' + encodeURI('Word');
   doXml();
   // As this is triggered from a change in the WIKINDX selection, store also the currently selected URL and name
   var jsonArray = JSON.parse(window.localStorage.getItem('wikindx-localStorage'));
@@ -103,7 +107,8 @@ export function getSearchInputReferences(searchText) {
   searchURL = wikindxURL.value 
     + "office.php" + '?method=getReferences' 
     + '&searchWord=' + encodeURI(searchText)
-    + '&style=' + encodeURI(styleSelectBox.value)
+    + '&style=' + encodeURI(styleSelectBox.value) 
+    + '&source=' + encodeURI('Word') 
     + '&searchParams=' + encodeURI(searchParams.value)
   doXml();
 }
@@ -115,7 +120,8 @@ export function getSearchInputCitations(searchText) {
   searchURL = wikindxURL.value 
     + "office.php" + '?method=getCitations' 
     + '&searchWord=' + encodeURI(searchText)
-    + '&style=' + encodeURI(styleSelectBox.value)
+    + '&style=' + encodeURI(styleSelectBox.value) 
+    + '&source=' + encodeURI('Word') 
     + '&searchParams=' + encodeURI(searchParams.value);
   doXml();
 }
@@ -133,7 +139,7 @@ export function heartbeat(url) {
   if (!url) {
     url = document.getElementById("wikindx-url").value;
   }
-  searchURL = url + "office.php" + '?method=heartbeat';
+  searchURL = url + "office.php" + '&source=' + encodeURI('Word') + '?method=heartbeat';
   doXml();
   if (xmlResponse == null) {
     return displayError(errorXMLHTTP);

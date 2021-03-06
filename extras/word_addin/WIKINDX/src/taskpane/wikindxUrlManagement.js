@@ -210,7 +210,7 @@ export function urlDeleteDisplay() {
     text += '<input type="checkbox" id="' + id + '" name="' + id + '">'
       + '<label for="' + id + '"> ' + jsonArray[i][1] + ': ' + jsonArray[i][0] + '</label><br/>';
   }
-  text += '<button class="button" id="wikindx-url-remove" alt="Delete URLs" title="Delete URLs">Delete URLs</button>';
+  text += '<button class="button" id="wikindx-url-remove" alt="Delete URLs" title="Delete URLs">Delete&nbsp;URLs</button>';
   text += '<button class="button" id="wikindx-close-url-remove" alt="Close" title="Close">Close</button>';
   document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Delete WIKINDX';
   document.getElementById("wikindx-urls-remove").innerHTML = text;

@@ -2,6 +2,7 @@
 title: "Wikindx overview"
 ---
 
+
 # Wikindx overview
 
 Reference management, bibliography management, citations and a whole lot more.
@@ -25,10 +26,11 @@ WIKINDX is widely used around the world including at NASA and a range of univers
 
 Listed below are the core features available by default. Functionality can be extended with plug-ins and other add-ins.
 
+
 ### User
 
-
 * 41 resource types.
+* Translations included for major languages (English, French, German, Spanish, Italian, Russian).
 * Multi-user mode – create and manage your own bibliographies drawn from the WIKINDX master bibliography and browse other users' bibliographies. (Must be enabled by the administrator.)
 * Create user groups and user group bibliographies. (Must be enabled by the administrator).
 * Save your own preferences.
@@ -57,7 +59,7 @@ Listed below are the core features available by default. Functionality can be ex
 * Add resources to a temporary basket for viewing and exporting.
 * Select a visual style.
 * Import WIKINDX resources into Zotero.
-* And much, much more...
+* And much, much more ...
 
 
 ### Administrator
@@ -85,9 +87,9 @@ Listed below are the core features available by default. Functionality can be ex
 
 
 
-## Extensions
+## Components
 
-WIKINDX uses a plug-in module system to extend or alter its capabilities. Additionally, there exist third-party plug-ins and extensions. All extras can be downloaded from the plugins section of the Sourceforge file downloads area. Simply extract them (with their directory structure) to the components/plugins/ directory to make them instantly available. Plugin options can be configured from within the web browser.
+WIKINDX uses a components system to extend or alter its capabilities. All offical components are available from our Components Update Server and are configurable from the Wikindx interface. You could also write your own components and contribute to the community of users.
 
 
 ### Some Plugins
@@ -109,8 +111,24 @@ WIKINDX uses a plug-in module system to extend or alter its capabilities. Additi
 * DebugTools – get usefull debugging info
 
 
-### Localizations and bibliographic styles
+### Bibliographic styles
 
-Translations are included in the core.
+There are a variety of bibliographic and citation styles available from the Components Update Server like:
 
-There are a variety of bibliographic/citation styles available from the sourceforge site. They act like plug-ins so simply extract them (with their directory structure) to the components/styles/ directory to make them instantly available.
+* American Psychological Association (APA)
+* Associação Brasileira de Normas Técnicas (ABNT)
+* British Medical Journal (BMJ)
+* Chicago
+* Comicforschung-Bibliographie Stil (CFB)
+* Harvard
+* Institute of Electrical and Electronics Engineers (IEEE)
+* Modern Language Association (MLA)
+* Turabian
+* Wikindx
+
+Create your own styles and contribute to extend our public repository of bibliographic styles!
+
+
+### Templates
+
+We provide basic themes. Fork one of them and build your own.

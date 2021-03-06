@@ -20,6 +20,8 @@ class OFFICE
 {
     private $db;
     private $vars;
+    private $output = 'html'; // default
+    private $stripTags = FALSE;
     
     /**
      * Constructor
@@ -42,6 +44,10 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
 	 */
     public function init()
     {
+    	if ($this->vars['source'] == 'googleDocs') {
+    		$this->output = 'noScan';
+    		$this->stripTags = TRUE;
+    	}
     	if (array_key_exists('method', $this->vars)) {
     		switch ($this->vars['method']) {
     			case 'getReferences':
@@ -221,6 +227,10 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
     	$titleString = str_replace(['{', '}'], '', $titleString);
     	if (!$this->vars['withHtml']) {
     		$citation = strip_tags($citation);
+    		if ($this->vars['source'] == 'googleDocs') {
+    			$citation = html_entity_decode($citation, ENT_QUOTES, 'UTF-8');
+    			$reference = html_entity_decode($reference, ENT_QUOTES, 'UTF-8');
+    		}
     	}
     	$jsonArray = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 
     		'citation' => $citation, 'titleCC' => $titleString, 'metaId' => $this->vars['id']];

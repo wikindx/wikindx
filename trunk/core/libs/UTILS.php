@@ -39,7 +39,7 @@ namespace UTILS
      */
     function listCoreOptionalPHPExtensions()
     {
-        return ['bzip2', 'curl', 'enchant', 'openssl', 'Phar', 'pspell', 'sockets', 'zlib', 'zip'];
+        return ['bzip2', 'curl', 'enchant', 'ldap', 'openssl', 'Phar', 'pspell', 'sockets', 'zlib', 'zip'];
     }
     /**
      * Return the normalized name of the current os

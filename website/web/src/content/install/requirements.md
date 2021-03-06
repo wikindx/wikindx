@@ -7,7 +7,7 @@ weight = 1
 
 ## Hosting
 
-WIKINDX requires a web server environment comprising a web server (typically [Apache](https://apache.org/) or [Nginx](https://www.nginx.com/)), [PHP](https://www.php.net/) scripting, and a [MariaDB](https://mariadb.org/) (or [MySQL](https://www.mysql.com)) server.
+WIKINDX requires a web server environment comprising a web server (typically [Apache](https://apache.org/), [Nginx](https://www.nginx.com/), or [Microsoft IIS](https://www.iis.net/)), [PHP](https://www.php.net/) scripting, and a [MariaDB](https://mariadb.org/) (or [MySQL](https://www.mysql.com)) server.
 
 Most web-hosting providers can provide this configuration at a low cost. Even small VPS of a few bucks per month are more than enough.  If you don't have any system administration skills or don't have the time to deal with it this is definitely your best option. Placing WIKINDX on such a remote web server means that it can be accessed from any machine and people on the web. The constraint of this solution is security. Be sure to update Wikindx regularly to benefit from our security fixes
 
@@ -20,7 +20,8 @@ For a single installation there are a variety of [LAMP software bundle](https://
 * [Caddy2](https://caddyserver.com/v2) (Web server only, OS versatile, Go based, for advanced users only)
 * [WAMP](https://www.wampserver.com/) (Windows only, Apache based)
 * [WinNMP](https://winnmp.wtriple.com/) (Windows only, Nginx based)
-* [XAMPP](http://www.apachefriends.org/en/xampp.html) (Windows, Linux, OSx, Apache based)
+* [XAMPP](http://www.apachefriends.org/en/xampp.html) (Windows, Linux, MacOS, Apache based)
+* [Homebrew](https://brew.sh/) (package manager for MacOS)
 
 If you have a BSD or Linux server then choose the softwares available from the package manager of your distribution / OS. They are usually very well endowed. Favor Apache over Nginx which is much easier to configure. As a general rule we follow the [software versions](https://distrowatch.com/table.php?distribution=debian) to be compatible with the latest [stable version of Debian](https://www.debian.org/releases/).
 
@@ -70,6 +71,8 @@ of the PHP Team. mod_php, CGI, and and FastCGI are compliant with PHP and Wikind
 
 Wikindx can support older versions to facilitate the migration
 of an installation but are not intended to support a large number of versions.
+
+All current versions of PHP have a good support of UTF-8.
 
 |Wikindx | 5.5 | 5.6 | 7.0 | 7.1 | 7.2 | 7.3 | 7.4 | 8.0
 |--------|-----|-----|-----|-----|-----|-----|-----|--------
@@ -137,6 +140,8 @@ for proper functioning, which should be the case for almost all installations.
    * __enchant__ (>= 5.2.0): if disabled, the spell checker incorporated into
      TinyMCE will be disabled. It is always disabled under Windows
      because the pspell is uninstallable in practice on this OS.
+
+   * __ldap__ (>= 6.4.0): if disabled, the LDAP authentification mode will be unavailable.
 
    * __openssl__ (>= 5.2.0): if disabled, [PHPMailer](https://github.com/PHPMailer/PHPMailer) will not be able to use
      secure protocols (starttls, tls, ssl) in SMTP mode and encryption.

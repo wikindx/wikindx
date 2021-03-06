@@ -83,7 +83,7 @@ function initializeWikindx() {
 //  userProperties.deleteAllProperties();
   if(prefs.localStorage === null) { // No wikindices stored
     return {
-     initialize: true,
+      initialize: true,
       xmlResponse: true // faking it . . .
    };
   } // else initialize with first stored WIKINDX
@@ -105,11 +105,4 @@ function initializeWikindx() {
     selectedURL: selectedURL,
     urlSelectBox: urlSelectBox
   };
-}
-
-function message(text) {
-  var selection = DocumentApp.getActiveDocument().getSelection();
-  var cursor = DocumentApp.getActiveDocument().getCursor();
-  cursor.insertText(text);
-  return 'hello';
 }

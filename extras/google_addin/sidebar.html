@@ -410,6 +410,8 @@
     document.getElementById("wikindx-search").onclick = wikindxSearch;
     document.getElementById("wikindx-refSelectBox").onchange = displayReference;
     document.getElementById("wikindx-citeSelectBox").onchange = displayCitation;
+    document.getElementById("wikindx-insert-reference").onclick = insertReference;
+    document.getElementById("wikindx-insert-citation").onclick = insertCitation;
     document.getElementById("wikindx-styleSelectBox").onchange = reset;
     document.getElementById("wikindx-reference-params").onchange = reset;
     document.getElementById("wikindx-citation-params").onchange = reset;
@@ -423,6 +425,36 @@
       );
 */
 
+function insertReference() {
+  google.script.run
+    .withSuccessHandler(insertReferenceResult)
+    .insertReference(
+      document.getElementById("wikindx-url").value,
+      document.getElementById("wikindx-styleSelectBox").value,
+      document.getElementById("wikindx-refSelectBox").value,
+    );
+}
+function insertReferenceResult(result) {
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+}
+function insertCitation() {
+  google.script.run
+    .withSuccessHandler(insertCitationResult)
+    .insertCitation(
+      document.getElementById("wikindx-url").value,
+      document.getElementById("wikindx-styleSelectBox").value,
+      document.getElementById("wikindx-citeSelectBox").value,
+    );
+}
+function insertCitationResult(result) {
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+}
 
 /**
  * Library functions
@@ -466,12 +498,13 @@ async function search(type, searchText) {
   }
 }
 function searchReferencesResult(result) {
-  console.table(result);
-  for (let match of result.matchArray) {
+  console.table(result.matches);
+  console.table(result.matchArray);
+/*  for (let match of result.matches) {
     console.log(`Found ${match[0]} start=${match.index} end=${match.index + match[0].length}.`);
-//    console.log(`Found ${match[2]} start=${match.index} end=${match.index + match[2].length}.`);
-//    console.table(match)
+    console.table(match)
   }
+*/
   document.getElementById("wikindx-search-working").style.display = "none";
   document.getElementById("wikindx-search-completed").style.display = "block";
   if(!result.xmlResponse) {

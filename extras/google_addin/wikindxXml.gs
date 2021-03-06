@@ -36,7 +36,7 @@ function getCitation(url, style, id) {
     method: 'getCitation',
     style: style,
     id: id,
-    withHtml: 0,
+    withHtml: '0',
     source: 'googleDocs'
   };
   return doXml(url, formData);
@@ -44,7 +44,8 @@ function getCitation(url, style, id) {
 function heartbeat(url) {
   url += "office.php";
   var formData = {
-    method: 'heartbeat'
+    method: 'heartbeat',
+    source: 'googleDocs'
   };
   return doXml(url, formData);
 }
@@ -65,7 +66,8 @@ function userCheckHeartbeat(url) {
 function getStyles(url) {
   url += "office.php";
   var formData = {
-    method: 'getStyles'
+    method: 'getStyles',
+    source: 'googleDocs'
   };
   return doXml(url, formData);
 }
@@ -77,6 +79,7 @@ function doXml(url, formData) {
   };
   try {
     var response = UrlFetchApp.fetch(url, options);
+//    var request = UrlFetchApp.getRequest(url, options);
     if (response === null) {
       return {
         xmlResponse: false,
@@ -101,6 +104,7 @@ function doXml(url, formData) {
   } catch(e) {
       return {
         xmlResponse: false,
+ //       message: url + '?' + request.payload
         message: errorXMLHTTP
       };
   }

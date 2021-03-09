@@ -25,6 +25,7 @@ You can use the [Homebrew](https://brew.sh/) package manager to get all the nece
 
 Some resources:
 
+* [Setup local MAMP server on Mac](https://documentation.mamp.info/en/MAMP-Mac/)
 * [Setup Local (L)AMP Stack on Mac with Homebrew](https://medium.com/@JanFaessler/setup-local-lamp-stack-on-mac-with-homebrew-47eb8d6d53ea)
 * [Upgrade to PHP 7.3 with Homebrew on Mac](https://stitcher.io/blog/php-73-upgrade-mac)
 * [Upgrade to PHP 7.4 with Homebrew on Mac](https://stitcher.io/blog/php-74-upgrade-mac)

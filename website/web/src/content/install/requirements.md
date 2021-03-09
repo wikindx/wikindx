@@ -20,6 +20,7 @@ For a single installation there are a variety of [LAMP software bundle](https://
 * [Caddy2](https://caddyserver.com/v2) (Web server only, OS versatile, Go based, for advanced users only)
 * [WAMP](https://www.wampserver.com/) (Windows only, Apache based)
 * [WinNMP](https://winnmp.wtriple.com/) (Windows only, Nginx based)
+* [MAMP](https://www.mamp.info/en/mamp/) (Windows/MacOS, Apache based)
 * [XAMPP](http://www.apachefriends.org/en/xampp.html) (Windows, Linux, MacOS, Apache based)
 * [Homebrew](https://brew.sh/) (package manager for MacOS)
 
@@ -156,6 +157,23 @@ important than those of the core:
  * backupMySQL: __zlib__ (optional)
  * dbAdminer: __bzi2__ (optional), __openssl__ (optional), __zip__ (optional), __zlib__ (optional)
  * wordProcessor: __enchant__ (optional), __socket__ (optional)
+
+
+## Disk space
+
+The code's disk space consumption is modest (around 40 MB for the code). You should plan a minimum of __150MB for the code__, downloading updates and one db backup. To this must be added the space to be allocated for attachments, images, attachment cache files ... It depends greatly on your use case.
+
+Database disk space can vary greatly. The initial size is around 10 MB (50 KB for its backup). For a large base of 23,000 resources, 12,000 authors and 10 years of statistics, we have observed a size of 460MB (110 MB for its backup). 
+
+
+## Memory consumption
+
+In normal use Wikindx consumes less than 20 MB of RAM by process. It is recommended to limit to 64MB for the proper functioning of updating, searching, and extracting texts from PDF. 
+
+
+## Execution time
+
+Generally a script responds in less than 1 s but searches can go up to 5 or 15 s depending on the size of the database and the complexity of the request. This can be more during a database upgrade, extracting texts from PDF, or importing data. It is recommended to limit the execution time of scripts to 120 s to allow the upgrade and imports.
 
 
 ## Browser compatibility

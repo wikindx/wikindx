@@ -7,11 +7,12 @@ weight = 2
 
 We can't cover all possible setups. We will restrict ourselves to examples taken from our own development configurations for a local install on a personal computer. 
 
+We propose in the following configurations less secure parameters or very high values because we describe here a personal installation which will not be exposed to the Internet. We are more concerned with practicality than security. For security it would be better to have a restrictive approach where you only open features or add resources if they are necessary according to your situation. 
+
+
 ## WinNMP on Windows
 
-[WinNMP](https://winnmp.wtriple.com) is really easy to use and come with a good documentation. Download the installer and install WinNMP at C:\WinNMP. After that just follow the section [How to create a new Project](https://winnmp.wtriple.com/howtos#How-to-create-a-new-Project) of its documentation. Once this step is completed, you could install Wikindx in the new virtual host, in `C:\WinNMP\WWW\wikindx` folder.
-
-We propose in the following configurations less secure parameters or very high values because we describe here a personal installation which will not be exposed to the Internet. We are more concerned with practicality than security. 
+[WinNMP](https://winnmp.wtriple.com) is really easy to use and come with a good documentation. Download the installer and install WinNMP at `C:\WinNMP`. After that just follow the section [How to create a new Project](https://winnmp.wtriple.com/howtos#How-to-create-a-new-Project) of its documentation. Once this step is completed, you could install Wikindx in the new virtual host, in `C:\WinNMP\WWW\wikindx` folder.
 
 ### Virtual host Setup
 
@@ -260,21 +261,15 @@ server {
 	
 	root 	"c:/winnmp/www/wikindx"; # automatically modified on each restart! can be manually set by replacing this comment
 	
-	
 	## Access Restrictions
 	allow		127.0.0.1;
 	deny		all;
 	
-	
 	## Add locations:
 	## https://winnmp.wtriple.com/howtos#How-to-add-locations
 	
-	
 	## Configure for various PHP Frameworks:
 	## http://winnmp.wtriple.com/nginx.php
-	
-	
-	
 	
 	autoindex on;
  
@@ -289,7 +284,6 @@ server {
 	location / {
 		try_files $uri $uri/ =404;
 	}
- 
 }
 ~~~~
 

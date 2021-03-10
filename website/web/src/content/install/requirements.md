@@ -75,23 +75,18 @@ of an installation but are not intended to support a large number of versions.
 
 All current versions of PHP have a good support of UTF-8.
 
-|Wikindx | 5.5 | 5.6 | 7.0 | 7.1 | 7.2 | 7.3 | 7.4 | 8.0
-|--------|-----|-----|-----|-----|-----|-----|-----|--------
-|trunk   |     |     |     |     |     |  X  |  X  | Partial
-|6.4.2   |     |     |     |     |     |  X  |  X  | Partial
-|6.4.1   |     |     |     |     |     |  X  |  X  |
-|6.3.z   |     |     |  X  |  X  |  X  |  X  |  X  |
-|6.2.z   |     |     |  X  |  X  |  X  |  X  |  X  |
-|6.1.0   |     |     |  X  |  X  |  X  |  X  |  X  |
-|6.0.z   |     |  X  |  X  |  X  |  X  |  X  |     |
-|5.9.1   |     |  X  |  X  |  X  |  X  |  X  |     |
-|5.8.z   |     |  X  |  X  |  X  |  X  |  X  |     |
-|5.7.3   |     |  X  |  X  |  X  |  X  |  X  |     |
-|5.7.2   |     |  X  |  X  |  X  |  X  |  X  |     |
-|5.7.1   |     |  X  |  X  |  X  |  X  |     |     |
-|5.7.0   |     |  X  |  X  |  X  |  X  |     |     |
-|5.3.z   |  X  |  X  |  X  |  X  |     |     |     |
-|5.2.z   |  X  |  X  |     |     |     |     |     |
+PHP version | Min Wikindx Version | Max Wikindx Version
+------------|---------------------|--------------------
+8.0         | 6.4.2 (partial)     | trunk (partial)
+7.4         | 6.1.0               | trunk
+7.3         | 5.7.2               | trunk
+7.2         | 5.7.0               | 6.3.10
+7.1         | 5.3.1               | 6.3.10
+7.0         | 5.3.1               | 6.3.10
+5.6         | 5.7.0               | 6.0.8
+5.5         | 5.2.1               | 5.3.2
+5.1         | 4.0.0               | ???
+4.3         | 3.8.1               | ???
 
 
 ## PHP extensions

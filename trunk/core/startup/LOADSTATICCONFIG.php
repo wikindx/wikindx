@@ -141,7 +141,7 @@ function loadStaticConfig()
     {
         if (preg_match('/^\d+[KMG]?$/u', $config->WIKINDX_MEMORY_LIMIT) === FALSE)
         {
-            $errors[] = 'Syntax Error in WIKINDX_MEMORY_LIMIT. See https://secure.php.net/manual/fr/faq.using.php#faq.using.shorthandbytes';
+            $errors[] = 'Syntax Error in WIKINDX_MEMORY_LIMIT. See https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes';
             $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
         }
         elseif (is_int($config->WIKINDX_MEMORY_LIMIT))

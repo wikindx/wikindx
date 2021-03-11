@@ -1561,7 +1561,7 @@ namespace FILE
      *
      * Read a JSON file and unserialize its content to a data structure with json_decode()
      *
-     * @see https://www.php.net/manual/fr/function.json-decode.php
+     * @see https://www.php.net/manual/en/function.json-decode.php
      *
      * @param string $file An absolute or relative path to a file
      *
@@ -1593,7 +1593,7 @@ namespace FILE
      *
      * Serialize a data structure with json_encode() and write it in a file
      *
-     * @see https://www.php.net/manual/fr/function.json-encode.php
+     * @see https://www.php.net/manual/en/function.json-encode.php
      *
      * @param string $file An absolute or relative path to a file
      * @param mixed $data A data structure or a value

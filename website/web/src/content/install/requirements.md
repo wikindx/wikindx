@@ -163,7 +163,7 @@ Database disk space can vary greatly. The initial size is around 10 MB (50 KB fo
 
 ## Memory consumption
 
-In normal use Wikindx consumes less than 20 MB of RAM by process. It is recommended to limit to 64MB for the proper functioning of updating, searching, and extracting texts from PDF. 
+In normal use Wikindx consumes less than 20 MB of RAM by process. It is recommended to limit to 128MB (default official value of PHP memory_limit) for the proper functioning of updating, searching, and extracting texts from PDF. 
 
 
 ## Execution time

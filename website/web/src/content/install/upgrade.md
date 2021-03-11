@@ -68,7 +68,7 @@ messages such as 'MySQL server has gone away', try increasing
 **max_allowed_packet** in the MySQL server.
 4/ If your database is over 1500 resources and you expect to export
 (with the importexport plugin) lists of resources of at least this
-length, then you should set `public $WIKINDX_MEMORY_LIMIT = "64M"` (64MB minimum); in
+length, then you should set `public $WIKINDX_MEMORY_LIMIT = "128M"` (128MB minimum); in
 `config.php` in order to avoid memory allocation errors.
 
 PS: However, it may happen that the rewriting of certain resource and
@@ -87,8 +87,7 @@ If you are upgrading a previous installation of WIKINDX 6.x, simply:
 
 2. Download the source code of the core from the [SourceForge Files](https://sourceforge.net/projects/wikindx/files/) section.
 
-3. Uncompress the source code into a folder on your computer -- this will create a `wikindx`
-folder.
+3. Uncompress the source code into a folder on your computer -- this will create a `wikindx` folder.
 
 4. In the web server hierarchy, optionally remove the `core` and `dbschema` folders.
 You can do this from time to time for cleaning up old code deleted from previous versions.

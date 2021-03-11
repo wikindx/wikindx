@@ -46,6 +46,7 @@ MAINTENANCE:
 10. Remove dead code validating components ot type language.
 11. New rule (code 34) about the characters set of the component_id field of the component.json file.
 12. Note the ldap PHP extension as optional.
+13. Follow the default official value of PHP memory_limit (128MB).
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

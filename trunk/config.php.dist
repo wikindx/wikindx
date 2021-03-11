@@ -77,13 +77,13 @@ public $WIKINDX_URL_BASE = "";
 /*****
 * START PHP MEMORY AND EXECUTION CONFIGURATION
 *****/
-// WIKINDX usually runs with the standard PHP memory_limit of 64MB.
+// WIKINDX usually runs with the standard PHP memory_limit of 128MB.
 // With some PHP configurations, however, this is not enough -- a mysterious blank page is often the result.
 // If you are unable to update php.ini's memory_limit yourself, WIKINDX_MEMORY_LIMIT may be set (an integer such as 64 or 128 followed by 'M').
 // Despite the PHP manual stating that this may not be set outside of php.ini, it seems to work most of the time.
 // It is not, however, guaranteed to do so and editing php.ini is the preferred method particularly if your PHP is in 'safe' mode.
 // Use double quotes around the value.
-public $WIKINDX_MEMORY_LIMIT = "2048M";
+public $WIKINDX_MEMORY_LIMIT = "128M";
 // WIKINDX should run fine with the PHP standard execution timeouts (typically 30 seconds) but,
 // in some cases such as database upgrading of a large database on a slow server, you will need to increase the timeout figure.
 // If this is FALSE, the value set in php.ini is used.

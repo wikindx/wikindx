@@ -132,7 +132,7 @@ function loadStaticConfig()
         $config->WIKINDX_DB_PASSWORD = "";
     }
 
-    // Attempt to set the memory the script uses -- does not work in safe mode
+    // Attempt to set the memory the script uses
     if (!property_exists($config, 'WIKINDX_MEMORY_LIMIT'))
     {
         $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
@@ -155,7 +155,7 @@ function loadStaticConfig()
     }
     ini_set("memory_limit", $config->WIKINDX_MEMORY_LIMIT);
 
-    // Attempt to set the max time the script runs for -- does not work in safe mode
+    // Attempt to set the max time the script runs for
     if (!property_exists($config, 'WIKINDX_MAX_EXECUTION_TIMEOUT'))
     {
         $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;

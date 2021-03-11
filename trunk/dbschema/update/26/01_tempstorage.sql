@@ -1,0 +1,8 @@
+-- 
+-- WIKINDX : Bibliographic Management system.
+-- @link https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+-- @author The WIKINDX Team
+-- @license https://www.isc.org/licenses/ ISC License
+--
+-- This upgrade query was broken and removed at v6.4.2 release.
+-- KEEP this file empty to erase the previous wrong query when the code is uploaded.

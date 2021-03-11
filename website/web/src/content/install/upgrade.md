@@ -93,7 +93,7 @@ folder.
 4. In the web server hierarchy, optionally remove the `core` and `dbschema` folders.
 You can do this from time to time for cleaning up old code deleted from previous versions.
 
-4. Copy the files and folders from the unzipped `wikindx` folder to the root
+4. Copy the files and folders from the uncompressed `wikindx` folder to the root
 folder of your website in the web server hierarchy. This will overwrite
 the source code of the existing installation.
 

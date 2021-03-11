@@ -20,3 +20,6 @@ disableToc: true
 
 #### Bibliographic Style Editor
 ![Bibliographic Style Editor](../images/screenshots/bibliographic_style_editor.jpg?width=50pc)
+
+#### Components Manager
+![Components Manager](../images/screenshots/components_manager.jpg?width=50pc)

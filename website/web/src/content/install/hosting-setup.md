@@ -5,30 +5,49 @@ weight = 2
 +++
 
 
-We can't cover all possible setups. We will restrict ourselves to examples taken from our own development configurations for a local install on a personal computer. 
+We can't cover all possible setups. We will restrict ourselves
+to examples taken from our own development configurations
+for a local install on a personal computer. 
 
-We propose in the following configurations less secure parameters or very high values because we describe here a personal installation which will not be exposed to the Internet. We are more concerned with practicality than security. For security it would be better to have a restrictive approach where you only open features or add resources if they are necessary according to your situation. 
+We propose in the following configurations less secure parameters
+or very high values because we describe here a personal installation
+which will not be exposed to the Internet. We are more concerned
+with practicality than security. For security it would be better
+to have a restrictive approach where you only open features
+or add resources if they are necessary according to your situation. 
 
 
 ## WinNMP on Windows
 
-[WinNMP](https://winnmp.wtriple.com) is really easy to use and come with a good documentation. Download the installer and install WinNMP at `C:\WinNMP`. After that just follow the section [How to create a new Project](https://winnmp.wtriple.com/howtos#How-to-create-a-new-Project) of its documentation. Once this step is completed, you could install Wikindx in the new virtual host, in `C:\WinNMP\WWW\wikindx` folder.
+[WinNMP](https://winnmp.wtriple.com) is really easy to use and come
+with a good documentation. Download the installer and install WinNMP at `C:\WinNMP`.
+After that just follow the section [How to create a new Project](https://winnmp.wtriple.com/howtos#How-to-create-a-new-Project)
+of its documentation. Once this step is completed, you could install Wikindx
+in the new virtual host, in `C:\WinNMP\WWW\wikindx` folder.
 
 ### Virtual host Setup
 
-* Open __WinNMP Manager__ by clicking the taskbar or desktop icon, then click on __New Project__ icon, choose a project name like __wikindx__, hit __Enter__ or click __Save Project__.
+* Open __WinNMP Manager__ by clicking the taskbar or desktop icon,
+  then click on __New Project__ icon, choose a project name like __wikindx__, hit __Enter__ or click __Save Project__.
 
 ![WinNMP Manager](../../images/winnmp_project_1.png)
 
-* Accept the __User Account Control__ warning about `WinNMP.exe`. This is required to map the domain name `wikindx.test` to `localhost`, for testing SEF links and other Nginx rewrite rules.
+* Accept the __User Account Control__ warning about `WinNMP.exe`.
+  This is required to map the domain name `wikindx.test`
+  to `localhost`, for testing SEF links and other Nginx rewrite rules.
 * Check __Enable Local Virtual Server__.
-* Don't change other options since your local installation is a production installation. You are not setting a local host to do some devloppement of a production website.
+* Don't change other options since your local installation
+  is a production installation. You are not setting a local
+  host to do some devloppement of a production website.
 * Click __Save__ to close the __Edit Project__ window
 
 ![Edit Project](../../images/winnmp_project_2.png)
 
-* The project database __wikindx__ and MariaDB user __wikindx__ are already created automatically (Adminer, a web ui db admin is available at <http://localhost/tools/adminer.php>).
-* The default MariaDb(MySql) host is __localhost__ with username __root__ and no password.
+* The project database __wikindx__ and MariaDB user __wikindx__
+  are already created automatically (Adminer, a web ui db admin
+  is available at <http://localhost/tools/adminer.php>).
+* The default MariaDb(MySql) host is __localhost__
+  with username __root__ and no password.
 
 ~~~~
 MySql server:       'localhost'
@@ -37,9 +56,12 @@ MySql password:     '' (no password)
 MySql database:     'wikindx'
 ~~~~
 
-* Type in your browser <http://wikindx.test>. You can see a welcome message with some instructions. Some tools are also available at <http://localhost>.
+* Type in your browser <http://wikindx.test>. You can see a welcome message
+  with some instructions. Some tools are also available at <http://localhost>.
 
-At this point you have a working virtual host ready for installing some PHP code. We need a few more tweaks to accommodate Wikindx.
+At this point you have a working virtual host readyfor installing some PHP code.
+We need a few more tweaks to accommodate Wikindx.
+
 
 ### PHP configuration (php.ini)
 
@@ -235,7 +257,9 @@ extension = php_mysqli.dll
 
 ### Nginx configuration
 
-If your setup is fine your should find a file `C:\WinNMP\conf\domains.d\wikindx.conf` which is the Nginx config of the Virtual Host dedicated to <http://wikindx.test>. Example:
+If your setup is fine your should find a file `C:\WinNMP\conf\domains.d\wikindx.conf`
+which is the Nginx config of the Virtual Host dedicated to <http://wikindx.test>.
+Example:
 
 ~~~~nginx
 server {
@@ -287,7 +311,12 @@ server {
 }
 ~~~~
 
-Instead we will focus on the `C:\WinNMP\conf\nginx.conf` file. This file is the global config of Nginx and `C:\WinNMP\conf\domains.d\wikindx.conf` inherit of it. This will improve Adminer configuration at the same time, allow the upload of big files (128MB) and long script execution for database backups from Adminer. Add or set the following options like in the sample file bellow:
+Instead we will focus on the `C:\WinNMP\conf\nginx.conf` file.
+This file is the global config of Nginx and `C:\WinNMP\conf\domains.d\wikindx.conf`
+inherit of it. This will improve Adminer configuration at the same time,
+allow the upload of big files (128MB) and long script execution
+for database backups from Adminer. Add or set the following options
+like in the sample file bellow:
 
 ~~~~nginx
 ## Timeouts ##
@@ -483,9 +512,11 @@ http {
 
 ## MacOS
 
-We had an example for [XAMPP](http://www.apachefriends.org/en/xampp.html). Unfortunately it is no longer valid due to the abandonment of the version without VM.
+We had an example for [XAMPP](http://www.apachefriends.org/en/xampp.html).
+Unfortunately it is no longer valid due to the abandonment of the version without VM.
 
-You can use the [Homebrew](https://brew.sh/) package manager to get all the necessary software. This is probably the simplest solution.
+You can use the [Homebrew](https://brew.sh/) package manager
+to get all the necessary software. This is probably the simplest solution.
 
 Some resources:
 
@@ -496,3 +527,94 @@ Some resources:
 * [Upgrade to PHP 8.0 with Homebrew on Mac](https://stitcher.io/blog/php-8-upgrade-mac)
 
 >>> We are looking for a contribution to complete this section.
+
+
+## Creating a database
+
+WinNMP creates a database on its own. For the other server environments
+you need to create by hand the database with a MySQL client.
+Hosting providers have often a dedicated tool.
+
+
+### With phpMyAdmin
+
+1. Launch PhpMyAdmin in a web browser, and log in.
+   There might be a link to this in your web server control panel or,
+   if running locally, try <http://localhost/phpmyadmin/>
+   in the web browser address bar.
+
+2. Open the _Databases_ tab. Type in __wikindx6__
+   as the name of a new database, set **utf8mb4_unicode_520_ci**
+   as the collation, and click _Create_ button.
+
+3. Go back to the _Databases_ tab, click on _Check privileges_
+   for the new database, and select _Add user account_.
+
+4. In _User name_ field type in __wikindx__
+   and in _password_ field type __wikindx__.
+   If running WIKINDX locally, select __local__ for host.
+   Check the checkbox for _Grant all privileges on database wikindx6_
+   then click on the _Go_ button.
+
+
+### With Adminer
+
+1. Launch Adminer in a web browser, and log in.
+   There might be a link to this in your web server control panel or,
+   if running locally, try <http://localhost/adminer/> in the web browser address bar.
+
+2. Click on *Create database* top link.
+   Type in __wikindx6__ as the name of a new database,
+   set **utf8mb4_unicode_520_ci** as the collation,
+   and click _Save_ button.
+
+3. Click on _Privileges_ link at the top of the database screen.
+   Click on _Create user_ link at the top.
+
+4. In _Username_ field type __wikindx__
+   and in _Password_ field type __wikindx__.
+   Check __All privileges__ option and click on _Save_ button.
+
+
+### With mysql CLI
+
+1. Launch mysql tool from a console session on the hosting server.
+   The command should be something like:
+
+~~~~sh
+shell> mysql
+~~~~
+
+or
+
+~~~~sh
+shell> mysql --user=admin_user_name --password admin_user_pwd
+~~~~
+
+2. In mysql prompt, execute this SQL query to create the __wikindx6__ database:
+
+~~~~sql
+mysql> CREATE DATABASE wikindx6 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+~~~~
+
+3. Add a __wikindx__ user with a __wikindx__ password,
+   with privileges on __wikindx6__ database
+   when it accesses it
+   from __localhost__ hostname server.
+
+~~~~sql
+mysql> GRANT ALL PRIVILEGES ON wikindx6.* TO 'wikindx'@'localhost' IDENTIFIED BY 'wikindx';
+~~~~
+
+
+4. Refresh the privileges:
+
+~~~~sql
+mysql> FLUSH PRIVILEGES;
+~~~~
+
+4. Quit mysql prompt:
+
+~~~~sql
+mysql> exit
+~~~~

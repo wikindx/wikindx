@@ -6,19 +6,19 @@ weight = 3
 
 ## Preamble
 
-The versions are numbered for the history and semi-automatic update
-system of the data and the database (each change is applied between the installed
-version and the target version).  However, always read the UPGRADE.txt
-file for the steps to be done by hand when upgrading.
+The versions are numbered for the history and the semi-automatic
+data and database update system (each change is applied between
+the installed version and the target version). However, always
+read the Upgrade chapter for instructions on upgrading.
 
 So we recommend that you regularly update to the latest version from the
 tarball version available in the [SourceForge File](https://sourceforge.net/projects/wikindx/files/) section,
 especially if your wikindx is hosted on the web.
 
-If you prefer an installation from a source management client, __we
-strongly recommand__ that you use one of the __point release__ described
-in the README.txt file at the root of SVN with the __trunk__ branch on a
-__production__ server.
+If you prefer an installation from a [Version Control Systems](https://en.wikipedia.org/wiki/Version_control) (VCS),
+__we strongly recommend__ that you use one of the __point release__ described
+in the README.txt file at the [root of SF SVN](https://sourceforge.net/p/wikindx/svn/HEAD/tree/)
+with the __trunk__ branch on a __production__ server.
 
 The __trunk__ branch (for developers and testers) can be broken at any
 (and for a long) time and damage your database.
@@ -26,16 +26,17 @@ The __trunk__ branch (for developers and testers) can be broken at any
 
 ## Components compatibility
 
-Wikindx, the core application, and officials components are developped
+Wikindx, the core application, and officials components are developed
 together: templates (themes), styles (bibliographic styles) and PHP
 plugins. The additional vendor component type contains third-party
 software.
 
 Wikindx comes with __default__ template, __APA__ style and main vendor
-components pre-installed. No plugins are pre-installed.
+components pre-installed. No plugins are pre-installed. Translations are
+included in the core or plugins.
 
-All components are available on [SourceForge File] section for a manual
-installation or via the component update system embeded in Wikindx.
+All components are available on [SourceForge File](https://sourceforge.net/projects/wikindx/files/) section for a manual
+installation or via the component update system embedded in Wikindx.
 
 Each official vendor component is released with a new version of the
 application and only for the last version. Others components could
@@ -47,151 +48,92 @@ are always compatible with the latest version. If you create your own
 components it is not guaranteed that they will work on a later version
 of Wikindx.
 
+## Installation
 
-## In all cases, the following steps need to be taken once the web server environment is up and running.
+In all cases, the following steps need to be taken once the web server
+is up and running, and the database have been created.
 
-The details may be slightly different (especially steps 4/ to 7/) depending on the version of phpMyAdmin that is available or whether running WIKINDX on a hosted web environment or locally but the principles are the same.
+The details may be slightly different (especially steps 4 to 7) depending
+on your MySQL client or whether running WIKINDX on a hosted web environment
+or locally but the principles are the same. Assume we are running
+a <http://wikindx.test> website installed in a `/var/www/wikindx` folder
+of the web server.
 
-1. If you haven't already, unzip wikindx into the web server environment folder (typically 'www/' or 'httpd/') where it will create the folder 'wikindx6/' – and copy config.php.dist to config.php. Depending on your Operating System, you might be prompted at stage 8/ below to change the permissions of various folders and files.
-2. By default, wikindx6/config.php has the following:
+
+1. Download the source code of the core from the [SourceForge Files](https://sourceforge.net/projects/wikindx/files/) section.
+
+2. Uncompress the source code into a folder on your computer -- this will create a `wikindx` folder.
+
+3. Copy the files and folders from the uncompressed `wikindx` folder
+   to `/var/www/wikindx` that you setup on previous chapter.
+
+4. Copy the `config.php.dist` file to `config.php`.
+
+5. Edit the `config.php` file and set the RDBMS connection parameters
+   (more if needed). Each setting is documented in the file.
 
 ```php
-// Name of the database which these scripts interface with:
-$WIKINDX_DB = "wikindx6";
-
-// Username and password required to connect to and open the database:
-$WIKINDX_DB_USER = "wikindx";
-$WIKINDX_DB_PASSWORD = "wikindx";
+// See https://www.php.net/manual/en/mysqli.construct.php
+public $WIKINDX_DB_HOST = "localhost";
+public $WIKINDX_DB = "wikindx6";
+public $WIKINDX_DB_USER = "wikindx";
+public $WIKINDX_DB_PASSWORD = "wikindx";
 ```
 
-Assuming you won't change these, we'll use these values in phpMyAdmin. NB, the password and username are for accessing the database and not for using WIKINDX. When you first launch WIKINDX (see below), you will be asked to enter a username/password which may or may not be the same as the set above.
+6. Optionally, ensure the web server environment is running
+   (with ps, top or an other process monitoring software).
 
-3. If running WIKINDX locally, ensure the web server environment (e.g. WAMP or XAMPP) is running both apache and MySQL.
-4. Launch PhpMyAdmin in a web browser. There might be a link to this in your web server control panel or, if running locally, try 'http://localhost/phpmyadmin/' in the web browser address bar.
-5. In the 'Databases' tab of PhpMyAdmin, type in 'wikindx6' as the name of a new database, set 'utf8mb4_unicode_520_ci' as the collation, and click 'Create'.
-6. Go back to the 'Databases' tab, click on 'Check privileges' for the new database, and select 'Add user account'.
-7. In the field 'User name', type in 'wikindx' and type 'wikindx' into the two password fields. If running WIKINDX locally, select 'local' for host. Check the checkbox for 'Grant all privileges on database wikindx6' then click on the 'Go' button.
-8. Type in the WIKINDX address in the web browser – if running locally, this will be http://localhost/wikindx6/ – to complete your WIKINDX configuration.
+7. Type in the WIKINDX address in the web browser – if running locally,
+   this will be <http://wikindx.test/> – to complete your WIKINDX configuration. You will go through the following steps:
 
-Bon voyage!
+    - If the PHP version is wrong, you will be prompted to correct this.
+    - If mandatory PHP extensions are missing, you will be prompted to correct this.
+    - If the `config.php` file is missing, you will be prompted to correct this.
+    - Missing folders will be created (cache and data).
+    - If anything is not writeable, you will be prompted to correct this.
+    - If the MySQL version is wrong, you will be prompted to correct this.
+    - The database will be populated with tables.
+    - Setup of the Super Administrator account.
+
+8. Go to __Admin > Configure__ menu and set global preferences.
+
+9. Go to __Wikindx > My Wikindx__ menu and set the Super Administrator preferences.
+
+10. Finally install and enable components from the __Components Manager__  (__Admin > Components__ menu).
+
+You single user install of Wikindx is ready. Have fun!
 
 
-
-
-
-
-    ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-                           --o INSTALL o--
-
-    ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-/////////////////////////////////////////////////////////////////////////////
-For upgrading from a previous installation of WIKINDX, read docs/UPGRADE.txt.
-/////////////////////////////////////////////////////////////////////////////
-
-Simple installation instructions (help for WIKINDX use is included in
-the system and is accessed through the web browser).
-
-REQUIREMENTS:
-
-1/ You must have the ability to create a database and grant permissions
-(GRANT ALL) on a MySQL server.
-
-2/ Read/Write access to your web server's documents folder.
-
-3/ (It is assumed you have a working MySQL database server and
-PHP-enabled web server.)
-
-4/ Any operating system capable of running the above.
-
-5/ Windows users wishing to run WIKINDX as a single user on a desktop
-machine, may be interested in the XAMPP or WTServer servers which are a
-one-step install of Apache/PHP/MySQL. Instructions can be found at
-https://wikindx.sourceforge.io/.
-
-NB:
-
-1/ WIKINDX will neither create the database nor grant appropriate
-permissions (GRANT ALL) - you must do this manually and save a copy of
-config.php.dist as config.php and edit it with the MySQL access data.
-PHPMyAdmin users (for Windows users, this utility for managing MySQL
-databases comes with the server) can find instructions for this at
-https://wikindx.sourceforge.io/.
-
-2/ Some PHP distributions (notably on Linux Mandriva) come without PHP
-extensions that are standard on other distributions. Importantly, the
-GD, mbstring, and XML extensions must be enabled on Mandriva (and
-possibly other Linux distributions).
-
-3/ The CURL PHP extension is not mandatory in WIKINDX but is used in
-some circumstances. For example, from v5.9.1, components such as plugins
-and styles can be managed from the _Admin > Components_ interface if CURL
-is installed – without CURL, components must be installed manually by
-downloading them from the Sourceforge server. It's not recommend to
-disable CURL and manage components by hand.
-
-4/ The standard PHP/Apache installation is typically sufficient to
-run WIKINDX. However, there are some instances (PHP/Apache installations
-with particular configurations or extras, for example) where this memory
-limit may need to be increased. An indication of this is typically an
-unexpected blank page following a WIKINDX operation or, if error
-reporting is turned on, an error message detailing a lack of memory. If
-either of these symptoms occur, increase php.ini's memory_limit in steps
-of 4 Megabytes until it is working again.
-
-5/ If your database is over 1500 resources and you expect to export
-(with the importexport plugin) lists of resources of at least this
-length, then you should set public $WIKINDX_MEMORY_LIMIT = "64M"; in
-config.php in order to avoid memory allocation errors.
-
- ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-INSTALLATION:
-
-1/ Unzip WIKINDX into a new folder on your web server -- it will create
-a wikindx/ folder.
-
-2/ Create a new MySQL database (e.g. 'wikindx5') and GRANT ALL
-permissions on it to your wikindx user.
-
-3/ Copy wikindx/config.php.dist to wikindx/config.php and edit the
-latter (a lot of configuration options are accessible via the web
-browser interface once installation is complete but, as a minimum, you
-will need to set the MySQL database access protocols).
-
-4/ Ensure that
-'cache/',
-'data/',
-'components/plugins/',
-'components/templates/',
-'components/styles/',
-'components/vendor/'
-
-and the files and folders within these folders are readable and writable
-(and in some case execution for PHP) by the web server user (usually
-'nobody', 'www-data', or 'daemon').
-
-So you have to modify, the owner, the group and the permission bits
-according to the particular configuration of your web server, PHP and
-file transfer software.  You may also be required to add the execution
-bit in certain cases. The same rights apply to files in these folders.
-See the chmod, web server and PHP manuals for details.
+## Permissions
 
 If you are running WIKINDX locally on Windows (using something like
-XAMPP), you can skip this step as the folders will be writable by
+XAMPP), you can skip the perms step as the folders will be writable by
 default.
 
-IIS has not been tested and uses the Windows permissions model.  No
-control is done in this case.
+If you are running a Unix machine WIKINDX will not function correctly
+if various folders and files within them are not writeable for the web server user.
+
+The install process will show with current Unix permissions. You should made folders
+and files readable and writeable (along with their contents) for the web server user.
+The web server user can be the owner and/or the group of those folders. So you have to modify,
+the owner, the group and the permission bits according to the particular configuration
+of your web server (usually web servers use 'nobody', 'www-data', or 'daemon' users),
+PHP and file transfer software.
+
+You may also be required to add the execution bit in certain cases.
+The same rights apply to files in these folders, but this script does not
+check them for performance reasons. See the chmod, web server and PHP manuals
+for details. r = readable; w = writable ; x = executable.
 
 The following commands should give a good result in the general case
-where the webserver user should be "user" or "group" (760, 670 or 770
+where the web server user should be "user" or "group" (760, 670 or 770
 should work):
 
-  cd my_website_root_folder
-  chown -R user:group *
-  chmod -R 770 *
+~~~~sh
+cd /var/www/wikindx
+chown -R www-data:www-data *
+chmod -R 777 *
+~~~~
 
 As a last resort you can use the 777 mode but it is a major security
 flaw.  You don't have to get to this end if the owners are set up
@@ -207,47 +149,19 @@ cases, notably the installation of the core and components, for managing
 caches and data. You can correct it later if you want the best possible
 security.
 
-WARNING: if you started to install without taking into account the
-persmissions you may find yourself blocked with a blank page because of
+__WARNING: *if you started to install without taking into account the
+permissions you may find yourself blocked with a blank page because of
 the template system which creates incomplete cached files. Each time you
 configure permissions, delete all the files and folders found under the
-cache/templates/tree.
+`cache/templates/` tree.*__
 
-5/ If you want an embeded spell checker, you need to enable enchant
-extension in your php.ini or .htaccess file. See your webserver manual.
 
-6/ Finally, run v6 through your web browser (http://<server>/wikindx)
-and follow the instructions there to complete the installation.
+### Note
 
-7/ Have fun!
-
- ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-NOTE:
-
-1/ The data/files/ directory is used for the temporary storage of RTF,
+The `data/files/` directory is used for the temporary storage of RTF,
 RIS, Endnote, BibTeX and other files for the user to download. The
 scripts within WIKINDX will mark these files for deletion after so many
 seconds have passed since their last modification (you can configure
 this through the web browser) . This doesn't necessarily mean that they
 will be immediately deleted: they will be deleted the next time someone
 exports a file.
-
-2/ Since v6.3.6 language packs are builtin.
-
-3/ Bibliographic style packs are available as separate downloads from
-the sourceforge site. They act like plug-ins so simply extract them
-(with their directory structure) to the components/styles/ directory to
-make them instantly available. NB - to be able to edit them, ensure the
-XML files are writeable by the web server user.
-
-4/ Other plug-in modules, extending the functionality of WIKINDX, are
-available from the sourceforge site. Unzip these with their directory
-structure to components/plugins/. v3.x plug-ins will not work with
-WIKINDX v5.  To allow plug-ins to be administered from within WIKINDX,
-ensure that each plugin's config.php and index.php are writeable by the
-web server user.
-
-5/ There is an optional RSS feed and WIKINDX content may be accessed via
-Content Management Systems such as Moodle, WordPress, etc. See
-docs/README_RSS and docs/README_CMS for details.

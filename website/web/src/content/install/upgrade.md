@@ -20,7 +20,12 @@ __BACK UP YOUR SOURCE CODE BEFORE ANY UPGRADING!!!!!!!__
 
 Backup doesn't cost more, is quick and prevents any definitive lost of data.
 
-Use our BackupMysql plugin which make a backup with PHP or the [mysqldump](https://mariadb.com/kb/en/mysqldump/) tool from the cli. mysqldump is the best choice for large databases because it has no execution time limit. The following command should work for ordinary MySQL configurations. Replace values quoted by `<>`. On Windows don't replace the `--result-file` option by the pipe syntax (>) because the ends of line and the encoding can be corrupted.
+Use our BackupMysql plugin which make a backup with PHP or the
+[mysqldump](https://mariadb.com/kb/en/mysqldump/) tool from the cli.
+mysqldump is the best choice for large databases because it has no execution time limit.
+The following command should work for ordinary MySQL configurations.
+Replace values quoted by `<>`. On Windows don't replace the `--result-file` option
+by the pipe syntax (>) because the ends of line and the encoding can be corrupted.
 
 Example:
 
@@ -35,9 +40,11 @@ mysqldump --user=wkxuser --password=4hv563UFM9Hnte5J --result-file=wikindx_backu
 
 ## Upgrading components
 
-From v5.9.1, components are updated and managed from the __Components Manager__ (Menu entry: _Admin > Components_). Update them after the core is fully upgraded.
+From v5.9.1, components are updated and managed from the __Components Manager__
+(Menu entry: _Admin > Components_). Update them after the core is fully upgraded.
 
-The cURL and Zip PHP extensions are not mandatory but used by the __Components Manager__. We recommend to enable these extensions and use the __Components Manager__.
+The cURL and Zip PHP extensions are not mandatory but used by the __Components Manager__.
+We recommend to enable these extensions and use the __Components Manager__.
 
 Without cURL, components cannot be downloaded by Wikindx but you can still manage to install
 a component with the top form of the __Components Manager__ from a local copy downloaded from Sourceforge.
@@ -47,11 +54,18 @@ have to do it by hand.
 
 If you are upgrading a components by hand, follow these steps:
 
-1. Download the component source code from the [SourceForge Files](https://sourceforge.net/projects/wikindx/files/) section. Until v6.3.5 each version has a `archives/X.y.Z/components` folder on SF where components are stored. After v6.3.5 components are stored in `components/<type>/<components_compatible_version>/` folder on SF. <__components_compatible_version__> is a number specific to the core of the version installed. Find this number in **WIKINDX_COMPONENTS_COMPATIBLE_VERSION** constant in `core/startup/CONSTANTS.php` file.
+1. Download the component source code from the [SourceForge Files](https://sourceforge.net/projects/wikindx/files/) section.
+   Until v6.3.5 each version has a `archives/X.y.Z/components` folder on SF
+   where components are stored. After v6.3.5 components are stored
+   in `components/<type>/<components_compatible_version>/` folder on SF.
+   <__components_compatible_version__> is a number specific to the core
+   of the version installed. Find this number in **WIKINDX_COMPONENTS_COMPATIBLE_VERSION**
+   constant in `core/startup/CONSTANTS.php` file.
 
 2. Uncompress the source code into a folder on your computer -- this will create a folder named after its __component id__.
 
-3. Copy the uncompressed folder inside the `components/<type>` folder of the current installation (<__type__> is the folder name of the type of the component).
+3. Copy the uncompressed folder inside the `components/<type>` folder
+   of the current installation (<__type__> is the folder name of the type of the component).
 
 4. Enable the component if the core upgrade disabled it.
 
@@ -112,13 +126,17 @@ several folders are writeable including:
     - `components/styles/'`
     - `components/vendor/`
 
-6. Run Wikindx through your web browser and follow the instructions on screen. You will go through the following steps:
+6. Run Wikindx through your web browser and follow the instructions on screen.
+   You will go through the following steps:
 
-    - If anything is not writeable, you will be prompted to correct this.
     - If the PHP version is wrong, you will be prompted to correct this.
+    - If mandatory PHP extensions are missing, you will be prompted to correct this.
+    - If the `config.php` file is missing, you will be prompted to correct this.
+    - Missing folders will be created (cache and data).
+    - If anything is not writeable, you will be prompted to correct this.
+    - Logon as Super Administrator (simple administrators cannot upgrade).
     - If the MySQL version is wrong, you will be prompted to correct this.
     - If the database needs upgrading, you will be prompted.
-    - Logon as Super Administrator (simple administrators cannot upgrade).
     - Upgrade of the database schema step by step. In order to account for
       potential PHP timeouts when used on a large database, the database
       upgrade takes place over numerous stages.
@@ -126,7 +144,9 @@ several folders are writeable including:
     - `config.php` upgrade (optional step).
     - Cache refresh (check component compatibility and clear template caches).
 
-7. Finally update the official components from the admin __Components Manager__. If a component is not compatible with the new core, it will be disabled automatically. After their update, enable them again.
+7. Finally update the official components from the __Components Manager__ (_Admin > Components_ menu).
+   If a component is not compatible with the new core, it will be disabled automatically.
+   After their update, enable them again.
 
 8. If you have created custom components you must adapt
 them to keep them working. Particularly in version 5.9.1, the

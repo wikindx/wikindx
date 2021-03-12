@@ -4,13 +4,10 @@
 
 The software documentation is at https://wikindx.sourceforge.io/web/trunk/index.html
 
-For prerequisites and other general information, read docs/README.md.
+After you go on the website, use the versions list in the left menu
+to switch the documentation of your version.
 
-For installing a fresh WIKINDX with a blank database, read docs/INSTALL.txt.
-
-For upgrading from a previous installation of WIKINDX, read docs/UPGRADE.txt.
-
-NB Read these documents carefully because manual operations may be
+NB: Read these documents carefully because manual operations may be
 necessary to complete the installation or upgrade and to ensure the preservation
 and security of your data.
 

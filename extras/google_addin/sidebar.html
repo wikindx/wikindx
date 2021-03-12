@@ -435,6 +435,7 @@ function insertReference() {
     );
 }
 function insertReferenceResult(result) {
+  console.table(result);
   if(!result.xmlResponse) {
     displayError(result.message);
     return;
@@ -498,8 +499,6 @@ async function search(type, searchText) {
   }
 }
 function searchReferencesResult(result) {
-  console.table(result.matches);
-  console.table(result.matchArray);
 /*  for (let match of result.matches) {
     console.log(`Found ${match[0]} start=${match.index} end=${match.index + match[0].length}.`);
     console.table(match)
@@ -516,7 +515,6 @@ function searchReferencesResult(result) {
   endPrintReference();
 }
 function searchCitationsResult(result) {
-  console.table(result);
   document.getElementById("wikindx-search-working").style.display = "none";
   document.getElementById("wikindx-search-completed").style.display = "block";
   if(!result.xmlResponse) {
@@ -992,8 +990,6 @@ function wikindxDisplayAbout() {
       hideVisible(["wikindx-url-management", "wikindx-messages", "wikindx-display-results", "wikindx-search-parameters", 
         "wikindx-finalize", "wikindx-action-title-references", "wikindx-action-title-citations", "wikindx-action-title-finalize"]);
       document.getElementById("wikindx-display-about").src = "https://www.wikindx.com/wikindx-addins/lightbulb.png";
-//        var message = JSON.stringify(visibleElements);
-//        google.script.run.message(message);
     } else {
       // Check if we need to display inital WIKINDX URL entry
       if (!wikindxLocalStorage) {
@@ -1005,9 +1001,7 @@ function wikindxDisplayAbout() {
       document.getElementById("wikindx-about").style.display = "none";
       document.getElementById("wikindx-display-about").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
       retrieveVisible();
-  //    LocalStorage.checkLocalStorage(true);
     }
- //     await google.script.run.message('hello');
  }
     </script>
   </body>

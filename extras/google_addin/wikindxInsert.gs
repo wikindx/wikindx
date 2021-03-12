@@ -5,11 +5,10 @@ var regexpSub = RegExp(/(<sub>)(.*?)(<\/sub>)/, 'g');
 var regexpSup = RegExp(/(<sup>)(.*?)(<\/sup>)/, 'g');
 var regexpHref = RegExp(/(<a class="rLink" href=".*>)(.*?)(<\/a>)/, 'g');
 var deleteArray = [];
+var insertError = "ERROR: Invalid selection or cursor position";
 
 function insertReference(url, style, id) {
   var i;
-  var document = DocumentApp.getActiveDocument();
-  var cursor = document.getCursor();
   var response = getReference(url, style, id);
   if (!response.xmlResponse) {
     return {
@@ -17,8 +16,31 @@ function insertReference(url, style, id) {
       message: response.message
     };
   }
-  // All good. Insert in-text reference into document, format it and return
-  var element = cursor.insertText(response.xmlArray['inTextReference']);
+  // All good. Insert in-text reference into a named range at the cursor, format it and return
+  var document = DocumentApp.getActiveDocument();
+  var element = newElement(document, response.xmlArray['inTextReference']);
+  if (!element) {
+    return {
+      xmlResponse: false,
+      message: insertError
+    };
+  }
+  var rangeBuilder = document.newRange();
+  rangeBuilder.addElement(element);
+  var tag = 'wikindx-id-' + Utilities.base64Encode(JSON.stringify([url, id]));
+  document.addNamedRange(tag, rangeBuilder.build());
+/*  var ranges = document.getNamedRanges();
+  var rangeElements = [];
+  var rangeTexts = [];
+  var rangeNames = [];
+  for (var i = 0; i < ranges.length; i++) {
+    rangeElements = ranges[i].getRange().getRangeElements();
+    rangeNames.push(ranges[i].getName());
+    for (var j = 0; j < rangeElements.length; j++) {
+      rangeTexts.push(rangeElements[j].getElement().getText());
+    }
+  }
+*/
   var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
   for (i = 0; i < styles.length; i++) {
     insertHtmlText(element, response.xmlArray['inTextReference'], styles[i]);
@@ -30,14 +52,12 @@ function insertReference(url, style, id) {
     element.deleteText(deleteArray[i].start, deleteArray[i].end);
   }
   return {
-    xmlResponse: true,
+    xmlResponse: true
   };
 }
 
 function insertCitation(url, style, id) {
   var i;
-  var document = DocumentApp.getActiveDocument();
-  var cursor = document.getCursor();
   var response = getCitation(url, style, id);
   if (!response.xmlResponse) {
     return {
@@ -46,10 +66,23 @@ function insertCitation(url, style, id) {
     };
   }
   // All good. Insert in-text reference into document, format it and return
-  var element = cursor.insertText(' ' + response.xmlArray['inTextReference']);
+  var document = DocumentApp.getActiveDocument();
+  var text = response.xmlArray['citation'] + ' ' + response.xmlArray['inTextReference'];
+  var element = newElement(document, text);
+  if (!element) {
+    return {
+      xmlResponse: false,
+      message: insertError
+    };
+  }
+  var rangeBuilder = document.newRange();
+  rangeBuilder.addElement(element);
+  var tag = 'wikindx-id-' + Utilities.base64Encode(JSON.stringify([url, id, response.xmlArray['metaId']]));
+  document.addNamedRange(tag, rangeBuilder.build());
+
   var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
   for (i = 0; i < styles.length; i++) {
-    insertHtmlText(element, response.xmlArray['inTextReference'], styles[i]);
+    insertHtmlText(element, text, styles[i]);
   }
   deleteArray.sort(function (b, a) {
     return a.end - b.end;
@@ -57,11 +90,36 @@ function insertCitation(url, style, id) {
   for(i = 0; i < deleteArray.length; i++) {
     element.deleteText(deleteArray[i].start, deleteArray[i].end);
   }
-  // Now add citation which has had HTML stripped at the WIKINDX end
-  cursor.insertText(response.xmlArray['citation']);
   return {
     xmlResponse: true
   };
+}
+function newElement(document, ref) {
+// First, check if something is selected (i.e. we replace)
+  var selection = document.getSelection();
+  var cursor = document.getCursor();
+  if (selection) {
+    var rangeElements = selection.getRangeElements();
+    var j = 0;
+    for (j; j < rangeElements.length - 1; j++) {
+      if (!rangeElements[j].isPartial()) { // Not satisfactory but will do for now. We ignore partial elements in the selection . . .
+        rangeElements[j].getElement().asText().setText('');
+      } else {
+        rangeElements[j].getElement().asText().deleteText(rangeElements[j].getStartOffset(), rangeElements[j].getEndOffsetInclusive());
+      }
+    }
+    if (rangeElements[j].isPartial()) {
+      var selText = rangeElements[j].getElement().asText().getText();
+      var element = rangeElements[j].getElement().asText().setText(selText + ' ' + ref);
+    } else {
+        var element = rangeElements[j].getElement().asText().setText(ref);
+      }
+  } else if (cursor) {
+    var element = cursor.insertText(ref);
+  } else {
+    element = null;
+  }
+  return element;
 }
 function insertHtmlText(element, text, style) {
   var i;
@@ -114,7 +172,7 @@ function insertHtmlText(element, text, style) {
     default: 
       return {
         xmlResponse: false,
-        message: 'missing style input'
+        message: 'Missing style input'
       };
   }
 }

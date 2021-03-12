@@ -9,9 +9,9 @@ BUG FIXES:
 2. Fix SQL formatting.
 3. Rearrange the order of some default function fields in readiness for PHP 8 [#312].
 4. In some cases, QUICKSEARCH searched on an empty field in FULLTEXT mode (abstracts, notes, etc.) – fixed.
-5. Recreate the usersUsernameUnique index with a BTREE type (bugfix #318).
+5. Recreate the usersUsernameUnique index with a BTREE type [#318].
 6. Index_Type option is unreliable for InnoDB due to functionality of [bug #22632](https://bugs.mysql.com/bug.php?id=22632).
-7. Bug 319 fixed: Edit collection did not update the collection's resources.
+7. Edit collection did not update the collection's resources [#319].
 8. Drop old form_data table.
 9. Add a missing index on resourceattachmentsResourceId (previous upgrade code missing).
 10. Add a missing index on resourcecustomCustomId (previous upgrade code missing).

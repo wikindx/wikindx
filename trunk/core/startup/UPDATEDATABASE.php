@@ -1558,7 +1558,7 @@ END;
     private function upgradeTo32()
     {
         // Die if not possible
-        $this->rewriteConfigFile6_4_0();
+        $this->rewriteConfigFile();
         
         // Clear attachments
         $attachment = FACTORY_ATTACHMENT::getInstance();
@@ -1747,6 +1747,19 @@ END;
     private function upgradeTo43()
     {
         $this->upgradeToTargetVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 44 (6.4.2)
+     *
+     * Rewrite the config file
+     */
+    private function upgradeTo44()
+    {
+        // Die if not possible
+        $this->rewriteConfigFile();
+        
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -2475,11 +2488,11 @@ END;
     }
     
     /**
-     * Write new config.php with upgrade to >= WIKINDX v6.3.10
+     * Write new config.php with upgrade to >= WIKINDX v6.4.2
      */
-    private function rewriteConfigFile6_4_0()
+    private function rewriteConfigFile()
     {
-        // As WIKINDX v5.3, v5.9, v6.2.2 and v6.4.0 (DB version 12.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
+        // As WIKINDX v5.3, v5.9, v6.2.2 and v6.4.2 (DB version 44.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
         // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
         $this->checkConfigFile(); // die if not writeable or file does not exist.
         
@@ -2488,167 +2501,230 @@ END;
         
         $newConfig = <<<END
 <?php
-/**********************************************************************************
- WIKINDX : Bibliographic Management system.
- @link http://wikindx.sourceforge.net/ The WIKINDX SourceForge project
- @author The WIKINDX Team
- @license https://www.isc.org/licenses/ ISC License
-**********************************************************************************/
 /**
-*
-* WIKINDX CONFIGURATION FILE
-*
-* NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
-* NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
-* NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
-*
-* If you make changes, backup the edited file as future upgrades of WIKINDX might overwrite this file - no questions asked!
-*/
+ * WIKINDX : Bibliographic Management system.
+ *
+ * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
+ * @author The WIKINDX Team
+ * @license https://www.isc.org/licenses/ ISC License
+ */
 
-/**********************************************************************************/
+/**
+ * WIKINDX CONFIGURATION FILE
+ *
+ * NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
+ * NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
+ * NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
+ *
+ * If you make changes, backup the edited file as future upgrades of WIKINDX might overwrite this file - no questions asked!
+ *
+ * You must follow the syntaxic rules of the PHP programming language.
+ */
 
 class CONFIG
 {
 /*****
-* START DATABASE CONFIGURATION
-*****/
-// NB:
-// wikindx supports only MySQL with mysqli PHP driver (WIKINDX_DB_TYPE parameter is deprecated).
-//
-// The database and permissions for accessing it must be created using your RDBMS client. Wikindx
-// will NOT do this for you.  If unsure how to do this, contact your server admin. After you have
-// set up an empty database with the correct permissions (GRANT ALL), the first running of Wikindx
-// will create the necessary database tables.
-//
-// WIKINDX uses caching in the database _cache table for lists of creators, keywords etc.  If you have a large
-// database, you may get SQL errors as WIKINDX attempts to write these cache data.  You will need to increase
-// max allowed packet in my.cnf and restart the MySQL server.
-//
-// Host on which the relational db management system (i.e. the MySQL server) is running (usually localhost if
-// the web files are on the same server as the RDBMS although some web hosting services may specify something like
-// localhost:/tmp/mysql5.sock).
-// If your DB server is on a non-standard socket (i.e. not port 3306), then you should set something like localhost:xxxx
-// where 'xxxx' is the non-standard socket.
+ * START DATABASE CONFIGURATION
+ *
+ * wikindx supports only MySQL with mysqli PHP driver (WIKINDX_DB_TYPE parameter is deprecated).
+ *
+ * The database and permissions for accessing it must be created using your RDBMS client. Wikindx
+ * will NOT do this for you.  If unsure how to do this, contact your server admin. After you have
+ * set up an empty database with the correct permissions (GRANT ALL), the first running of Wikindx
+ * will create the necessary database tables.
+ *
+ * WIKINDX uses caching in the database _cache table for lists of creators, keywords etc.  If you have a large
+ * database, you may get SQL errors as WIKINDX attempts to write these cache data.  You will need to increase
+ * max_allowed_packet in my.cnf and restart the MySQL server.
+ *
+ */
 
-END;
-        $newConfig .= 'public $WIKINDX_DB_HOST = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_HOST) . '";' . "\n";
-        $newConfig .= '// name of the database which these scripts interface with (case-sensitive):' . "\n" .
-                   'public $WIKINDX_DB = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB) . '";' . "\n";
-        $newConfig .= '// username and password required to connect to and open the database' . "\n" .
-                   '// (it is strongly recommended that you change these default values):' . "\n" .
-                   'public $WIKINDX_DB_USER = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_USER) . '";' . "\n" .
-                   'public $WIKINDX_DB_PASSWORD = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_PASSWORD) . '";' . "\n";
-        $newConfig .= <<<END
+/*
+ * Host on which the MariaDB/MySQL Relational Database management system (RDBMS) is running.
+ * Usually localhost if the web server and the DBMS are hosted on the same server.
+ *
+ * If your DB server is on a non-standard port (not 3306), then you should set something
+ * like localhost:xxxx where 'xxxx' is the port.
+ *
+ * Wikindx use only the first four parameters of the mysqli class constructor.
+ * See https://www.php.net/manual/en/mysqli.construct.php 
+ *
+ * Name of the MariaDB/MySQL host server (case-insensitive)
+ *
+ * @name WIKINDX_DB_HOST Default is "localhost"
+ */
+public \$WIKINDX_DB_HOST = %%WIKINDX_DB_HOST%%;
+
+/**
+ * Name of the MariaDB/MySQL database (case-sensitive)
+ *
+ * @name WIKINDX_DB Default is "wikindx6"
+ */
+public \$WIKINDX_DB = %%WIKINDX_DB%%;
+
+/**
+ * Username required to connect to and open the database (case-sensitive)
+ *
+ * @name WIKINDX_DB_USER Default is "wikindx"
+ */
+public \$WIKINDX_DB_USER = %%WIKINDX_DB_USER%%;
+
+/**
+ * Password of the user required to connect to and open the database (case-sensitive)
+ *
+ * @name WIKINDX_DB_PASSWORD Default is "wikindx"
+ */
+public \$WIKINDX_DB_PASSWORD = %%WIKINDX_DB_PASSWORD%%;
+
+/*
+ * END DATABASE CONFIGURATION
+ **********************************************************************************/
+
 /*****
-* END DATABASE CONFIGURATION
-*****/
+ * START PATHS CONFIGURATION
+ */
 
-/**********************************************************************************/
+/*
+ * The auto-detection of the path installation and the base url is an experimental feature
+ * which you can disable by changing this parameter to FALSE.
+ *
+ * If you deactivate auto-detection you must fill in the option WIKINDX_URL_BASE.
+ * If you don't define this option, auto-detection is enabled by default.
+ *
+ * @name WIKINDX_PATH_AUTO_DETECTION Default is TRUE
+ */
+public \$WIKINDX_PATH_AUTO_DETECTION = %%WIKINDX_PATH_AUTO_DETECTION%%;
+
+/*
+ * If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
+ *
+ * You have to indicate the protocol HTTP / HTTPS and remove the terminal /.
+ *
+ * e.g. if wikindx's index.php file is in /wikindx/ under the httpd/ (or similar)
+ * folder on the www.myserver.com, then set the variable to http://www.myserver.com/wikindx
+ * Otherwise, leave as "".
+ *
+ * @name WIKINDX_URL_BASE Default is ""
+ */
+public \$WIKINDX_URL_BASE = %%WIKINDX_URL_BASE%%;
+
+/*
+ * END PATHS CONFIGURATION
+ **********************************************************************************/
 
 /*****
-* START PATHS CONFIGURATION
-*****/
-// The auto-detection of the path installation and the base url is an experimental feature
-// which you can disable by changing this parameter to FALSE.
-// If you deactivate auto-detection you must fill in the option WIKINDX_URL_BASE.
-// If you don't define this option, auto-detection is enabled by default.
+ * START PHP MEMORY AND EXECUTION CONFIGURATION
+ */
+
+/*
+ * WIKINDX usually runs fine with the standard PHP memory limit (memory_limit).
+ *
+ * If this is FALSE, the value set in php.ini is used (typically 128M),
+ * Otherwise the value is a positive integer number of bytes, -1, or a positive string number with a unit.
+ *
+ * See https://www.php.net/manual/en/ini.core.php#ini.memory-limit
+ * See https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
+ *
+ * With some PHP configurations, however, this is not enough -- a mysterious blank page is often the result.
+ * If you are unable to update php.ini's memory_limit yourself,
+ * WIKINDX_MEMORY_LIMIT may be set (an integer such as 128 or 256 followed by 'M').
+ *
+ * @name WIKINDX_MEMORY_LIMIT Default is FALSE
+ */
+public \$WIKINDX_MEMORY_LIMIT = %%WIKINDX_MEMORY_LIMIT%%;
+
+/*
+ * WIKINDX usually run fine with the PHP standard execution timeouts (max_execution_time).
+ *
+ * If this is FALSE, the value set in php.ini is used (typically 30 seconds),
+ * Otherwise the value is a positive integer number of seconds.
+ *
+ * See https://www.php.net/manual/en/info.configuration.php#ini.max-execution-time
+ *
+ * In some cases such as database upgrading of a large database on a slow server, you will need to increase the timeout figure.
+ *
+ * @name WIKINDX_MAX_EXECUTION_TIMEOUT Default is FALSE
+ */
+public \$WIKINDX_MAX_EXECUTION_TIMEOUT = %%WIKINDX_MAX_EXECUTION_TIMEOUT%%;
+
+/*
+ * WIKINDX_MAX_WRITECHUNK concerns how many resources are exported and written to file in one go.
+ *
+ * If this is FALSE, the value is set to 10,000.
+ * Otherwise the value is a positive integer number.
+ .
+ * If your WIKINDX contains several thousands of resources and you wish to export them all (e.g. to BibTeX or Endnote),
+ * then you may run into memory problems which will manifest as either
+ * a blank page when you attempt to export or an error report (if you have error reporting turned on).
+ *
+ * WIKINDX_MAX_WRITECHUNK breaks down the SQL querying of resources and subsequent writing of resources
+ * to file into manageable chunks with the LIMIT clause.
+ *
+ * As a rough guide, with a WIKINDX_MEMORY_LIMIT of 64MB, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
+ * This can be a tricky figure to set as setting the figure too low increases SQL and PHP execution times significantly.
+ *
+ * @name WIKINDX_MAX_WRITECHUNK Default is FALSE
+ */
+public \$WIKINDX_MAX_WRITECHUNK = %%WIKINDX_MAX_WRITECHUNK%%;
+
+/*
+ * END PHP MEMORY AND EXECUTION CONFIGURATION
+ **********************************************************************************/
+}
 
 END;
-        $newConfig .= 'public $WIKINDX_PATH_AUTO_DETECTION = TRUE;' . "\n";
 
-        $newConfig .= <<<END
-// If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
-// You have to indicate protocol HTTP / HTTPS and remove the terminal /.
-// e.g. if wikindx's index.php file is in /wikindx/ under the httpd/ (or similar)
-// folder on the www.myserver.com, then set the variable
-// to http://www.myserver.com/wikindx
-// Otherwise, leave as "".
+        // Current values are inserted in the config file by substitution of %% quoted strings
+        $newConfig = str_replace('%%WIKINDX_DB_HOST%%', '"' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_HOST) . '"', $newConfig);
+        $newConfig = str_replace('%%WIKINDX_DB%%', '"' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB) . '"', $newConfig);
+        $newConfig = str_replace('%%WIKINDX_DB_USER%%', '"' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_USER) . '"', $newConfig);
+        $newConfig = str_replace('%%WIKINDX_DB_PASSWORD%%', '"' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_PASSWORD) . '"', $newConfig);
+        $newConfig = str_replace('%%WIKINDX_PATH_AUTO_DETECTION%%', property_exists($tmpconfig, 'WIKINDX_PATH_AUTO_DETECTION') && $tmpconfig->WIKINDX_PATH_AUTO_DETECTION === FALSE ? 'FALSE' : 'TRUE', $newConfig);
 
-END;
         if (property_exists($tmpconfig, 'WIKINDX_BASE_URL'))
         {
-            $newConfig .= 'public $WIKINDX_URL_BASE = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_BASE_URL) . '";' . "\n";
+            $newConfig = str_replace('%%WIKINDX_URL_BASE%%', '"' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_BASE_URL) . '"', $newConfig);
         }
         elseif (property_exists($tmpconfig, 'WIKINDX_URL_BASE'))
         {
-            $newConfig .= 'public $WIKINDX_URL_BASE = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_URL_BASE) . '";' . "\n";
+            $newConfig = str_replace('%%WIKINDX_URL_BASE%%', '"' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_URL_BASE) . '"', $newConfig);
         }
         else
         {
-            $newConfig .= 'public $WIKINDX_URL_BASE = "";' . "\n";
+            $newConfig = str_replace('%%WIKINDX_URL_BASE%%', '""', $newConfig);
         }
         
-        $newConfig .= <<<END
-/*****
-* END PATHS CONFIGURATION
-*****/
-
-/**********************************************************************************/
-
-/*****
-* START PHP MEMORY AND EXECUTION CONFIGURATION
-*****/
-// WIKINDX usually runs with the standard PHP memory_limit of 64MB.
-// With some PHP configurations, however, this is not enough -- a mysterious blank page is often the result.
-// If you are unable to update php.ini's memory_limit yourself, WIKINDX_MEMORY_LIMIT may be set (an integer such as 64 or 128 followed by 'M').
-// Despite the PHP manual stating that this may not be set outside of php.ini, it seems to work most of the time.
-// It is not, however, guaranteed to do so and editing php.ini is the preferred method particularly if your PHP is in 'safe' mode.
-// Use double quotes around the value.
-
-END;
-        if (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && ($tmpconfig->WIKINDX_MEMORY_LIMIT !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && is_string($tmpconfig->WIKINDX_MEMORY_LIMIT))
         {
-            $newConfig .= 'public $WIKINDX_MEMORY_LIMIT = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_MEMORY_LIMIT) . '";' . "\n";
+            $newConfig = str_replace('%%WIKINDX_MEMORY_LIMIT%%', '"' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_MEMORY_LIMIT) . '"', $newConfig);
+        }
+        elseif (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && is_int($tmpconfig->WIKINDX_MEMORY_LIMIT))
+        {
+            $newConfig = str_replace('%%WIKINDX_MEMORY_LIMIT%%', strval($tmpconfig->WIKINDX_MEMORY_LIMIT, $newConfig));
         }
         else
         {
-            $newConfig .= 'public $WIKINDX_MEMORY_LIMIT = FALSE;' . "\n";
+            $newConfig = str_replace('%%WIKINDX_MEMORY_LIMIT%%', 'FALSE', $newConfig);
         }
-        $newConfig .= <<<END
-// WIKINDX should run fine with the PHP standard execution timeouts (typically 30 seconds) but,
-// in some cases such as database upgrading of a large database on a slow server, you will need to increase the timeout figure.
-// If this is FALSE, the value set in php.ini is used.
-// Despite the PHP manual stating that this may not be set outside of php.ini, it seems to work most of the time.
-// It is not, however, guaranteed to do so and editing php.ini is the preferred method particularly if your PHP is in 'safe' mode.
-// The value is in seconds.
-// Do NOT use quotes around the value.
-
-END;
-        if (property_exists($tmpconfig, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
+        
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && is_int($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT))
         {
-            $newConfig .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
+            $newConfig = str_replace('%%WIKINDX_MAX_EXECUTION_TIMEOUT%%', strval($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT, $newConfig));
         }
         else
         {
-            $newConfig .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = FALSE;' . "\n";
+            $newConfig = str_replace('%%WIKINDX_MAX_EXECUTION_TIMEOUT%%', 'FALSE', $newConfig);
         }
-        $newConfig .= <<<END
-// WIKINDX_MAX_WRITECHUNK concerns how many resources are exported and written to file in one go.
-// If your WIKINDX contains several thousands of resources and you wish to export them all (e.g. to bibTeX or Endnote),
-// then you may run into memory problems which will manifest as either
-// a blank page when you attempt to export or an error report (if you have error reporting turned on).
-// WIKINDX_MAX_WRITECHUNK breaks down the SQL querying of resources and subsequent writing of resources to file into manageable chunks.
-// As a rough guide, with a WIKINDX_MEMORY_LIMIT of 64MB, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
-// If WIKINDX_MAX_WRITECHUNK is FALSE, the chunk is set to 10,000.
-// This can be a tricky figure to set as setting the figure too low increases SQL and PHP execution times significantly.
-// Do NOT use quotes around the value.
-
-END;
-        if (property_exists($tmpconfig, 'WIKINDX_MAX_WRITECHUNK') && ($tmpconfig->WIKINDX_MAX_WRITECHUNK !== FALSE))
+        
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_WRITECHUNK') && is_int($tmpconfig->WIKINDX_MAX_WRITECHUNK))
         {
-            $newConfig .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $tmpconfig->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
+            $newConfig = str_replace('%%WIKINDX_MAX_WRITECHUNK%%', strval($tmpconfig->WIKINDX_MAX_WRITECHUNK, $newConfig));
         }
         else
         {
-            $newConfig .= 'public $WIKINDX_MAX_WRITECHUNK = FALSE;' . "\n";
+            $newConfig = str_replace('%%WIKINDX_MAX_WRITECHUNK%%', 'FALSE', $newConfig);
         }
-        $newConfig .= <<<END
-/*****
-* END PHP MEMORY AND EXECUTION CONFIGURATION
-*****/
-}
-END;
-        $newConfig .= "\n";
         
         // Config file paths
         $cf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'config.php']);

@@ -139,47 +139,64 @@ function loadStaticConfig()
     }
     elseif (is_string($config->WIKINDX_MEMORY_LIMIT))
     {
-        if (preg_match('/^\d+[KMG]?$/u', $config->WIKINDX_MEMORY_LIMIT) === FALSE)
+        if (preg_match('/^\-1|d+[KMG]?$/u', $config->WIKINDX_MEMORY_LIMIT) === FALSE)
         {
             $errors[] = 'Syntax Error in WIKINDX_MEMORY_LIMIT. See https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes';
             $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
         }
-        elseif (is_int($config->WIKINDX_MEMORY_LIMIT))
+    }
+    elseif (is_int($config->WIKINDX_MEMORY_LIMIT))
+    {
+        if ($config->WIKINDX_MEMORY_LIMIT < -1)
         {
-            if ($config->WIKINDX_MEMORY_LIMIT < -1)
-            {
-                $errors[] = 'WIKINDX_MEMORY_LIMIT must be a positive integer.';
-                $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
-            }
+            $errors[] = 'Syntax Error in WIKINDX_MEMORY_LIMIT. See https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes';
+            $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
         }
     }
-    ini_set("memory_limit", $config->WIKINDX_MEMORY_LIMIT);
+    elseif (is_bool($config->WIKINDX_MEMORY_LIMIT))
+    {
+        if ($config->WIKINDX_MEMORY_LIMIT !== FALSE)
+        {
+            $errors[] = 'Syntax Error in WIKINDX_MEMORY_LIMIT. See https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes';
+            $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
+        }
+    }
+    else
+    {
+        $errors[] = 'Syntax Error in WIKINDX_MEMORY_LIMIT. See https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes';
+        $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
+    }
+    // Configure it only if explicitely defined
+    if ($config->WIKINDX_MEMORY_LIMIT !== FALSE)
+    {
+        ini_set("memory_limit", $config->WIKINDX_MEMORY_LIMIT);
+    }
 
     // Attempt to set the max time the script runs for
     if (!property_exists($config, 'WIKINDX_MAX_EXECUTION_TIMEOUT'))
     {
         $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;
     }
-    elseif (is_string($config->WIKINDX_MAX_EXECUTION_TIMEOUT))
-    { // v4 config.php required quotes around value
-        if (!$config->WIKINDX_MAX_EXECUTION_TIMEOUT = intval($config->WIKINDX_MAX_EXECUTION_TIMEOUT))
+    elseif (is_int($config->WIKINDX_MAX_EXECUTION_TIMEOUT))
+    {
+        if ($config->WIKINDX_MAX_EXECUTION_TIMEOUT < 0)
         {
             $errors[] = 'WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).';
             $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;
         }
     }
-    elseif (!is_int($config->WIKINDX_MAX_EXECUTION_TIMEOUT))
+    elseif (is_bool($config->WIKINDX_MAX_EXECUTION_TIMEOUT))
     {
         if ($config->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE)
         {
             $errors[] = 'WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).';
             $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;
         }
-        elseif ($config->WIKINDX_MAX_EXECUTION_TIMEOUT < 0)
-        {
-            $errors[] = 'WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).';
-            $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;
-        }
+    }
+    else
+    {
+        $errors[] = 'WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).';
+        $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;
     }
     // Configure it only if explicitely defined
     if ($config->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE)
@@ -192,7 +209,15 @@ function loadStaticConfig()
     {
         $config->WIKINDX_MAX_WRITECHUNK = WIKINDX_MAX_WRITECHUNK_DEFAULT;
     }
-    elseif (!is_int($config->WIKINDX_MAX_WRITECHUNK))
+    elseif (is_int($config->WIKINDX_MAX_WRITECHUNK))
+    {
+        if ($config->WIKINDX_MAX_WRITECHUNK < 1)
+        {
+            $errors[] = 'WIKINDX_MAX_WRITECHUNK must be a positive integer (or FALSE for default configuration).';
+            $config->WIKINDX_MAX_WRITECHUNK = WIKINDX_MAX_WRITECHUNK_DEFAULT;
+        }
+    }
+    elseif (is_bool($config->WIKINDX_MAX_WRITECHUNK))
     {
         if ($config->WIKINDX_MAX_WRITECHUNK !== FALSE)
         {
@@ -200,7 +225,7 @@ function loadStaticConfig()
         }
         $config->WIKINDX_MAX_WRITECHUNK = WIKINDX_MAX_WRITECHUNK_DEFAULT;
     }
-    elseif ($config->WIKINDX_MAX_WRITECHUNK < 1)
+    else
     {
         $errors[] = 'WIKINDX_MAX_WRITECHUNK must be a positive integer (or FALSE for default configuration).';
         $config->WIKINDX_MAX_WRITECHUNK = WIKINDX_MAX_WRITECHUNK_DEFAULT;

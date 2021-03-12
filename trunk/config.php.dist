@@ -46,7 +46,7 @@ class CONFIG
  * like localhost:xxxx where 'xxxx' is the port.
  *
  * Wikindx use only the first four parameters of the mysqli class constructor.
- * See https://www.php.net/manual/en/mysqli.construct.php 
+ * See https://www.php.net/manual/en/mysqli.construct.php
  *
  * Name of the MariaDB/MySQL host server (case-insensitive)
  *

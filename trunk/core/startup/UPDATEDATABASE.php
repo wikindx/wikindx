@@ -1752,9 +1752,19 @@ END;
     /**
      * Upgrade database schema to version 44 (6.4.2)
      *
-     * Rewrite the config file
+     * Ensure utf8mb4_unicode_520_ci is always the default collation of the database.
      */
     private function upgradeTo44()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 45 (6.4.2)
+     *
+     * Rewrite the config file
+     */
+    private function upgradeTo45()
     {
         // Die if not possible
         $this->rewriteConfigFile();
@@ -2492,7 +2502,7 @@ END;
      */
     private function rewriteConfigFile()
     {
-        // As WIKINDX v5.3, v5.9, v6.2.2 and v6.4.2 (DB version 44.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
+        // As WIKINDX v5.3, v5.9, v6.2.2 and v6.4.2 (DB version 45.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
         // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
         $this->checkConfigFile(); // die if not writeable or file does not exist.
         

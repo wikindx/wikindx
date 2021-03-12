@@ -50,6 +50,7 @@ MAINTENANCE:
 14. WIKINDX_MAX_EXECUTION_TIMEOUT: follow the default official value of PHP max_execution_time (30 seconds).
 15. Remove the deprecated syntax of WIKINDX_MAX_EXECUTION_TIMEOUT. The value cannot be a string now.
 16. Use a better system to rewrite the config file.
+17. Ensure utf8mb4_unicode_520_ci is always the default collation of the database.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

@@ -198,7 +198,6 @@ to ensure the MySQL access protocols match
 those you have specified for the WIKINDX database.</p>
 
 <p>Ensure also that the
-<em>components/languages</em>,
 <em>components/plugins</em>,
 <em>components/styles</em>,
 <em>components/templates</em>,

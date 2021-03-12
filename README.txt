@@ -70,27 +70,40 @@ Repository locations
 
 Repository layout
 
-- Sources are in folders:
+- Wikindx sources:
 
      - trunk/               contains the sources of the project
 
      - trunk/components/    sources of officials components
 
-     - trunk/docs/          public and internal documentation sources of Wikindx
+     - trunk/dbschema/      DDL code to build the database on install or upgrade
 
-     - website/             contains the sources of the project website and docs
+     - trunk/cli-dump-repairkit-schema.php is used to build the schema of the Repair Kit
+
+     - trunk/cli-make-languages.php is used to extract and merge Gettext translation files
+
+     - trunk/cli-sign-components.php is used to sign components before a release
 
 
-- Tools scripts
+- Tools scripts:
 
      - tools/               tools used to develop or release Wikindx
 
-     - release/make.php     is the used to build the release packages
+     - release/cli-make-api-manual.php is used to build the API Manual
+
+     - release/cli-make-package.php is used to build the release packages
+
+     - release/cli-make-web.php is used to build the website code
 
      - release/README.txt   describes the release process
 
 
-- Other folders:
+- Website sources:
+
+     - website/             contains the sources of the project website and docs
+
+     - website/api-manual   contains some files used for displaying de API Manual
+                            and choosing its version online
 
      - website/cus/index.php is used to serve the list of
        components from the update server configured in Wikindx 6.3.6 and later
@@ -102,16 +115,15 @@ Repository layout
      - website/cus/core stores the definition in json format of the component
        compatibility versions for each core version since Wikindx version 6.3.6
 
-
      - website/downloads/components_server.php is used to serve the list of
        components from the update server configured in Wikindx 5.9.1 to 6.3.5
 
      - website/downloads/ stores the components list of each version released in
        a subfolder named after their version number for Wikindx 5.9.1 to 6.3.5
 
-     - website/web/src stores the source files of the website generated with Hugo (v0.80)
+     - website/web/src stores the source files of the website
 
-     - The API manual is not stored in SVN but build at the release time.
+     - website/web/X.Y.Z stores the source files of the website generated with Hugo (v0.80)
 
  ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 

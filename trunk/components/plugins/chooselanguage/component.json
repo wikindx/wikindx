@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "chooselanguage",
-    "component_version": "363",
+    "component_version": "426",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Choose Language",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "6dfac03fdcf3a6c5aef3e2fbdc8a685e582374647059f3bf502a5b7d44b047a4"
+    "component_sha256": "0d9a10fa62b0d2b008c149c0851357fb59d18f0a9fb33c15eea96c7a7bbe3afb"
 }

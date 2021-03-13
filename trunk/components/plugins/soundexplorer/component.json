@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "soundexplorer",
-    "component_version": "383",
+    "component_version": "426",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Sound Explorer",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "90ce3dd8921d36198d10045d3b3b47c5814ba4c38005193471ff7a2a6ab8a66b"
+    "component_sha256": "6cf667dc5e97ee7e0af07c2de00b3fcc80a29c2b600875b2aafbf2f121e5af72"
 }

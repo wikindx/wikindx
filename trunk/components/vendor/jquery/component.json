@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "jquery",
-    "component_version": "175",
+    "component_version": "426",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "jQuery JS library",
@@ -29,5 +29,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "128ed7c048f97120750a22053325698b6f785e527be8fb750cfdcf916a727e02"
+    "component_sha256": "2ab84188bfb532926e04745696af12e110ef170161c37d3ea05396dc43c44cc3"
 }

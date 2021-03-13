@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "harvard",
-    "component_version": "363",
+    "component_version": "426",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Harvard",
@@ -17,5 +17,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "a3b2c5be2642fa2f475676e49ce6cf40bb4590aa74745ed7f8907810faa9f10f"
+    "component_sha256": "c18b4eb49d14841031115b4e0f176b22ca92f11ac2447914a1d58cc897eb1e23"
 }

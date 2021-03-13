@@ -1,3 +1,24 @@
+function finalizeGetReferences(url, params, style, ids) {
+  url += "office.php";
+  var formData = {
+    method: 'getBib',
+    searchParams: params,
+    style: style,
+    source: 'googleDocs',
+    ids: ids
+  };
+  return doXml(url, formData);
+}
+function finalizeGetCitations(url, style, ids) {
+  url += "office.php";
+  var formData = {
+    method: 'getCiteCCs',
+    style: style,
+    source: 'googleDocs',
+    ids: ids
+  };
+}
+
 function getSearchInputReferences(url, params, style, searchText) {
   url += "office.php";
   var formData = {
@@ -79,7 +100,7 @@ function doXml(url, formData) {
   };
   try {
     var response = UrlFetchApp.fetch(url, options);
-//    var request = UrlFetchApp.getRequest(url, options);
+//    var response = UrlFetchApp.getRequest(url, options);
     if (response === null) {
       return {
         xmlResponse: false,
@@ -104,7 +125,7 @@ function doXml(url, formData) {
   } catch(e) {
       return {
         xmlResponse: false,
- //       message: url + '?' + request.payload
+        url: url + '?' + response.payload,
         message: errorXMLHTTP
       };
   }

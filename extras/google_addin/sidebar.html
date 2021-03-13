@@ -415,6 +415,7 @@
     document.getElementById("wikindx-styleSelectBox").onchange = reset;
     document.getElementById("wikindx-reference-params").onchange = reset;
     document.getElementById("wikindx-citation-params").onchange = reset;
+    document.getElementById("wikindx-finalize-run").onclick = finalizeRun;
 
 /** Start the WIKINDX add-in – initial display on loading the add-in (also check for stored wikindices) */
     initialize();
@@ -425,6 +426,10 @@
       );
 */
 
+/**
+ * Library functions
+ */
+/** Insert stuff */
 function insertReference() {
   google.script.run
     .withSuccessHandler(insertReferenceResult)
@@ -435,7 +440,6 @@ function insertReference() {
     );
 }
 function insertReferenceResult(result) {
-  console.table(result);
   if(!result.xmlResponse) {
     displayError(result.message);
     return;
@@ -457,9 +461,6 @@ function insertCitationResult(result) {
   }
 }
 
-/**
- * Library functions
- */
 /** Search stuff */
 function wikindxSearch() {
   var searchText = document.getElementById("wikindx-search-text").value;
@@ -499,11 +500,6 @@ async function search(type, searchText) {
   }
 }
 function searchReferencesResult(result) {
-/*  for (let match of result.matches) {
-    console.log(`Found ${match[0]} start=${match.index} end=${match.index + match[0].length}.`);
-    console.table(match)
-  }
-*/
   document.getElementById("wikindx-search-working").style.display = "none";
   document.getElementById("wikindx-search-completed").style.display = "block";
   if(!result.xmlResponse) {
@@ -815,6 +811,7 @@ function displayCitationResult(result) {
     }
   }
   function displayInit() {
+
   document.getElementById("wikindx-about").style.display = "none";
   document.getElementById("wikindx-display-about").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
   if (document.getElementById("wikindx-action").value == 'references') {
@@ -823,7 +820,42 @@ function displayCitationResult(result) {
     displayCitationPane();
   } else if (document.getElementById("wikindx-action").value == 'finalize') {
     displayFinalizePane();
-  //  Finalize.finalizeDisplay();
+    google.script.run
+      .withSuccessHandler(finalizeDisplayResult)
+      .finalizeDisplay();
+  }
+}
+function finalizeDisplayResult(result) {
+  for (var i = 0; i < result.debug.length; i++) {
+    console.table(result.debug[i]);
+  }
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+  document.getElementById("wikindx-finalize-styleSelectBox").innerHTML = result.styles;
+  document.getElementById("wikindx-finalize").style.display = "block";
+}
+async function finalizeRun() {
+//  document.getElementById("wikindx-finalize-working").style.display = "block";
+  document.getElementById("wikindx-finalize-completed").style.display = "none";
+  var params = document.getElementById("wikindx-finalize-order").value;
+  var style = document.getElementById("wikindx-finalize-styleSelectBox").value;
+  await google.script.run
+    .withSuccessHandler(finalizeRunResult)
+    .finalizeRun(params, style);
+
+}
+function finalizeRunResult(result) {
+  document.getElementById("wikindx-search-working").style.display = "none";
+//  document.getElementById("wikindx-search-completed").style.display = "block";
+console.log(result.misc);
+  for (var i = 0; i < result.debug.length; i++) {
+    console.table(result.debug[i]);
+  }
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
   }
 }
 

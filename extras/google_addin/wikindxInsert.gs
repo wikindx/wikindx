@@ -4,6 +4,7 @@ var regexpUnderline = RegExp(/(<span style="text-decoration: underline;">)(.*?)(
 var regexpSub = RegExp(/(<sub>)(.*?)(<\/sub>)/, 'g');
 var regexpSup = RegExp(/(<sup>)(.*?)(<\/sup>)/, 'g');
 var regexpHref = RegExp(/(<a class="rLink" href=".*>)(.*?)(<\/a>)/, 'g');
+var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
 var deleteArray = [];
 var insertError = "ERROR: Invalid selection or cursor position";
 
@@ -27,7 +28,7 @@ function insertReference(url, style, id) {
   }
   var rangeBuilder = document.newRange();
   rangeBuilder.addElement(element);
-  var tag = 'wikindx-id-' + Utilities.base64Encode(JSON.stringify([url, id]));
+  var tag = 'wikindxW!K!NDXidW!K!NDX' + JSON.stringify([url, id]);
   document.addNamedRange(tag, rangeBuilder.build());
 /*  var ranges = document.getNamedRanges();
   var rangeElements = [];
@@ -41,16 +42,10 @@ function insertReference(url, style, id) {
     }
   }
 */
-  var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
   for (i = 0; i < styles.length; i++) {
     insertHtmlText(element, response.xmlArray['inTextReference'], styles[i]);
   }
-  deleteArray.sort(function (b, a) {
-    return a.end - b.end;
-  });
-  for(i = 0; i < deleteArray.length; i++) {
-    element.deleteText(deleteArray[i].start, deleteArray[i].end);
-  }
+  deleteTags(element);
   return {
     xmlResponse: true
   };
@@ -77,22 +72,38 @@ function insertCitation(url, style, id) {
   }
   var rangeBuilder = document.newRange();
   rangeBuilder.addElement(element);
-  var tag = 'wikindx-id-' + Utilities.base64Encode(JSON.stringify([url, id, response.xmlArray['metaId']]));
+  var tag = 'wikindxW!K!NDXidW!K!NDX' + JSON.stringify([url, id, response.xmlArray['metaId']]);
   document.addNamedRange(tag, rangeBuilder.build());
-
-  var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
   for (i = 0; i < styles.length; i++) {
     insertHtmlText(element, text, styles[i]);
   }
-  deleteArray.sort(function (b, a) {
-    return a.end - b.end;
-  });
-  for(i = 0; i < deleteArray.length; i++) {
-    element.deleteText(deleteArray[i].start, deleteArray[i].end);
-  }
+  deleteTags(element);
   return {
     xmlResponse: true
   };
+}
+function updateReference(element, tag, text) {
+    element = element.setText(text);
+    var document = DocumentApp.getActiveDocument();
+    var rangeBuilder = document.newRange();
+    rangeBuilder.addElement(element);
+    document.addNamedRange(tag, rangeBuilder.build());
+    for (var i = 0; i < styles.length; i++) {
+      insertHtmlText(element, text, styles[i]);
+  }
+  deleteTags(element);
+}
+function appendBibliography(text) {
+    var document = DocumentApp.getActiveDocument();
+    var body = document.getBody();
+    var element = body.appendParagraph(text);
+    var rangeBuilder = document.newRange();
+    rangeBuilder.addElement(element);
+    document.addNamedRange('wikindx-bibliography', rangeBuilder.build());
+    for (var i = 0; i < styles.length; i++) {
+      insertHtmlText(element, text, styles[i]);
+  }
+  deleteTags(element);
 }
 function newElement(document, ref) {
 // First, check if something is selected (i.e. we replace)
@@ -131,42 +142,42 @@ function insertHtmlText(element, text, style) {
       matches = [...text.matchAll(regexpItalics)];
       transformArray = findTags(matches);
       for(i = 0; i < transformArray.length; i++) {
-        element.setItalic(transformArray[i].textStart, transformArray[i].textEnd, true);
+        element.editAsText().setItalic(transformArray[i].textStart, transformArray[i].textEnd, true);
       }
       break;
     case 'bold': 
       matches = [...text.matchAll(regexpBold)];
       transformArray = findTags(matches);
       for(i = 0; i < transformArray.length; i++) {
-        element.setBold(transformArray[i].textStart, transformArray[i].textEnd, true);
+        element.editAsText().setBold(transformArray[i].textStart, transformArray[i].textEnd, true);
       }
       break;
     case 'underline': 
       matches = [...text.matchAll(regexpUnderline)];
       transformArray = findTags(matches);
       for(i = 0; i < transformArray.length; i++) {
-        element.setUnderline(transformArray[i].textStart, transformArray[i].textEnd, true);
+        element.editAsText().setUnderline(transformArray[i].textStart, transformArray[i].textEnd, true);
       }
       break;
     case 'super': 
       matches = [...text.matchAll(regexpSup)];
       transformArray = findTags(matches);
       for(i = 0; i < transformArray.length; i++) {
-        element.setTextAlignment(transformArray[i].textStart, transformArray[i].textEnd, DocumentApp.TextAlignment.SUPERSCRIPT);
+        element.editAsText().setTextAlignment(transformArray[i].textStart, transformArray[i].textEnd, DocumentApp.TextAlignment.SUPERSCRIPT);
       }
       break;
     case 'sub': 
       matches = [...text.matchAll(regexpSub)];
       transformArray = findTags(matches);
       for(i = 0; i < transformArray.length; i++) {
-        element.setTextAlignment(transformArray[i].textStart, transformArray[i].textEnd, DocumentApp.TextAlignment.SUBSCRIPT);
+        element.editAsText().setTextAlignment(transformArray[i].textStart, transformArray[i].textEnd, DocumentApp.TextAlignment.SUBSCRIPT);
       }
       break;
     case 'href': 
       matches = [...text.matchAll(regexpHref)];
       transformArray = findTags(matches);
       for(i = 0; i < transformArray.length; i++) {
-        element.setLinkUrl(transformArray[i].textStart, transformArray[i].textEnd, transformArray[i].capture);
+        element.editAsText().setLinkUrl(transformArray[i].textStart, transformArray[i].textEnd, transformArray[i].capture);
       }
       break;
     default: 
@@ -175,6 +186,9 @@ function insertHtmlText(element, text, style) {
         message: 'Missing style input'
       };
   }
+  return {
+    xmlResponse: true
+  };
 }
 function findTags(matches) {
   var openTagStart, openTagEnd, textStart, textEnd, closeTagStart, closeTagEnd;
@@ -200,4 +214,12 @@ function findTags(matches) {
     deleteArray.push({start: closeTagStart, end: closeTagEnd});
   }
   return transformArray;
+}
+function deleteTags(element) {
+  deleteArray.sort(function (b, a) {
+    return a.end - b.end;
+  });
+  for(i = 0; i < deleteArray.length; i++) {
+    element.editAsText().deleteText(deleteArray[i].start, deleteArray[i].end);
+  }
 }

@@ -12,7 +12,7 @@ disableToc = false
 **From this version the API documentation and manual are integrated into the website. The manual will no longer be packaged. **
 
 
-### Bugs fixes
+## Bugs fixes
 
 * When adding a new resource form, if a duplicate title is detected, the form is now re-presented with the filled-in form data intact [#313].
 * Fix SQL formatting.
@@ -36,7 +36,7 @@ disableToc = false
 * Allow the two syntax of current_timestamp() for MySQL and MariaDB.
 
 
-### Feature enhancement
+## Feature enhancement
 
 * Added the ability to add an impressum/legal notice at the footer of each page – see Admin|Configure|Miscellaneous.
 * Added code to interface with a Word add-in if the WIKINDX allows read-only access, can be reached through https:// and has 
@@ -45,7 +45,7 @@ chosen style and appends a bibliography ordered as required.
 * Allow to use the CN as a LDAP login.
 
 
-### Maintenance
+## Maintenance
 
 * Blocks install/upgrade if the db engine does not meet the requirements [#311].
 * Move technical details in debug mode [#301].

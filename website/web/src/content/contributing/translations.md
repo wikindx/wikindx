@@ -5,7 +5,7 @@ weight = 3
 +++
 
 
-We are looking for translators. If you want to see Wikindx in your
+We are looking for translators. If you want to see WIKINDX in your
 native language do not hesitate to join us on [Transifex].
 
 If you only want to report an error without committing yourself to fixing it,
@@ -67,7 +67,7 @@ language, number of plural forms, encoding, last translator ...). Here
 is the example the French __PO__ file:
 
 ~~~~
-# Wikindx's Français Translation ressource.
+# WIKINDX's Français Translation ressource.
 # Copyright (C) 2019, Mark Grimshaw-Aagaard <sirfragalot@users.sourceforge.net>.
 # This file is distributed under the same license as the debugtools package.
 #
@@ -322,7 +322,7 @@ _This is a quick introduction, for details read the code._
 
 To update the POT files on Transifex, copy the files to the
 `/home/project-web/wikindx/htdocs/transifex/pot` directory on the SF
-Wikindx Website FTP folder. Transifex update the resources (twice a day)
+WIKINDX Website FTP folder. Transifex update the resources (twice a day)
 from these files.  You can force the update by hand but put the POT file
 online before.
 
@@ -405,7 +405,7 @@ saved in the `cache/locales_system.json` file (refresh at each core
 upgrade). Users choose their preferred locale from this second list.
 
 An artificial locale called auto is added to this list. It allows the
-user to let Wikindx deduce its locale from the headers sent by its
+user to let WIKINDX deduce its locale from the headers sent by its
 browser.
 
 The language code returned in the HTML source code of the pages IS NOT a

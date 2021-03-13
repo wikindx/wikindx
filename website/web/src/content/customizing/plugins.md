@@ -26,7 +26,7 @@ To get your plugins working, a few conditions are required:
    case-sensitive words 'menu' or 'inline'.
 
  * index.php and config.php must be writeable by the web server
-   user (this allows administrators to manage plugins via the wikindx
+   user (this allows administrators to manage plugins via the WIKINDX
    interface rather than having to edit the files directly).
 
  * config.php should have the public variable $wikindxVersion.  e.g.  public
@@ -59,7 +59,7 @@ mysqli only). In each driver directory, create one directory "full" (lowercase)
 and one directory "update" (lowercase).
 
 Full and update directories may contain one or more SQL files to run on the first
-execution of Wikindx or on upgrade stage, in alphabetical order. If you do create
+execution of WIKINDX or on upgrade stage, in alphabetical order. If you do create
 a database table that stores user IDs, then that field should be named
 'pluginxxxxUserId' (when a user is deleted from the WIKINDX, the delete routines
 check plugin database tables for fields that follow that convention).
@@ -207,7 +207,7 @@ class testMessages
             "heading" => dgettext($domain, "Test Plugin Example"),
             "command1" => dgettext($domain, "This is command 1"),
             "command2" => dgettext($domain, "This is command 2"),
-            "noMethod" => dgettext($domain, "No method was input. Try the Wikindx menu instead"),
+            "noMethod" => dgettext($domain, "No method was input. Try the WIKINDX menu instead"),
             "thisModule" => dgettext($domain, "this module"),
             "noHelp" => dgettext($domain, "No help here. Try ### instead."),
             "helpMePlease" => dgettext($domain, "The method is ### and here I am.  Sadly, I cannot help."),

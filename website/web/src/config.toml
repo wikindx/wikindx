@@ -1,11 +1,11 @@
 baseurl = "https://wikindx.sourceforge.io/web/trunk/"
 languageCode = "en-gb"
-title = "Wikindx"
+title = "WIKINDX"
 theme = "hugo-theme-learn"
 publishDir = "../trunk"
 
 [author]
-name = "Wikindx Team"
+name = "WIKINDX Team"
 email = "sirfragalot@users.sourceforge.net"
 
 [[menu.shortcuts]]
@@ -84,10 +84,10 @@ home = [ "HTML", "RSS", "JSON"]
 editURL = ""
 
 # Author of the site, will be used in meta information
-author = "Wikindx Team"
+author = "WIKINDX Team"
 
 # Description of the site, will be used in meta information
-description = "Wikindx"
+description = "WIKINDX"
 
 # Shows a checkmark for visited pages on the menu
 showVisitedLinks = false

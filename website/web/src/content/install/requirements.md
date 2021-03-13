@@ -9,7 +9,7 @@ weight = 1
 
 WIKINDX requires a web server environment comprising a web server (typically [Apache](https://apache.org/), [Nginx](https://www.nginx.com/), or [Microsoft IIS](https://www.iis.net/)), [PHP](https://www.php.net/) scripting, and a [MariaDB](https://mariadb.org/) (or [MySQL](https://www.mysql.com)) server.
 
-Most web-hosting providers can provide this configuration at a low cost. Even small VPS of a few bucks per month are more than enough.  If you don't have any system administration skills or don't have the time to deal with it this is definitely your best option. Placing WIKINDX on such a remote web server means that it can be accessed from any machine and people on the web. The constraint of this solution is security. Be sure to update Wikindx regularly to benefit from our security fixes
+Most web-hosting providers can provide this configuration at a low cost. Even small VPS of a few bucks per month are more than enough.  If you don't have any system administration skills or don't have the time to deal with it this is definitely your best option. Placing WIKINDX on such a remote web server means that it can be accessed from any machine and people on the web. The constraint of this solution is security. Be sure to update WIKINDX regularly to benefit from our security fixes
 
 WIKINDX can also be installed on a private network within a company, institution or an organization or locally for a single user on one desktop or laptop computer.
 
@@ -31,7 +31,7 @@ If a third party is configuring for hosting, provide them with the information o
 
 ## MariaDB & MySQL versions
 
-Wikindx does not use advanced features of MariaDB / MySQL database engines which should
+WIKINDX does not use advanced features of MariaDB / MySQL database engines which should
 allow to install it without problems on a recent version. However, there
 is no guarantee that MySQL will change its default options to stricter
 uses as in the past. We are finding that more and more [MariaDB and MySQL
@@ -42,23 +42,23 @@ If you encounter a problem let us know it.
 Minimal versions are strictly understood for decent support of UTF-8 and
 runtime-checked. The setup blocks the installation if the db engine does not correspond to the minimum required.
 
-Wikindx use the following options and sets them on db connection:
+WIKINDX use the following options and sets them on db connection:
 
 * Charset: [utf8mb4](https://mariadb.com/kb/en/supported-character-sets-and-collations/)
 * Collation: [utf8mb4_unicode_520_ci](https://mariadb.com/kb/en/setting-character-sets-and-collations/) (please use this collation on db creation)
 * GROUP_CONCAT limit: [group_concat_max_len](https://mariadb.com/kb/en/group_concat/) = 200000
 * Mode: [TRADITIONAL](https://mariadb.com/kb/en/sql-mode/#traditional) (this stricter mode allows us to prevent errors)
 
-__Disclaimer: *Wikindx is not supposed to share its database with any other software. This widespread practice involves serious security breaches and possible data loss in the event of software bugs. Dedicate a database to Wikindx!*__
+__Disclaimer: *WIKINDX is not supposed to share its database with any other software. This widespread practice involves serious security breaches and possible data loss in the event of software bugs. Dedicate a database to WIKINDX!*__
 
 Support for another database engine is not considered and is
 limited to the [mysqli](https://www.php.net/manual/fr/book.mysqli.php) PHP driver.
 
-|Wikindx / MariaDB | 10.2 | 10.3 | 10.4 | 10.5
+|WIKINDX / MariaDB | 10.2 | 10.3 | 10.4 | 10.5
 |------------------|------|------|------|------
 |All versions      |   X  |   X  |   X  |   X
 
-|Wikindx / MySQL   | 5.7.5 | 5.8 | 8.0
+|WIKINDX / MySQL   | 5.7.5 | 5.8 | 8.0
 |------------------|------|------|------
 |All versions      |   X  |   X  |   X
 
@@ -68,14 +68,14 @@ limited to the [mysqli](https://www.php.net/manual/fr/book.mysqli.php) PHP drive
 PHP support is tested for the core, components, and third party software
 included. For security purpose we recommend to use an [officialy
 supported PHP version](https://www.php.net/supported-versions.php)
-of the PHP Team. mod_php, CGI, and and FastCGI are compliant with PHP and Wikindx.
+of the PHP Team. mod_php, CGI, and and FastCGI are compliant with PHP and WIKINDX.
 
-Wikindx can support older versions to facilitate the migration
+WIKINDX can support older versions to facilitate the migration
 of an installation but are not intended to support a large number of versions.
 
 All current versions of PHP have a good support of UTF-8.
 
-PHP version | Min Wikindx Version | Max Wikindx Version
+PHP version | Min WIKINDX Version | Max WIKINDX Version
 ------------|---------------------|--------------------
 8.0         | 6.4.2 (partial)     | trunk (partial)
 7.4         | 6.1.0               | trunk
@@ -94,9 +94,9 @@ PHP version | Min Wikindx Version | Max Wikindx Version
 
 ### Core requirements
 
-The version numbers in this section are those of Wikindx, not those of a
+The version numbers in this section are those of WIKINDX, not those of a
 PHP extension or a library used by a PHP extension. When the version is
-not specified the need is valid for all versions of Wikindx.
+not specified the need is valid for all versions of WIKINDX.
 
 
 #### Mandatory extensions
@@ -104,7 +104,7 @@ not specified the need is valid for all versions of Wikindx.
 In summary, from version 5.2.0 all the extensions mentioned above are required
 for proper functioning, which should be the case for almost all installations. 
 
-| Extensions | Wikindx version
+| Extensions | WIKINDX version
 |------------|-----------------------
 | core       |
 | date       |
@@ -129,7 +129,7 @@ for proper functioning, which should be the case for almost all installations.
 
 #### Optional extensions and configuration
 
-| Extensions       | Wikindx version | Note
+| Extensions       | WIKINDX version | Note
 |------------------|-----------------|-----------------
 | curl             | >= 5.2.0        | Needed to extract texts of a PDF.
 | enchant / pspell | >= 5.2.0        | Used by the spell checker of [TinyMCE](https://www.tiny.cloud/). It is always disabled under Windows because the pspell is uninstallable in practice on this OS.
@@ -137,11 +137,11 @@ for proper functioning, which should be the case for almost all installations.
 | openssl          | >= 5.2.0        | Needed if you intend to send emails with secure protocols (starttls, tls, ssl) in SMTP mode and encryption (See [PHPMailer](https://github.com/PHPMailer/PHPMailer)).
 | sockets          | >= 5.2.0        | Needed if you intend to send emails with the SMTP protocol.
 | zip              |                 | Without this extension attachments will not be exported in a Zip archive. Also used by the release process.
-| curl + zip       | >= 5.9.1        | if disabled, the update feature of Wikindx components will be disabled.
+| curl + zip       | >= 5.9.1        | if disabled, the update feature of WIKINDX components will be disabled.
 | Phar             |                 | Used by the release process.
 | zlib             |                 | Used by the release process.
 
-If **allow_url_fopen** is disabled Wikindx will be not be able to embed an external image in an RTF export.
+If **allow_url_fopen** is disabled WIKINDX will be not be able to embed an external image in an RTF export.
 
 
 #### Official plugins requirements
@@ -163,7 +163,7 @@ Database disk space can vary greatly. The initial size is around 10 MB (50 KB fo
 
 ## Memory consumption
 
-In normal use Wikindx consumes less than 20 MB of RAM by process. It is recommended to limit to 128MB (default official value of PHP memory_limit) for the proper functioning of updating, searching, and extracting texts from PDF. 
+In normal use WIKINDX consumes less than 20 MB of RAM by process. It is recommended to limit to 128MB (default official value of PHP memory_limit) for the proper functioning of updating, searching, and extracting texts from PDF. 
 
 
 ## Execution time
@@ -174,7 +174,7 @@ Generally a script responds in less than 1 s but searches can go up to 5 or 15 s
 ## Browser compatibility
 
 The  client  accesses  the  database via  a  standard  (graphical)  web
-browser. Wikindx  makes use of the [TinyMCE](https://www.tiny.cloud/) editor  (v2.0.4) and this
+browser. WIKINDX  makes use of the [TinyMCE](https://www.tiny.cloud/) editor  (v2.0.4) and this
 could limit the web browsers that can be used. A migration project to
 TinyMCE 5 is underway to address these limitations. Your browser should
 [support HTML5](https://caniuse.com/?search=html5)
@@ -191,4 +191,4 @@ Generally, though, if you use the following, you should be fine:
  * [Vivaldi](https://vivaldi.com)
  * [WebKit based browsers](https://en.wikipedia.org/wiki/List_of_web_browsers#WebKit-based)
 
-You must enable JavaScript execution. Without JavaScript Wikindx will not work properly.
+You must enable JavaScript execution. Without JavaScript WIKINDX will not work properly.

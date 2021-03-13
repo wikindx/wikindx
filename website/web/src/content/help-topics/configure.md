@@ -32,13 +32,13 @@ The LDAP connection test function runs exactly the same code as during user conn
 
 The code should work with all LDAP servers. However, it has only been tested with Active Directory and ApacheDS servers. In particular, your user login (or FullName / email) attribute may not be in the proposed list even if the most frequently used are there. You can request it as a feature from the developers.
 
-Wikindx is not able to renew LDAP password on expiration or bulk import users from a group or OU. It only checks for authentication.
+WIKINDX is not able to renew LDAP password on expiration or bulk import users from a group or OU. It only checks for authentication.
 
 When LDAP authentication is enabled, native authentication is not used except for an attempt to connect the Super Admin. If its LDAP authentication fails, the built-in authentication is used instead.
 
-When LDAP authentication is successful, the user is created in Wikindx if it did not already exist. The Username (login), Fullname and Email attributes are acquired from the directory server.
+When LDAP authentication is successful, the user is created in WIKINDX if it did not already exist. The Username (login), Fullname and Email attributes are acquired from the directory server.
 
-Passwords are not stored in Wikindx database when performing an LDAP authentication. If the LDAP server is offline or any error during the communication with the server occurs, the LDAP authentication will fail.
+Passwords are not stored in WIKINDX database when performing an LDAP authentication. If the LDAP server is offline or any error during the communication with the server occurs, the LDAP authentication will fail.
 
 If the Super Admin subsequently disables LDAP authentication, users created in this way will not be able to log in with builtin authentication without changing their password or asking Super Admin to register one.
 

@@ -9,7 +9,7 @@ weight = 4
 If you are upgrading, read this document carefully. Follow the instructions
 below depending on the starting version.
 
-Instead, you can also install again Wikindx in a different folder
+Instead, you can also install again WIKINDX in a different folder
 from a copy of the `components` and `data` folders and a backup of the database.
 
 __BACK UP YOUR DATABASE BEFORE ANY UPGRADING!!!!!!!__
@@ -46,7 +46,7 @@ From v5.9.1, components are updated and managed from the __Components Manager__
 The cURL and Zip PHP extensions are not mandatory but used by the __Components Manager__.
 We recommend to enable these extensions and use the __Components Manager__.
 
-Without cURL, components cannot be downloaded by Wikindx but you can still manage to install
+Without cURL, components cannot be downloaded by WIKINDX but you can still manage to install
 a component with the top form of the __Components Manager__ from a local copy downloaded from Sourceforge.
 
 Without Zip, you cannot install components via the __Components Manager__ and
@@ -126,7 +126,7 @@ several folders are writeable including:
     - `components/styles/'`
     - `components/vendor/`
 
-6. Run Wikindx through your web browser and follow the instructions on screen.
+6. Run WIKINDX through your web browser and follow the instructions on screen.
    You will go through the following steps:
 
     - If the PHP version is wrong, you will be prompted to correct this.
@@ -182,7 +182,7 @@ their UTF-8 repaired with the plugin, should follow this procedure:
 
 1. Download and install WIKINDX 6.0.8 or 6.1.0 according to your PHP version.
 2. Run WIKINDX and follow the database upgrade.
-3. Install the RepairKit plugin for the relevant wikindx version and run the
+3. Install the RepairKit plugin for the relevant WIKINDX version and run the
    plugin’s __Fix chars__ code.
 4. If you do not have PHP 7.0 or greater, you cannot go further than using
    WIKINDX v6.0.8. If you have PHP 7.0 or greater, then you can now safely download

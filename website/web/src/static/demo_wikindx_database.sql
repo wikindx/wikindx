@@ -187,7 +187,7 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (44, 'configRssLimit', 10, NULL, NULL, NULL, NULL),
 (45, 'configRssDisplay', NULL, NULL, NULL, 1, NULL),
 (46, 'configRssTitle', NULL, 'WIKINDX', NULL, NULL, NULL),
-(47, 'configRssDescription', NULL, 'My Wikindx', NULL, NULL, NULL),
+(47, 'configRssDescription', NULL, 'My WIKINDX', NULL, NULL, NULL),
 (49, 'configMailUse', NULL, NULL, NULL, NULL, NULL),
 (50, 'configMailFrom', NULL, '', NULL, NULL, NULL),
 (51, 'configMailReplyTo', NULL, '', NULL, NULL, NULL),

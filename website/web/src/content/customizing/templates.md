@@ -12,7 +12,7 @@ Smarty HTML Templating System -- documentation on Smarty can be found at
 various .tpl files in `wikindx/components/templates/default/`.
 
 Certain files must be present for the template to be available to the
-user in _Wikindx > Preferences_:
+user in _WIKINDX > Preferences_:
 
  * display.tpl
    * header.tpl (optional if merged with display.tpl)
@@ -88,7 +88,7 @@ This can be 0, 1, 2, 0$, 1$, or 2$ where
      no choice --useful where the template is to be used in special
      circumstances such as on mobile devices. Without a '$', read-only
      users will initially be presented with the number of menu levels set by
-     the template designer and this can be overridden in _Wikindx > Preferences_.
+     the template designer and this can be overridden in _WIKINDX > Preferences_.
 
 If there is only one line in config.txt or the value of the line 1
 is wrong, then 0 is assumed for line 1.

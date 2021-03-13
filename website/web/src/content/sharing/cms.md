@@ -31,104 +31,138 @@ This introduction to CMS Hooks has three parts:
 
 ## Displaying single or multiple WIKINDX resources in a CMS
 
+
+### Interrogating wikindx
+
 In all cases, the return from WIKINDX comprises one or more resources
-matching the queryString parameter you have set.
-
-*************************
-  INTERROGATING WIKINDX
-*************************
-
-NB.
+matching the __queryString__ parameter you have set.
 
 1. The following assumes the path to the WIKINDX is
-<http://localhost/wikindx/> -- if not, adjust the path accordingly.
+<http://wikindx.test/> -- if not, adjust the path accordingly.
 
-2. 'action' and 'id' are required and must have valid values. 'action'
-may be 'getResource', 'getCategory', 'getKeyword', 'getCreator',
-'getPublisher', 'getCollection', 'getAbstract', 'getNotes', 'getQuote',
-'getParaphrase', 'getMusing', 'getRecent'  ('id' is not required
-for this last one). The 'id' you wish to use may be found directly
+2. __action__ and __id__ are required and must have valid values. __action__
+may be __getResource__, __getCategory__, __getKeyword__, __getCreator__,
+__getPublisher__, __getCollection__, __getAbstract__, __getNotes__, __getQuote__,
+__getParaphrase__, __getMusing__, __getRecent__  (__id__ is not required
+for this last one). The __id__ you wish to use may be found directly
 in WIKINDX (if you've set your WIKINDX Preferences to view the CMS
 pop-up window) or by browsing the MySQL database using a client such as
 PhpMyAdmin.
 
-3. 'limit' is optional. e.g. '&limit=10' in the queryString will limit
-the results of any list to 10. The default is unlimited. 'limit' will be
-ignored if action = 'getResource'.
+3. __limit__ is optional. e.g. __&limit=10__ in the queryString will limit
+the results of any list to 10. The default is unlimited. __limit__ will be
+ignored if `action = 'getResource'`.
 
-4. 'order' is optional. e.g. '&order=year' in the queryString will
+4. __order__ is optional. e.g. `&order=year` in the queryString will
 display a list ordered by publication year. Possible values are
-'creator', 'year', 'title', and 'timestamp'. The default is 'creator'.
+__creator__, __year__, __title__, and __timestamp__. The default is __creator__.
 
-5. When using 'getKeyword', 'getCategory' or 'getCreator', you may have
-a further parameter of '&sqlMethod=and' which allows you to return
+5. When using __getKeyword__, __getCategory__ or __getCreator__, you may have
+a further parameter of `&sqlMethod=and` which allows you to return
 results, for example, where each resource belongs to all requested
 categories. By default, the resources in the result match any one of the
 requested categories. Ditto for keywords and creators.
 
 6. You can select the bibliographic style used by adding, for example,
-the following to the querystring '&bibStyle=HARVARD'. Without this, the
+the following to the querystring `&bibStyle=HARVARD`. Without this, the
 default bibliographic style set in admin panel will be used.
 
 7. You can select the language used by adding, for example,
-the following to the querystring '&language=en'. Without this, the
-preferred language (provided by \UTILS\determine_locale()) will be used.
-The language set is the name of a folder in components/languages/
+the following to the querystring `&language=en`. Without this, the
+preferred language (provided by `\UTILS\determine_locale()`) will be used.
+The language set is the name of a folder in `core/languages/`.
 
 8. When getting quotes and paraphrases, only public comments are returned
 and only public musings are returned when getting musings.
 
-EXAMPLES:
+Examples:
 
 To display a single resource ('id' == resource ID):
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getResource&id=242');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getResource&id=242');
+~~~~
 
 To display a category list ('id' == category ID):
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getCategory&id=4');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getCategory&id=4');
+~~~~
 
 To display a subcategory list ('id' == subcategory ID):
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getSubcategory&id=4');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getSubcategory&id=4');
+~~~~
 
 To display a keyword list ('id' == keyword ID):
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getKeyword&id=32');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getKeyword&id=32');
+~~~~
 
 To display a creator list ('id' == creator ID):
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getCreator&id=143');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getCreator&id=143');
+~~~~
 
 To display a publisher list ('id' == publisher ID):
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getPublisher&id=42');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getPublisher&id=42');
+~~~~
 
 To display a collection list ('id' == collection ID):
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getCollection&id=13');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getCollection&id=13');
+~~~~
 
 To display an abstract ('id' == resource ID):
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getAbstract&id=242');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getAbstract&id=242');
+~~~~
 
 To display all quotes and comments for a resource ('id' == resource ID):
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getQuote&id=242');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getQuote&id=242');
+~~~~
 
 To display a list of any of the above, use a comma-separated list of the appropriate ID numbers.  For example:
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getResource&id=13,54,2,103,4');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getResource&id=13,54,2,103,4');
+~~~~
 
 To display up to 5 resources by two particular creators (where they are co-authors), ordered by publication year:
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getCreator&id=4,5&limit=5&order=year&sqlMethod=and');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getCreator&id=4,5&limit=5&order=year&sqlMethod=and');
+~~~~
 
 Additionally, you may also use the following ('order' will be ignored and, if no 'limit', the default is 10 resources returned):
 
 To display the 10 most recently added resources:
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getRecent&limit=10');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getRecent&limit=10');
+~~~~
 
 To display at most 15 resources added within the last 5 days:
-   $string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getRecent&limit=15&days=5');
+
+~~~~php
+   $string = file_get_contents('wikindx.test/cmsprint.php?action=getRecent&limit=15&days=5');
+~~~~
 
 
-***********************
-  OUTPUT FROM WIKINDX
-***********************
+### Output from WIKINDX
 
 The output from `cmsprint.php` ($string above) is a string representing
 a base64_encoded, serialized PHP array (unless no resources have been
-found in which case $string will be FALSE). To access this array, you
+found in which case `$string` will be FALSE). To access this array, you
 will need to use the following:
 
 ~~~~php
@@ -138,7 +172,7 @@ if($string)
 }
 ~~~~
 
-The contents of $array may be like the following example:
+The contents of `$array` may be like the following example:
 
 ~~~~plain
 	[13] => Back, M., &amp; Des, D. (1996). Micro-narratives in sound design: Context and caricature in waveform manipulation. Retrieved March 12, 2004, from <a href="http://www2.hku.nl/~audiogam/ag/articles/micronaratives.htm" target="_blank">http://www2.hku.nl/~aud&nbsp;...&nbsp;cles/micronaratives.htm</a>.
@@ -155,15 +189,15 @@ each array member is the resource ID.
 You can then loop through this array in order to format and print the
 individual items as you wish. An example might be:
 
-~~~~
+~~~~php
 foreach($array as $resourceId => $item)
 {
     print $item . "<br>";
 }
-~~~~php
+~~~~
 
 The output for a command such as
-$string = file_get_contents('http://localhost/wikindx/cmsprint.php?action=getQuote&id=242');
+`$string = file_get_contents('wikindx.test/cmsprint.php?action=getQuote&id=242');`
 , after processing as above, may be an array
 such as:
 
@@ -208,29 +242,29 @@ If the WIKINDX admin allows it, you can send a complex
 SQL statement to WIKINDX and receive an array of resources in return.
 This array is in the same format as described in PART 1. The SQL
 statement is a base64-encoded string that can be copied and pasted from
-the WIKINDX 'cms' link if you have enabled this link in your WIKINDX
-preferences. The 'cms' link is displayed when viewing WIKINDX lists.
+the WIKINDX __cms__ link if you have enabled this link in your WIKINDX
+preferences. The __cms__ link is displayed when viewing WIKINDX lists.
 
 1. Formulate your WIKINDX list first.
 
-2. Click on the 'cms' link.
+2. Click on the __cms__ link.
 
 3. Write the provided string to a temporary file on your web server.
 
 4. Contact the WIKINDX and give it the address where $text is stored.
 
-5. Process $string as an array in your CMS using
-unserialize(base64_decode($string)).
+5. Process `$string` as an array in your CMS using
+`unserialize(base64_decode($string))`.
 
 You can select the bibliographic style used by adding, for example, the
-following to the querystring '&bibStyle=HARVARD'. Without this, the
+following to the querystring `&bibStyle=HARVARD`. Without this, the
 default bibliographic style set in admin panel will be used. This is
 the only extra parameter accepted.
 
 Example (in your CMS code and assuming both CMS and WIKINDX are on localhost):
 
 ~~~~php
-$string = file_get_contents(http://localhost/wikindx/cmsprint.php?action=parseSql&address=http://localhost/cms/temp/tempfile.txt);
+$string = file_get_contents(wikindx.test/cmsprint.php?action=parseSql&address=http://localhost/cms/temp/tempfile.txt);
 
 if($string)
 {
@@ -296,42 +330,42 @@ Using the example above, this code will produce:
 Chion states that:  "Blah, blah, blah" [cite]3:314[/cite] but in a later article corrects this by saying:  "Bleah, bleah, bleah" [cite]89:22-23[/cite].
 ~~~~php
 
-3. Write the new $text to a temporary file on your web server.
+3. Write the new `$text` to a temporary file on your web server.
 
 4. Contact the WIKINDX and give it the address where $text is stored.
 For example (assuming both CMS and WIKINDX are on localhost):
 
 ~~~~php
-$string = file_get_contents(http://localhost/wikindx/cmsprint.php?action=parseText&wikindxLink=1&address=http://localhost/cms/temp/tempfile.txt);
+$string = file_get_contents(wikindx.test/cmsprint.php?action=parseText&wikindxLink=1&address=http://localhost/cms/temp/tempfile.txt);
 ~~~~
 
-5. Print $string back to your CMS.
+5. Print `$string` back to your CMS.
 
 
 Note the following:
 
-1. The querystring parameter 'wikindxLink=1' is optional and, if
+1. The __querystring__ parameter `wikindxLink=1` is optional and, if
 set, the formatted citations in $string will be hyperlinked to the
 appropriate WIKINDX resource (best used where CMS and WIKINDX are on the
 same host).
 
 2. You can select the bibliographic style used by adding, for example,
-the following to the querystring '&bibStyle=HARVARD'. Without this, the
+the following to the querystring `&bibStyle=HARVARD`. Without this, the
 default bibliographic style set in admin panel will be used.
 
 3. $string will contain not only the formatted text block but will
 also contain an appended bibliography of the citations in the text.
 Where the current style is an in-text citation style such as APA,
-this bibliography is separated by '<br><br>' -- if your CMS uses
+this bibliography is separated by `<br><br>` -- if your CMS uses
 similar HTML code for line breaks and you wish to be able to split this
 bibliography from the text for some reason, you should replace all
-occurrences of '<br>' in $text with a unique string prior to sending
-it to the WIKINDX and then split the result on '<br><br>' before
-reverting that unique string back to '<br>' before finally printing
+occurrences of `<br>` in $text with a unique string prior to sending
+it to the WIKINDX and then split the result on `<br><br>` before
+reverting that unique string back to `<br>` before finally printing
 the result back to the CMS. If the current style is a style using
 footnotes such as Chicago, the WIKINDX result contains the formatted
 text, the required footnote citations and the appended bibliography.
-Splitting the WIKINDX result on '<br><br>' will produce an array
+Splitting the WIKINDX result on `<br><br>` will produce an array
 of three members, the first being the text block, the second being the
 footnotes and the third being the bibliography. For example, you might
 use the following code:
@@ -340,7 +374,7 @@ use the following code:
 $text = preg_replace("/\{ADD_BIB_ITEM:(.*)\}/Ui", "[cite]$1[/cite]", $text);
 $text = str_replace('<br>', 'IAMAUNIQUESTRING', $text);
 <... write $text to cms/temp/tempfile.txt ...>
-$string = file_get_contents("http://localhost/wikindx/cmsprint.php?action=parseText&address=http://localhost/cms/temp/tempfile.txt");
+$string = file_get_contents("wikindx.test/cmsprint.php?action=parseText&address=http://localhost/cms/temp/tempfile.txt");
 $split = preg_split("/(<br \/>){2,2}/i", $string);
 $text = str_replace('IAMAUNIQUESTRING', '<br>', $split[0]);
 $footnotes = $split[1];

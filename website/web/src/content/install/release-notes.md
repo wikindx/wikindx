@@ -26,7 +26,7 @@ disableToc = false
 * Add a missing index on resourcecustomCustomId (previous upgrade code missing).
 * Add a missing index on resourcelanguageLanguageId (previous upgrade code missing).
 * Add a missing index on resourcelanguageResourceId (previous upgrade code missing).
-1* Add a missing index on resourcemiscCollection (previous upgrade code missing).
+* Add a missing index on resourcemiscCollection (previous upgrade code missing).
 * Add a missing index on resourcemiscPublisher (previous upgrade code missing).
 * Add a missing index on resourcetimestampTimestamp (previous upgrade code missing).
 * Add a missing index on resourcetimestampTimestamp (previous upgrade code missing).

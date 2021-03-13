@@ -1,4 +1,4 @@
-# WIKINDX's Translation ressource: Deutsch.
+# Wikindx's Translation ressource: Deutsch.
 # For copyright see the component.json file
 # This file is distributed under the same license as the wikindx package.
 #
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-13 18:00+0100\n"
+"POT-Creation-Date: 2021-03-13 19:06+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2583,11 +2583,9 @@ msgid ""
 msgstr ""
 "Zwei oder mehr Inline-Plugins wurden dem gleichen Container zugeordnet: ###"
 
-#. top menu item
-#: core/messages/messages.php:91 core/messages/messages.php:383
-#: core/messages/messages.php:994
-msgid "Configure"
-msgstr "Konfigu­rieren"
+#: core/messages/messages.php:91
+msgid "Configure Wikindx"
+msgstr "Wikindx konfigurieren"
 
 #: core/messages/messages.php:92
 msgid "Logon"
@@ -2794,10 +2792,8 @@ msgstr "Datei-URLs ###"
 
 #. / heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
 #: core/messages/messages.php:142
-#, fuzzy
-#| msgid "Add WIKINDX Resources ###"
-msgid "My WIKINDX ###"
-msgstr "WIKINDX-Ressourcen hinzufügen ###"
+msgid "My Wikindx ###"
+msgstr "Mein Wikindx ###"
 
 #: core/messages/messages.php:143
 msgid "Forgotten Password"
@@ -3804,6 +3800,11 @@ msgstr ""
 #: core/messages/messages.php:382
 msgid "Update"
 msgstr ""
+
+#. top menu item
+#: core/messages/messages.php:383 core/messages/messages.php:994
+msgid "Configure"
+msgstr "Konfigu­rieren"
 
 #: core/messages/messages.php:384
 msgid "an error occurred while installing the package: ###."
@@ -5689,8 +5690,8 @@ msgid "Register"
 msgstr "Registrierung"
 
 #: core/messages/messages.php:880
-msgid "My WIKINDX"
-msgstr ""
+msgid "My Wikindx"
+msgstr "Mein Wikindx"
 
 #: core/messages/messages.php:882
 msgid "User Logon"
@@ -5744,8 +5745,8 @@ msgid "Turn Help off"
 msgstr "Hilfe ausschalten"
 
 #: core/messages/messages.php:897
-msgid "About WIKINDX"
-msgstr ""
+msgid "About Wikindx"
+msgstr "Über Wikindx"
 
 #. top menu item
 #: core/messages/messages.php:900
@@ -8673,21 +8674,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "My Wikindx"
-#~ msgstr "Mein Wikindx"
-
-#~ msgid ""
-#~ "<p>If an element such as a keyword or category is hyperlinked, clicking on "
-#~ "the link will display other resources belonging to that keyword or "
-#~ "category. Any quotations, paraphrases and available musings can optionally "
-#~ "have hyperlinked keywords linking them to other metadata.</p>"
-#~ msgstr ""
-#~ "<p>Falls ein Element wie ein Schlagwort oder eine Kategorie als Link "
-#~ "dargestellt werden, werden beim Klicken auf den Link andere Ressourcen mit "
-#~ "diesem Schlagwort bzw. der Kategorie angezeigt. Alle Zitate, "
-#~ "Umschreibungen und vorhandene Gedanken können optional auch verlinkte "
-#~ "Schlagwörter haben, die sie zu anderen Metadaten verlinken.</p>"
-
 #~ msgid "<h3>My Wikindx</h3>"
 #~ msgstr "<h3>Mein Wikindx</h3>"
 
@@ -9624,8 +9610,17 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "Sie sind nicht als Superadmin angemeldet: bitten Sie ###, die "
 #~ "Aktualisierung des Datenbankschemas vorzunehmen."
 
-#~ msgid "About Wikindx"
-#~ msgstr "Über Wikindx"
+#~ msgid ""
+#~ "<p>If an element such as a keyword or category is hyperlinked, clicking on "
+#~ "the link will display other resources belonging to that keyword or "
+#~ "category. Any quotations, paraphrases and available musings can optionally "
+#~ "have hyperlinked keywords linking them to other metadata.</p>"
+#~ msgstr ""
+#~ "<p>Falls ein Element wie ein Schlagwort oder eine Kategorie als Link "
+#~ "dargestellt werden, werden beim Klicken auf den Link andere Ressourcen mit "
+#~ "diesem Schlagwort bzw. der Kategorie angezeigt. Alle Zitate, "
+#~ "Umschreibungen und vorhandene Gedanken können optional auch verlinkte "
+#~ "Schlagwörter haben, die sie zu anderen Metadaten verlinken.</p>"
 
 #~ msgid "Disabled Styles"
 #~ msgstr "Deaktivierte Stile"
@@ -9638,6 +9633,3 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "My Bibliographies"
 #~ msgstr "Meine Bibliographien"
-
-#~ msgid "My Wikindx ###"
-#~ msgstr "Mein Wikindx ###"

@@ -1,4 +1,4 @@
-# WIKINDX's Translation ressource: Français.
+# Wikindx's Translation ressource: Français.
 # For copyright see the component.json file
 # This file is distributed under the same license as the wikindx package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-13 18:00+0100\n"
+"POT-Creation-Date: 2021-03-13 19:06+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2021\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -2589,10 +2589,8 @@ msgstr ""
 "Le membre ### de la classe CONFIG est manquant. La configuration n'a pas pu "
 "être mise à jour."
 
-#. top menu item
-#: core/messages/messages.php:91 core/messages/messages.php:383
-#: core/messages/messages.php:994
-msgid "Configure"
+#: core/messages/messages.php:91
+msgid "Configure Wikindx"
 msgstr "Configuration"
 
 #: core/messages/messages.php:92
@@ -2796,10 +2794,8 @@ msgstr "URL des fichiers ###"
 
 #. / heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
 #: core/messages/messages.php:142
-#, fuzzy
-#| msgid "Add WIKINDX Resources ###"
-msgid "My WIKINDX ###"
-msgstr "Ajouter des entrées ###"
+msgid "My Wikindx ###"
+msgstr "Préférences ###"
 
 #: core/messages/messages.php:143
 msgid "Forgotten Password"
@@ -3755,6 +3751,11 @@ msgstr "Réinstaller"
 #: core/messages/messages.php:382
 msgid "Update"
 msgstr "Mettre à jour"
+
+#. top menu item
+#: core/messages/messages.php:383 core/messages/messages.php:994
+msgid "Configure"
+msgstr "Configuration"
 
 #: core/messages/messages.php:384
 msgid "an error occurred while installing the package: ###."
@@ -5772,8 +5773,8 @@ msgid "Register"
 msgstr "S'enregistrer"
 
 #: core/messages/messages.php:880
-msgid "My WIKINDX"
-msgstr ""
+msgid "My Wikindx"
+msgstr "Préférences"
 
 #: core/messages/messages.php:882
 msgid "User Logon"
@@ -5827,10 +5828,8 @@ msgid "Turn Help off"
 msgstr "Désactiver l'aide"
 
 #: core/messages/messages.php:897
-#, fuzzy
-#| msgid "Default is 'WIKINDX'"
-msgid "About WIKINDX"
-msgstr "Par défaut 'WIKINDX'"
+msgid "About Wikindx"
+msgstr "À propos..."
 
 #. top menu item
 #: core/messages/messages.php:900
@@ -8692,12 +8691,3 @@ msgstr "Modification du groupe de mots clefs réussie"
 #: core/messages/success.php:182
 msgid "Successfully approved resource(s)"
 msgstr "Approbation des références réussie"
-
-#~ msgid "My Wikindx ###"
-#~ msgstr "Préférences ###"
-
-#~ msgid "My Wikindx"
-#~ msgstr "Préférences"
-
-#~ msgid "About Wikindx"
-#~ msgstr "À propos..."

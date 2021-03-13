@@ -1,4 +1,4 @@
-# WIKINDX's Translation ressource: Українська.
+# Wikindx's Translation ressource: Українська.
 # For copyright see the component.json file
 # This file is distributed under the same license as the wikindx package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-13 18:00+0100\n"
+"POT-Creation-Date: 2021-03-13 19:06+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/saulery/teams/103557/"
@@ -2581,11 +2581,9 @@ msgid ""
 "updated."
 msgstr "Пропущено член ### класу CONFIG. Конфігурацію не оновлено."
 
-#. top menu item
-#: core/messages/messages.php:91 core/messages/messages.php:383
-#: core/messages/messages.php:994
-msgid "Configure"
-msgstr "Налаштувати"
+#: core/messages/messages.php:91
+msgid "Configure Wikindx"
+msgstr "Налаштувати Wikindx"
 
 #: core/messages/messages.php:92
 msgid "Logon"
@@ -2788,10 +2786,8 @@ msgstr "Адреси файлів ###"
 
 #. / heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
 #: core/messages/messages.php:142
-#, fuzzy
-#| msgid "Add WIKINDX Resources ###"
-msgid "My WIKINDX ###"
-msgstr "Додати ресурси WIKINDX ###"
+msgid "My Wikindx ###"
+msgstr "Мій Wikindx ###"
 
 #: core/messages/messages.php:143
 msgid "Forgotten Password"
@@ -3740,6 +3736,11 @@ msgstr "Перевстановити"
 #: core/messages/messages.php:382
 msgid "Update"
 msgstr "Оновити"
+
+#. top menu item
+#: core/messages/messages.php:383 core/messages/messages.php:994
+msgid "Configure"
+msgstr "Налаштувати"
 
 #: core/messages/messages.php:384
 msgid "an error occurred while installing the package: ###."
@@ -5764,8 +5765,8 @@ msgid "Register"
 msgstr "Зареєструватися"
 
 #: core/messages/messages.php:880
-msgid "My WIKINDX"
-msgstr ""
+msgid "My Wikindx"
+msgstr "Мій Wikindx"
 
 #: core/messages/messages.php:882
 msgid "User Logon"
@@ -5819,10 +5820,8 @@ msgid "Turn Help off"
 msgstr "Вимкнути довідку"
 
 #: core/messages/messages.php:897
-#, fuzzy
-#| msgid "Default is 'WIKINDX'"
-msgid "About WIKINDX"
-msgstr "Типовим є значення «WIKINDX»"
+msgid "About Wikindx"
+msgstr "Про Wikindx"
 
 #. top menu item
 #: core/messages/messages.php:900
@@ -8674,12 +8673,3 @@ msgstr "Групу ключових слів успішно змінено"
 #: core/messages/success.php:182
 msgid "Successfully approved resource(s)"
 msgstr "Ресурси успішно схвалено"
-
-#~ msgid "My Wikindx ###"
-#~ msgstr "Мій Wikindx ###"
-
-#~ msgid "My Wikindx"
-#~ msgstr "Мій Wikindx"
-
-#~ msgid "About Wikindx"
-#~ msgstr "Про Wikindx"

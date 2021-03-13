@@ -88,7 +88,7 @@ class MESSAGES
 		return array(
 /// heading_ Page headings
 		    "heading" => array(
-				"configure" => dgettext($domain, "Configure"),
+				"configure" => dgettext($domain, "Configure Wikindx"),
 				"logon" => dgettext($domain, "Logon"),
 				"list" => dgettext($domain, "List Resources"),
 				"search" => dgettext($domain, "Search Resources"),
@@ -139,7 +139,7 @@ class MESSAGES
 				"attach" => dgettext($domain, "File Attachments ###"),
 				"url" => dgettext($domain, "File URLs ###"),
 /// heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
-				"myWikindx" => dgettext($domain, "My WIKINDX ###"),
+				"myWikindx" => dgettext($domain, "My Wikindx ###"),
 				"forget" => dgettext($domain, "Forgotten Password"),
 				"delete" => dgettext($domain, "Delete Resource"),
 				"adminKeywords" => dgettext($domain, "Administer Keywords"),
@@ -877,7 +877,7 @@ class MESSAGES
 				"news" => dgettext($domain, "News"),
 				"prefs" => dgettext($domain, "Preferences"),
 				"register" => dgettext($domain, "Register"),
-				"myWikindx" => dgettext($domain, "My WIKINDX"),
+				"myWikindx" => dgettext($domain, "My Wikindx"),
 				"bibs" => dgettext($domain, "Bibliographies"),
 				"userLogon" => dgettext($domain, "User Logon"),
 				"logout" => dgettext($domain, "Logout"),
@@ -894,7 +894,7 @@ class MESSAGES
 				"statisticsCollections" => dgettext($domain, "Collections"),
 				"toggleHelpOn" => dgettext($domain, "Turn Help on"),
 				"toggleHelpOff" => dgettext($domain, "Turn Help off"),
-				"about" => dgettext($domain, "About WIKINDX"),
+				"about" => dgettext($domain, "About Wikindx"),
 /// menu_res Resources menu starts here
 				"res" => dgettext($domain, "Resources"), // top menu item
 				"new" => dgettext($domain, "New"),

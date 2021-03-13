@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-13 18:00+0100\n"
+"POT-Creation-Date: 2021-03-13 19:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2546,11 +2546,8 @@ msgid ""
 "updated."
 msgstr ""
 
-#. top menu item
 #: core/messages/messages.php:91
-#: core/messages/messages.php:383
-#: core/messages/messages.php:994
-msgid "Configure"
+msgid "Configure Wikindx"
 msgstr ""
 
 #: core/messages/messages.php:92
@@ -2772,7 +2769,7 @@ msgstr ""
 
 #. / heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
 #: core/messages/messages.php:142
-msgid "My WIKINDX ###"
+msgid "My Wikindx ###"
 msgstr ""
 
 #: core/messages/messages.php:143
@@ -3700,6 +3697,12 @@ msgstr ""
 
 #: core/messages/messages.php:382
 msgid "Update"
+msgstr ""
+
+#. top menu item
+#: core/messages/messages.php:383
+#: core/messages/messages.php:994
+msgid "Configure"
 msgstr ""
 
 #: core/messages/messages.php:384
@@ -5543,7 +5546,7 @@ msgid "Register"
 msgstr ""
 
 #: core/messages/messages.php:880
-msgid "My WIKINDX"
+msgid "My Wikindx"
 msgstr ""
 
 #: core/messages/messages.php:882
@@ -5601,7 +5604,7 @@ msgid "Turn Help off"
 msgstr ""
 
 #: core/messages/messages.php:897
-msgid "About WIKINDX"
+msgid "About Wikindx"
 msgstr ""
 
 #. top menu item

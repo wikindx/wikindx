@@ -1,4 +1,4 @@
-# WIKINDX's Translation ressource: Русский.
+# Wikindx's Translation ressource: Русский.
 # For copyright see the component.json file
 # This file is distributed under the same license as the wikindx package.
 #
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-13 18:00+0100\n"
+"POT-Creation-Date: 2021-03-13 19:06+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2597,11 +2597,9 @@ msgid ""
 msgstr ""
 "Два или более встроенных плагина были назначены в один и тот же контейнер: ###"
 
-#. top menu item
-#: core/messages/messages.php:91 core/messages/messages.php:383
-#: core/messages/messages.php:994
-msgid "Configure"
-msgstr "Общая настройка"
+#: core/messages/messages.php:91
+msgid "Configure Wikindx"
+msgstr "Настроить Wikindx"
 
 #: core/messages/messages.php:92
 msgid "Logon"
@@ -2808,10 +2806,8 @@ msgstr "URL-ссылки файла ###"
 
 #. / heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
 #: core/messages/messages.php:142
-#, fuzzy
-#| msgid "Add WIKINDX Resources ###"
-msgid "My WIKINDX ###"
-msgstr "Добавить источники WIKINDX ###"
+msgid "My Wikindx ###"
+msgstr "Мой Wikindx ###"
 
 #: core/messages/messages.php:143
 msgid "Forgotten Password"
@@ -3804,6 +3800,11 @@ msgstr ""
 #: core/messages/messages.php:382
 msgid "Update"
 msgstr ""
+
+#. top menu item
+#: core/messages/messages.php:383 core/messages/messages.php:994
+msgid "Configure"
+msgstr "Общая настройка"
 
 #: core/messages/messages.php:384
 msgid "an error occurred while installing the package: ###."
@@ -5681,8 +5682,8 @@ msgid "Register"
 msgstr "Регистрация"
 
 #: core/messages/messages.php:880
-msgid "My WIKINDX"
-msgstr ""
+msgid "My Wikindx"
+msgstr "Мой Wikindx"
 
 #: core/messages/messages.php:882
 msgid "User Logon"
@@ -5736,8 +5737,8 @@ msgid "Turn Help off"
 msgstr "Отключить посказки"
 
 #: core/messages/messages.php:897
-msgid "About WIKINDX"
-msgstr ""
+msgid "About Wikindx"
+msgstr "О Wikindx"
 
 #. top menu item
 #: core/messages/messages.php:900
@@ -8638,14 +8639,222 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
+#~ msgid "Disabled Plugins"
+#~ msgstr "Деактивированные плагины"
+
+#~ msgid "Import BibTeX"
+#~ msgstr "Импорт из файла BibTeX"
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Активированные языки"
+
+#, fuzzy
+#~| msgid "Reporter"
+#~ msgid "Exporter"
+#~ msgstr "Докладчик"
+
+#~ msgid "<h3>Paste BibTeX</h3>"
+#~ msgstr "Вставить код BibTeX"
+
+#~ msgid "Select the creators you wish to remove from the group"
+#~ msgstr "Выберите авторов, которых вы хотите удалить из группы."
+
+#~ msgid ""
+#~ "Depending on what the sources were for your resources, you may have broken "
+#~ "UTF-8 characters.  If you opt not to fix such instances now and discover "
+#~ "after the upgrade that you do have broken UTF-8 characters, you can either "
+#~ "run the upgrade again, reloading the original database, and check the "
+#~ "checkbox here or you can download and run the repairkit plugin (which "
+#~ "gives more control over what is fixed)."
+#~ msgstr ""
+#~ "В зависимости от того, какие значения были у ваших источников, у Вас могут "
+#~ "быть неверно отображаемые UTF-8 символы. Если это так, тогда Вы можете "
+#~ "либо запустить обновление еще раз и установите флажок здесь или загрузите "
+#~ "и запустить Repairkit-плагин (который дает гораздо больший контроль над "
+#~ "исправлением неверных значений)."
+
+#, fuzzy
+#~| msgid "<h3>Category Tree</h3>"
+#~ msgid "<h3>Creator Groups</h3>"
+#~ msgstr "Дерево категорий"
+
+#~ msgid "Plugin Commands"
+#~ msgstr "Команды плагина"
+
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Войти как Главный администратор:"
+
+#~ msgid "<h3>My Wikindx</h3>"
+#~ msgstr "Мой Wikindx"
+
+#~ msgid "Unable to update database with update/updateMySQL.txt."
+#~ msgstr "Невозможно обновить БД с помощью update/updateMySQL.txt."
+
+#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
+#~ msgstr ""
+#~ "Отправить в карантин новые источники (не отображаются публично) до "
+#~ "утверждения администратором"
+
+#~ msgid "My Bibliographies"
+#~ msgstr "Мои Библиографии"
+
+#, fuzzy
+#~| msgid "Disabled Languages"
+#~ msgid "Available Languages"
+#~ msgstr "Деактивированные языки"
+
+#, fuzzy
+#~| msgid "<h3>Category Tree</h3>"
+#~ msgid "<h3>Keyword Groups</h3>"
+#~ msgstr "Дерево категорий"
+
+#, fuzzy
+#~| msgid ""
+#~| "Select and group multiple creators into one creator (the grouped creators "
+#~| "will not be deleted).  List operations on the group master will include "
+#~| "grouped creators. This is intended for situations where one person may be "
+#~| "represented by different creator names but you wish to keep those creator "
+#~| "names accurate to the original bibliographic source."
+#~ msgid ""
+#~ "<p>Select and group multiple creators into one creator (the grouped "
+#~ "creators will not be deleted). List operations on the group master will "
+#~ "include grouped creators. This is intended for situations where one person "
+#~ "may be represented by different creator names but you wish to keep those "
+#~ "creator names accurate to the original bibliographic source.</p>"
+#~ msgstr ""
+#~ "Выберите и сгруппируйте несколько авторов в одного (сгруппированные авторы "
+#~ "не будут удалены). Список операций на мастер-группы будет включать в себя "
+#~ "сгруппированных авторов. Это нужно для ситуации, когда один человек может "
+#~ "быть представлен разными именами авторов, но Вы хотите сохранить эти имена "
+#~ "автора с точностью до исходного библиографического источника."
+
+#~ msgid "<h3>Preferences</h3>"
+#~ msgstr "Настройки"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Обновить БД"
+
+#~ msgid "<h3>Resource</h3>"
+#~ msgstr "<h3>Поиск</h3>"
+
+#~ msgid "<h3>Search</h3>"
+#~ msgstr "<h3>Поиск</h3>"
+
+#~ msgid "Enabled Templates"
+#~ msgstr "Активированные шаблоны"
+
+#~ msgid ""
+#~ "If you have languages and styles that are in your WIKINDX installation "
+#~ "folders but they do not show here, then they are not compatible with this "
+#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
+#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
+#~ "localization and adminstyle plug-ins and use them to update your files."
+#~ msgstr ""
+#~ "Если у Вас есть языки или стили, которые Вы установли в WIKINDX, но они не "
+#~ "отображаются здесь, значит они не совместимы с текущей версией WIKINDX. "
+#~ "Перейдите на страницу скачивания (https://sourceforge.net/projects/"
+#~ "wikindx//files/pluginsxxx/), скачайте последнии локализации и плагины. "
+#~ "Используйте их для обновления Ваших файлов."
+
+#~ msgid "Ungroup"
+#~ msgstr "Убрать группировку"
+
+#~ msgid "Remove users from this group"
+#~ msgstr "Удалить пользователей из этой группы"
+
+#~ msgid "Enabled Styles"
+#~ msgstr "Активированные стили"
+
+#~ msgid "There is no news available to view"
+#~ msgstr "Нет доступных для просмотра новостей"
+
+#~ msgid "Disabled Languages"
+#~ msgstr "Деактивированные языки"
+
+#~ msgid "Plugin has no README file or the README file is empty"
+#~ msgstr "У плагина нет файла README"
+
+#~ msgid "Disabled Styles"
+#~ msgstr "Деактивированные стили"
+
+#~ msgid "Fix UTF8:"
+#~ msgstr "Починить UTF8:"
+
+#~ msgid "Menu Location"
+#~ msgstr "Положение меню"
+
+#, fuzzy
+#~| msgid "<h3>Ideas</h3>"
+#~ msgid "<h3>Components</h3>"
+#~ msgstr "<h3>Поиск</h3>"
+
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Мой Wikindx"
+
+#~ msgid "Upgrade the Database"
+#~ msgstr "Обновить БД"
+
+#~ msgid "Configurable Inline Plugins"
+#~ msgstr "Настраиваемые встроенные плагины"
+
+#~ msgid "<h3>Ideas</h3>"
+#~ msgstr "<h3>Поиск</h3>"
+
+#~ msgid "Configurable Menu Plugins"
+#~ msgstr "Настраиваемое меню плагинов"
+
+#~ msgid ""
+#~ "Before being able to use WIKINDX, you must configure it. The minimum "
+#~ "initially required are username, password and email. From the Admin menu, "
+#~ "after configuration, you can add and edit other settings."
+#~ msgstr ""
+#~ "Перед тем как начать использовать WIKINDX, Вы должны его настроить. "
+#~ "Минимальная настройка включает ввод имени пользователя, пароль и почтовый "
+#~ "ящик. Из меню Управления, после настройки, Вы можете добавлять категории, "
+#~ "подкатегории, языки, дополнительные типы записей (все они могут быть "
+#~ "привязаны к конкретному источнику) и системных пользователей."
+
+#~ msgid ""
+#~ "You are not logged on as the superAdmin: please ask that person ### to "
+#~ "carry out the upgrade through their web browser."
+#~ msgstr ""
+#~ "Вы не вошли в систему как главный администратор: попросите этого человека "
+#~ "### выполнить обновление через свой веб-браузер."
+
+#~ msgid ""
+#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
+#~ "you are strongly advised not to run it on a production server -- if you "
+#~ "wish to test it, either create a new database or make a copy of your "
+#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
+#~ "have been dealt with, and the final release version provided, before using "
+#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
+#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
+#~ "detected that this is the first time a new version is being run and that "
+#~ "the database requires upgrading. This upgrading is automatic but only the "
+#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
+#~ "strong> to <strong>back up your old database</strong> first. If you do not "
+#~ "do this and you experience the memory errors detailed below when upgrading "
+#~ "your only copy of the database, then you will have irrevocably corrupted "
+#~ "the database: <em>caveat upgrader</em><p>"
+#~ msgstr ""
+#~ "WIKINDX обнаружил, что это первый запуск новой версии. Ваша база данных "
+#~ "требует модернизации. Это обновление произойдет автоматически, но только "
+#~ "главный администратор может его выполнить. <p><strong>Настоятельно "
+#~ "рекомендуется создать резервную копию вашей старой базы данных</strong> в "
+#~ "первую очередь. Если вы не сделаете этого, тогда в случае ошибки памяти "
+#~ "(подробно ниже) при обновлении, Вы безвозвратно потеряете свои данные: "
+#~ "<em>нюансы обновления</em><p>"
+
 #~ msgid "Disabled Templates"
 #~ msgstr "Деактивированные шаблоны"
 
-#~ msgid "My Wikindx ###"
-#~ msgstr "Мой Wikindx ###"
+#~ msgid "bibtex"
+#~ msgstr "bibtex"
 
-#~ msgid "My Wikindx"
-#~ msgstr "Мой Wikindx"
+#~ msgid "Enabled Plugins"
+#~ msgstr "Активированные плагины"
 
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
@@ -8711,222 +8920,5 @@ msgstr "Источник успешно одобрен"
 #~ "wikindx4/attachments/ -- процесс обновления удалит ссылки на вложения если "
 #~ "в базе данных вложений файлы не существуют в новом месте."
 
-#~ msgid "Enabled Plugins"
-#~ msgstr "Активированные плагины"
-
-#~ msgid "bibtex"
-#~ msgstr "bibtex"
-
-#~ msgid ""
-#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
-#~ "you are strongly advised not to run it on a production server -- if you "
-#~ "wish to test it, either create a new database or make a copy of your "
-#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
-#~ "have been dealt with, and the final release version provided, before using "
-#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
-#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
-#~ "detected that this is the first time a new version is being run and that "
-#~ "the database requires upgrading. This upgrading is automatic but only the "
-#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
-#~ "strong> to <strong>back up your old database</strong> first. If you do not "
-#~ "do this and you experience the memory errors detailed below when upgrading "
-#~ "your only copy of the database, then you will have irrevocably corrupted "
-#~ "the database: <em>caveat upgrader</em><p>"
-#~ msgstr ""
-#~ "WIKINDX обнаружил, что это первый запуск новой версии. Ваша база данных "
-#~ "требует модернизации. Это обновление произойдет автоматически, но только "
-#~ "главный администратор может его выполнить. <p><strong>Настоятельно "
-#~ "рекомендуется создать резервную копию вашей старой базы данных</strong> в "
-#~ "первую очередь. Если вы не сделаете этого, тогда в случае ошибки памяти "
-#~ "(подробно ниже) при обновлении, Вы безвозвратно потеряете свои данные: "
-#~ "<em>нюансы обновления</em><p>"
-
 #~ msgid "<h3>Category Tree</h3>"
 #~ msgstr "Дерево категорий"
-
-#~ msgid ""
-#~ "You are not logged on as the superAdmin: please ask that person ### to "
-#~ "carry out the upgrade through their web browser."
-#~ msgstr ""
-#~ "Вы не вошли в систему как главный администратор: попросите этого человека "
-#~ "### выполнить обновление через свой веб-браузер."
-
-#~ msgid ""
-#~ "Before being able to use WIKINDX, you must configure it. The minimum "
-#~ "initially required are username, password and email. From the Admin menu, "
-#~ "after configuration, you can add and edit other settings."
-#~ msgstr ""
-#~ "Перед тем как начать использовать WIKINDX, Вы должны его настроить. "
-#~ "Минимальная настройка включает ввод имени пользователя, пароль и почтовый "
-#~ "ящик. Из меню Управления, после настройки, Вы можете добавлять категории, "
-#~ "подкатегории, языки, дополнительные типы записей (все они могут быть "
-#~ "привязаны к конкретному источнику) и системных пользователей."
-
-#~ msgid "Configurable Menu Plugins"
-#~ msgstr "Настраиваемое меню плагинов"
-
-#~ msgid "<h3>Ideas</h3>"
-#~ msgstr "<h3>Поиск</h3>"
-
-#~ msgid "Configurable Inline Plugins"
-#~ msgstr "Настраиваемые встроенные плагины"
-
-#~ msgid "Upgrade the Database"
-#~ msgstr "Обновить БД"
-
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Мой Wikindx"
-
-#, fuzzy
-#~| msgid "<h3>Ideas</h3>"
-#~ msgid "<h3>Components</h3>"
-#~ msgstr "<h3>Поиск</h3>"
-
-#~ msgid "Menu Location"
-#~ msgstr "Положение меню"
-
-#~ msgid "Fix UTF8:"
-#~ msgstr "Починить UTF8:"
-
-#~ msgid "Disabled Styles"
-#~ msgstr "Деактивированные стили"
-
-#~ msgid "Plugin has no README file or the README file is empty"
-#~ msgstr "У плагина нет файла README"
-
-#~ msgid "Disabled Languages"
-#~ msgstr "Деактивированные языки"
-
-#~ msgid "There is no news available to view"
-#~ msgstr "Нет доступных для просмотра новостей"
-
-#~ msgid "Enabled Styles"
-#~ msgstr "Активированные стили"
-
-#~ msgid "Remove users from this group"
-#~ msgstr "Удалить пользователей из этой группы"
-
-#~ msgid "Ungroup"
-#~ msgstr "Убрать группировку"
-
-#~ msgid ""
-#~ "If you have languages and styles that are in your WIKINDX installation "
-#~ "folders but they do not show here, then they are not compatible with this "
-#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
-#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
-#~ "localization and adminstyle plug-ins and use them to update your files."
-#~ msgstr ""
-#~ "Если у Вас есть языки или стили, которые Вы установли в WIKINDX, но они не "
-#~ "отображаются здесь, значит они не совместимы с текущей версией WIKINDX. "
-#~ "Перейдите на страницу скачивания (https://sourceforge.net/projects/"
-#~ "wikindx//files/pluginsxxx/), скачайте последнии локализации и плагины. "
-#~ "Используйте их для обновления Ваших файлов."
-
-#~ msgid "Enabled Templates"
-#~ msgstr "Активированные шаблоны"
-
-#~ msgid "<h3>Search</h3>"
-#~ msgstr "<h3>Поиск</h3>"
-
-#~ msgid "<h3>Resource</h3>"
-#~ msgstr "<h3>Поиск</h3>"
-
-#~ msgid "Upgrade the database"
-#~ msgstr "Обновить БД"
-
-#~ msgid "<h3>Preferences</h3>"
-#~ msgstr "Настройки"
-
-#, fuzzy
-#~| msgid ""
-#~| "Select and group multiple creators into one creator (the grouped creators "
-#~| "will not be deleted).  List operations on the group master will include "
-#~| "grouped creators. This is intended for situations where one person may be "
-#~| "represented by different creator names but you wish to keep those creator "
-#~| "names accurate to the original bibliographic source."
-#~ msgid ""
-#~ "<p>Select and group multiple creators into one creator (the grouped "
-#~ "creators will not be deleted). List operations on the group master will "
-#~ "include grouped creators. This is intended for situations where one person "
-#~ "may be represented by different creator names but you wish to keep those "
-#~ "creator names accurate to the original bibliographic source.</p>"
-#~ msgstr ""
-#~ "Выберите и сгруппируйте несколько авторов в одного (сгруппированные авторы "
-#~ "не будут удалены). Список операций на мастер-группы будет включать в себя "
-#~ "сгруппированных авторов. Это нужно для ситуации, когда один человек может "
-#~ "быть представлен разными именами авторов, но Вы хотите сохранить эти имена "
-#~ "автора с точностью до исходного библиографического источника."
-
-#, fuzzy
-#~| msgid "<h3>Category Tree</h3>"
-#~ msgid "<h3>Keyword Groups</h3>"
-#~ msgstr "Дерево категорий"
-
-#, fuzzy
-#~| msgid "Disabled Languages"
-#~ msgid "Available Languages"
-#~ msgstr "Деактивированные языки"
-
-#~ msgid "My Bibliographies"
-#~ msgstr "Мои Библиографии"
-
-#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
-#~ msgstr ""
-#~ "Отправить в карантин новые источники (не отображаются публично) до "
-#~ "утверждения администратором"
-
-#~ msgid "Unable to update database with update/updateMySQL.txt."
-#~ msgstr "Невозможно обновить БД с помощью update/updateMySQL.txt."
-
-#~ msgid "<h3>My Wikindx</h3>"
-#~ msgstr "Мой Wikindx"
-
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Войти как Главный администратор:"
-
-#~ msgid "Plugin Commands"
-#~ msgstr "Команды плагина"
-
-#, fuzzy
-#~| msgid "<h3>Category Tree</h3>"
-#~ msgid "<h3>Creator Groups</h3>"
-#~ msgstr "Дерево категорий"
-
-#~ msgid ""
-#~ "Depending on what the sources were for your resources, you may have broken "
-#~ "UTF-8 characters.  If you opt not to fix such instances now and discover "
-#~ "after the upgrade that you do have broken UTF-8 characters, you can either "
-#~ "run the upgrade again, reloading the original database, and check the "
-#~ "checkbox here or you can download and run the repairkit plugin (which "
-#~ "gives more control over what is fixed)."
-#~ msgstr ""
-#~ "В зависимости от того, какие значения были у ваших источников, у Вас могут "
-#~ "быть неверно отображаемые UTF-8 символы. Если это так, тогда Вы можете "
-#~ "либо запустить обновление еще раз и установите флажок здесь или загрузите "
-#~ "и запустить Repairkit-плагин (который дает гораздо больший контроль над "
-#~ "исправлением неверных значений)."
-
-#~ msgid "<h3>Paste BibTeX</h3>"
-#~ msgstr "Вставить код BibTeX"
-
-#, fuzzy
-#~| msgid "Reporter"
-#~ msgid "Exporter"
-#~ msgstr "Докладчик"
-
-#~ msgid "Enabled Languages"
-#~ msgstr "Активированные языки"
-
-#~ msgid "Import BibTeX"
-#~ msgstr "Импорт из файла BibTeX"
-
-#~ msgid "Disabled Plugins"
-#~ msgstr "Деактивированные плагины"
-
-#~ msgid "About Wikindx"
-#~ msgstr "О Wikindx"
-
-#~ msgid "Select the creators you wish to remove from the group"
-#~ msgstr "Выберите авторов, которых вы хотите удалить из группы."

@@ -519,7 +519,7 @@ class ADMINCOMPONENTS
         if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars))
         {
             $this->possibleMenus = [
-                'wikindx' => 'WIKINDX',
+                'wikindx' => 'Wikindx',
                 'res' => $this->messages->text('menu', 'res'),
                 'search' => $this->messages->text('menu', 'search'),
                 'text' => $this->messages->text('menu', 'text'),

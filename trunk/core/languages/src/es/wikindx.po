@@ -1,4 +1,4 @@
-# WIKINDX's Translation ressource: Español.
+# Wikindx's Translation ressource: Español.
 # For copyright see the component.json file
 # This file is distributed under the same license as the wikindx package.
 #
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-13 18:00+0100\n"
+"POT-Creation-Date: 2021-03-13 19:06+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2562,11 +2562,9 @@ msgid ""
 "updated."
 msgstr ""
 
-#. top menu item
-#: core/messages/messages.php:91 core/messages/messages.php:383
-#: core/messages/messages.php:994
-msgid "Configure"
-msgstr "Configurar"
+#: core/messages/messages.php:91
+msgid "Configure Wikindx"
+msgstr "Configurar Wikindx"
 
 #: core/messages/messages.php:92
 msgid "Logon"
@@ -2773,10 +2771,8 @@ msgstr ""
 
 #. / heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
 #: core/messages/messages.php:142
-#, fuzzy
-#| msgid "Edit WIKINDX Resources ###"
-msgid "My WIKINDX ###"
-msgstr "Editar los recursos WIKINDX###"
+msgid "My Wikindx ###"
+msgstr "Mi WIKINDX###"
 
 #: core/messages/messages.php:143
 msgid "Forgotten Password"
@@ -3746,6 +3742,11 @@ msgstr ""
 #: core/messages/messages.php:382
 msgid "Update"
 msgstr ""
+
+#. top menu item
+#: core/messages/messages.php:383 core/messages/messages.php:994
+msgid "Configure"
+msgstr "Configurar"
 
 #: core/messages/messages.php:384
 msgid "an error occurred while installing the package: ###."
@@ -5584,8 +5585,8 @@ msgid "Register"
 msgstr "Registro"
 
 #: core/messages/messages.php:880
-msgid "My WIKINDX"
-msgstr ""
+msgid "My Wikindx"
+msgstr "Mi Wikindx"
 
 #: core/messages/messages.php:882
 msgid "User Logon"
@@ -5639,8 +5640,8 @@ msgid "Turn Help off"
 msgstr ""
 
 #: core/messages/messages.php:897
-msgid "About WIKINDX"
-msgstr ""
+msgid "About Wikindx"
+msgstr "Acerca de Wikindx"
 
 #. top menu item
 #: core/messages/messages.php:900
@@ -8493,12 +8494,6 @@ msgstr "La palabra clave ha sido editada correctamente"
 msgid "Successfully approved resource(s)"
 msgstr "Recurso eliminado correctamente del cesto"
 
-#~ msgid "My Wikindx"
-#~ msgstr "Mi Wikindx"
-
-#~ msgid "Upgrade the database"
-#~ msgstr "Actualizar la base de datos"
-
 #~ msgid "My Bibliographies"
 #~ msgstr "Mis bibliografías"
 
@@ -8636,8 +8631,8 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ "<p>Most of the configuration options are self-explanatory but bear the "
 #~ "following in mind:</p>"
 
-#~ msgid "About Wikindx"
-#~ msgstr "Acerca de Wikindx"
+#~ msgid "Upgrade the database"
+#~ msgstr "Actualizar la base de datos"
 
 #, fuzzy
 #~| msgid "<h3>Preferences</h3>"
@@ -8691,6 +8686,3 @@ msgstr "Recurso eliminado correctamente del cesto"
 
 #~ msgid "Import BibTeX"
 #~ msgstr "Importar BibTeX"
-
-#~ msgid "My Wikindx ###"
-#~ msgstr "Mi WIKINDX###"

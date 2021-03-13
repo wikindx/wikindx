@@ -1,4 +1,4 @@
-# WIKINDX's Translation ressource: Italiano.
+# Wikindx's Translation ressource: Italiano.
 # For copyright see the component.json file
 # This file is distributed under the same license as the wikindx package.
 #
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-13 18:00+0100\n"
+"POT-Creation-Date: 2021-03-13 19:06+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2571,11 +2571,9 @@ msgid ""
 "updated."
 msgstr "Due o più plug-in linea sono stati assegnati lo stesso contenitore: ###"
 
-#. top menu item
-#: core/messages/messages.php:91 core/messages/messages.php:383
-#: core/messages/messages.php:994
-msgid "Configure"
-msgstr "Configura"
+#: core/messages/messages.php:91
+msgid "Configure Wikindx"
+msgstr "Configurazione Wikindx"
 
 #: core/messages/messages.php:92
 msgid "Logon"
@@ -2782,10 +2780,8 @@ msgstr "File URLs ###"
 
 #. / heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
 #: core/messages/messages.php:142
-#, fuzzy
-#| msgid "Add WIKINDX Resources ###"
-msgid "My WIKINDX ###"
-msgstr "Aggiungi le Risorse WIKINDX ###"
+msgid "My Wikindx ###"
+msgstr "My Wikindx ###"
 
 #: core/messages/messages.php:143
 msgid "Forgotten Password"
@@ -3781,6 +3777,11 @@ msgstr ""
 #: core/messages/messages.php:382
 msgid "Update"
 msgstr ""
+
+#. top menu item
+#: core/messages/messages.php:383 core/messages/messages.php:994
+msgid "Configure"
+msgstr "Configura"
 
 #: core/messages/messages.php:384
 msgid "an error occurred while installing the package: ###."
@@ -5642,8 +5643,8 @@ msgid "Register"
 msgstr "Registrazione"
 
 #: core/messages/messages.php:880
-msgid "My WIKINDX"
-msgstr ""
+msgid "My Wikindx"
+msgstr "My Wikindx"
 
 #: core/messages/messages.php:882
 msgid "User Logon"
@@ -5697,8 +5698,8 @@ msgid "Turn Help off"
 msgstr "Aiuto Disabilitato"
 
 #: core/messages/messages.php:897
-msgid "About WIKINDX"
-msgstr ""
+msgid "About Wikindx"
+msgstr "Tutto su Wikindx"
 
 #. top menu item
 #: core/messages/messages.php:900
@@ -8587,30 +8588,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "My Wikindx"
-#~ msgstr "My Wikindx"
-
-#~ msgid ""
-#~ "<ul>\n"
-#~ "<li>Edit a number of elements on this page. Certain options, such as "
-#~ "editing and adding attachments, need to be enabled by the administrator.</"
-#~ "li>\n"
-#~ "<li>Add new elements such as quotations, paraphrases and musings. Comments "
-#~ "(on quotations and paraphrases) and musings can be set to be to private, "
-#~ "public or available to any user groups you have defined in My Wikindx.</"
-#~ "li>\n"
-#~ "</ul>"
-#~ msgstr ""
-#~ "<ul>\n"
-#~ "<li>Modificare alcuni elementi in questa pagina. Alcune opzioni, come ad "
-#~ "esempio la modifica e l'aggiunta di allegati, devono essere abilitati "
-#~ "dall'amministratore.</li>\n"
-#~ "<li>Aggiungere nuovi elementi come citazioni, parafrasi e riflessioni. "
-#~ "Commenti (nelle citazioni o nelle parafrasi) e le riflessioni possono "
-#~ "essere impostati come privati, pubblici o disponibili a qualsiasi gruppo "
-#~ "di utenti che hai definito in My Wikindx.</li>\n"
-#~ "</ul>"
-
 #~ msgid "Disabled Plugins"
 #~ msgstr "Plugins Disabilitati"
 
@@ -9513,11 +9490,29 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "There is no news available to view"
 #~ msgstr "Non ci sono news disponibili da visualizzare"
 
-#~ msgid "My Wikindx ###"
-#~ msgstr "My Wikindx ###"
+#~ msgid "Configurable Inline Plugins"
+#~ msgstr "Plugins Inline configurabili"
 
-#~ msgid "About Wikindx"
-#~ msgstr "Tutto su Wikindx"
+#~ msgid ""
+#~ "<ul>\n"
+#~ "<li>Edit a number of elements on this page. Certain options, such as "
+#~ "editing and adding attachments, need to be enabled by the administrator.</"
+#~ "li>\n"
+#~ "<li>Add new elements such as quotations, paraphrases and musings. Comments "
+#~ "(on quotations and paraphrases) and musings can be set to be to private, "
+#~ "public or available to any user groups you have defined in My Wikindx.</"
+#~ "li>\n"
+#~ "</ul>"
+#~ msgstr ""
+#~ "<ul>\n"
+#~ "<li>Modificare alcuni elementi in questa pagina. Alcune opzioni, come ad "
+#~ "esempio la modifica e l'aggiunta di allegati, devono essere abilitati "
+#~ "dall'amministratore.</li>\n"
+#~ "<li>Aggiungere nuovi elementi come citazioni, parafrasi e riflessioni. "
+#~ "Commenti (nelle citazioni o nelle parafrasi) e le riflessioni possono "
+#~ "essere impostati come privati, pubblici o disponibili a qualsiasi gruppo "
+#~ "di utenti che hai definito in My Wikindx.</li>\n"
+#~ "</ul>"
 
 #, fuzzy
 #~| msgid "My Wikindx"
@@ -9526,9 +9521,6 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "<h3>Search</h3>"
 #~ msgstr "<h3>Cerca</h3>"
-
-#~ msgid "Configurable Inline Plugins"
-#~ msgstr "Plugins Inline configurabili"
 
 #~ msgid ""
 #~ "<p>Ensure the wikindx/plugins directories (and the index.php and config."

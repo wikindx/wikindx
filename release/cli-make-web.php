@@ -52,8 +52,8 @@ $VersionPackaged = mb_strtolower($VersionPackaged);
 echo "Version selected: $VersionPackaged\n";
 
 define('DIR_DST', implode(DIRECTORY_SEPARATOR, [DIRPKG_ROOT, "..", "website", "web", $VersionPackaged]));
-//define('BASE_URL', "https://wikindx.sourceforge.io/web/" . $VersionPackaged . "/");
-define('BASE_URL', "http://wikindx.test/" . $VersionPackaged . "/");
+define('BASE_URL', "https://wikindx.sourceforge.io/web/" . $VersionPackaged . "/");
+//define('BASE_URL', "http://wikindx.test/" . $VersionPackaged . "/");
 
 
 ///////////////////////////////////////////////////////////////////////

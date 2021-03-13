@@ -107,7 +107,7 @@ class MySQL_Backup
         {
             if (empty($this->tables) || in_array($table, $this->tables))
             {
-                // Process only tables of Wikindx
+                // Process only tables of WIKINDX
                 if (substr($table, 0, strlen($this->prefix)) == $this->prefix)
                 {
                     $value[] = $table;

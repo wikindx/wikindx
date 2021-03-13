@@ -5,7 +5,7 @@
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Debug Tools",
-    "component_description": "Some tools for debugging Wikindx. For developers, testers, or difficult situations when a bug arises.",
+    "component_description": "Some tools for debugging WIKINDX. For developers, testers, or difficult situations when a bug arises.",
     "component_licence": "ISC License",
     "component_authors": [
         {

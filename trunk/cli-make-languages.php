@@ -303,7 +303,7 @@ function mergePoFile($poFile1, $poFile2, $poFile3, $locale)
         $pocontent = file_get_contents($poFile3);
         $pocontent = str_replace(
             "# SOME DESCRIPTIVE TITLE.",
-            "# Wikindx's Translation ressource: " . \LOCALES\codeISO639a1toName($locale) . ".",
+            "# WIKINDX's Translation ressource: " . \LOCALES\codeISO639a1toName($locale) . ".",
             $pocontent
         );
         $pocontent = str_replace(

@@ -1,9 +1,9 @@
 ---
-title: "Wikindx overview"
+title: "WIKINDX overview"
 ---
 
 
-# Wikindx overview
+# WIKINDX overview
 
 Reference management, bibliography management, citations and a whole lot more.
 
@@ -89,7 +89,7 @@ Listed below are the core features available by default. Functionality can be ex
 
 ## Components
 
-WIKINDX uses a components system to extend or alter its capabilities. All offical components are available from our Components Update Server and are configurable from the Wikindx interface. You could also write your own components and contribute to the community of users.
+WIKINDX uses a components system to extend or alter its capabilities. All offical components are available from our Components Update Server and are configurable from the WIKINDX interface. You could also write your own components and contribute to the community of users.
 
 
 ### Some Plugins

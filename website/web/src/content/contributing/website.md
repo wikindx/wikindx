@@ -39,14 +39,14 @@ The code is generated in `website/web/trunk` or `website/web/X.Y.Z` folder.
 
 For updating the website, generate the code for each version and upload the content of each output folder inside the `/home/project-web/wikindx/htdocs/web` folder of the SourceForge website FTP. Don't remove the folders of old versions.
 
-Regenerating an older version is not supported. To do this, you have to extract an old revision from SVN because the wrapper script uses the code of the current Wikindx core and is not able to extract itself the code of the SVN, etc. It's just an ad hoc script that could change from version to version.
+Regenerating an older version is not supported. To do this, you have to extract an old revision from SVN because the wrapper script uses the code of the current WIKINDX core and is not able to extract itself the code of the SVN, etc. It's just an ad hoc script that could change from version to version.
 
 For the online website to be complete you also need to generate and upload the API manual for the same versions. See its own page.
 
 
 ## Help Topics
 
-Help Topics are special pages. Wikindx code points to them. So if you want to rename or update them you have to make sure that the names and the content match with the links and behavior provided in the current application of the trunk code. See the `\UTILS\createHelpTopicLink()` function in `trunk/core/libs/UTILS.php`.
+Help Topics are special pages. WIKINDX code points to them. So if you want to rename or update them you have to make sure that the names and the content match with the links and behavior provided in the current application of the trunk code. See the `\UTILS\createHelpTopicLink()` function in `trunk/core/libs/UTILS.php`.
 
 
 ## Configuration and changes to the Grav Learn theme

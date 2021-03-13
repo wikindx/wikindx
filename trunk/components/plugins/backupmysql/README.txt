@@ -49,10 +49,10 @@ CHANGELOG:
 
 v1.9, 2020
 1. Stored databases can now be renamed.
-2. Wikindx compatibility version 8.
+2. WIKINDX compatibility version 8.
 
 v1.8, 2020
-1. Wikindx compatibility version 7.
+1. WIKINDX compatibility version 7.
 
 v1.7, 2020
 1. Add documentation.
@@ -61,10 +61,10 @@ v1.6, 2020
 1. Relicencing under CC-BY-NC-SA 4.0 terms.
 
 v1.5 ~ 2019
-1. Adaptation for Wikindx 5.9.1.
+1. Adaptation for WIKINDX 5.9.1.
 
 v1.4 ~ 10th Decemper 2018
-1. Dump only wikindx tables if the database is shared with an other software
+1. Dump only WIKINDX tables if the database is shared with an other software
 2. Support of PostgreSQL and SQLite database engines removed (not supported by the core)
 
 v1.3

@@ -4,7 +4,7 @@
 -- @author The WIKINDX Team
 -- @license https://www.isc.org/licenses/ ISC License
 -- 
--- SQL script of the Wikindx db schema for MySQL
+-- SQL script of the WIKINDX db schema for MySQL
 -- 
 
 -- Set utf8mb4_unicode_520_ci as the default collation of the database

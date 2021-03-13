@@ -523,7 +523,7 @@ class CITEFORMAT
                     $this->newParagraph = FALSE;
                 }
 
-                // Wikindx v4 runs in HTML 4.01 but TinyMCE was configured for XHTML in v3.8.
+                // WIKINDX v4 runs in HTML 4.01 but TinyMCE was configured for XHTML in v3.8.
                 // For the precaution, treating the two notations which can be mixed after migrating to v4.
                 if ((($this->output == 'rtf') &&
                     (mb_strpos($this->item['text'], "__WIKINDX__NEWLINEPAR____WIKINDX__NEWLINEPAR__")
@@ -2849,7 +2849,7 @@ class CITEFORMAT
         // e.g. Grimshaw et al. state "blah blah blah" [cite]123:45-46[/cite].
         // Similarly, check for possessive form of a single creator name in the same sentence.  English has two forms (the second below for names that end in 's').
         // If there is no equivalent possessive form in another language, set these to FALSE.
-        // From wikindx v3.4.7 onwards, $this->possessiveArray is used allowing unlimited possessive forms.  If it exists and is an array, possessive1 and possessive2
+        // From WIKINDX v3.4.7 onwards, $this->possessiveArray is used allowing unlimited possessive forms.  If it exists and is an array, possessive1 and possessive2
         // will be ignored.
         $this->possessiveArray[] = "'s";
         $this->possessiveArray[] = "'";

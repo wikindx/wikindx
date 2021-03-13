@@ -5,3 +5,4 @@ weight = 3
 chapter = true
 +++
 
+This chapter describes some ways to access WIKINDX data from outside.

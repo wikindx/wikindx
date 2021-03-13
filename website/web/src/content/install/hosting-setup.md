@@ -22,7 +22,7 @@ or add resources if they are necessary according to your situation.
 [WinNMP](https://winnmp.wtriple.com) is really easy to use and come
 with a good documentation. Download the installer and install WinNMP at `C:\WinNMP`.
 After that just follow the section [How to create a new Project](https://winnmp.wtriple.com/howtos#How-to-create-a-new-Project)
-of its documentation. Once this step is completed, you could install Wikindx
+of its documentation. Once this step is completed, you could install WIKINDX
 in the new virtual host, in `C:\WinNMP\WWW\wikindx` folder.
 
 ### Virtual host Setup
@@ -60,7 +60,7 @@ MySql database:     'wikindx'
   with some instructions. Some tools are also available at <http://localhost>.
 
 At this point you have a working virtual host readyfor installing some PHP code.
-We need a few more tweaks to accommodate Wikindx.
+We need a few more tweaks to accommodate WIKINDX.
 
 
 ### PHP configuration (php.ini)

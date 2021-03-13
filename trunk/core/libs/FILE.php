@@ -1091,7 +1091,7 @@ namespace FILE
 
 
     /**
-     * Create a compressed package for the release of Wikindx core, manual or one of its components
+     * Create a compressed package for the release of WIKINDX core, manual or one of its components
      *
      * This function is a wrapper that hide the specifics of compression formats.
      *
@@ -1138,7 +1138,7 @@ namespace FILE
 
     
     /**
-     * Create a compressed package for the release of Wikindx core, manual or one of its components
+     * Create a compressed package for the release of WIKINDX core, manual or one of its components
      *
      * This function is a wrapper that hide the specifics of compression formats.
      *
@@ -1184,7 +1184,7 @@ namespace FILE
     }
     
     /**
-     * Create a compressed package in .tar.bz2 format for the release of Wikindx core, manual or one of its components
+     * Create a compressed package in .tar.bz2 format for the release of WIKINDX core, manual or one of its components
      *
      * This function must be called from createComponentPackage() only.
      *
@@ -1208,7 +1208,7 @@ namespace FILE
     }
     
     /**
-     * Create a compressed package in .tar.gz format for the release of Wikindx core, manual or one of its components
+     * Create a compressed package in .tar.gz format for the release of WIKINDX core, manual or one of its components
      *
      * This function must be called from createComponentPackage() only.
      *
@@ -1232,7 +1232,7 @@ namespace FILE
     }
     
     /**
-     * Create a compressed package in .zip format for the release of Wikindx core, manual or one of its components
+     * Create a compressed package in .zip format for the release of WIKINDX core, manual or one of its components
      *
      * This function must be called from createComponentPackage() only.
      *
@@ -1253,7 +1253,7 @@ namespace FILE
     }
     
     /**
-     * Create a compressed package for the release of Wikindx core, manual or one of its components
+     * Create a compressed package for the release of WIKINDX core, manual or one of its components
      *
      * This function is a wrapper that hide the specifics of compression formats.
      *
@@ -1303,7 +1303,7 @@ namespace FILE
     }
     
     /**
-     * Create a compressed package in .tar.bz2 format for the release of Wikindx core, manual or one of its components
+     * Create a compressed package in .tar.bz2 format for the release of WIKINDX core, manual or one of its components
      *
      * This function must be called from createComponentPackage() only.
      *
@@ -1322,7 +1322,7 @@ namespace FILE
     }
     
     /**
-     * Create a compressed package in .tar.gz format for the release of Wikindx core, manual or one of its components
+     * Create a compressed package in .tar.gz format for the release of WIKINDX core, manual or one of its components
      *
      * This function must be called from createComponentPackage() only.
      *
@@ -1341,7 +1341,7 @@ namespace FILE
     }
     
     /**
-     * Create a compressed package in .zip format for the release of Wikindx core, manual or one of its components
+     * Create a compressed package in .zip format for the release of WIKINDX core, manual or one of its components
      *
      * This function must be called from createComponentPackage() only.
      *
@@ -1380,7 +1380,7 @@ namespace FILE
     }
     
     /**
-     * Create a compressed package in .tar format for the release of Wikindx core, manual or one of its components
+     * Create a compressed package in .tar format for the release of WIKINDX core, manual or one of its components
      *
      * This function must be called from createComponentPackage() only.
      *

@@ -213,7 +213,7 @@ class GLOBALS
      */
     public static function getUserVar($key, $default = FALSE)
     {
-        // Added the check for FALSE because, in some cases (Read Only from the Wikindx menu after being logged in),
+        // Added the check for FALSE because, in some cases (Read Only from the WIKINDX menu after being logged in),
         // self::$userVars[$key] exists but is FALSE. e.g. a warning is produced in PARSEXML line 139 because $style is a bool.
         // TODO: Check loading of user vars for read only –– here is a temporary fix only.
         if (!array_key_exists($key, self::$userVars) || (self::$userVars[$key] === FALSE))

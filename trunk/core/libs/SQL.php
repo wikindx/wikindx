@@ -17,7 +17,7 @@
  */
 class SQL
 {
-    /** @var string Error message returned by db drivers or Wikindx */
+    /** @var string Error message returned by db drivers or WIKINDX */
     public $error = "";
     
     /** @var int Error code returned by db drivers */

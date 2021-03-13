@@ -5,7 +5,7 @@ weight = 4
 +++
 
 
-The API Manual is a documentation of all PHP classes, functions, namespaces, etc provided by Wikindx. It is useful for core and component developers. 
+The API Manual is a documentation of all PHP classes, functions, namespaces, etc provided by WIKINDX. It is useful for core and component developers. 
 
 
 ## Setting the build environment
@@ -34,14 +34,14 @@ The code is generated in `website/api-manual/trunk` or `website/api-manual/X.Y.Z
 
 For updating the API Manual, generate the code for each version and upload the content of each output folder inside the `/home/project-web/wikindx/htdocs/api-manual` folder of the SourceForge website FTP. Don't remove the folders of old versions.
 
-Regenerating an older version is not supported. To do this, you have to extract an old revision from SVN because the wrapper script uses the code of the current Wikindx core and is not able to extract itself the code of the SVN, etc. It's just an ad hoc script that could change from version to version.
+Regenerating an older version is not supported. To do this, you have to extract an old revision from SVN because the wrapper script uses the code of the current WIKINDX core and is not able to extract itself the code of the SVN, etc. It's just an ad hoc script that could change from version to version.
 
 For the online website to be complete you also need to generate and upload the website for the same versions. See its own page.
 
 
 ## Configuration
 
-The configuration file is `trunk/phpdoc.xml`. It is used to define the root folder of Wikindx sources and ignored source files. Basically, the sources of cli tools, third party libraries and components are ignored. Files and directories containing non PHP files are also ignored as possible.
+The configuration file is `trunk/phpdoc.xml`. It is used to define the root folder of WIKINDX sources and ignored source files. Basically, the sources of cli tools, third party libraries and components are ignored. Files and directories containing non PHP files are also ignored as possible.
 
 
 ## Version selector

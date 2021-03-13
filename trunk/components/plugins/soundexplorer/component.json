@@ -5,7 +5,7 @@
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Sound Explorer",
-    "component_description": "Experimental plugin that plays sounds at certain Wikindx events.",
+    "component_description": "Experimental plugin that plays sounds at certain WIKINDX events.",
     "component_licence": "ISC License",
     "component_authors": [
         {

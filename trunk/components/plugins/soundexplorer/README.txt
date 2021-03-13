@@ -41,7 +41,7 @@ v2.5, 2020
 2020-07-11 : CHG : relicencing under ISC License terms.
 
 v2.4, 2020
-1. Wikindx compatibility version 7.
+1. WIKINDX compatibility version 7.
 
 v2.3, 2020
 1. Add documentation.
@@ -52,7 +52,7 @@ v2.2, 2020
 
 v2.1, 2019
 1. Plugin reconfigured to use HTML5 audio.
-2. Adaptation for Wikindx 5.9.1.
+2. Adaptation for WIKINDX 5.9.1.
 
 v1.2
 1. Plugin now compatible with WIKINDX v5.x

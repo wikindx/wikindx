@@ -9,7 +9,7 @@
  */
 
 /**
- * make.php - Packaging script for Wikindx release
+ * make.php - Packaging script for WIKINDX release
  *
  * Release script.
  *
@@ -47,7 +47,7 @@ $VersionsAvailable[] = 'trunk';
 /// Configuration (dynamic)
 ///////////////////////////////////////////////////////////////////////
 
-echo "---[Wikindx Packaging]---------------------------------------------------------\n\n";
+echo "---[Packaging]------------------------------------------------------------------\n\n";
 
 $VersionPackaged = promptListUser("Which version do you want to pack?", $VersionsAvailable, "trunk");
 $VersionPackaged = mb_strtolower($VersionPackaged);
@@ -239,7 +239,7 @@ $readmecmp  = str_pad("--o " . mb_strtoupper("WIKINDX " . $VersionPackaged . " C
 $readmecmp .= "\n";
 $readmecmp .= str_pad("---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---", MAX_LINE_LENGHT, " ", STR_PAD_BOTH) . "\n";
 $readmecmp .= "\n";
-$readmecmp .= str_pad("List of components available for Wikindx", MAX_LINE_LENGHT, " ", STR_PAD_BOTH) . "\n";
+$readmecmp .= str_pad("List of components available for " . APP_NAME, MAX_LINE_LENGHT, " ", STR_PAD_BOTH) . "\n";
 $readmecmp .= "\n";
 
 foreach ($componentPath as $rootpath => $paths)
@@ -401,7 +401,7 @@ foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
 
 // GENERAL README
 echo "General README.txt\n";
-$readmeglobal  = str_pad("--o " . mb_strtoupper("Wikindx " . $VersionPackaged . " installation files") . " o--", MAX_LINE_LENGHT, " ", STR_PAD_BOTH) . "\n";
+$readmeglobal  = str_pad("--o " . mb_strtoupper(APP_NAME . " " . $VersionPackaged . " installation files") . " o--", MAX_LINE_LENGHT, " ", STR_PAD_BOTH) . "\n";
 $readmeglobal .= "\n";
 $readmeglobal .= str_pad("---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---", MAX_LINE_LENGHT, " ", STR_PAD_BOTH) . "\n";
 $readmeglobal .= "\n";
@@ -412,7 +412,7 @@ if ($VersionPackaged == "trunk")
 }
 $readmeglobal .= formatParagraph("For a new installation or an update of the core, download the main package, uncompress it and follow the instructions in the documentation. A good part of the process is automatic but some manual actions specific to a version are often necessary (Internet not required).", MAX_LINE_LENGHT, 0) . "\n";
 $readmeglobal .= "\n";
-$readmeglobal .= formatParagraph("\"components\" folder contains the component packages available for this version of the core. They can be installed or updated from the administration of the components of your Wikindx installation (Internet required, does not work with a proxy).", MAX_LINE_LENGHT, 0) . "\n";
+$readmeglobal .= formatParagraph("\"components\" folder contains the component packages available for this version of the core. They can be installed or updated from the administration of the components of your WIKINDX installation (Internet required, does not work with a proxy).", MAX_LINE_LENGHT, 0) . "\n";
 $readmeglobal .= "\n";
 $readmeglobal .= formatParagraph("For an offline installation of components, you must download the desired component packages from a station that has internet access, and install individually from the same administration screen. It is therefore recommended to recopy the hash of the downloaded file to check its integrity.", MAX_LINE_LENGHT, 0) . "\n";
 $readmeglobal .= "\n";

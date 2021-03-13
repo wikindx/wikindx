@@ -1,4 +1,4 @@
-# Wikindx's Translation ressource: Русский.
+# WIKINDX's Translation ressource: Русский.
 # For copyright see the component.json file
 # This file is distributed under the same license as the wikindx package.
 #
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-26 12:02+0100\n"
+"POT-Creation-Date: 2021-03-13 18:00+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -45,7 +45,7 @@ msgstr "Не указан тип связи с БД в config.php."
 msgid "Missing subQuery statement."
 msgstr "Пропущен оператор subQuery."
 
-#. translators: When using the word processor how are extra, unnamed authors indicated?
+#. translators: When using the word processor how are extra, unnamed authors indicated? 
 #. In English this would be 'et al.' as in: 'According to Grimshaw et al., "blah blah blah".
 #: core/messages/constants.php:29
 msgid "et al."
@@ -55,10 +55,10 @@ msgstr "et al."
 #. You should not translate this string but establish a list separated by ;
 #. of the singular possessive forms of your language, if they exist.
 #. THAT END BY A POINT AND ONLY A POINT.
-#.
+#. 
 #. If your language does not use it or is incompatible with the operation described
 #. below of the word processor, put a ; in this string empty.
-#.
+#. 
 #. When using the word processor, how is singular possessive defined.
 #. This is only for a single creator's surname and, like 'et al.' above, is used
 #. to detect if a creator name should be removed from the in-text citation
@@ -95,20 +95,20 @@ msgstr "»"
 #. a list separated by ; of the most common abbreviations of your language
 #. or bibliographic styles used in your language (country)
 #. THAT END BY A POINT AND ONLY A POINT.
-#.
+#. 
 #. It is strongly recommended to leave the Latin abbreviations
 #. which are a common place of bibliographies.
-#.
+#. 
 #. Remove the English abbreviations unless they are used in your language.
-#.
+#. 
 #. Abreviations such as U.S.A., U.S.S.R., N.B. are dealt with in the code
 #. (must be capital English characters and no spaces).
 #. '...' and multiple dots consisting of two or more dots are dealt with in the code.
-#.
+#. 
 #. N.B. MATCHING IS CASE SENSITIVE. You must indicate all the possible cases of an abbreviation.
-#.
+#. 
 #. If you have no abbreviations, put a ; in this string.
-#.
+#. 
 #. When using the word processor, for certain styles the text
 #. must be split up into sentences -- e.g. APA requires that year
 #. must follow the author name and page no. follows the citation
@@ -117,7 +117,7 @@ msgstr "»"
 #. This string handles other groups of characters (commonly abbreviations)
 #. that may appear in a sentence // but do not indicate a sentence divider.
 #. If there are no such abbreviations, the string must exist and be empty.
-#.
+#. 
 #. The Latin abbreviations which are a common place of bibliographies
 #. are already included. Do not add them to your list.
 #. Latin abbreviations in order of apparition are:
@@ -138,7 +138,7 @@ msgstr "»"
 #. - sqq. : sequunturque
 #. - v. : versus
 #. - viz. : videre licet
-#.
+#. 
 #. English abbreviations in order of apparition are:
 #. - short for Brothers (as in Warner Bros.)
 #. - company
@@ -2597,9 +2597,11 @@ msgid ""
 msgstr ""
 "Два или более встроенных плагина были назначены в один и тот же контейнер: ###"
 
-#: core/messages/messages.php:91
-msgid "Configure Wikindx"
-msgstr "Настроить Wikindx"
+#. top menu item
+#: core/messages/messages.php:91 core/messages/messages.php:383
+#: core/messages/messages.php:994
+msgid "Configure"
+msgstr "Общая настройка"
 
 #: core/messages/messages.php:92
 msgid "Logon"
@@ -2806,8 +2808,10 @@ msgstr "URL-ссылки файла ###"
 
 #. / heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
 #: core/messages/messages.php:142
-msgid "My Wikindx ###"
-msgstr "Мой Wikindx ###"
+#, fuzzy
+#| msgid "Add WIKINDX Resources ###"
+msgid "My WIKINDX ###"
+msgstr "Добавить источники WIKINDX ###"
 
 #: core/messages/messages.php:143
 msgid "Forgotten Password"
@@ -3800,11 +3804,6 @@ msgstr ""
 #: core/messages/messages.php:382
 msgid "Update"
 msgstr ""
-
-#. top menu item
-#: core/messages/messages.php:383 core/messages/messages.php:994
-msgid "Configure"
-msgstr "Общая настройка"
 
 #: core/messages/messages.php:384
 msgid "an error occurred while installing the package: ###."
@@ -5682,8 +5681,8 @@ msgid "Register"
 msgstr "Регистрация"
 
 #: core/messages/messages.php:880
-msgid "My Wikindx"
-msgstr "Мой Wikindx"
+msgid "My WIKINDX"
+msgstr ""
 
 #: core/messages/messages.php:882
 msgid "User Logon"
@@ -5737,8 +5736,8 @@ msgid "Turn Help off"
 msgstr "Отключить посказки"
 
 #: core/messages/messages.php:897
-msgid "About Wikindx"
-msgstr "О Wikindx"
+msgid "About WIKINDX"
+msgstr ""
 
 #. top menu item
 #: core/messages/messages.php:900
@@ -8639,6 +8638,15 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
+#~ msgid "Disabled Templates"
+#~ msgstr "Деактивированные шаблоны"
+
+#~ msgid "My Wikindx ###"
+#~ msgstr "Мой Wikindx ###"
+
+#~ msgid "My Wikindx"
+#~ msgstr "Мой Wikindx"
+
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
 #~ "If your database is large or your server is slow, it is advised to "
@@ -8708,9 +8716,6 @@ msgstr "Источник успешно одобрен"
 
 #~ msgid "bibtex"
 #~ msgstr "bibtex"
-
-#~ msgid "Disabled Templates"
-#~ msgstr "Деактивированные шаблоны"
 
 #~ msgid ""
 #~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
@@ -8903,9 +8908,6 @@ msgstr "Источник успешно одобрен"
 #~ "и запустить Repairkit-плагин (который дает гораздо больший контроль над "
 #~ "исправлением неверных значений)."
 
-#~ msgid "Select the creators you wish to remove from the group"
-#~ msgstr "Выберите авторов, которых вы хотите удалить из группы."
-
 #~ msgid "<h3>Paste BibTeX</h3>"
 #~ msgstr "Вставить код BibTeX"
 
@@ -8922,3 +8924,9 @@ msgstr "Источник успешно одобрен"
 
 #~ msgid "Disabled Plugins"
 #~ msgstr "Деактивированные плагины"
+
+#~ msgid "About Wikindx"
+#~ msgstr "О Wikindx"
+
+#~ msgid "Select the creators you wish to remove from the group"
+#~ msgstr "Выберите авторов, которых вы хотите удалить из группы."

@@ -49,7 +49,7 @@ v1.17, 2020
 1. Add possibility to quarantine resources on import.
 
 v1.16, 2020
-1. Wikindx compatibility version 7.
+1. WIKINDX compatibility version 7.
 
 v1.15, 2020
 1. Remove a forgotten var_dump() that breaks the output.
@@ -71,7 +71,7 @@ v1.10, 2020
 2. No longer use session_id() for temporary file names.
 
 v1.9 ~ 2019
-1. Adaptation for Wikindx 5.9.1.
+1. Adaptation for WIKINDX 5.9.1.
 
 v1.8 ~ June 2017
 1. Plugin now compatible with WIKINDX v5.x
@@ -81,7 +81,7 @@ v1.8 ~ June 2017
 5. Imagemagick no longer used.
 
 v1.7 ~ Sept. 2014
-A packaging error in the download files stopped wikindx working if v1.6 of this plugin was installed.
+A packaging error in the download files stopped WIKINDX working if v1.6 of this plugin was installed.
 --------------------
 v1.6 ~ Aug. 2014
 1. In bibtex, custom fields can now be exported.

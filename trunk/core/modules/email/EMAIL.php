@@ -44,7 +44,7 @@ class EMAIL
         $this->badInput = FACTORY_BADINPUT::getInstance();
     }
     /**
-     * Start functions for emailing users their preferences or 'my wikindx' details.
+     * Start functions for emailing users their preferences or 'My WIKINDX' details.
      *
      * @return bool
      */

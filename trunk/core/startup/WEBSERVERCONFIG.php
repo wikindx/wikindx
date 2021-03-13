@@ -12,7 +12,7 @@
  * WEBSERVERCONFIG
  *
  * CONFIGURE the webserver with default parameters
- * compliant with Wikindx before applying
+ * compliant with WIKINDX before applying
  * its adminuser custom configuration.
  *
  * This have to be included at the top of each independant script

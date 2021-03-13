@@ -1,4 +1,4 @@
-# Wikindx's Translation ressource: Deutsch.
+# WIKINDX's Translation ressource: Deutsch.
 # For copyright see the component.json file
 # This file is distributed under the same license as the wikindx package.
 #
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-02-26 12:02+0100\n"
+"POT-Creation-Date: 2021-03-13 18:00+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -45,7 +45,7 @@ msgstr "In config.php wurde kein RDBMS-Typ ausgewählt."
 msgid "Missing subQuery statement."
 msgstr "Fehlende subQuery-Anweisung."
 
-#. translators: When using the word processor how are extra, unnamed authors indicated?
+#. translators: When using the word processor how are extra, unnamed authors indicated? 
 #. In English this would be 'et al.' as in: 'According to Grimshaw et al., "blah blah blah".
 #: core/messages/constants.php:29
 msgid "et al."
@@ -55,10 +55,10 @@ msgstr "et al."
 #. You should not translate this string but establish a list separated by ;
 #. of the singular possessive forms of your language, if they exist.
 #. THAT END BY A POINT AND ONLY A POINT.
-#.
+#. 
 #. If your language does not use it or is incompatible with the operation described
 #. below of the word processor, put a ; in this string empty.
-#.
+#. 
 #. When using the word processor, how is singular possessive defined.
 #. This is only for a single creator's surname and, like 'et al.' above, is used
 #. to detect if a creator name should be removed from the in-text citation
@@ -95,20 +95,20 @@ msgstr "“"
 #. a list separated by ; of the most common abbreviations of your language
 #. or bibliographic styles used in your language (country)
 #. THAT END BY A POINT AND ONLY A POINT.
-#.
+#. 
 #. It is strongly recommended to leave the Latin abbreviations
 #. which are a common place of bibliographies.
-#.
+#. 
 #. Remove the English abbreviations unless they are used in your language.
-#.
+#. 
 #. Abreviations such as U.S.A., U.S.S.R., N.B. are dealt with in the code
 #. (must be capital English characters and no spaces).
 #. '...' and multiple dots consisting of two or more dots are dealt with in the code.
-#.
+#. 
 #. N.B. MATCHING IS CASE SENSITIVE. You must indicate all the possible cases of an abbreviation.
-#.
+#. 
 #. If you have no abbreviations, put a ; in this string.
-#.
+#. 
 #. When using the word processor, for certain styles the text
 #. must be split up into sentences -- e.g. APA requires that year
 #. must follow the author name and page no. follows the citation
@@ -117,7 +117,7 @@ msgstr "“"
 #. This string handles other groups of characters (commonly abbreviations)
 #. that may appear in a sentence // but do not indicate a sentence divider.
 #. If there are no such abbreviations, the string must exist and be empty.
-#.
+#. 
 #. The Latin abbreviations which are a common place of bibliographies
 #. are already included. Do not add them to your list.
 #. Latin abbreviations in order of apparition are:
@@ -138,7 +138,7 @@ msgstr "“"
 #. - sqq. : sequunturque
 #. - v. : versus
 #. - viz. : videre licet
-#.
+#. 
 #. English abbreviations in order of apparition are:
 #. - short for Brothers (as in Warner Bros.)
 #. - company
@@ -2583,9 +2583,11 @@ msgid ""
 msgstr ""
 "Zwei oder mehr Inline-Plugins wurden dem gleichen Container zugeordnet: ###"
 
-#: core/messages/messages.php:91
-msgid "Configure Wikindx"
-msgstr "Wikindx konfigurieren"
+#. top menu item
+#: core/messages/messages.php:91 core/messages/messages.php:383
+#: core/messages/messages.php:994
+msgid "Configure"
+msgstr "Konfigu­rieren"
 
 #: core/messages/messages.php:92
 msgid "Logon"
@@ -2792,8 +2794,10 @@ msgstr "Datei-URLs ###"
 
 #. / heading_myWikindx In a multi-user WIKINDX, settings for a user's bibliographies and personal details
 #: core/messages/messages.php:142
-msgid "My Wikindx ###"
-msgstr "Mein Wikindx ###"
+#, fuzzy
+#| msgid "Add WIKINDX Resources ###"
+msgid "My WIKINDX ###"
+msgstr "WIKINDX-Ressourcen hinzufügen ###"
 
 #: core/messages/messages.php:143
 msgid "Forgotten Password"
@@ -3800,11 +3804,6 @@ msgstr ""
 #: core/messages/messages.php:382
 msgid "Update"
 msgstr ""
-
-#. top menu item
-#: core/messages/messages.php:383 core/messages/messages.php:994
-msgid "Configure"
-msgstr "Konfigu­rieren"
 
 #: core/messages/messages.php:384
 msgid "an error occurred while installing the package: ###."
@@ -5690,8 +5689,8 @@ msgid "Register"
 msgstr "Registrierung"
 
 #: core/messages/messages.php:880
-msgid "My Wikindx"
-msgstr "Mein Wikindx"
+msgid "My WIKINDX"
+msgstr ""
 
 #: core/messages/messages.php:882
 msgid "User Logon"
@@ -5745,8 +5744,8 @@ msgid "Turn Help off"
 msgstr "Hilfe ausschalten"
 
 #: core/messages/messages.php:897
-msgid "About Wikindx"
-msgstr "Über Wikindx"
+msgid "About WIKINDX"
+msgstr ""
 
 #. top menu item
 #: core/messages/messages.php:900
@@ -8674,6 +8673,9 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
+#~ msgid "My Wikindx"
+#~ msgstr "Mein Wikindx"
+
 #~ msgid ""
 #~ "<p>If an element such as a keyword or category is hyperlinked, clicking on "
 #~ "the link will display other resources belonging to that keyword or "
@@ -9622,8 +9624,8 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "Sie sind nicht als Superadmin angemeldet: bitten Sie ###, die "
 #~ "Aktualisierung des Datenbankschemas vorzunehmen."
 
-#~ msgid "My Bibliographies"
-#~ msgstr "Meine Bibliographien"
+#~ msgid "About Wikindx"
+#~ msgstr "Über Wikindx"
 
 #~ msgid "Disabled Styles"
 #~ msgstr "Deaktivierte Stile"
@@ -9633,3 +9635,9 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "<h3>Search</h3>"
 #~ msgstr "<h3>Suche</h3>"
+
+#~ msgid "My Bibliographies"
+#~ msgstr "Meine Bibliographien"
+
+#~ msgid "My Wikindx ###"
+#~ msgstr "Mein Wikindx ###"

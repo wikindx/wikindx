@@ -9,7 +9,7 @@
  */
 
 /**
- * Provides interface for auto-suggestions from external programs and for Wikindx AJAX.
+ * Provides interface for auto-suggestions from external programs and for WIKINDX AJAX.
  */
 class SUGGEST
 {

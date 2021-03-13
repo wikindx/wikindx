@@ -31,7 +31,7 @@ v1.8, 2020
 
 v.1.7
 1. If user is an admin, categories and subcategories can already be edited so remove this plugin from the menu system.
-2. Adaptation for Wikindx 5.9.1.
+2. Adaptation for WIKINDX 5.9.1.
 
 v1.6
 1. Plugin now uses core WIKINDX code and so is simply a gateway to that.

@@ -5,7 +5,7 @@
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "Default",
-    "component_description": "Wikindx default theme (installed by default, horizontal menu)",
+    "component_description": "WIKINDX default theme (installed by default, horizontal menu)",
     "component_licence": "ISC License",
     "component_authors": [
         {

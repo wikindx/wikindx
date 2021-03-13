@@ -17,7 +17,7 @@ disableToc = true
 
 ## Personal settings
 
-The administrator will have defined default settings but, under the _Wikindx > My Wikindx_ or _Wikindx > Preferences menu_, you can alter a number of parameters that change the way WIKINDX performs or displays its data. As a registered user, under the My Wikindx menu, these include:
+The administrator will have defined default settings but, under the _Wikindx > My WIKINDX_ or _Wikindx > Preferences menu_, you can alter a number of parameters that change the way WIKINDX performs or displays its data. As a registered user, under the My WIKINDX menu, these include:
 
 * Manage your personal details and email notification
 * Set up user groups and bibliographies

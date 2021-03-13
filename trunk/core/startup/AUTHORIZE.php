@@ -444,7 +444,7 @@ class AUTHORIZE
         $this->session->destroy();
         // set the default language prior to displaying the login prompt
         $user = FACTORY_USER::getInstance();
-        // remove any wikindx cookie that has been set
+        // remove any WIKINDX cookie that has been set
         $cookie = FACTORY_COOKIE::getInstance();
         $cookie->deleteCookie();
         // send back to front page
@@ -501,7 +501,7 @@ class AUTHORIZE
         $this->session->destroy();
         // set the default language prior to displaying the login prompt
         $user = FACTORY_USER::getInstance();
-        // remove any wikindx cookie that has been set
+        // remove any WIKINDX cookie that has been set
         $cookie = FACTORY_COOKIE::getInstance();
         $cookie->deleteCookie();
         // send back to front page

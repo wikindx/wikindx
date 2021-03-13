@@ -19,7 +19,7 @@
  * This is a standard technique to facilitate the indexing of public content
  * by indexation robots visiting the website
  *
- * The search engine of Wikindx is not usable by indexation robots.
+ * The search engine of WIKINDX is not usable by indexation robots.
  * This page compensate for this lack.
  *
  * @package wikindx\core\modules\sitemap

@@ -14,7 +14,7 @@ If you are a registered user you can:
 
 
 * Edit a number of elements on this page. Certain options, such as editing and adding attachments, need to be enabled by the administrator.
-* Add new elements such as quotations, paraphrases and musings. Comments (on quotations and paraphrases) and musings can be set to be to private, public or available to any user groups you have defined in My Wikindx.
+* Add new elements such as quotations, paraphrases and musings. Comments (on quotations and paraphrases) and musings can be set to be to private, public or available to any user groups you have defined in My WIKINDX.
 
 If an element such as a keyword or category is hyperlinked, clicking on the link will display other resources belonging to that keyword or category. Any quotations, paraphrases and available musings can optionally have hyperlinked keywords linking them to other metadata.
 

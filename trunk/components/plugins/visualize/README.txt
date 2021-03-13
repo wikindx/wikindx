@@ -28,7 +28,7 @@ CHANGELOG:
 2020-07-11 : CHG : relicencing under ISC License terms.
 
 v1.5, 2020
-1. Wikindx compatibility version 7.
+1. WIKINDX compatibility version 7.
 
 v1.4, 2020
 1. Add documentation.

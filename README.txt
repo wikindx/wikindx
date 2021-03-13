@@ -16,7 +16,7 @@ After some code loss, we gave up using BRANCHES and TAGS.
 
  ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 
-Version notes and instructions to upgrade or install Wikindx from a tarball
+Version notes and instructions to upgrade or install WIKINDX from a tarball
 is included in docs/ folder of each release tarball. Go to SourceForge FILES
 section to download them.
 
@@ -70,7 +70,7 @@ Repository locations
 
 Repository layout
 
-- Wikindx sources:
+- WIKINDX sources:
 
      - trunk/               contains the sources of the project
 
@@ -87,7 +87,7 @@ Repository layout
 
 - Tools scripts:
 
-     - tools/               tools used to develop or release Wikindx
+     - tools/               tools used to develop or release
 
      - release/cli-make-api-manual.php is used to build the API Manual
 
@@ -106,20 +106,20 @@ Repository layout
                             and choosing its version online
 
      - website/cus/index.php is used to serve the list of
-       components from the update server configured in Wikindx 6.3.6 and later
+       components from the update server configured in WIKINDX 6.3.6 and later
 
      - website/cus/components stores descriptions in json format of each component
-       version released since Wikindx version 6.3.6. The format of its subfolders
+       version released since WIKINDX version 6.3.6. The format of its subfolders
        must respect the scheme <component_type>/<compatibility_version>/.
 
      - website/cus/core stores the definition in json format of the component
-       compatibility versions for each core version since Wikindx version 6.3.6
+       compatibility versions for each core version since WIKINDX version 6.3.6
 
      - website/downloads/components_server.php is used to serve the list of
-       components from the update server configured in Wikindx 5.9.1 to 6.3.5
+       components from the update server configured in WIKINDX 5.9.1 to 6.3.5
 
      - website/downloads/ stores the components list of each version released in
-       a subfolder named after their version number for Wikindx 5.9.1 to 6.3.5
+       a subfolder named after their version number for WIKINDX 5.9.1 to 6.3.5
 
      - website/web/src stores the source files of the website
 
@@ -155,7 +155,7 @@ Release History (Archived repository)
 Revision 1 of active repository is the same as revision 3959 of the archived
 repository.
 
-The sources of wikindx were not versioned before version 4.0.0.
+The sources of WIKINDX were not versioned before version 4.0.0.
 
 The source code for major version 3.8.1 was also imported because it can help
 track migration errors from v3 to v4 whithout unpacking an archive, but importing

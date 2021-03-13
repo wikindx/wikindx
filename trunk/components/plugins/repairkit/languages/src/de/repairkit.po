@@ -1,4 +1,4 @@
-# Wikindx's Translation ressource: Deutsch.
+# WIKINDX's Translation ressource: Deutsch.
 # For copyright see the component.json file
 # This file is distributed under the same license as the repairkit package.
 #

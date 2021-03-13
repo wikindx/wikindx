@@ -45,7 +45,7 @@ v1.12, 2020
 1. Minor debugging for paper saving and exporting.
 
 v1.11, 2020
-1. Wikindx compatibility version 7.
+1. WIKINDX compatibility version 7.
 
 v1.10, 2020
 1. Fix RTF export of images.
@@ -63,7 +63,7 @@ v1.7
 1. Remove a the old unused "papers" folder.
 
 v1.6
-1. Adaptation for Wikindx 5.9.1.
+1. Adaptation for WIKINDX 5.9.1.
 
 v1.5
 1. Plugin now compatible with WIKINDX v5.x

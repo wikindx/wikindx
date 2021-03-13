@@ -97,7 +97,7 @@ public $WIKINDX_DB_PASSWORD = "wikindx";
 
 8. Go to __Admin > Configure__ menu and set global preferences.
 
-9. Go to __Wikindx > My Wikindx__ menu and set the Super Administrator preferences.
+9. Go to __Wikindx > My WIKINDX__ menu and set the Super Administrator preferences.
 
 10. Finally install and enable components from the __Components Manager__  (__Admin > Components__ menu).
 

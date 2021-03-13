@@ -14,7 +14,7 @@ Most of the configuration options are self-explanatory but bear the following in
 * Printing PHP errors and SQL statements is for debugging purposes and should not be used on a live production server. Printing SQL statements will interfere with AJAX/javascript operations on pages such as Advanced Search and New/Edit Resource.
 * Prior to v6.4.0, data relating to searches and similar were stored in PHP sessions but these are common to all tabs/windows – searches in different tabs would make use of search data (such as search parameters, last multi search etc.) from the most recently conducted search in whatever tab. v6.4.0 makes use of javascript sessionStorage which allows for browser tabs/windows to be uniquely identified allowing search data to be unique to that search. Not all browsers support sessionStorage (a list of compatible browsers can be found here: [_sessionStorage: Browser compatibility_ in developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage#Browser_compatibility) or [_sessionStorage_ in caniuse.com](https://caniuse.com/?search=sessionStorage)) so, for this reason, the feature is disabled by default in WIKINDX. Turn it on with the checkbox under Miscellaneous labelled 'BrowserTabID'.
 
-Some of the settings here, such as no. resources to display per page or the bibliographic style, are defaults that users can override in My Wikindx.
+Some of the settings here, such as no. resources to display per page or the bibliographic style, are defaults that users can override in My WIKINDX.
 
 You can add system users from the Admin menu.
 

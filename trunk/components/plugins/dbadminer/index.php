@@ -11,7 +11,7 @@
 /**
   * dbAdminer class.
   *
-  * Wikindx custom wrapper for adminer
+  * WIKINDX custom wrapper for adminer
   */
 
 /**

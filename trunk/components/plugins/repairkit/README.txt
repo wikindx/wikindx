@@ -63,7 +63,7 @@ v192 2020
 1. Removed statistics tables in Missing Rows.
 
 v1.8.5, 2020
-1. Wikindx compatibility version 7.
+1. WIKINDX compatibility version 7.
 
 v1.8.4, 2020
 1. Fix an error of version check.
@@ -85,7 +85,7 @@ v1.8.1
 v1.8.0
 1. Transfer responsibility for creating the schema to an external tool and load the schema
    from a predefined location for all database schemas delivered with the core.
-2. Adaptation for Wikindx 5.9.1.
+2. Adaptation for WIKINDX 5.9.1.
 
 v1.7.1
 1. Added creators check: in some cases, 'resourcecreatorCreatorSurname' does not match the id in resourcecreatorCreatorMain.

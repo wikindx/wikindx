@@ -6,7 +6,7 @@ chapter = true
 +++
 
 
-Wikindx is a web application written in PHP and is intended to be OS independent.
+WIKINDX is a web application written in PHP and is intended to be OS independent.
 
 This chapter will explain how to install and upgrade it, and what are the requirements for proper operation.
 

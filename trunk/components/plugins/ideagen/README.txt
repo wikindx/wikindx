@@ -27,7 +27,7 @@ CHANGELOG:
 2020-12-21 : CHG : converted all instances of trim() for form input to UTF8::mb_trim().
 2020-12-21 : CHG : handle multiple tabs.
 2020-12-21 : CHG : if browsing a user bibliography, use it also for the front page
-                   (which otherwise uses the master bibliography) – set in Wikindx|Bibliographies.
+                   (which otherwise uses the master bibliography) – set in WIKINDX|Bibliographies.
 2020-12-21 : FIX : minor debugging of the ideaGen plugin.
 2020-12-21 : CHG : improved the options displayed in the Metadata menu.
 2020-12-21 : CHG : reformat source code to the prefered if/then/else style.

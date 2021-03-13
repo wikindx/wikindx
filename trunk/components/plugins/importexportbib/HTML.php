@@ -146,7 +146,7 @@ class HTMLEXPORT
         $header = '<!DOCTYPE html>' . LF;
         $header .= '<html>' . LF;
         $header .= '<head>' . LF;
-        $header .= '<title>Wikindx export</title>' . LF;
+        $header .= '<title>WIKINDX export</title>' . LF;
         $header .= '<meta charset="UTF-8">' . LF;
         $header .= '<meta http-equiv="X-UA-Compatible" content="IE=edge">' . LF;
         $header .= '</head>' . LF;

@@ -9,7 +9,7 @@
  */
 
 /**
- * \brief Provides interface for external programs and for Wikindx AJAX.
+ * \brief Provides interface for external programs and for WIKINDX AJAX.
  * Currently it is the "default" class that API functions get put into that
  * don't yet fit into other classes.  Eventually, this class may be removed altogether.
  */

@@ -31,7 +31,7 @@ CHANGELOG:
 2020-07-11 : CHG : relicencing under ISC License terms.
 
 v1.13, 2020
-1. Wikindx compatibility version 7.
+1. WIKINDX compatibility version 7.
 
 v1.12, 2020
 1. Add documentation.
@@ -48,7 +48,7 @@ v1.10, 2019
 5. Some improvements to the display.
 6. Debugged the handling of non-Latin/accented characters during citation and bibliography previews.
 7. Corrected a bug in displaying '<' and '>' characters.
-8. Adaptation for Wikindx 5.9.1.
+8. Adaptation for WIKINDX 5.9.1.
 
 v1.9
 1. Fix a fclose() bug.
@@ -60,7 +60,7 @@ v1.8
 4. Fix any memory leaks due to an oversight fclose().
 
 v1.7
-1. As per wikindx v4.2.2, season names (e.g. Spring) can now be added to resources requiring them (e.g. journal article);
+1. As per WIKINDX v4.2.2, season names (e.g. Spring) can now be added to resources requiring them (e.g. journal article);
    user defined seasons in the style editor have been added to reflect this change.
 
 v1.6

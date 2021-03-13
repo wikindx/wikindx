@@ -79,7 +79,7 @@ __X.Y.Z__ is the number of the released version defined by the constant
 
 15. Update translations in SVN and push POT files on Transifex via the
     `/home/project-web/wikindx/htdocs/transifex/pot` directory on the SF
-    Wikindx Website FTP. Wait for Transifex to update the resources
+    WIKINDX Website FTP. Wait for Transifex to update the resources
     (twice a day). You can force the update by hand but put the POT
     file online before. Announce on Transifex a deadline for updating
     translations before the release.
@@ -113,12 +113,12 @@ __X.Y.Z__ is the number of the released version defined by the constant
 ~~~~
 
 19. Upload the content of `release/trunk/files` in the
-    `/home/pfs/project/wikindx/archives` directory of the SourceForge Wikindx
+    `/home/pfs/project/wikindx/archives` directory of the SourceForge WIKINDX
     Project FTP.
 
 20. Upload the content of `release/trunk/cus` in the
     `/home/project-web/wikindx/htdocs/cus` directory of the SourceForge
-    Wikindx Project FTP.
+    WIKINDX Project FTP.
 
 21. Try the update server. Don't forget to switch the Trunk Version flag
     in debug configuration.
@@ -217,26 +217,26 @@ to HEAD after the release!
 
 2. Without overwriting files already online, upload the content of
     `release/X.Y.Z/files` in the `/home/pfs/project/wikindx/` directory
-    of the SourceForge Wikindx Project FTP.
+    of the SourceForge WIKINDX Project FTP.
 
 3. Without overwriting files already online, upload the content of
     `release/X.Y.Z/cus` in the `/home/project-web/wikindx/htdocs/cus` directory
-    of the SourceForge Wikindx Project FTP.
+    of the SourceForge WIKINDX Project FTP.
 
 4. Update the WIKINDX TEST DRIVE website and check if nothing bad append before
    publishing to directories that are not archives. If things go wrong, correct
    and redo the release from the begining.
 
 5. Remove all files and folders of the current_release FTP directory
-   of the SourceForge Wikindx Project FTP and upload the content of
+   of the SourceForge WIKINDX Project FTP and upload the content of
    `release/X.Y.Z/files/X.Y.Z` instead.
 
-6. On the Files section of the Wikindx SourceForge pages, go in
+6. On the Files section of the WIKINDX SourceForge pages, go in
     directory X.Y.Z, display details of the wikindx_x.y.z.tar.bz2 file, select
     it as the default download for all systems (Link: Select all) and save.
 
 7. If an old A.B.C version should no longer be highlighted, remove its A.B.C
-    folder of the SourceForge Wikindx Project FTP. The automatic update for
+    folder of the SourceForge WIKINDX Project FTP. The automatic update for
     the A.B.C version will continue to work because it uses the copies of the
     `archives/` folders, which have not been deleted.
 

@@ -60,7 +60,7 @@ const ROOT_DIR = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_
      * and return an associative array of childnode's value of 'info' node.
      *
      * This function is taylored by hand to replace the generic parser simplexml_load_file.
-     * SimpleXml is very simple to use, but is so slow that parse each style file of Wikindx
+     * SimpleXml is very simple to use, but is so slow that parse each style file of WIKINDX
      * implies a waste of 100 ms in each load.
      *
      * This function is closed to a determined tree node as showed below:

@@ -51,6 +51,7 @@ MAINTENANCE:
 15. Remove the deprecated syntax of WIKINDX_MAX_EXECUTION_TIMEOUT. The value cannot be a string now.
 16. Use a better system to rewrite the config file.
 17. Ensure utf8mb4_unicode_520_ci is always the default collation of the database.
+18. Standardize the name of the application to WIKINDX.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
@@ -77,7 +78,7 @@ BUG FIXES:
 13. Ensure that logged-in users can attach resources to user tags.
 14. Ensure that logged-in users can only edit a resource's categories, keywords, and languages if they own the resource or allowed to by the superadmin.
 15. Add a default value to the users.usersFullname field [#316].
-16. In MyWikindx, after a successful operation, return to the previously selected pane rather than the top User pane.
+16. In My WIKINDX, after a successful operation, return to the previously selected pane rather than the top User pane.
 
 MAINTENANCE:
 1. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].
@@ -178,7 +179,7 @@ MAINTENANCE:
 18. Drop PHP 7.1 support.
 19. Drop PHP 7.2 support.
 20. Update PHPMailer to version 6.2.0 (PHP 8.0 support).
-21. Remove WIKINDX_DB_TABLEPREFIX: It is no longer possible to modify the prefix of the tables in the database. This functionality is only useful for several programs sharing the same database with the same table names or several wikindx installations in the same database. These two practices are to be avoided because they are a good way to lose your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. Firstly, the "wkx_" prefix will be kept for some versions and cannot be changed. Secondly, it will be deleted.
+21. Remove WIKINDX_DB_TABLEPREFIX: It is no longer possible to modify the prefix of the tables in the database. This functionality is only useful for several programs sharing the same database with the same table names or several WIKINDX installations in the same database. These two practices are to be avoided because they are a good way to lose your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. Firstly, the "wkx_" prefix will be kept for some versions and cannot be changed. Secondly, it will be deleted.
 22. Update jpGraph from 4.2.10 to 4.3.4.
 23. Remove multistage in upgrade.
 24. enchant_broker_free() and enchant_broker_free_dict() are deprecated; unset the object instead (PHP 8.0 support).
@@ -247,8 +248,8 @@ v6.3.8
 Focus: Minor bug fixes, maintenance, and feature enhancements
 
 BUG FIXES:
-1. For the special restricted user, ensure they cannot change their user details (inc. password) in MyWikindx.
-2. Tidied up display of MyWikindx.
+1. For the special restricted user, ensure they cannot change their user details (inc. password) in My WIKINDX.
+2. Tidied up display of My WIKINDX.
 3. Fix a duplicate declaration of default value for db users.usersFullname field.
 4. Update the repairkit schema.
 5. Prevent a crash when the database is empty and the userId is known by the session.
@@ -269,7 +270,7 @@ MAINTENANCE:
 2. Remove unnecessary serialize/base64 combinations when dealing with session arrays.
 
 FEATURE ENHANCEMENTS:
-1. Added a keyword group feature. Keyword groups allow the individual user to group semantically similar keywords together so the resources or metadata can then be browsed together. To create a keyword group, at least two keywords must be in the database. A keyword group is private to the user who created it but the ability to browse them can be shared with one or more user groups (created in Wikindx|MyWikindx). When creating a keyword group, adding one or more user groups is not required, likewise the keyword group description: the name and at least two keywords, though, are required. Once created, the resources belonging to all of the keywords in the group can be browsed in Search|Browse... and metadata can be browsed in the Metadata menu.
+1. Added a keyword group feature. Keyword groups allow the individual user to group semantically similar keywords together so the resources or metadata can then be browsed together. To create a keyword group, at least two keywords must be in the database. A keyword group is private to the user who created it but the ability to browse them can be shared with one or more user groups (created in WIKINDX|My WIKINDX). When creating a keyword group, adding one or more user groups is not required, likewise the keyword group description: the name and at least two keywords, though, are required. Once created, the resources belonging to all of the keywords in the group can be browsed in Search|Browse... and metadata can be browsed in the Metadata menu.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
@@ -314,7 +315,7 @@ v6.3.5
 Focus: Minor bug fixes and maintenance.
 
 BUG FIXES:
-1. For the wikindx testdrive, update the password of user 'wikindx'.
+1. For the WIKINDX testdrive, update the password of user 'wikindx'.
 2. Ensure menu plugins display in the menu system where $authorize in the plugin's config.php is set to 1.
 3. Fix an SQL error for non-admin registered users using QUICKSEARCH and alphabetical listing.
 4. Corrected incorrect paging when inserting a citation into metadata.
@@ -386,7 +387,7 @@ Focus: Quick bug fix.
 
 BUG FIXES:
 1. Fix an error in v6.3.0 upgrade relating to components.json and an incorrect UPDATEDATABASE.php.
-2. Upgrade plugins to wikindx plugin version 8.
+2. Upgrade plugins to WIKINDX plugin version 8.
 3. Attempt to deal with a memory leak when caching large PDF files on attachment uploads.
 4. As an exception to guarantee access in the event of a misconfiguration or an offline server, if the LDAP authentication of the Super Admin account fails, a second will be attempted with the native method.
 5. Prevent the loading of broken plugins.
@@ -467,7 +468,7 @@ MAINTENANCE:
 16. Fix the default value of users table.
 17. Disable display of views index, popularity index and downloads index in single resource views and resource lists and disable ability to order by these in Quick list all... operations. On large databases, the compilation of the indices takes too long. At a later stage such indices will be available in the Statistics menu.
 18. Update of PHPMailer to 6.1.5 version.
-19. Remove superAdmin user configuration from Admin|Configure interface. superAdmin details can be edited from My Wikindx and from Admin|Users|Edit.
+19. Remove superAdmin user configuration from Admin|Configure interface. superAdmin details can be edited from My WIKINDX and from Admin|Users|Edit.
 20. Update adminer to 4.7.7 (https://github.com/vrana/adminer/releases/tag/v4.7.7).
 
 FEATURE ENHANCEMENTS:
@@ -609,7 +610,7 @@ Focus: Minor bug fixes.
 
 BUGS:
 1. Fix some heredoc string opening syntax.
-2. Fix display of Register User in the Wikindx menu – under the right conditions (Admin|Configure interface), the menu item is now displayed.
+2. Fix display of Register User in the WIKINDX menu – under the right conditions (Admin|Configure interface), the menu item is now displayed.
 3. Fix RSS.
 4. Fix text replacement in Help files.
 5. Fix an crash during translation in the link dialog of the custom TinyMCE dialog.
@@ -688,7 +689,7 @@ v6.0.3
 Focus: Minor bug fixes.
 
 BUGS:
-1. When a user selects menu reduced level 2 from MyWikindx, there were fatal errors when menus with submenus were selected. Fixed.
+1. When a user selects menu reduced level 2 from My WIKINDX, there were fatal errors when menus with submenus were selected. Fixed.
 2. Add a missing string in English messages of collections.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
@@ -706,7 +707,7 @@ BUGS:
 3. Fix missing variable configIsCreator in Configure.
 4. When listing resources containing resources with multiple creators, the number of resources returned as per the paging value was
 incorrect. An erroneous GROUP BY statement has been corrected.
-5. Ensure read only users have access to some configuration options (Wikindx|Preferences menu).
+5. Ensure read only users have access to some configuration options (WIKINDX|Preferences menu).
 6. Correct a syntax error preventing code execution under PHP 5.6 and 7.0.
 
 MAINTENANCE:
@@ -823,7 +824,7 @@ to Text features) [https://sourceforge.net/p/wikindx/v5bugs/173].
 7. Configure the user's preferred locale in addition to the language (without separating these two notions for the moment).
 8. Remove the need of disabling ONLY_FULL_GROUP_BY sql mode and don't force it anymore (ONLY_FULL_GROUP_BY is the default since MySQL 5.7)
 [https://sourceforge.net/p/wikindx/v5bugs/68/].
-9. Merge and improve the Wikindx|Preferences and Wikindx|My Wikindx interfaces so that the interface now matches Admin|Configure.
+9. Merge and improve the WIKINDX|Preferences and WIKINDX|My WIKINDX interfaces so that the interface now matches Admin|Configure.
 10. Cache, data, and third-party software folders are separated into "cache", "data", and "vendor" folders for easy maintenance. On upgrading
 the database, copying of existing files is carried out automatically (the admin is informed of this after the upgrade).
 - The "cache" folder contains data that can be deleted and will be recreated by the application.
@@ -833,7 +834,7 @@ the database, copying of existing files is carried out automatically (the admin 
 11. With the new folder structure, remove the options in config.php to configure attachments and files locations.
 
 SECURITY:
-1. Migrate the Wikindx official website to HTTPS.
+1. Migrate the WIKINDX official website to HTTPS.
 2. Remove options to set a session location ($WIKINDX_SESSION_PATH_CLEAR, WIKINDX_SESSION_PATH).
 
 MAINTENANCE:
@@ -1036,10 +1037,10 @@ BUGS:
 2. Fixed a minor bug in the search function when inserting a citation that caused an error when there were no results.
 3. Fixed a bug in upgrading a pre-v5 database: collections such as journals are no longer being removed from the resources (duplicates are
 being correctly removed from the collections table while the collection field in resource_misc is now correctly updated).
-4. Fixed a fatal error that stopped wikindx loading if plugin versions were not compatible with the latest wikindx version.
+4. Fixed a fatal error that stopped WIKINDX loading if plugin versions were not compatible with the latest WIKINDX version.
 5. 'Quick List All...' now takes account of the user bibliography that is set for browsing.
 6. A template error (on the next metadata link) when viewing random metadata has been fixed.
-7. Stop changing the charset and the collation of the database because (wikindx can be in a shared db).
+7. Stop changing the charset and the collation of the database because (WIKINDX can be in a shared db).
 8. Fix a warning about configListlink for public access.
 9. Fix an error in the template compilation of the resource delete page. Template designers should amend the following lines in content.tpl:
 	{if isset($resourceList.submit)}
@@ -1230,7 +1231,7 @@ to be quickly and easily constructed. Additionally full-text searches may be per
 on resource attachments of type PDF, DOC, or DOCX. Files larger that 10MB are quietly ignored. Searching
 across several attachments takes some time . . . If your PHP installation has CURL installed, this
 time is dramatically cut.
-5. My Wikindx email notification. When setting notification to a digest of recent updates,
+5. My WIKINDX email notification. When setting notification to a digest of recent updates,
 added the option to receive either a list of all recently added or edited resources or,
 above a set value, just the total number of added or edited resources since the last notification.
 6. Bibliographic styles can now include custom fields if these have been added to the
@@ -1314,4 +1315,4 @@ non-letter symbols are removed in order to correctly sort resources by title.
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 
 CHANGELOG v4:  see the CHANGELOG.txt in the tarball of a v4 release.
-CHANGELOG v3, v2 and v1:  see wikindx3/CHANGELOG in the wikindx3.8.2 download
+CHANGELOG v3, v2 and v1:  see wikindx3/CHANGELOG in the WIKINDX 3.8.2 download

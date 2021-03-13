@@ -363,7 +363,7 @@ class MENU
         $this->menuInsert();
         if ($type == 'wikindx')
         {
-            GLOBALS::setTplVar('heading', 'Wikindx');
+            GLOBALS::setTplVar('heading', 'WIKINDX');
         }
         else
         {

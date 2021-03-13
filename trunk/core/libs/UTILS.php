@@ -18,7 +18,7 @@ namespace UTILS
     include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "LOADSTYLE.php"]));
 
     /**
-     * Return an array of mandatory PHP extensions used by the Wikindx core
+     * Return an array of mandatory PHP extensions used by the WIKINDX core
      *
      * The name of each extension is the value of an array entry. An extension name
      * use the same casing as get_loaded_extensions().
@@ -30,7 +30,7 @@ namespace UTILS
         return ['Core', 'date', 'fileinfo', 'filter', 'gd', 'gettext', 'hash', 'iconv', 'intl', 'json', 'mbstring', 'libxml','mysqli', 'pcre', 'session', 'SimpleXML', 'xmlreader'];
     }
     /**
-     * Return an array of optional PHP extensions used by the Wikindx core
+     * Return an array of optional PHP extensions used by the WIKINDX core
      *
      * The name of each extension is the value of an array entry. An extension name
      * use the same casing as get_loaded_extensions().

@@ -6,7 +6,7 @@
 
 NB. this module is compatible with WIKINDX v5 and up.
 
-Some tools for debugging Wikindx.
+Some tools for debugging WIKINDX.
 
 Unzip this file (with any directory structure) into plugins/debugtools/.
 Thus, plugins/debugtools/index.php etc.
@@ -24,7 +24,7 @@ v1.4, 2020
 1. Fix an error printing arrays.
 
 v1.3, 2020
-1. Wikindx compatibility version 7.
+1. WIKINDX compatibility version 7.
 
 v1.2, 2020
 1. Add documentation.

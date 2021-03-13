@@ -45,7 +45,7 @@ $VersionsAvailable[] = 'trunk';
 /// Configuration (dynamic)
 ///////////////////////////////////////////////////////////////////////
 
-echo "---[Wikindx API Manual building]------------------------------------------------\n\n";
+echo "---[API Manual building]---------------------------------------------------------\n\n";
 
 $VersionPackaged = promptListUser("Which version do you want to pack?", $VersionsAvailable, "trunk");
 $VersionPackaged = mb_strtolower($VersionPackaged);

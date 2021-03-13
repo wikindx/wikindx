@@ -6,7 +6,7 @@ chapter = true
 +++
 
 
-Wikindx can be customized through components of four types: plugin, style, template, vendor.
+WIKINDX can be customized through components of four types: plugin, style, template, vendor.
 
 Disclaimer : _currently the interface between the components and the core is not mature and we have not set up an infrastructure that would allow a developer to distribute an official component without also being an active developer of the core. The interface is quite unstable from one version to another, however you can develop a component for your private use if you are not put off by the code changes with each version._
 

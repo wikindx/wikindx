@@ -1,4 +1,4 @@
-# Wikindx's Translation ressource: Français.
+# WIKINDX's Translation ressource: Français.
 # For copyright see the component.json file
 # This file is distributed under the same license as the adminstyle package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -824,24 +824,6 @@ msgid "(Fields are case-sensitive)"
 msgstr "(Champs sensibles à la casse)"
 
 #~ msgid ""
-#~ "If you develop new styles yourself, you are strongly encouraged to contact "
-#~ "the WIKINDX developers at #linkSfWikindx# to make them available to other "
-#~ "users."
-#~ msgstr ""
-#~ "Si vous développez de nouveaux styles, nous vous encourageons vivement à "
-#~ "contacter les développeurs de WIKINDX à #linkSfWikindx# pour les mettre à "
-#~ "la disposition des autres utilisateurs."
-
-#~ msgid ""
-#~ "You can create a new style based on an existing one by copying the "
-#~ "existing style. To remove a style from the list available to your users, "
-#~ "disable that style in the Admin|Components menu."
-#~ msgstr ""
-#~ "Vous pouvez créer un nouveau style en dupliquant un style existant. Pour "
-#~ "supprimer un style de la liste disponible pour vos utilisateurs, "
-#~ "désactivez ce style dans le menu Administration > Composants."
-
-#~ msgid ""
 #~ "Please note, to edit a style, you should do it from the same browser "
 #~ "window as you use to view a bibliographic list.  This is because, in order "
 #~ "to save processing the style definition file each time you list a "
@@ -1165,12 +1147,23 @@ msgstr "(Champs sensibles à la casse)"
 #~ "style existant, le fichier de style XML  <strong>doit aussi</strong> avoir "
 #~ "les mêmes droits."
 
-#~ msgid "<em>and:</em>"
-#~ msgstr "<em>et :</em>"
+#~ msgid ""
+#~ "If you develop new styles yourself, you are strongly encouraged to contact "
+#~ "the WIKINDX developers at #linkSfWikindx# to make them available to other "
+#~ "users."
+#~ msgstr ""
+#~ "Si vous développez de nouveaux styles, nous vous encourageons vivement à "
+#~ "contacter les développeurs de WIKINDX à #linkSfWikindx# pour les mettre à "
+#~ "la disposition des autres utilisateurs."
 
 #~ msgid ""
-#~ "Bibliographic styles requiring this complexity are few and far between."
-#~ msgstr "Les styles bibliographiques exigeant cette complexité sont rares."
+#~ "You can create a new style based on an existing one by copying the "
+#~ "existing style. To remove a style from the list available to your users, "
+#~ "disable that style in the Admin|Components menu."
+#~ msgstr ""
+#~ "Vous pouvez créer un nouveau style en dupliquant un style existant. Pour "
+#~ "supprimer un style de la liste disponible pour vos utilisateurs, "
+#~ "désactivez ce style dans le menu Administration > Composants."
 
 #~ msgid ""
 #~ "If the value entered for the edition of a resource contains non-numeric "
@@ -1203,3 +1196,10 @@ msgstr "(Champs sensibles à la casse)"
 #~ msgstr ""
 #~ "Il y a clairement un problème ici, notamment à la fin du titre de la "
 #~ "référence. La solution consiste à utiliser la règle 10 ci-dessus :"
+
+#~ msgid "<em>and:</em>"
+#~ msgstr "<em>et :</em>"
+
+#~ msgid ""
+#~ "Bibliographic styles requiring this complexity are few and far between."
+#~ msgstr "Les styles bibliographiques exigeant cette complexité sont rares."

@@ -969,7 +969,7 @@ class adminstyle_MODULE
         );
         $td .= BR . "&nbsp;" . BR;
         $example = [$this->pluginmessages->text('titleAsEntered'),
-            "Wikindx bibliographic management system", ];
+            "WIKINDX bibliographic management system", ];
         $titleCapitalization = base64_decode($this->session->getVar("cite_titleCapitalization"));
         $td .= HTML\p($this->pluginmessages->text('titleCapitalization') . BR .
             FORM\selectedBoxValue(FALSE, "cite_titleCapitalization", $example, $titleCapitalization, 2));
@@ -1308,7 +1308,7 @@ class adminstyle_MODULE
         // Title capitalization, edition, day and month, runningTime and page formats
         $pString .= HTML\tableStart('styleTable borderStyleSolid');
         $pString .= HTML\trStart();
-        $example = [$this->pluginmessages->text('titleAsEntered'), "Wikindx bibliographic management system"];
+        $example = [$this->pluginmessages->text('titleAsEntered'), "WIKINDX bibliographic management system"];
         $input = base64_decode($this->session->getVar("style_titleCapitalization"));
         $td = HTML\strong($this->pluginmessages->text('titleCapitalization')) . BR .
             FORM\selectedBoxValue(FALSE, "style_titleCapitalization", $example, $input, 2);

@@ -1,4 +1,4 @@
-# Wikindx's Translation ressource: Українська.
+# WIKINDX's Translation ressource: Українська.
 # For copyright see the component.json file
 # This file is distributed under the same license as the adminstyle package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
@@ -824,24 +824,6 @@ msgid "(Fields are case-sensitive)"
 msgstr "(Вміст полів обробляється з врахуванням регістру)"
 
 #~ msgid ""
-#~ "If you develop new styles yourself, you are strongly encouraged to contact "
-#~ "the WIKINDX developers at #linkSfWikindx# to make them available to other "
-#~ "users."
-#~ msgstr ""
-#~ "Якщо ви розробляєте власні стилі, дуже радимо вам зв'язатися із "
-#~ "розробниками WIKINDX за допомогою посилань на сторінці #linkSfWikindx#, "
-#~ "щоб зробити результати вашої роботи доступними іншим користувачам."
-
-#~ msgid ""
-#~ "You can create a new style based on an existing one by copying the "
-#~ "existing style. To remove a style from the list available to your users, "
-#~ "disable that style in the Admin|Components menu."
-#~ msgstr ""
-#~ "Ви можете створити стиль на основі наявного копіюванням наявного стилю. "
-#~ "Щоб вилучити стиль зі списку доступних для ваших користувачів стилів, "
-#~ "вимкніть стиль у меню Адміністрування|Компоненти."
-
-#~ msgid ""
 #~ "Please note, to edit a style, you should do it from the same browser "
 #~ "window as you use to view a bibliographic list.  This is because, in order "
 #~ "to save processing the style definition file each time you list a "
@@ -1165,14 +1147,23 @@ msgstr "(Вміст полів обробляється з врахування�
 #~ "редагуванні наявного стилю, файл XML стилю <strong>повинен мати</strong> "
 #~ "такі самі права доступу."
 
-#~ msgid "<em>and:</em>"
-#~ msgstr "<em>і:</em>"
+#~ msgid ""
+#~ "If you develop new styles yourself, you are strongly encouraged to contact "
+#~ "the WIKINDX developers at #linkSfWikindx# to make them available to other "
+#~ "users."
+#~ msgstr ""
+#~ "Якщо ви розробляєте власні стилі, дуже радимо вам зв'язатися із "
+#~ "розробниками WIKINDX за допомогою посилань на сторінці #linkSfWikindx#, "
+#~ "щоб зробити результати вашої роботи доступними іншим користувачам."
 
 #~ msgid ""
-#~ "Bibliographic styles requiring this complexity are few and far between."
+#~ "You can create a new style based on an existing one by copying the "
+#~ "existing style. To remove a style from the list available to your users, "
+#~ "disable that style in the Admin|Components menu."
 #~ msgstr ""
-#~ "Бібліографічні стилі, у яких потрібен такий рівень складності, є "
-#~ "нечисленними і мало поширеними."
+#~ "Ви можете створити стиль на основі наявного копіюванням наявного стилю. "
+#~ "Щоб вилучити стиль зі списку доступних для ваших користувачів стилів, "
+#~ "вимкніть стиль у меню Адміністрування|Компоненти."
 
 #~ msgid ""
 #~ "If the value entered for the edition of a resource contains non-numeric "
@@ -1204,3 +1195,12 @@ msgstr "(Вміст полів обробляється з врахування�
 #~ msgstr ""
 #~ "Очевидно, тут маємо проблему, а саме наприкінці заголовка ресурсу. Усунути "
 #~ "проблему можна застосувавши правило №10, вказане вище:"
+
+#~ msgid "<em>and:</em>"
+#~ msgstr "<em>і:</em>"
+
+#~ msgid ""
+#~ "Bibliographic styles requiring this complexity are few and far between."
+#~ msgstr ""
+#~ "Бібліографічні стилі, у яких потрібен такий рівень складності, є "
+#~ "нечисленними і мало поширеними."

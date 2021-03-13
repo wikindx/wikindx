@@ -198,7 +198,7 @@ class UPDATEDATABASE
      *
      * If $wkxVersion is NULL, the version number used is. $this->targetVersion
      *
-     * @param string $wkxVersion Version number of Wikindx (Default is NULL)
+     * @param string $wkxVersion Version number of WIKINDX (Default is NULL)
      * @param string $pluginPath is the path to the root directory of a plugin. Default is the constant DIRECTORY_SEPARATOR for the core
      */
     public function updateDbSchema($wkxVersion = NULL, $pluginPath = DIRECTORY_SEPARATOR)
@@ -533,7 +533,7 @@ class UPDATEDATABASE
             
             $pString .= "
                 <p>Each step is a partial (with pauses when the execution is too long) or complete update to an internal version.
-                An internal version corresponds to a structural change valid for one or more public versions of Wikindx.
+                An internal version corresponds to a structural change valid for one or more public versions of WIKINDX.
                 A public version can also have many internal versions. The update ends when the last internal version is reached.
                 It is useful to know which internal version you are on if you encounter a bug.<p>
                 
@@ -2537,11 +2537,11 @@ class CONFIG
 /*****
  * START DATABASE CONFIGURATION
  *
- * wikindx supports only MySQL with mysqli PHP driver (WIKINDX_DB_TYPE parameter is deprecated).
+ * WIKINDX supports only MySQL with mysqli PHP driver (WIKINDX_DB_TYPE parameter is deprecated).
  *
- * The database and permissions for accessing it must be created using your RDBMS client. Wikindx
+ * The database and permissions for accessing it must be created using your RDBMS client. WIKINDX
  * will NOT do this for you.  If unsure how to do this, contact your server admin. After you have
- * set up an empty database with the correct permissions (GRANT ALL), the first running of Wikindx
+ * set up an empty database with the correct permissions (GRANT ALL), the first running of WIKINDX
  * will create the necessary database tables.
  *
  * WIKINDX uses caching in the database _cache table for lists of creators, keywords etc.  If you have a large
@@ -2557,7 +2557,7 @@ class CONFIG
  * If your DB server is on a non-standard port (not 3306), then you should set something
  * like localhost:xxxx where 'xxxx' is the port.
  *
- * Wikindx use only the first four parameters of the mysqli class constructor.
+ * WIKINDX use only the first four parameters of the mysqli class constructor.
  * See https://www.php.net/manual/en/mysqli.construct.php
  *
  * Name of the MariaDB/MySQL host server (case-insensitive)
@@ -2611,7 +2611,7 @@ public \$WIKINDX_PATH_AUTO_DETECTION = %%WIKINDX_PATH_AUTO_DETECTION%%;
  *
  * You have to indicate the protocol HTTP / HTTPS and remove the terminal /.
  *
- * e.g. if wikindx's index.php file is in /wikindx/ under the httpd/ (or similar)
+ * e.g. if WIKINDX's index.php file is in /wikindx/ under the httpd/ (or similar)
  * folder on the www.myserver.com, then set the variable to http://www.myserver.com/wikindx
  * Otherwise, leave as "".
  *

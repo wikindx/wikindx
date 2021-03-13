@@ -57,7 +57,7 @@ The **WIKINDX Virtual Research Environment** is brought to you by the following:
 
 ### Packages and libraries
 
-Wikindx includes and uses several free creations. We thank the authors
+WIKINDX includes and uses several free creations. We thank the authors
 for their work:
 
 * [FatCow](https://www.fatcow.com/), Free Icon Set ([CC BY 3.0](https://creativecommons.org/licenses/by/3.0/))

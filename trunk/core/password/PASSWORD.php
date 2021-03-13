@@ -102,7 +102,7 @@ class PASSWORD
         }
         else
         {
-            // superadmin from My Wikindx menu
+            // superadmin from My WIKINDX menu
             if (array_key_exists('usersUsername', $formData))
             {
                 $usersUsername = $formData['usersUsername'];

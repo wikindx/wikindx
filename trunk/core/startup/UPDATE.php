@@ -16,7 +16,7 @@
 namespace UPDATE
 {
     /**
-     * Check if the current Wikindx data (db and files) need an upgrade
+     * Check if the current WIKINDX data (db and files) need an upgrade
      *
      * @param object $dbo An SQL object
      *
@@ -166,7 +166,7 @@ namespace UPDATE
      * in the field regardless of the version.
      *
      * @param object $dbo An SQL object
-     * @param string $ComponentId Id of a component or 'core' for the Wikindx core
+     * @param string $ComponentId Id of a component or 'core' for the WIKINDX core
      *
      * @return float
      */
@@ -196,7 +196,7 @@ namespace UPDATE
      * If $version is NULL, the version number used it 0.0.
      *
      * @param object $dbo An SQL object
-     * @param string $ComponentId Id of a component or 'core' for the Wikindx core
+     * @param string $ComponentId Id of a component or 'core' for the WIKINDX core
      * @param string $version (Default is NULL)
      */
     function setPluginInternalVersion($dbo, $ComponentId, $version = NULL)

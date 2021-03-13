@@ -158,7 +158,7 @@ class CONFIGDBSTRUCTURE
         $this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS[$name]["type"] => $value]);
     }
     /**
-     * Convert a value from Wikindx database format to PHP format
+     * Convert a value from WIKINDX database format to PHP format
      *
      * @param string $configType can be: configVarchar, configInt, configBoolean, configDatetime, or configText
      * @param mixed $value to convert
@@ -183,7 +183,7 @@ class CONFIGDBSTRUCTURE
         return $value;
     }
     /**
-     * Convert a value from PHP format to Wikindx database format
+     * Convert a value from PHP format to WIKINDX database format
      *
      * @param string $configType can be: configVarchar, configInt, configBoolean, configDatetime, or configText
      * @param mixed $value to convert

@@ -42,7 +42,7 @@ v1.4, 2020
 2. Fix CSS/JS includes.
 
 v1.3
-1. Adaptation for Wikindx 5.9.1.
+1. Adaptation for WIKINDX 5.9.1.
 
 v1.2
 1. Plugin now compatible with WIKINDX v5.x

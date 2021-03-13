@@ -4,8 +4,6 @@ date = 2021-01-30T00:08:41+01:00
 weight = 5
 +++
 
-          --o Programming third party plugins in WIKINDX o--
-
 There are two types of plugin, menu plugins and in-line plugins. Menu
 plugins are accessed via the WIKINDX menu system while in-line plugins
 appear in the main body of the WIKINDX.
@@ -15,31 +13,31 @@ To get your plugins working, a few conditions are required:
  * All modules must go in a folder within the `wikindx/components/plugins/`
    directory.
 
- * This module folder must have a main PHP file called index.php, a
-   config.php file and a plugintype.txt file -- you add further files
+ * This module folder must have a main PHP file called `index.php`, a
+   `config.php` file and a `plugintype.txt` file -- you add further files
    as you like.
 
  * If the folder is called 'test', the class name in
    `wikindx/components/plugins/test/index.php` must be called test_MODULE.
 
- * plugintype.txt should have one line which comprises either of the
+ * `plugintype.txt` should have one line which comprises either of the
    case-sensitive words 'menu' or 'inline'.
 
- * index.php and config.php must be writeable by the web server
+ * `index.php` and `config.php` must be writeable by the web server
    user (this allows administrators to manage plugins via the WIKINDX
    interface rather than having to edit the files directly).
 
- * config.php should have the public variable $wikindxVersion.  e.g.  public
-   $wikindxVersion = 8; From WIKINDX 5.8, compatible plugins are required to
+ * `config.php` should have the public variable `$wikindxVersion`.  e.g.  public
+   `$wikindxVersion = 8;` From WIKINDX 5.8, compatible plugins are required to
    explicitly state their compatibility with the constant
-   WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"]. This is a value that matches
+   __WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"]__. This is a value that matches
    an internal core version that could be validate for more than one public version.
-   In the plugin's config.php, set $wikindxVersion to match
-   WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] in order to state compatibility.
+   In the plugin's `config.php`, set `$wikindxVersion` to match
+   __WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"]__ in order to state compatibility.
    Incompatible plugins will not load. They will still be present
    and editable in the _Admin > Components_ interface.
 
-The plugin directory may optionally have a file called description.txt
+The plugin directory may optionally have a file called `description.txt`
 which may be used as a README providing instructions and credits. The
 first line of this file must be the title of the plugin (and is used to
 display available plugins when administering plugins in WIKINDX) but
@@ -50,10 +48,10 @@ change language localization as for other parts of WIKINDX.  In the example
 given below, both the file and the class are called 'testMessages_en'.  The
 '_xx' suffix of a new file and class for another language should follow the
 name of a language folder in `wikindx/components/languages/`. New localization
- files should go into the same plugin folder as the xxx_en file.
+ files should go into the same plugin folder as the `xxx_en` file.
 
 For creating or upgrading the db structure of the objects used by your plugin,
-create a folder "dbschema" (lowercase) in your plugin directory. In "dbschema"
+create a folder `dbschema` (lowercase) in your plugin directory. In `dbschema`
 create one directory for each database driver supported (lowercase) (currently
 mysqli only). In each driver directory, create one directory "full" (lowercase)
 and one directory "update" (lowercase).
@@ -78,42 +76,42 @@ specified in the plugin. These types of plugins are intended for cases
 where the main display table of the WIKINDX is completely dedicated to
 the plugin.
 
-  * The constructor of a menu plugin must appear as:
+* The constructor of a menu plugin must appear as:
 
 ~~~~php
-   public function __construct($menuInit = FALSE)
-   {
-      if($menuInit)
-      {
-         // set $this->menus
-         // set $this->authorize
-         return;
-      }
-      // Do something else
-   }
+public function __construct($menuInit = FALSE)
+{
+    if ($menuInit)
+    {
+        // set $this->menus
+        // set $this->authorize
+        return;
+    }
+    // Do something else
+}
 ~~~~
 
-  * The constructor must set $this->menus. This is a multi-dimensional
-    public array where you define which menu(s) the module should insert
-    itself into, what is the label for the menu item and which method
-    within our class do we run when the menu option is selected.
+* The constructor must set `$this->menus`. This is a multi-dimensional
+  public array where you define which menu(s) the module should insert
+  itself into, what is the label for the menu item and which method
+  within our class do we run when the menu option is selected.
 
-  * The constructor must set the public parameter $this->authorize as
-    either 0 (public readonly access), 1 (login required) or 2 (admin only).
-    This should come from your config.php file (see below).
+* The constructor must set the public parameter `$this->authorize` as
+  either 0 (public readonly access), 1 (login required) or 2 (admin only).
+  This should come from your config.php file (see below).
 
-  * Both $this-Menus and $this->authorize should only be set when
-    $menuInit is TRUE in which case the constructor should return after
-    they have been set without doing anything else ($menuInit is set
-    automatically to TRUE by the MENU class in `wikindx/core/navigation/MENU.php`).
+* Both $this-Menus and `$this->authorize` should only be set when
+  `$menuInit` is TRUE in which case the constructor should return after
+  they have been set without doing anything else (`$menuInit` is set
+  automatically to TRUE by the MENU class in `wikindx/core/navigation/MENU.php`).
 
-You should also have a config.php file (see the example below) which
+You should also have a `config.php` file (see the example below) which
 defines the access level for the plugin and in which menu(s) the plugin
 is displayed. These values can be altered through the WIKINDX _Admin > Components_
 interface and so you must have a public $menus array and a public
-$authorize variable.
+`$authorize` variable.
 
-Unless using the basic GLOBALS::buildOutputString() method, you must
+Unless using the basic `GLOBALS::buildOutputString()` method, you must
 use the templating system that WIKINDX uses and return the template
 string to the calling process. Furthermore, in the interests of
 compatibility and future WIKINDX upgrades, you should use the WIKINDX
@@ -123,7 +121,7 @@ Constructor parameters could be $db and $vars that are the database object (see
 the SQL class in `wikindx/core/libs/SQL.php`) and an array of all input values from
 the web browser form or querystring.
 
-$this->authorize controls the display of the module item in the menu
+`$this->authorize` controls the display of the module item in the menu
 system according to user permissions.
 
 An example of a menu plugin is given below.
@@ -161,18 +159,17 @@ An example of an in-line plugin is given below.
 class test_CONFIG
 {
 	public $menus = array('plugin1');
-/**
-* $authorize
-*
-* 0 (public readonly access)
-* 1 (login required)
-* 2 (admin only)
-*/
+    /**
+    * $authorize
+    *
+    * 0 (public readonly access)
+    * 1 (login required)
+    * 2 (admin only)
+    */
 	public $authorize = 1;
 	public $wikindxVersion = 5.8;
 }
 ~~~~
-
 
 ~~~~php
 <?php
@@ -215,7 +212,6 @@ class testMessages
     }
 }
 ~~~~
-
 
 ~~~~php
 <?php
@@ -339,7 +335,6 @@ class test_MODULE
 	}
 }
 ~~~~
-
 
 ~~~~php
 <?php

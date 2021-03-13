@@ -13,7 +13,7 @@ read the Upgrade chapter for instructions on upgrading.
 
 So we recommend that you regularly update to the latest version from the
 tarball version available in the [SourceForge File](https://sourceforge.net/projects/wikindx/files/) section,
-especially if your wikindx is hosted on the web.
+especially if your WIKINDX is hosted on the web.
 
 If you prefer an installation from a [Version Control Systems](https://en.wikipedia.org/wiki/Version_control) (VCS),
 __we strongly recommend__ that you use one of the __point release__ described
@@ -26,27 +26,27 @@ The __trunk__ branch (for developers and testers) can be broken at any
 
 ## Components compatibility
 
-Wikindx, the core application, and officials components are developed
+WIKINDX, the core application, and officials components are developed
 together: templates (themes), styles (bibliographic styles) and PHP
 plugins. The additional vendor component type contains third-party
 software.
 
-Wikindx comes with __default__ template, __APA__ style and main vendor
+WIKINDX comes with __default__ template, __APA__ style and main vendor
 components pre-installed. No plugins are pre-installed. Translations are
 included in the core or plugins.
 
 All components are available on [SourceForge File](https://sourceforge.net/projects/wikindx/files/) section for a manual
-installation or via the component update system embedded in Wikindx.
+installation or via the component update system embedded in WIKINDX.
 
 Each official vendor component is released with a new version of the
 application and only for the last version. Others components could
-cover many Wikindx versions.
+cover many WIKINDX versions.
 
 For reasons of immaturity of the system of components it is recommended
 to contribute to the official development team so that the components
 are always compatible with the latest version. If you create your own
 components it is not guaranteed that they will work on a later version
-of Wikindx.
+of WIKINDX.
 
 ## Installation
 
@@ -97,11 +97,11 @@ public $WIKINDX_DB_PASSWORD = "wikindx";
 
 8. Go to __Admin > Configure__ menu and set global preferences.
 
-9. Go to __Wikindx > My WIKINDX__ menu and set the Super Administrator preferences.
+9. Go to __WIKINDX > My WIKINDX__ menu and set the Super Administrator preferences.
 
 10. Finally install and enable components from the __Components Manager__  (__Admin > Components__ menu).
 
-You single user install of Wikindx is ready. Have fun!
+You single user install of WIKINDX is ready. Have fun!
 
 
 ## Permissions
@@ -144,7 +144,7 @@ recommended) the owner of the root SVN folder, .svn folders, and all
 files and folders under .svn need to be readable, writable and
 executable (7).
 
-Wikindx create folders with 777 permissions so that it works in all
+WIKINDX create folders with 777 permissions so that it works in all
 cases, notably the installation of the core and components, for managing
 caches and data. You can correct it later if you want the best possible
 security.

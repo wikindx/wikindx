@@ -7,6 +7,8 @@ Focus: bug fixes
 BUG FIXES:
 1. Undefined variable during upgrade.
 2. Version comparison could fail. E.g. strcmp(’5.7.5’, ’5.7.31’).
+3. Sometimes the config.php file is written empty. Replacement
+   of the HEREDOC syntax by a template file config.php.dist. Weird bug. 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

@@ -1597,10 +1597,7 @@ END;
      * Clear missing attachments
      */
     private function upgradeTo32()
-    {
-        // Die if not possible
-        $this->rewriteConfigFile();
-        
+    {        
         // Clear attachments
         $attachment = FACTORY_ATTACHMENT::getInstance();
         $attachment->checkAttachmentRows();
@@ -2547,184 +2544,53 @@ END;
         // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
         $this->checkConfigFile(); // die if not writeable or file does not exist.
         
+        // Config file paths
+        $tf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'config.php.dist']);
+        $cf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'config.php']);
+        $bf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'config.' . date('YmdHis') . '.php']);
+        
+        // Read the template file
+        if (!is_readable($tf))
+        {
+            GLOBALS::addTplVar('content', "Fatal error: could not read the template file $tf (file not readable)");
+            $this->endDisplay();
+        }
+        
+        $newConfig = file_get_contents($tf);
+        
+        // Save the old config file before writing it
+        // Something could go wrong and configuration lost otherwise
+        if (!is_readable($cf))
+        {
+            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf (file not readable)");
+            $this->endDisplay();
+        }
+        
+        $oldConfig = file_get_contents($cf);
+        if ($oldConfig === FALSE)
+        {
+            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf (read error)");
+            $this->endDisplay();
+        }
+        
+        // Add an header to block any direct read of the backup file from the browser
+        // This prevents unauthorized access even if the admin never deletes the file
+        $oldConfig =
+              "<?php" . LF
+            . "header('HTTP/1.1 403 Forbidden');" . LF
+            . "die('Access forbidden.');" . LF
+            . "?>" . LF
+            . $oldConfig;
+        
+        if (file_put_contents($bf, $oldConfig) === FALSE)
+        {
+            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf (write error)");
+            $this->endDisplay();
+        }
+        
+        
         // Load a separate config class that contains original constant names
         $tmpconfig = new CONFIG();
-        
-        $newConfig = <<<END
-<?php
-/**
- * WIKINDX : Bibliographic Management system.
- *
- * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
- *
- * @author The WIKINDX Team
- * @license https://www.isc.org/licenses/ ISC License
- */
-
-/**
- * WIKINDX CONFIGURATION FILE
- *
- * NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
- * NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
- * NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
- *
- * If you make changes, backup the edited file as future upgrades of WIKINDX might overwrite this file - no questions asked!
- *
- * You must follow the syntaxic rules of the PHP programming language.
- */
-
-class CONFIG
-{
-/*****
- * START DATABASE CONFIGURATION
- *
- * WIKINDX supports only MySQL with mysqli PHP driver (WIKINDX_DB_TYPE parameter is deprecated).
- *
- * The database and permissions for accessing it must be created using your RDBMS client. WIKINDX
- * will NOT do this for you.  If unsure how to do this, contact your server admin. After you have
- * set up an empty database with the correct permissions (GRANT ALL), the first running of WIKINDX
- * will create the necessary database tables.
- *
- * WIKINDX uses caching in the database _cache table for lists of creators, keywords etc.  If you have a large
- * database, you may get SQL errors as WIKINDX attempts to write these cache data.  You will need to increase
- * max_allowed_packet in my.cnf and restart the MySQL server.
- *
- */
-
-/*
- * Host on which the MariaDB/MySQL Relational Database management system (RDBMS) is running.
- * Usually localhost if the web server and the DBMS are hosted on the same server.
- *
- * If your DB server is on a non-standard port (not 3306), then you should set something
- * like localhost:xxxx where 'xxxx' is the port.
- *
- * WIKINDX use only the first four parameters of the mysqli class constructor.
- * See https://www.php.net/manual/en/mysqli.construct.php
- *
- * Name of the MariaDB/MySQL host server (case-insensitive)
- *
- * @name WIKINDX_DB_HOST Default is "localhost"
- */
-public \$WIKINDX_DB_HOST = %%WIKINDX_DB_HOST%%;
-
-/**
- * Name of the MariaDB/MySQL database (case-sensitive)
- *
- * @name WIKINDX_DB Default is "wikindx6"
- */
-public \$WIKINDX_DB = %%WIKINDX_DB%%;
-
-/**
- * Username required to connect to and open the database (case-sensitive)
- *
- * @name WIKINDX_DB_USER Default is "wikindx"
- */
-public \$WIKINDX_DB_USER = %%WIKINDX_DB_USER%%;
-
-/**
- * Password of the user required to connect to and open the database (case-sensitive)
- *
- * @name WIKINDX_DB_PASSWORD Default is "wikindx"
- */
-public \$WIKINDX_DB_PASSWORD = %%WIKINDX_DB_PASSWORD%%;
-
-/*
- * END DATABASE CONFIGURATION
- **********************************************************************************/
-
-/*****
- * START PATHS CONFIGURATION
- */
-
-/*
- * The auto-detection of the path installation and the base url is an experimental feature
- * which you can disable by changing this parameter to FALSE.
- *
- * If you deactivate auto-detection you must fill in the option WIKINDX_URL_BASE.
- * If you don't define this option, auto-detection is enabled by default.
- *
- * @name WIKINDX_PATH_AUTO_DETECTION Default is TRUE
- */
-public \$WIKINDX_PATH_AUTO_DETECTION = %%WIKINDX_PATH_AUTO_DETECTION%%;
-
-/*
- * If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
- *
- * You have to indicate the protocol HTTP / HTTPS and remove the terminal /.
- *
- * e.g. if WIKINDX's index.php file is in /wikindx/ under the httpd/ (or similar)
- * folder on the www.myserver.com, then set the variable to http://www.myserver.com/wikindx
- * Otherwise, leave as "".
- *
- * @name WIKINDX_URL_BASE Default is ""
- */
-public \$WIKINDX_URL_BASE = %%WIKINDX_URL_BASE%%;
-
-/*
- * END PATHS CONFIGURATION
- **********************************************************************************/
-
-/*****
- * START PHP MEMORY AND EXECUTION CONFIGURATION
- */
-
-/*
- * WIKINDX usually runs fine with the standard PHP memory limit (memory_limit).
- *
- * If this is FALSE, the value set in php.ini is used (typically 128M),
- * Otherwise the value is a positive integer number of bytes, -1, or a positive string number with a unit.
- *
- * See https://www.php.net/manual/en/ini.core.php#ini.memory-limit
- * See https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
- *
- * With some PHP configurations, however, this is not enough -- a mysterious blank page is often the result.
- * If you are unable to update php.ini's memory_limit yourself,
- * WIKINDX_MEMORY_LIMIT may be set (an integer such as 128 or 256 followed by 'M').
- *
- * @name WIKINDX_MEMORY_LIMIT Default is FALSE
- */
-public \$WIKINDX_MEMORY_LIMIT = %%WIKINDX_MEMORY_LIMIT%%;
-
-/*
- * WIKINDX usually run fine with the PHP standard execution timeouts (max_execution_time).
- *
- * If this is FALSE, the value set in php.ini is used (typically 30 seconds),
- * Otherwise the value is a positive integer number of seconds.
- *
- * See https://www.php.net/manual/en/info.configuration.php#ini.max-execution-time
- *
- * In some cases such as database upgrading of a large database on a slow server, you will need to increase the timeout figure.
- *
- * @name WIKINDX_MAX_EXECUTION_TIMEOUT Default is FALSE
- */
-public \$WIKINDX_MAX_EXECUTION_TIMEOUT = %%WIKINDX_MAX_EXECUTION_TIMEOUT%%;
-
-/*
- * WIKINDX_MAX_WRITECHUNK concerns how many resources are exported and written to file in one go.
- *
- * If this is FALSE, the value is set to 10,000.
- * Otherwise the value is a positive integer number.
- .
- * If your WIKINDX contains several thousands of resources and you wish to export them all (e.g. to BibTeX or Endnote),
- * then you may run into memory problems which will manifest as either
- * a blank page when you attempt to export or an error report (if you have error reporting turned on).
- *
- * WIKINDX_MAX_WRITECHUNK breaks down the SQL querying of resources and subsequent writing of resources
- * to file into manageable chunks with the LIMIT clause.
- *
- * As a rough guide, with a WIKINDX_MEMORY_LIMIT of 64MB, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
- * This can be a tricky figure to set as setting the figure too low increases SQL and PHP execution times significantly.
- *
- * @name WIKINDX_MAX_WRITECHUNK Default is FALSE
- */
-public \$WIKINDX_MAX_WRITECHUNK = %%WIKINDX_MAX_WRITECHUNK%%;
-
-/*
- * END PHP MEMORY AND EXECUTION CONFIGURATION
- **********************************************************************************/
-}
-
-END;
 
         // Current values are inserted in the config file by substitution of %% quoted strings
         $newConfig = str_replace('%%WIKINDX_DB_HOST%%', '"' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_HOST) . '"', $newConfig);
@@ -2775,40 +2641,6 @@ END;
         else
         {
             $newConfig = str_replace('%%WIKINDX_MAX_WRITECHUNK%%', 'FALSE', $newConfig);
-        }
-        
-        // Config file paths
-        $cf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'config.php']);
-        $bf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'config.' . date('YmdHis') . '.php']);
-        
-        // Save the old config file before writing it
-        // Something could go wrong and configuration lost otherwise
-        if (!is_readable($cf))
-        {
-            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf (file not readable)");
-            $this->endDisplay();
-        }
-        
-        $oldConfig = file_get_contents($cf);
-        if ($oldConfig === FALSE)
-        {
-            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf (read error)");
-            $this->endDisplay();
-        }
-        
-        // Add an header to block any direct read of the backup file from the browser
-        // This prevents unauthorized access even if the admin never deletes the file
-        $oldConfig =
-              "<?php" . LF
-            . "header('HTTP/1.1 403 Forbidden');" . LF
-            . "die('Access forbidden.');" . LF
-            . "?>" . LF
-            . $oldConfig;
-        
-        if (file_put_contents($bf, $oldConfig) === FALSE)
-        {
-            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf (write error)");
-            $this->endDisplay();
         }
         
         if (!is_writable($cf))

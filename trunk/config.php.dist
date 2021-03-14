@@ -52,28 +52,28 @@ class CONFIG
  *
  * @name WIKINDX_DB_HOST Default is "localhost"
  */
-public $WIKINDX_DB_HOST = "localhost";
+public $WIKINDX_DB_HOST = %%WIKINDX_DB_HOST%%;
 
 /**
  * Name of the MariaDB/MySQL database (case-sensitive)
  *
  * @name WIKINDX_DB Default is "wikindx6"
  */
-public $WIKINDX_DB = "wikindx6";
+public $WIKINDX_DB = %%WIKINDX_DB%%;
 
 /**
  * Username required to connect to and open the database (case-sensitive)
  *
  * @name WIKINDX_DB_USER Default is "wikindx"
  */
-public $WIKINDX_DB_USER = "wikindx";
+public $WIKINDX_DB_USER = %%WIKINDX_DB_USER%%;
 
 /**
  * Password of the user required to connect to and open the database (case-sensitive)
  *
  * @name WIKINDX_DB_PASSWORD Default is "wikindx"
  */
-public $WIKINDX_DB_PASSWORD = "wikindx";
+public $WIKINDX_DB_PASSWORD = %%WIKINDX_DB_PASSWORD%%;
 
 /*
  * END DATABASE CONFIGURATION
@@ -92,7 +92,7 @@ public $WIKINDX_DB_PASSWORD = "wikindx";
  *
  * @name WIKINDX_PATH_AUTO_DETECTION Default is TRUE
  */
-public $WIKINDX_PATH_AUTO_DETECTION = TRUE;
+public $WIKINDX_PATH_AUTO_DETECTION = %%WIKINDX_PATH_AUTO_DETECTION%%;
 
 /*
  * If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
@@ -105,7 +105,7 @@ public $WIKINDX_PATH_AUTO_DETECTION = TRUE;
  *
  * @name WIKINDX_URL_BASE Default is ""
  */
-public $WIKINDX_URL_BASE = "";
+public $WIKINDX_URL_BASE = %%WIKINDX_URL_BASE%%;
 
 /*
  * END PATHS CONFIGURATION
@@ -130,7 +130,7 @@ public $WIKINDX_URL_BASE = "";
  *
  * @name WIKINDX_MEMORY_LIMIT Default is FALSE
  */
-public $WIKINDX_MEMORY_LIMIT = FALSE;
+public $WIKINDX_MEMORY_LIMIT = %%WIKINDX_MEMORY_LIMIT%%;
 
 /*
  * WIKINDX usually run fine with the PHP standard execution timeouts (max_execution_time).
@@ -144,7 +144,7 @@ public $WIKINDX_MEMORY_LIMIT = FALSE;
  *
  * @name WIKINDX_MAX_EXECUTION_TIMEOUT Default is FALSE
  */
-public $WIKINDX_MAX_EXECUTION_TIMEOUT = FALSE;
+public $WIKINDX_MAX_EXECUTION_TIMEOUT = %%WIKINDX_MAX_EXECUTION_TIMEOUT%%;
 
 /*
  * WIKINDX_MAX_WRITECHUNK concerns how many resources are exported and written to file in one go.
@@ -164,7 +164,7 @@ public $WIKINDX_MAX_EXECUTION_TIMEOUT = FALSE;
  *
  * @name WIKINDX_MAX_WRITECHUNK Default is FALSE
  */
-public $WIKINDX_MAX_WRITECHUNK = FALSE;
+public $WIKINDX_MAX_WRITECHUNK = %%WIKINDX_MAX_WRITECHUNK%%;
 
 /*
  * END PHP MEMORY AND EXECUTION CONFIGURATION

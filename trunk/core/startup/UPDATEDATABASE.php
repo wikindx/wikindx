@@ -169,7 +169,48 @@ class UPDATEDATABASE
         }
         
         // If the current engine version is greater than or equal to the minimum required
-        return (strcmp($EngineVersion, $VersionMin) >= 0);
+        $aEngineVersion = explode(".", $EngineVersion);
+        $aVersionMin = explode(".", $VersionMin);
+        if (
+            array_key_exists(0, $aEngineVersion)
+            && array_key_exists(0, $aVersionMin)
+            && intval($aEngineVersion[0]) >= intval($aVersionMin[0])
+        ){
+            if (
+                array_key_exists(1, $aEngineVersion)
+                && array_key_exists(1, $aVersionMin)
+                && intval($aEngineVersion[1]) >= intval($aVersionMin[1])
+            ){
+                if (
+                    array_key_exists(2, $aEngineVersion)
+                    && array_key_exists(2, $aVersionMin)
+                    && intval($aEngineVersion[2]) >= intval($aVersionMin[2])
+                ){
+                    return TRUE;
+                }
+                else
+                {
+                    if (!array_key_exists(2, $aVersionMin))
+                        return TRUE;
+                    else
+                        return FALSE;
+                }
+            }
+            else
+            {
+                if (!array_key_exists(1, $aVersionMin))
+                    return TRUE;
+                else
+                    return FALSE;
+            }
+        }
+        else
+        {
+            if (!array_key_exists(0, $aVersionMin))
+                return TRUE;
+            else
+                return FALSE;
+        }
     }
     
     /**

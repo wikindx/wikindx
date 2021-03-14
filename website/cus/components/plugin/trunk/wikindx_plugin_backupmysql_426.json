@@ -1,0 +1,34 @@
+{
+    "component_version": "426",
+    "component_sha256": "842b915c187be72c3e57e656e15789d1bb2f002658e463c1dfb2d5ff7ae67210",
+    "component_licence": "ISC License",
+    "component_name": "MySQL Backup",
+    "component_description": "MySQL backup database tools. This tool is limited by the maximum execution time of a web page of your hosting service. It can not replace an appropriate backup tool for large databases like mysqldump. This plugin can be a security vulnerability for a public site. Use with caution.",
+    "component_id": "backupmysql",
+    "component_builtin": "false",
+    "component_type": "plugin",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2013, 2016-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2021",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_backupmysql_426.zip",
+            "package_sha256": "6ca6b878378a128cfe71a83364817514848ba9fafa289c3532131f7dcbdd3c99",
+            "package_size": 20389
+        }
+    ]
+}

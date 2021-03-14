@@ -1,0 +1,40 @@
+{
+    "component_sha256": "2ab84188bfb532926e04745696af12e110ef170161c37d3ea05396dc43c44cc3",
+    "component_version": "426",
+    "component_licence": "MIT License",
+    "component_website": "https://jquery.com/",
+    "component_name": "jQuery JS library",
+    "component_description": "jQuery is a fast, small, and feature-rich JavaScript library. It makes things like HTML document traversal and manipulation, event handling, animation, and Ajax much simpler with an easy-to-use API that works across a multitude of browsers. With a combination of versatility and extensibility, jQuery has changed the way that millions of people write JavaScript.",
+    "component_id": "jquery",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_type": "vendor",
+    "component_authors": [
+        {
+            "author_name": "JS Foundation and other contributors",
+            "author_role": "Developers",
+            "author_copyright": "2006-2021"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Packager",
+            "author_copyright": "2017-2016, 2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2017-2021",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/trunk/wikindx_vendor_jquery_426.zip",
+            "package_sha256": "36d5e12db144f052cc06386d6f996c7161933b4f9d06bd71b688f6a8c7956038",
+            "package_size": 31717
+        }
+    ]
+}

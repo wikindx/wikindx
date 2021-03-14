@@ -1,0 +1,34 @@
+{
+    "component_version": "426",
+    "component_sha256": "93137e51f1fe971911310818f9caaca0c65d4c93a0a3afc78fdb9244603900af",
+    "component_name": "Admin Styles",
+    "component_description": "Create, edit and share with WIKINDX users your bibliographic and citation styles.",
+    "component_licence": "ISC License",
+    "component_id": "adminstyle",
+    "component_builtin": "false",
+    "component_type": "plugin",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2013-2014, 2016-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2021",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_adminstyle_426.zip",
+            "package_sha256": "7093002dd9475c383d67f80ecca3ca89c2513bdae9d333b77dae43650c81ce65",
+            "package_size": 110266
+        }
+    ]
+}

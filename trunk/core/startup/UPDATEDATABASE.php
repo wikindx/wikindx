@@ -2618,7 +2618,7 @@ END;
         }
         elseif (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && is_int($tmpconfig->WIKINDX_MEMORY_LIMIT))
         {
-            $newConfig = str_replace('%%WIKINDX_MEMORY_LIMIT%%', strval($tmpconfig->WIKINDX_MEMORY_LIMIT, $newConfig));
+            $newConfig = str_replace('%%WIKINDX_MEMORY_LIMIT%%', strval($tmpconfig->WIKINDX_MEMORY_LIMIT), $newConfig);
         }
         else
         {
@@ -2627,7 +2627,7 @@ END;
         
         if (property_exists($tmpconfig, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && is_int($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT))
         {
-            $newConfig = str_replace('%%WIKINDX_MAX_EXECUTION_TIMEOUT%%', strval($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT, $newConfig));
+            $newConfig = str_replace('%%WIKINDX_MAX_EXECUTION_TIMEOUT%%', strval($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT), $newConfig);
         }
         else
         {
@@ -2636,7 +2636,7 @@ END;
         
         if (property_exists($tmpconfig, 'WIKINDX_MAX_WRITECHUNK') && is_int($tmpconfig->WIKINDX_MAX_WRITECHUNK))
         {
-            $newConfig = str_replace('%%WIKINDX_MAX_WRITECHUNK%%', strval($tmpconfig->WIKINDX_MAX_WRITECHUNK, $newConfig));
+            $newConfig = str_replace('%%WIKINDX_MAX_WRITECHUNK%%', strval($tmpconfig->WIKINDX_MAX_WRITECHUNK), $newConfig);
         }
         else
         {

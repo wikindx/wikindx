@@ -57,8 +57,8 @@ class UPDATEDATABASE
             $this->startInstallDisplay();
             
             $errorMessage = "
-            	WIKINDX requires " . $EngineName . " " . $VersionMin . ".
-            	Your version is " . $EngineVersionRaw . ".
+            	WIKINDX requires MySQL " . WIKINDX_MYSQL_VERSION_MIN . " or MariaDB " . WIKINDX_MARIADB_VERSION_MIN . " minimum.
+            	Your version is " . $this->db->queryFetchFirstField("SELECT version() AS EngineVersion;") . ".
             	Please upgrade your db engine first.
             ";
             GLOBALS::addTplVar('content', \HTML\p($errorMessage, "error", "center"));

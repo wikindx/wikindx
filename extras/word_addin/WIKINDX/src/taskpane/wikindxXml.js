@@ -62,6 +62,7 @@ export function finalizeGetCitations(wikindxURL, ids) {
   searchURL = wikindxURL 
     + "office.php" + '?method=getCiteCCs' 
     + '&style=' + encodeURI(styleSelectBox.value) 
+    + '&source=' + encodeURI('Word') 
     + '&ids=' + encodeURI(ids);
   doXml();
 }

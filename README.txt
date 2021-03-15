@@ -129,10 +129,10 @@ Repository layout
 
 Release History (Active repository)
 
- Version    Release Date   Revision
- ---------  ------------   --------
+ Version    Release Date   Revision Note
+ ---------  ------------   -------- --------------
   6.4.3      2021-03-14        1473
-  6.4.2      2021-03-13        1465
+  6.4.2      2021-03-13        1465 Broken upgrade
   6.4.1      2021-01-29        1251
   6.4.0      2020-12-21        1115
   6.3.10     2020-08-30         632

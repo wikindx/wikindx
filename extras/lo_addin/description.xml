@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<description
+ xmlns="http://openoffice.org/extensions/description/2006"
+ xmlns:dep="http://openoffice.org/extensions/description/2006"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<identifier value="com.wikindx.libreoffice.extension"/>
+	
+	<version value="0.0.1"/>
+	
+	<platform value="all" />
+	
+	<!-- <dependencies>
+	<OpenOffice.org-minimal-version value="7.0" dep:name="OpenOffice.org 7.0"/>
+	</dependencies> -->
+	
+	<display-name>
+		<name lang="en">Wikindx</name>
+	</display-name>
+	
+	<publisher>
+		<name xlink:href="https://wikindx.sourceforge.io/" lang="en">Wikindx Team</name>
+	</publisher>
+	
+	<icon>
+		<default xlink:href="icons/wikindx-32.png" />
+		<high-contrast xlink:href="icons/wikindx-32.png" />
+	</icon>
+	
+	<extension-description>
+		<src xlink:href="description/desc_en.txt" lang="en" />
+	</extension-description>
+
+	<registration>
+		<simple-license accept-by="admin" suppress-on-update="true" suppress-if-required="true">
+			<license-text xlink:href="description/license.txt" lang="en" />
+		</simple-license>
+	</registration>
+</description>

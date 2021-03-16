@@ -4,6 +4,8 @@ https://wiki.documentfoundation.org/Development/Extension_Development
 
 https://wiki.documentfoundation.org/Macros/Python_Design_Guide/fr
 
+https://github.com/kelsa-pi/unodit
+
 Debugging on socket
 
 https://wiki.documentfoundation.org/Development/Extension_Development/Python_Extensions_Development
@@ -20,3 +22,5 @@ https://wiki.openoffice.org/wiki/Documentation/DevGuide/Extensions/Checklist_for
 Code sample
 
 http://christopher5106.github.io/office/2015/12/06/openoffice-libreoffice-automate-your-office-tasks-with-python-macros.html
+
+https://git.libreoffice.org/sdk-examples/+/HEAD/

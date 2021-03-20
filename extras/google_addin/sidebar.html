@@ -430,8 +430,10 @@
  * Library functions
  */
 /** Insert stuff */
-function insertReference() {
-  google.script.run
+async function insertReference() {
+  document.getElementById("wikindx-search-completed").style.display = "none";
+  document.getElementById("wikindx-search-working").style.display = "block"; 
+  await google.script.run
     .withSuccessHandler(insertReferenceResult)
     .insertReference(
       document.getElementById("wikindx-url").value,
@@ -440,13 +442,17 @@ function insertReference() {
     );
 }
 function insertReferenceResult(result) {
+  document.getElementById("wikindx-search-completed").style.display = "block";
+  document.getElementById("wikindx-search-working").style.display = "none"; 
   if(!result.xmlResponse) {
     displayError(result.message);
     return;
   }
 }
-function insertCitation() {
-  google.script.run
+async function insertCitation() {
+  document.getElementById("wikindx-search-completed").style.display = "none";
+  document.getElementById("wikindx-search-working").style.display = "block"; 
+  await google.script.run
     .withSuccessHandler(insertCitationResult)
     .insertCitation(
       document.getElementById("wikindx-url").value,
@@ -455,6 +461,8 @@ function insertCitation() {
     );
 }
 function insertCitationResult(result) {
+  document.getElementById("wikindx-search-completed").style.display = "block";
+  document.getElementById("wikindx-search-working").style.display = "none"; 
   if(!result.xmlResponse) {
     displayError(result.message);
     return;
@@ -811,7 +819,6 @@ function displayCitationResult(result) {
     }
   }
   function displayInit() {
-
   document.getElementById("wikindx-about").style.display = "none";
   document.getElementById("wikindx-display-about").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
   if (document.getElementById("wikindx-action").value == 'references') {
@@ -837,18 +844,1062 @@ function finalizeDisplayResult(result) {
   document.getElementById("wikindx-finalize").style.display = "block";
 }
 async function finalizeRun() {
-//  document.getElementById("wikindx-finalize-working").style.display = "block";
-  document.getElementById("wikindx-finalize-completed").style.display = "none";
+  document.getElementById("wikindx-search-completed").style.display = "none";
+  document.getElementById("wikindx-search-working").style.display = "block"; 
   var params = document.getElementById("wikindx-finalize-order").value;
   var style = document.getElementById("wikindx-finalize-styleSelectBox").value;
   await google.script.run
     .withSuccessHandler(finalizeRunResult)
     .finalizeRun(params, style);
-
 }
 function finalizeRunResult(result) {
   document.getElementById("wikindx-search-working").style.display = "none";
-//  document.getElementById("wikindx-search-completed").style.display = "block";
+  document.getElementById("wikindx-search-completed").style.display = "block";
+console.log(result.misc);
+  for (var i = 0; i < result.debug.length; i++) {
+    console.table(result.debug[i]);
+  }
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+}
+
+/** HTML elements visibility functions */
+  var visibleElements = [];
+  function hideVisible(idArray) {
+    // store what is currently visible then hide
+    visibleElements = []; // Empty out storage . . .
+    for (var i = 0; i < idArray.length; i++) {
+      if (document.getElementById(idArray[i]).style.display != "none") {
+        visibleElements.push(idArray[i]);
+        document.getElementById(idArray[i]).style.display = "none";
+      }
+    }
+  }
+  function retrieveVisible() {
+    // Retrieve what was visible and show again
+    for (var i = 0; i < visibleElements.length; i++) {
+      document.getElementById(visibleElements[i]).style.display = "block";
+    }
+  }
+  function reset() {
+    document.getElementById("wikindx-display-results").style.display = "none";
+    document.getElementById("wikindx-messages").style.display = "none";
+    document.getElementById("wikindx-search-working").style.display = "none"; 
+    document.getElementById("wikindx-search-completed").style.display = "none"; 
+  }
+  function endPrintCitation() {
+    document.getElementById("wikindx-messages").style.display = "none";
+    document.getElementById("wikindx-display-ref").style.display = "none";
+    document.getElementById("wikindx-insert-refSection").style.display = "none";
+    document.getElementById("wikindx-refSelectBox").style.display = "none";
+    document.getElementById("wikindx-display-cite").style.display = "block";
+    document.getElementById("wikindx-insert-citeSection").style.display = "block";
+    document.getElementById("wikindx-display-results").style.display = "block";
+    document.getElementById("wikindx-citeSelectBox").style.display = "block";
+  }
+  function endPrintReference() {
+    document.getElementById("wikindx-messages").style.display = "none";
+    document.getElementById("wikindx-display-cite").style.display = "none";
+    document.getElementById("wikindx-insert-citeSection").style.display = "none";
+    document.getElementById("wikindx-citeSelectBox").style.display = "none";
+    document.getElementById("wikindx-display-ref").style.display = "block";
+    document.getElementById("wikindx-insert-refSection").style.display = "block";
+    document.getElementById("wikindx-display-results").style.display = "block";
+    document.getElementById("wikindx-refSelectBox").style.display = "block";
+  }
+  function displayReferencePane() {
+    hideVisible(["wikindx-messages", "wikindx-display-results", "wikindx-citation-order"]);
+    document.getElementById("wikindx-search-completed").style.display = "none";
+    document.getElementById("wikindx-url-management").style.display = "none";
+    document.getElementById("wikindx-action-title-citations").style.display = "none";
+    document.getElementById("wikindx-action-title-finalize").style.display = "none";
+    document.getElementById("wikindx-finalize").style.display = "none";
+    document.getElementById("wikindx-search-completed").style.display = "none";
+    document.getElementById("wikindx-search-working").style.display = "none";
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-display-finalize-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-action-title-references").style.display = "block";
+    document.getElementById("wikindx-reference-order").style.display = "block";
+    document.getElementById("wikindx-search-parameters").style.display = "block";
+  }
+  function displayCitationPane() {
+    hideVisible(["wikindx-messages", "wikindx-display-results", "wikindx-reference-order"]);
+    document.getElementById("wikindx-search-completed").style.display = "none";
+    document.getElementById("wikindx-url-management").style.display = "none";
+    document.getElementById("wikindx-action-title-references").style.display = "none";
+    document.getElementById("wikindx-action-title-finalize").style.display = "none";
+    document.getElementById("wikindx-finalize").style.display = "none";
+    document.getElementById("wikindx-search-completed").style.display = "none";
+    document.getElementById("wikindx-search-working").style.display = "none"; 
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-references-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-display-finalize-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-action-title-citations").style.display = "block";
+    document.getElementById("wikindx-citation-order").style.display = "block";
+    document.getElementById("wikindx-search-parameters").style.display = "block";
+  }
+  function displayFinalizePane() {
+    hideVisible(["wikindx-messages", "wikindx-display-results", "wikindx-url-management", "wikindx-search-parameters"]);
+    document.getElementById("wikindx-finalize-completed").style.display = "none";
+    document.getElementById("wikindx-action-title-references").style.display = "none";
+    document.getElementById("wikindx-action-title-citations").style.display = "none";
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-display-references-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-action-title-finalize").style.display = "block";
+  }
+// Display ERROR messages
+  function displayError(error) {
+    document.getElementById("wikindx-display-results").style.display = "none";
+    document.getElementById("wikindx-finalize").style.display = "none";
+    document.getElementById("wikindx-success").style.display = "none";
+    document.getElementById("wikindx-finalize-working").style.display = "none";
+    document.getElementById("wikindx-search-working").style.display = "none";
+    document.getElementById("wikindx-error").innerHTML = error;
+    document.getElementById("wikindx-error").style.display = "block";
+    document.getElementById("wikindx-messages").style.display = "block";
+}
+// Display SUCCESS messages
+function displaySuccess(success) {
+  document.getElementById("wikindx-display-results").style.display = "none";
+  document.getElementById("wikindx-finalize").style.display = "none";
+  document.getElementById("wikindx-error").style.display = "none";
+  document.getElementById("wikindx-success").innerHTML = success;
+  document.getElementById("wikindx-success").style.display = "block";
+  document.getElementById("wikindx-messages").style.display = "block";
+}
+
+/** Help/About display stuff */
+function displayReferencesHelp() {
+  // Show Help
+  if (document.getElementById("wikindx-references-help").style.display == "none") {
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-display-finalize-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-references-help").style.display = "block";
+    document.getElementById("wikindx-display-references-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb.png";
+  } else {
+    // Hide Help
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-display-references-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+  }
+}
+function wikindxDisplayCitationsHelp() {
+  // Show Help
+  if (document.getElementById("wikindx-citations-help").style.display == "none") {
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-references-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-display-finalize-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-citations-help").style.display = "block";
+    document.getElementById("wikindx-display-citations-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb.png";
+  } else {
+    // Hide Help
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+  }
+}
+function wikindxDisplayFinalizeHelp() {
+  // Show Help
+  if (document.getElementById("wikindx-finalize-help").style.display == "none") {
+    document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-references-help").style.display = "none";
+    document.getElementById("wikindx-display-citations-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-display-references-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+    document.getElementById("wikindx-finalize-help").style.display = "block";
+    document.getElementById("wikindx-display-finalize-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb.png";
+  } else {
+    // Hide Help
+    document.getElementById("wikindx-finalize-help").style.display = "none";
+    document.getElementById("wikindx-display-finalize-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+  }
+}
+function wikindxDisplayAbout() {
+  // Show About
+    if (document.getElementById("wikindx-about").style.display == "none") {
+      document.getElementById("wikindx-about").style.display = "block";
+      hideVisible(["wikindx-url-management", "wikindx-messages", "wikindx-display-results", "wikindx-search-parameters", 
+        "wikindx-finalize", "wikindx-action-title-references", "wikindx-action-title-citations", "wikindx-action-title-finalize"]);
+      document.getElementById("wikindx-display-about").src = "https://www.wikindx.com/wikindx-addins/lightbulb.png";
+    } else {
+      // Check if we need to display inital WIKINDX URL entry
+      if (!wikindxLocalStorage) {
+        document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Add WIKINDX';
+        document.getElementById("wikindx-close-url-entry").style.display = "none";
+        urlManagementDisplay("wikindx-url-entry");
+      }
+  // Hide About and turn back on what was previously visible
+      document.getElementById("wikindx-about").style.display = "none";
+      document.getElementById("wikindx-display-about").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+      retrieveVisible();
+    }
+ }
+    </script>
+  </body>
+</html><!-- Icons from https://www.fatcow.com/free-icons -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://www.wikindx.com/wikindx-addins/taskpane.css">
+  </head>
+  <body>
+    <section id="sideload-msg" class="ms-welcome__main" style="display:none">
+        <h2 class="ms-font-xl"></h2>Please sideload your add-in to see app body</h2>
+    </section>
+
+    <table class="wikindx-table"><tr><td class="wikindx-td">
+    <a href="https://wikindx.sourceforge.io/" target="_new"><img width="112" height="27" src="https://www.wikindx.com/wikindx-addins/wikindx-filled.png" alt="WIKINDX" title="WIKINDX" /></a>
+    <input type="image" class="bulb" id="wikindx-display-about" width="16" height="16" src="https://www.wikindx.com/wikindx-addins/lightbulb_off.png" alt="About WIKINDX" title="About WIKINDX"/>
+    </td>
+        <td class="wikindx-td">
+        <select class="select" id="wikindx-action" style="display:none">
+            <option value="references" selected>Search references</option>
+            <option value="citations">Search citations</option>
+            <option value="finalize">Finalize document</option>
+        </select>
+        </td>
+    </tr></table>
+    <br/>
+
+ <!--   <main id="app-body" class="ms-welcome__main" style="display: none;"> -->
+
+    <!-- ABOUT section START -->
+    <section id="wikindx-about" style="display:none">
+      <table class="wikindx-table"><tr><td class="wikindx-td">
+        <strong>Welcome to the WIKINDX citation tool.</strong><br/>
+        v.1.0 (&copy;Mark Grimshaw-Aagaard 2021)
+        <p>If you have a WIKINDX, you can import formatted in-text citations and references into your document. The WIKINDX 
+        must be accessed through SSL (i.e. the URL starts with 'https://') and the WIKINDX admin must have enabled read-only 
+        mode. If your WIKINDX is normally accessed through a browser as, for example, 'www.mywikindx.com', then the URL here should be 
+        'https://www.mywikindx.com'.</p>
+        <p>In this initial version of the tool, only citation format styles available on the WIKINDX that are neither endnote nor footnote type 
+        can be used (i.e. styles such as APA, Harvard, MLA) – this might change in the future.</p>
+        <p>In the search field, you can use combinations of: <em>AND</em>, <em>OR</em>, <em>NOT</em>, and <em>''exact phrase''</em> as 
+        well as the wildcards <em>?</em> and <em>*</em></p>
+        <p>A search on references is conducted on the following fields:
+        <ul class="wikindx-list">
+            <li>Author names</li>
+            <li>Title</li>
+            <li>Abstract and notes</li>
+            <li>Keywords</li>
+            <li>Quotations and paraphrases</li>
+            <li>Custom fields</li>
+        </ul>
+        </p>
+        <p>A search on citations is conducted on the following fields:
+            <ul class="wikindx-list">
+                <li>Keywords</li>
+                <li>Quotations and paraphrases</li>
+            </ul>
+            </p>
+        <p>
+        Once you have inserted your references and citations, you can then finalize your document. This produces in-text citations and 
+        the reference list formatted to the chosen citation format style. If you have inserted citations and references from more than 
+        one WIKINDX, then the list of available citation format styles will comprise those that are common to the wikindices. If no 
+        styles in common are found, then the style selection box will comprise those from the WIKINDX with the most references in the document, and 
+        references from another WIKINDX will use the default citation style from that WIKINDX. 
+        </p>
+        <section id="wikindx-about-begin">
+        <p>To get started, close this help by clicking on the lightbulb icon above and enter the URL and name of the WIKINDX you 
+            wish to search.</p>
+        </section>
+      </td></tr></table>
+    </section>
+    <!-- ABOUT section END -->
+
+    <!-- URL MANAGEMENT section START -->
+    <section id="wikindx-url-management" style="display:none">
+        <strong>Manage wikindices: <span id="wikindx-url-management-subtitle"></span></strong>
+        <table class="wikindx-table"><tr><td class="wikindx-td">
+        <!-- URL ENTRY section START -->
+        <section id="wikindx-url-entry">
+            WIKINDX URL (https://...):
+            <input class="inputText" type="text" id="wikindx-new-url" placeholder="Enter new WIKINDX URL here (https://...)"></input>
+            <br/><br/>
+            WIKINDX name:
+            <input class="inputText" type="text" id="wikindx-new-url-name" placeholder="Enter new WIKINDX name here"></input>
+            <button class="button" id="wikindx-url-store" alt="Store URL" title="Store URL">Store URL</button>
+            <button class="button" id="wikindx-close-url-entry" alt="Close" title="Close">Close</button>
+        </section>
+        <!-- URL ENTRY section END -->
+
+        <!-- URL EDIT section START -->
+        <section id="wikindx-url-edit">
+            WIKINDX URL (https://...):
+            <input class="inputText" type="text" id="wikindx-edit-url" placeholder="Enter new WIKINDX URL here (https://...)"></input>
+            <br/><br/>
+            WIKINDX name:
+            <input class="inputText" type="text" id="wikindx-edit-name" placeholder="Enter new WIKINDX name here"></input>
+            <button class="button" id="wikindx-url-edit2" alt="Edit URL" title="Edit URL">Edit URL</button>
+            <button class="button" id="wikindx-close-url-edit" alt="Close" title="Close">Close</button>
+        </section>
+        <!-- URL EDIT section END -->
+
+        <!-- PREFERRED URL section START -->
+        <section id="wikindx-urls-preferred">
+        </section>
+        <!-- PREFERRED URL section END -->
+
+        <!-- URL DELETE section START -->
+        <section id="wikindx-urls-remove">
+        </section>
+        <!-- URL DELETE section END -->
+    </td></tr></table>
+    </section>
+    <!-- URL MANAGEMENT section END -->
+
+    <!-- SEARCH PARAMETERS section START -->
+    <section id="wikindx-search-parameters" style="display:none">
+        <!-- ACTION TITLE section START -->
+        <section id="wikindx-action-title-references">
+            <strong>Search and insert references</strong>&nbsp;
+            <input type="image" class="bulb" id="wikindx-display-references-help" width="16" height="16" src="https://www.wikindx.com/wikindx-addins/lightbulb_off.png" alt="Help" title="Help"/>
+        </section>
+        <section id="wikindx-action-title-citations" style="display:none">
+            <strong>Search and insert citations</strong>&nbsp;
+            <input type="image" class="bulb" id="wikindx-display-citations-help" width="16" height="16" src="https://www.wikindx.com/wikindx-addins/lightbulb_off.png" alt="Help" title="Help"/>
+        </section>
+        <!-- ACTION TITLE section END -->
+        <section id="wikindx-references-help" style="display:none">
+            <table class="wikindx-table"><tr>
+            <td class="wikindx-td">
+            You can import references from one or more WIKINDICES by searching on text then selecting the desired reference from the resulting 
+            select box.
+            <p>In the search field, you can use combinations of: AND, OR, NOT and "exact phrase" as well as the wildcards '?' and '*'.</p>
+            <p>A search on references is conducted on the following fields:
+                <ul class="wikindx-list">
+                    <li>Author names</li>
+                    <li>Title</li>
+                    <li>Abstract and notes</li>
+                    <li>Keywords</li>
+                    <li>Quotations and paraphrases</li>
+                    <li>Custom fields</li>
+                </ul>
+            </p>
+            <p>Wait for the search to finish before clicking on the button again.</p>
+            <p>Once you have chosen the reference you wish to insert, position the cursor in the document where you wish to place the in-text 
+            reference, then click on 'Insert Reference'. Inserted references only show as in-text references – a bibliography will be produced 
+            when you finalize the document. If you insert in-text references in different citation styles, when you finalize, these 
+            references will be changed to the chosen finalization style.</p>
+            <p>The reference is inserted in a 'content control' box in the document. Clicking on the box will display the title of the reference – 
+            the display length is limited by Word (as it is in the select box of references found after searching). While you can edit and even delete 
+            the text within such a box, when you finalize the document, the original reference from the WIKINDX will be restored.</p>
+            </td>
+            </tr></table>
+        </section>
+        <section id="wikindx-citations-help" style="display:none">
+            <table class="wikindx-table"><tr>
+            <td class="wikindx-td">
+            You can import citations (quotations or paraphrases) from one or more WIKINDICES by searching on text then selecting the 
+            desired citation from the resulting select box.
+            <p>In the search field, you can use combinations of: AND, OR, NOT and "exact phrase" as well as the wildcards '?' and '*'.</p>
+            <p>A search on citations is conducted on the following fields:
+                <ul class="wikindx-list">
+                    <li>Keywords</li>
+                    <li>Quotations and paraphrases</li>
+                </ul>
+                </p>
+            <p>
+            <p>Wait for the search to finish before clicking on the button again.</p>
+            <p>Once you have chosen the citation you wish to insert, position the cursor in the document where you wish to place the 
+            citation and its in-text reference, then click on 'Insert Citation'. Note that google docs makes it very difficult to insert HTML-formatted text – for this reason, all HTML formatting is stripped in the citation returned from WIKINDX. Only the citation and the in-text references are inserted – a bibliography will be produced when you 
+            finalize the document. If you insert citations and their in-text references in different citation styles, when you finalize, these 
+            references will be changed to the chosen finalization style.</p>
+            <p>The citation's in-text reference is inserted in a 'content control' box in the document immediately following the citation 
+            itself. Clicking on the box will 
+            display the title of the reference – the display length is limited by Word (as it is in the select box of references found 
+            after searching). While you can edit and even delete the text within such a box, when you finalize the document, the original 
+            in-text reference from the WIKINDX will be restored.</p>
+            </td>
+            </tr></table>
+        </section>
+        <!-- WIKINDX URL -->
+        <table class="wikindx-table"><tr><td class="wikindx-td">
+            WIKINDX:<br/>
+            <select class="select" id="wikindx-url">
+            </select>
+            <br/>
+            <section id="wikindx-manage-urls">
+            
+            <table class="wikindx-table-button"><tr><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-add" alt="Add WIKINDX . . ." title="Add WIKINDX . . ." width="16" height="16" src="https://www.wikindx.com/wikindx-addins/add.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-edit1" alt="Edit WIKINDX . . ." title="Edit WIKINDX . . ." width="16" height="16" src="https://www.wikindx.com/wikindx-addins/edit.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-preferred" alt="Preferred WIKINDX . . ." title="Preferred WIKINDX . . ." width="16" height="16" src="https://www.wikindx.com/wikindx-addins/rosette.png" style="display:none"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-delete" alt="Delete WIKINDX . . ." title="Delete WIKINDX . . ." width="16" height="16" src="https://www.wikindx.com/wikindx-addins/bin.png"/>
+                </td><td class="wikindx-td-button">
+                <input type="image" class="buttonIcon" id="wikindx-url-heartbeat" alt="Check WIKINDX pulse" title="Check WIKINDX pulse" width="16" height="16" src="https://www.wikindx.com/wikindx-addins/heart.png"/>
+                </td><td class="wikindx-td-button">
+                <a href="" target="_new" id="wikindx-url-visit" ><img width="16" height="16" alt="Open WIKINDX in browser" title="Open WIKINDX in browser" src="https://www.wikindx.com/wikindx-addins/plane.png" /></a>
+            </td></tr></table>
+            </section>
+        </td><td class="wikindx-td">
+            <!-- Search text -->
+            Search text:<br/>
+            <input class="inputText" type="text" id="wikindx-search-text" placeholder="Enter search here"></input>
+        </td></tr>
+        <tr><td class="wikindx-td">
+            Search order:<br/>
+            <section id="wikindx-reference-order">
+            <select class="select" id="wikindx-reference-params">
+                <option value="creator_ASC" selected>Creator ascending</option></option>
+                <option value="creator_DESC">Creator descending</option>
+                <option value="year_DESC">Year descending</option>
+                <option value="year_ASC">Year ascending</option>
+                <option value="title_ASC">Title ascending</option>
+                <option value="title_DESC">Title descending</option>
+                <option value="timestamp_DESC">Timestamp descending</option>
+                <option value="timestamp_ASC">Timestamp ascending</option>
+            </select>
+            </section>
+            <section id="wikindx-citation-order" style="display:none">
+            <select class="select" id="wikindx-citation-params">
+                <option value="creator_ASC" selected>Creator ascending</option></option>
+                <option value="creator_DESC">Creator descending</option>
+                <option value="year_DESC">Year descending</option>
+                <option value="year_ASC">Year ascending</option>
+                <option value="title_ASC">Title ascending</option>
+                <option value="title_DESC">Title descending</option>
+            </select>
+            </section>
+        </td><td class="wikindx-td">
+            <section id="wikindx-styles" style="display:none">
+                Style:<br/>
+                <select class="selectStyle" id="wikindx-styleSelectBox">
+
+                </select>
+            </section>
+        </td></tr></table>
+
+        <table class="wikindx-table" style="width:100%;border:0px"><tr> 
+            <td class="wikindx-td" style="width:50%;border:0px">
+                <button class="button" id="wikindx-search" alt="Finalize" title="Finalize" style="width:80%">Search</button>
+            </td>
+            <td class="wikindx-td" style="border:0px">
+            <section id="wikindx-search-working" style="display:none">
+                <div class="lds-hourglass"></div>
+            </section>
+            <section id="wikindx-search-completed" style="display:none">
+                <img width="20" height="20" src="https://www.wikindx.com/wikindx-addins/tick.png" alt="Completed" title="Completed" />
+            </section>
+            </td>
+        </tr></table>
+    </section>
+    <!-- SEARCH PARAMETERS section END -->
+
+    <!-- DOCUMENT FINALIZE section START -->
+    <section id="wikindx-finalize" style="display:none">
+        <!-- ACTION TITLE section START -->
+        <section id="wikindx-action-title-finalize" style="display:none">
+            <strong>Finalize the document</strong>&nbsp;
+            <input type="image" class="bulb" id="wikindx-display-finalize-help" width="16" height="16" src="https://www.wikindx.com/wikindx-addins/lightbulb_off.png" alt="Help" title="Help"/>
+        </section>
+        <!-- ACTION TITLE section END -->
+        <section id="wikindx-finalize-help" style="display:none">
+            <table class="wikindx-table"><tr>
+            <td class="wikindx-td">
+            With references and citations now inserted in your document, you can now finalize it. A bibliography will be appended, your in-text 
+            references and bibliography will be formatted, and the bibliography ordered, all according to the options you select below. If your 
+            document has references from more than one WIKINDX, then the only available citation styles will be those that are in common. If no 
+            styles in common are found, then the style selection box will comprise those from the WIKINDX with the most references in the document, and 
+            references from another WIKINDX will use the default citation style from that WIKINDX. If you have 
+            inserted in-text references in different citation styles, when you finalize, these references will be changed to the chosen finalization style.
+            <p>Any in-text reference inserted in the document appears in a 'content control' box that can be moved where you want. You can certainly 
+            edit the text within a box, but when you click on 'Finalize' those edits will be lost and the original in-text reference from the WIKINDX 
+            will be pasted in. Equally, you can edit the contents of the Bibliography content control box (which will be appended to the end of the 
+            document the first time you click on the finalize button), but any edits will be lost if you click on 'Finalize' again.</p>
+            <p>To delete an in-text reference, select and delete the appropriate content control box – simply removing the text will not work as the 
+            reference will be pasted back in when you click on 'Finalize'. Ensure then, that any final polishing of the document's references 
+            (including the addition of non-WIKINDX references to the bibliography) is only undertaken <em>after</em> you really have finalized the document.</p>
+            <p>The more in-text references you have, the longer the finalization process takes. As an example, a document with about 80 in-text 
+            references, will take about 10 seconds to finalize. Of this, about 1 second is used for communication and processing of references and 
+            bibliography between and on the add-in and the wikindices being used. The rest is down to Word and is not something we have control over.</p>
+            <p>You can 'finalize' your document as often as you like – if you finalize once, then decide on a different citation style or 
+            bibliography ordering, simply choose the options you want then click on the button again . . .</p>
+            </td>
+            </tr></table>
+        </section>
+        <table class="wikindx-table">
+            <section id="wikindx-finalize-params">
+            <tr>
+            <td class="wikindx-td">
+                Order:<br/>
+            <select class="select" id="wikindx-finalize-order">
+                <option value="creator_ASC" selected>Creator ascending</option></option>
+                <option value="creator_DESC">Creator descending</option>
+                <option value="year_DESC">Year descending</option>
+                <option value="year_ASC">Year ascending</option>
+                <option value="title_ASC">Title ascending</option>
+                <option value="title_DESC">Title descending</option>
+            </select>
+            </td>
+            </section>
+            <td class="wikindx-td">
+            Style:<br/>
+            <select class="selectStyle" id="wikindx-finalize-styleSelectBox">
+
+            </select>
+            </td>
+        </tr></table>
+        
+        <table class="wikindx-table" style="width:100%;border:0px"><tr> 
+            <td class="wikindx-td" style="width:50%;border:0px">
+                <button class="button" id="wikindx-finalize-run" alt="Finalize" title="Finalize" style="width:80%">Finalize</button>
+            </td>
+            <td class="wikindx-td" style="border:0px">
+    <!--    <span id="wikindx-finalize-working" style="color:green;display:none">&nbsp;&nbsp;Finalizing. Please wait . . .</span>-->
+            <section id="wikindx-finalize-working" style="display:none">
+                <div class="lds-hourglass"></div>
+            </section>
+            <section id="wikindx-finalize-completed" style="display:none">
+                <img width="20" height="20" src="https://www.wikindx.com/wikindx-addins/tick.png" alt="Completed" title="Completed" />
+            </section>
+            </td>
+        </tr></table>
+    </section>
+    <!-- DOCUMENT FINALIZE section END -->
+
+    <!-- DISPLAY RESULTS section START -->
+    <section id="wikindx-display-results" style="display:none">
+    <table class="wikindx-table"><tr><td class="wikindx-td">
+        <!-- SEARCH RESULTS section START -->
+        <section id="wikindx-search-results">
+            <select class="selectResults" id="wikindx-refSelectBox">
+            </select>
+        </section>
+        <!-- SEARCH RESULTS section END -->
+
+        <!-- DISPLAY REFERENCE section START -->
+        <section id="wikindx-display-ref">
+
+        </section>
+        <!-- DISPLAY REFERENCE section END -->
+
+
+        <select class="selectResults" id="wikindx-citeSelectBox" style="display:none">
+        </select>
+        <!-- DISPLAY CITATION section START -->
+        <section id="wikindx-display-cite">
+
+        </section>
+        <!-- DISPLAY CITATION section END -->
+
+        <!-- INSERT REFERENCE section START -->
+        <section id="wikindx-insert-refSection">
+            <button class="button" id="wikindx-insert-reference" alt="Insert reference" title="Insert reference">Insert</button>&nbsp;
+        </section>
+        <!-- INSERT REFERENCE section END -->
+
+        <!-- INSERT CITATION section START -->
+        <section id="wikindx-insert-citeSection">
+            <button class="button" id="wikindx-insert-citation" alt="Insert citation" title="Insert citation">Insert</button>&nbsp;
+        </section>
+            <!-- INSERT CITATION section END -->
+    </td></tr></table>
+    </section>
+    <!-- DISPLAY RESULTS section END -->
+
+    <!-- MESSAGES section START -->
+    <br/><br/>
+    <section id="wikindx-messages" style="display:none">
+    <table class="wikindx-table"><tr><td class="wikindx-td">
+        <section class="wikindx-error" id="wikindx-error">
+        </section>
+        <section class="wikindx-success" id="wikindx-success">
+        </section>
+    </td></tr></table>
+    </section>
+    <!-- MESSAGES section END -->
+
+<!--    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+  <script>
+    /** 
+     * set to true if at least one WIKINDX URL is stored but might be set to false in initialDisplay()
+     * i.e. we start with assumption that wikindices are stored but check and amend on first loading of the add-in
+     */
+    var wikindxLocalStorage = true;
+    /** 
+     * Various messages displayed in wikindx-messages
+     */
+    var errorNewUrl = "ERROR: Missing URL or name input.";
+    var errorStyles = "ERROR: Either no styles are defined on the selected WIKINDX or there are no available in-text citation styles.";
+    var errorSearch = "ERROR: Missing search input.";
+    /**
+     * On document load, assign onclick(onchange) handlers to each button/icon
+     */
+    document.getElementById("wikindx-action").onchange = displayInit;
+    document.getElementById("wikindx-display-about").onclick = wikindxDisplayAbout;
+    document.getElementById("wikindx-url-store").onclick = urlRegister;
+    document.getElementById("wikindx-url-edit1").onclick = urlEditDisplay;
+    document.getElementById("wikindx-url-edit2").onclick = urlEdit;
+    document.getElementById("wikindx-close-url-edit").onclick = wikindxClose;
+    document.getElementById("wikindx-url-add").onclick = urlAddDisplay;
+    document.getElementById("wikindx-url-preferred").onclick = urlPreferredDisplay;
+    document.getElementById("wikindx-url-delete").onclick = urlDeleteDisplay;
+    document.getElementById("wikindx-close-url-entry").onclick = wikindxClose;
+    document.getElementById("wikindx-url-heartbeat").onclick = heartbeat;
+    document.getElementById("wikindx-url").onchange = styleSelectBox;
+    document.getElementById("wikindx-display-references-help").onclick = displayReferencesHelp;
+    document.getElementById("wikindx-display-citations-help").onclick = wikindxDisplayCitationsHelp;
+    document.getElementById("wikindx-display-finalize-help").onclick = wikindxDisplayFinalizeHelp;
+    document.getElementById("wikindx-search").onclick = wikindxSearch;
+    document.getElementById("wikindx-refSelectBox").onchange = displayReference;
+    document.getElementById("wikindx-citeSelectBox").onchange = displayCitation;
+    document.getElementById("wikindx-insert-reference").onclick = insertReference;
+    document.getElementById("wikindx-insert-citation").onclick = insertCitation;
+    document.getElementById("wikindx-styleSelectBox").onchange = reset;
+    document.getElementById("wikindx-reference-params").onchange = reset;
+    document.getElementById("wikindx-citation-params").onchange = reset;
+    document.getElementById("wikindx-finalize-run").onclick = finalizeRun;
+
+/** Start the WIKINDX add-in – initial display on loading the add-in (also check for stored wikindices) */
+    initialize();
+
+// Set up a generic promise for interfacing with google scripts
+/*    const p = func => new Promise(resolve=>
+        google.script.run.withSuccessHandler(resolve)[func]()
+      );
+*/
+
+/**
+ * Library functions
+ */
+/** Insert stuff */
+async function insertReference() {
+  document.getElementById("wikindx-search-completed").style.display = "none";
+  document.getElementById("wikindx-search-working").style.display = "block"; 
+  await google.script.run
+    .withSuccessHandler(insertReferenceResult)
+    .insertReference(
+      document.getElementById("wikindx-url").value,
+      document.getElementById("wikindx-styleSelectBox").value,
+      document.getElementById("wikindx-refSelectBox").value,
+    );
+}
+function insertReferenceResult(result) {
+  document.getElementById("wikindx-search-completed").style.display = "block";
+  document.getElementById("wikindx-search-working").style.display = "none"; 
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+}
+async function insertCitation() {
+  document.getElementById("wikindx-search-completed").style.display = "none";
+  document.getElementById("wikindx-search-working").style.display = "block"; 
+  await google.script.run
+    .withSuccessHandler(insertCitationResult)
+    .insertCitation(
+      document.getElementById("wikindx-url").value,
+      document.getElementById("wikindx-styleSelectBox").value,
+      document.getElementById("wikindx-citeSelectBox").value,
+    );
+}
+function insertCitationResult(result) {
+  document.getElementById("wikindx-search-completed").style.display = "block";
+  document.getElementById("wikindx-search-working").style.display = "none"; 
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+}
+
+/** Search stuff */
+function wikindxSearch() {
+  var searchText = document.getElementById("wikindx-search-text").value;
+  searchText = searchText.trim();
+  searchText = searchText.replace(/[\u201C\u201D]/g, '"'); // Really!!!!! Ensure smart quotes are standard double quotes!!!!!
+  if (!searchText) {
+    displayError(errorSearch);
+    return false;
+  }
+  if (document.getElementById("wikindx-action").value == 'references') {
+    search('references', searchText);
+  } else if (document.getElementById("wikindx-action").value == 'citations') {
+    search('citations', searchText);
+  }
+}
+async function search(type, searchText) {
+  document.getElementById("wikindx-search-completed").style.display = "none";
+  document.getElementById("wikindx-search-working").style.display = "block"; 
+  if (type == 'references') {
+    await google.script.run
+      .withSuccessHandler(searchReferencesResult)
+      .searchReferences(
+        document.getElementById("wikindx-url").value,
+        document.getElementById("wikindx-reference-params").value,
+        document.getElementById("wikindx-styleSelectBox").value,
+        searchText
+      );
+  } else {
+    await google.script.run
+      .withSuccessHandler(searchCitationsResult)
+      .searchCitations(
+        document.getElementById("wikindx-url").value,
+        document.getElementById("wikindx-reference-params").value,
+        document.getElementById("wikindx-styleSelectBox").value,
+        searchText
+      );
+  }
+}
+function searchReferencesResult(result) {
+  document.getElementById("wikindx-search-working").style.display = "none";
+  document.getElementById("wikindx-search-completed").style.display = "block";
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+  document.getElementById("wikindx-refSelectBox").innerHTML = result.refSelectBox;
+  document.getElementById("wikindx-display-ref").innerHTML = '</br>' + result.bibEntry;
+  endPrintReference();
+}
+function searchCitationsResult(result) {
+  document.getElementById("wikindx-search-working").style.display = "none";
+  document.getElementById("wikindx-search-completed").style.display = "block";
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+  document.getElementById("wikindx-citeSelectBox").innerHTML = result.citeSelectBox;
+  document.getElementById("wikindx-display-cite").innerHTML = '</br>' + result.citation + '<br/><br/>' + result.bibEntry;
+  endPrintCitation();
+}
+function displayReference() {
+  google.script.run
+    .withSuccessHandler(displayReferenceResult)
+    .displayReference(
+      document.getElementById("wikindx-url").value,
+      document.getElementById("wikindx-styleSelectBox").value,
+      document.getElementById("wikindx-refSelectBox").value
+    );
+}
+function displayReferenceResult(result) {
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+  document.getElementById("wikindx-display-ref").innerHTML = '</br>' + result.bibEntry;
+}
+function displayCitation() {
+  google.script.run
+    .withSuccessHandler(displayCitationResult)
+    .displayCitation(
+      document.getElementById("wikindx-url").value,
+      document.getElementById("wikindx-styleSelectBox").value,
+      document.getElementById("wikindx-citeSelectBox").value
+    );
+}
+function displayCitationResult(result) {
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+  document.getElementById("wikindx-display-cite").innerHTML = '</br>' + result.citation + '<br/><br/>' + result.bibEntry;
+}
+
+ /** URL Management stuff */
+  function urlManagementDisplay(turnOn) {
+    var displays = ["wikindx-url-entry", "wikindx-url-edit", "wikindx-urls-remove", "wikindx-urls-preferred"];
+    for (var i = 0; i < displays.length; i++) {
+      if (displays[i] != turnOn) {
+        document.getElementById(displays[i]).style.display = "none";
+      }
+    }
+    hideVisible(["wikindx-search-parameters", "wikindx-display-results"]);
+    document.getElementById("wikindx-messages").style.display = "none";
+    document.getElementById(turnOn).style.display = "block";
+    document.getElementById("wikindx-url-management").style.display = "block";
+  }
+  function heartbeat() {
+    google.script.run
+      .withSuccessHandler(heartbeatResult)
+      .userCheckHeartbeat(document.getElementById("wikindx-url").value);
+  }
+  function heartbeatResult(result) {
+    if(!result.xmlResponse) {
+      displayError(result.message);
+      return;
+    }
+    displaySuccess(result.message);
+    return;
+  }
+  function urlRegister() {
+    var newUrl = document.getElementById("wikindx-new-url");
+    var url = newUrl.value.trim();
+    var newName = document.getElementById("wikindx-new-url-name");
+    var name = newName.value.trim();
+    if (!url) {
+      displayError(errorNewUrl);
+      return;
+    }
+    if (!name) {
+      displayError(errorNewUrl);
+      return;
+    }
+    // Add trailing '/'
+    if (url.slice(-1) != '/') {
+      url += '/';
+    }
+    google.script.run
+      .withSuccessHandler(urlRegisterResult)
+      .urlRegister(url, name);
+  }
+
+  function urlRegisterResult(result) {
+    if(!result.xmlResponse) {
+      displayError(result.message);
+      return;
+    }
+    if (result.numStoredURLs > 1) {
+      visibleElements.push("wikindx-url-preferred");
+    }
+    visibleElements.push("wikindx-search-parameters");
+    visibleElements.push("wikindx-action");
+    retrieveVisible();
+    document.getElementById("wikindx-url-management").style.display = "none";
+    document.getElementById("wikindx-about-begin").style.display = "none";
+    document.getElementById("wikindx-url").innerHTML = result.urlSelectBox;
+    document.getElementById("wikindx-styleSelectBox").innerHTML = result.styleSelectBox;
+    document.getElementById("wikindx-url-visit").href = result.selectedURL;
+    displaySuccess(result.message);
+    return;
+  }
+  function urlEdit() {
+    var editUrl = document.getElementById("wikindx-edit-url");
+    var url = editUrl.value.trim();
+    var editName = document.getElementById("wikindx-edit-name");
+    var name = editName.value.trim();
+    if (!url) {
+      displayError(errorNewUrl);
+      return;
+    }
+    if (!name) {
+      displayError(errorNewUrl);
+      return;
+    }
+    // Add trailing '/'
+    if (url.slice(-1) != '/') {
+      url += '/';
+    }
+    google.script.run
+      .withSuccessHandler(urlEditResult)
+      .urlEdit(url, name, document.getElementById("wikindx-url").value);
+  }
+  function urlEditResult(result) {
+    if(!result.xmlResponse) {
+      displayError(result.message);
+      return;
+    }
+    visibleElements.push("wikindx-search-parameters");
+    document.getElementById("wikindx-url-management").style.display = "none";
+    document.getElementById("wikindx-url").innerHTML = result.urlSelectBox;
+    document.getElementById("wikindx-styleSelectBox").innerHTML = result.styleSelectBox;
+    document.getElementById("wikindx-url-visit").href = result.selectedURL;
+    retrieveVisible();
+    displaySuccess(result.message);
+    return;
+  }
+  function urlEditDisplay() {
+      google.script.run
+        .withSuccessHandler(urlEditDisplayResult)
+        .urlEditDisplay(document.getElementById("wikindx-url").value);
+  }
+  function urlEditDisplayResult(result) {
+    document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Edit WIKINDX';
+    document.getElementById("wikindx-edit-url").value = result.selectedURL;
+    document.getElementById("wikindx-edit-name").value = result.selectedName;
+    urlManagementDisplay("wikindx-url-edit");
+  }
+  function urlAddDisplay() {
+    document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Add WIKINDX';
+    urlManagementDisplay("wikindx-url-entry");
+  }
+  function urlDelete() {
+    var hidden = JSON.parse(atob(document.getElementById("wikindx-hidden").value));
+    var split = [];
+    var keep = [];
+
+    for(var i = 0; i < hidden.length; i++) {
+      if (document.getElementById(hidden[i]).checked == false) {
+        split = hidden[i].split('--WIKINDX--');
+        keep.push([split[0], split[1]]);
+      }
+    }
+    google.script.run
+      .withSuccessHandler(urlDeleteResult)
+      .urlDelete(keep);
+  }
+  function urlDeleteResult(result) {
+    if(!result.xmlResponse) {
+      displayError(result.message);
+      return;
+    }
+    if (!result.done) {
+      return; // do nothing
+    }
+    if (result.numStoredURLs < 2) {
+      document.getElementById("wikindx-url-preferred").style.display = "none";
+    }
+    if (!result.numStoredURLs) { // Have we completely emptied the list?
+      document.getElementById("wikindx-about-begin").style.display = "block";
+      document.getElementById("wikindx-urls-remove").style.display = "none";
+      document.getElementById("wikindx-action").style.display = "none";
+      document.getElementById("wikindx-close-url-entry").style.display = "none";
+      urlAddDisplay();
+      displaySuccess(result.message);
+      return;
+    }
+    document.getElementById("wikindx-url-management").style.display = "none";
+    retrieveVisible();
+    document.getElementById("wikindx-styleSelectBox").innerHTML = result.styleSelectBox;
+    document.getElementById("wikindx-url").innerHTML = result.urlSelectBox;
+    document.getElementById("wikindx-url-visit").href = result.selectedURL;
+    document.getElementById("wikindx-search-parameters").style.display = "block";
+    displaySuccess(result.message);
+  }
+  function urlDeleteDisplay() {
+      google.script.run
+        .withSuccessHandler(urlDeleteDisplayResult)
+        .urlDeleteDisplay();
+  }
+  function urlDeleteDisplayResult(result) {
+    document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Delete WIKINDX';
+    result.text += '<input type="hidden" id="wikindx-hidden" value="' + btoa(JSON.stringify(result.hidden)) + '">';
+    document.getElementById("wikindx-urls-remove").innerHTML = result.text;
+    document.getElementById("wikindx-url-remove").onclick = urlDelete;
+    document.getElementById("wikindx-close-url-remove").onclick = wikindxClose;
+    urlManagementDisplay("wikindx-urls-remove");
+  }
+  function urlPrefer() {
+    google.script.run
+      .withSuccessHandler(urlPreferResult)
+      .urlPrefer(document.querySelector('input[name="wikindx-preferred"]:checked').value);
+  }
+  function urlPreferResult(result) {
+    if(!result.xmlResponse) {
+      displayError(result.message);
+      return;
+    }
+    retrieveVisible();
+    document.getElementById("wikindx-styleSelectBox").innerHTML = result.styleSelectBox;
+    document.getElementById("wikindx-url").innerHTML = result.urlSelectBox;
+    document.getElementById("wikindx-url-visit").href = result.selectedURL;
+    document.getElementById("wikindx-url-management").style.display = "none";
+    document.getElementById("wikindx-search-parameters").style.display = "block";
+    displaySuccess(result.message);
+    return;
+  }
+  function urlPreferredDisplay() {
+      google.script.run
+        .withSuccessHandler(urlPreferredDisplayResult)
+        .urlPreferredDisplay();
+  }
+  function urlPreferredDisplayResult(result) {
+    document.getElementById("wikindx-url-management-subtitle").innerHTML = 'Preferred WIKINDX';
+    document.getElementById("wikindx-urls-preferred").innerHTML = result.text;
+    document.getElementById("wikindx-url-prefer").onclick = urlPrefer;
+    document.getElementById("wikindx-close-url-preferred").onclick = wikindxClose;
+    urlManagementDisplay("wikindx-urls-preferred");
+  }
+  function styleSelectBox() {
+      google.script.run
+        .withSuccessHandler(styleSelectBoxResult)
+        .styleSelectBox(document.getElementById("wikindx-url").value);
+  }
+  function styleSelectBoxResult(result) {
+    if(!result.xmlResponse) {
+      displayError(result.message);
+      return;
+    }
+    reset();
+    document.getElementById("wikindx-styleSelectBox").innerHTML = result.styleSelectBox;
+    document.getElementById("wikindx-url-visit").href = result.selectedURL;
+  }
+  function wikindxClose() {
+  retrieveVisible();
+  document.getElementById("wikindx-url-management").style.display = "none";
+  document.getElementById("wikindx-messages").style.display = "none";
+  document.getElementById("wikindx-search-parameters").style.display = "block";
+}
+
+/** Initialization stuff */
+  function initialize() {
+    google.script.run
+      .withSuccessHandler(initializeResult)
+  //      .withFailureHandler(wikindxDisplayAbout)
+      .initializeWikindx();
+  }
+  function initializeResult(result) {
+    if(!result.xmlResponse) {
+      displayError(result.message);
+      return;
+    }
+    if (result.initialize) {
+      document.getElementById("wikindx-about-begin").style.display = "block";
+      wikindxLocalStorage = false;
+      wikindxDisplayAbout();
+    } else {
+      reset();
+      if (result.numStoredURLs > 1) {
+        visibleElements.push("wikindx-url-preferred");
+      }
+      visibleElements.push("wikindx-search-parameters");
+      visibleElements.push("wikindx-action");
+      retrieveVisible();
+      document.getElementById("wikindx-about-begin").style.display = "none";
+      document.getElementById("wikindx-url").innerHTML = result.urlSelectBox;
+      document.getElementById("wikindx-url-visit").href = result.selectedURL;
+      document.getElementById("wikindx-styleSelectBox").innerHTML = result.styleSelectBox;
+      document.getElementById("wikindx-styles").style.display = "block";
+    }
+  }
+  function displayInit() {
+  document.getElementById("wikindx-about").style.display = "none";
+  document.getElementById("wikindx-display-about").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
+  if (document.getElementById("wikindx-action").value == 'references') {
+    displayReferencePane();
+  } else if (document.getElementById("wikindx-action").value == 'citations') {
+    displayCitationPane();
+  } else if (document.getElementById("wikindx-action").value == 'finalize') {
+    displayFinalizePane();
+    google.script.run
+      .withSuccessHandler(finalizeDisplayResult)
+      .finalizeDisplay();
+  }
+}
+function finalizeDisplayResult(result) {
+  for (var i = 0; i < result.debug.length; i++) {
+    console.table(result.debug[i]);
+  }
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+  document.getElementById("wikindx-finalize-styleSelectBox").innerHTML = result.styles;
+  document.getElementById("wikindx-finalize").style.display = "block";
+}
+async function finalizeRun() {
+  document.getElementById("wikindx-search-completed").style.display = "none";
+  document.getElementById("wikindx-search-working").style.display = "block"; 
+  var params = document.getElementById("wikindx-finalize-order").value;
+  var style = document.getElementById("wikindx-finalize-styleSelectBox").value;
+  await google.script.run
+    .withSuccessHandler(finalizeRunResult)
+    .finalizeRun(params, style);
+}
+function finalizeRunResult(result) {
+  document.getElementById("wikindx-search-working").style.display = "none";
+  document.getElementById("wikindx-search-completed").style.display = "block";
 console.log(result.misc);
   for (var i = 0; i < result.debug.length; i++) {
     console.table(result.debug[i]);

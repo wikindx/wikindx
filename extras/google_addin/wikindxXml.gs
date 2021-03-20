@@ -68,7 +68,11 @@ function heartbeat(url) {
     method: 'heartbeat',
     source: 'googleDocs'
   };
-  return doXml(url, formData);
+return {
+  xmlResponse: true,
+  message: successHeartbeat
+};
+//  return doXml(url, formData);
 }
 function userCheckHeartbeat(url) {
   response = heartbeat(url);

@@ -2,7 +2,6 @@ var order, ascDesc, id;
 var foundBibliography;
 var bibliography;
 var finalizeReferences = [];
-var allItemObjects = [];
 var multipleOrder = [];
 var wikindices = [];
 var multipleWikindices;
@@ -26,22 +25,13 @@ function finalizeDisplay() {
     rangeElements = ranges[i].getRange().getRangeElements();
     tag = ranges[i].getName();
     split = tag.split('W!K!NDX');
+    if ((split.length < 3) || (split[1] != 'id')) {
+      continue;
+    }
+    // If we get here, we have references
     for (j = 0; j < rangeElements.length; j++) {
-      text = rangeElements[j].getElement().getText();
-      debug.push(["rangeNo. " + i + ': ' + "elementNo. " + j + ': ' + text]);
-      if ((split.length > 1) && (split[0] === 'wikindx') && (text.trim() === '')) {
-        return {xmlResponse: false, message: 'delete'};
-        tag.delete();
-        continue;
-      }
-      // 'looking for wikindxW!K!NDXidW!K!NDX{[JSON string/array]}'
-      if ((split.length < 3) || (split[0] != 'wikindx')) {
-        continue;
-      }
-      if (split[1] != 'id') {
-        continue;
-      }
-      // If we get here, we have references
+      text = rangeElements[j].getElement().editAsText().getText();
+      debug.push(["rangeNo. " + i + ': ' + "elementNo. " + j + ': ' + text + ' id: ' + JSON.parse(split[2])[1]]);
       found = true;
       url = JSON.parse(split[2])[0];
       wikindicesPush(url);
@@ -52,7 +42,8 @@ function finalizeDisplay() {
       message: 'debugging',
       debug: debug
     };
-*/  if (!found) { // Nothing stored yet for this document
+*/
+  if (!found) { // Nothing stored yet for this document
     return {
       xmlResponse: false,
       message: errorNoInserts,
@@ -103,7 +94,7 @@ function finalizeRun(params, style) {
     ascDesc = split[1];
   }
   for (i = 0; i < urls.length; i++) {
-    response = finalizeGetReferencesXML(urls[i], params, style, JSON.stringify(cleanIDs[urls[i]]), ranges);
+    response = finalizeGetReferencesXML(urls[i], params, style, JSON.stringify(cleanIDs[urls[i]]), document);
     if (response.xmlResponse === false) {
       return {
         xmlResponse: false,
@@ -129,21 +120,19 @@ function finalizeRun(params, style) {
   finalizeGetBibliography();
   if (foundBibliography) {
     var document = DocumentApp.getActiveDocument();
-    var ranges = document.getNamedRanges();
-    for (var i = 0; i < ranges.length; i++) {
-      if (ranges[i].getName() == 'wikindx-bibliography') {
-        var rangeElements = ranges[i].getRange().getRangeElements();
-        rangeElements[0].getElement().asText().setText('');
-        ranges[i].remove();
-        break;
-      }
-    }
+    var ranges = document.getNamedRanges('wikindx-bibliography');
+    ranges[0].remove();
+    var rangeElements = ranges[0].getRange().getRangeElements();
+    rangeElements[0].getElement().asText().setText('');
   }
   appendBibliography('\n\n\n\n' + bibliography);
   return {
     xmlResponse: true,
     debug: debug,
-    misc: bibliography
+    misc: misc
+  }
+  return {
+    xmlResponse: true
   }
 }
 function getCleanIDs(ranges) {
@@ -186,7 +175,8 @@ function finalizeGetBibliography() {
   var i, key;
   if (!multipleWikindices) {
     for (i = 0; i < finalizeReferences.length; i++) {
-      bibliography += finalizeReferences[i] + '\n';
+      let text = finalizeReferences[i];
+      bibliography += text + '\n';
     }
   } else {
     if (order == 'creator') {
@@ -213,23 +203,15 @@ function finalizeGetBibliography() {
   }
 }
 function finalizeGetCitationsXML(url, style, idString) {
-  var tag, cc, j;
+  var tag, j;
   Xml.finalizeGetCitations(url, idString);
   // Replace in-text references
-  allItemObjects = []; // Reset . . .
   for (j = 0; j < Xml.xmlResponse.length; j++) {
     tag = 'wikindxW!K!NDXidW!K!NDX' + JSON.stringify([url, Xml.xmlResponse[j].id, Xml.xmlResponse[j].metaId]);
-    cc = context.document.contentControls.getByTag(tag);
-    cc.load('items');
-    let items = {
-      cc: cc,
-      text: Xml.xmlResponse[j].inTextReference
-    };
-    allItemObjects.push(items);
   }
 }
-function finalizeGetReferencesXML(url, params, style, idString, ranges) {
-  var key, tag, rangeElements, element, i, j, k;
+function finalizeGetReferencesXML(url, params, style, idString, document) {
+  var key, tag, ranges, rangeElements, element, i, j;
 
   var response = finalizeGetReferences(url, params, style, idString);
   if (response.xmlResponse === false) {
@@ -242,34 +224,26 @@ function finalizeGetReferencesXML(url, params, style, idString, ranges) {
   var jsonArray = response.xmlArray;
   for (i = 0; i < jsonArray.length; i++) {
     tag = 'wikindxW!K!NDXidW!K!NDX' + JSON.stringify([url, jsonArray[i].id]);
-    let items = {
-      tag: tag,
-      text: jsonArray[i].inTextReference
-    };
+    ranges = document.getNamedRanges(tag);
     for (j = 0; j < ranges.length; j++) {
-      if (tag == ranges[j].getName()) {
-        rangeElements = ranges[j].getRange().getRangeElements();
-        for (k = 0; k < rangeElements.length; k++) {
-          element = rangeElements[k].getElement();
-          debug.push([element.asText().getText(), jsonArray[i].inTextReference]);
-        }
-        updateReference(element, tag, jsonArray[i].inTextReference);
-//    allItemObjects.push(items);
-        if (!finalizeReferences.includes(jsonArray[i].bibEntry)) {
-          finalizeReferences.push(jsonArray[i].bibEntry);
-          if (multipleWikindices) {
-            key = finalizeReferences.indexOf(jsonArray[i].bibEntry);
-            multipleOrder.push({
-              "index": key,
-              "creator": jsonArray[i].creatorOrder,
-              "title": jsonArray[i].titleOrder,
-              "year": jsonArray[i].yearOrder
-            });
-          }
-        }
+      rangeElements = ranges[j].getRange().getRangeElements();
+      element = rangeElements[0].getElement();
+      ranges[j].remove();
+      updateReference(element, tag, jsonArray[i].inTextReference);
+    }
+    if (!finalizeReferences.includes(jsonArray[i].bibEntry)) {
+      finalizeReferences.push(jsonArray[i].bibEntry);
+      if (multipleWikindices) {
+        key = finalizeReferences.indexOf(jsonArray[i].bibEntry);
+        multipleOrder.push({
+          "index": key,
+          "creator": jsonArray[i].creatorOrder,
+          "title": jsonArray[i].titleOrder,
+          "year": jsonArray[i].yearOrder
+        });
       }
     }
-  }misc = finalizeReferences;
+  }
   return {
     xmlResponse: true
   }

@@ -1,3 +1,9 @@
+function getBlankBlob() {
+  var url = 'https://www.wikindx.com/wikindx-addins/blank.png';
+  var formData = {};
+  return doXmlBlob(url, formData);
+}
+
 function finalizeGetReferences(url, params, style, ids) {
   url += "office.php";
   var formData = {
@@ -17,6 +23,7 @@ function finalizeGetCitations(url, style, ids) {
     source: 'googleDocs',
     ids: ids
   };
+  return doXml(url, formData);
 }
 
 function getSearchInputReferences(url, params, style, searchText) {
@@ -96,6 +103,38 @@ function getStyles(url) {
   };
   return doXml(url, formData);
 }
+function doXmlBlob(url, formData) {
+  var options = {
+    method: 'post',
+    payload: formData,
+    muteHttpExceptions: true
+  };
+  try {
+    var response = UrlFetchApp.fetch(url, options);
+    if (response === null) {
+      return {
+        xmlResponse: false,
+        message: errorXMLHTTP
+      };
+    } else if (response.getResponseCode() != 200) {
+      return {
+        xmlResponse: false,
+        message: errorXMLHTTP
+      };
+    } else {
+      return {
+        xmlResponse: true,
+        blob: response.getBlob()
+      };
+    }
+  } catch(e) {
+      return {
+        xmlResponse: false,
+        url: url + '?' + response.payload,
+        message: errorXMLHTTP
+      };
+  }
+}
 function doXml(url, formData) {
   var options = {
     method: 'post',
@@ -104,7 +143,6 @@ function doXml(url, formData) {
   };
   try {
     var response = UrlFetchApp.fetch(url, options);
-//    var response = UrlFetchApp.getRequest(url, options);
     if (response === null) {
       return {
         xmlResponse: false,

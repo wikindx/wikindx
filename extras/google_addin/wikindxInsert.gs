@@ -7,13 +7,23 @@ var regexpHref = RegExp(/(<a class="rLink" href=".*>)(.*?)(<\/a>)/, 'g');
 var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
 var deleteArray = [];
 var transformArray = [];
-var updatePosition = 0;
+var blob = null;
 var insertError = "ERROR: Invalid cursor position. A reference cannot replace a selection so position the cursor where you wish to insert the reference.";
-var blankImage = UrlFetchApp.fetch('https://www.wikindx.com/wikindx-addins/blank.png');
-var blob = blankImage.getBlob();
 
+function getBlob() {
+  var response = getBlankBlob();
+  if (!response.xmlResponse) {
+    return {
+      xmlResponse: false,
+      message: response.message
+    };
+  }
+  blob = response.blob;
+}
 function insertReference(url, style, id) {
   var i;
+
+  getBlob();
   var response = getReference(url, style, id);
   if (!response.xmlResponse) {
     return {
@@ -42,9 +52,10 @@ function insertReference(url, style, id) {
     xmlResponse: true
   };
 }
-
 function insertCitation(url, style, id) {
   var i;
+
+  getBlob();
   var response = getCitation(url, style, id);
   if (!response.xmlResponse) {
     return {
@@ -62,12 +73,12 @@ function insertCitation(url, style, id) {
     };
   }
   for (i = 0; i < styles.length; i++) {
-    insertHtmlText(element, text, styles[i]);
+    insertHtmlText(element, response.xmlArray['inTextReference'], styles[i]);
   }
   deleteTags(element);
   var rangeBuilder = document.newRange();
   rangeBuilder.addElement(element);
-  var tag = 'wikindxW!K!NDXidW!K!NDX' + JSON.stringify([url, id, response.xmlArray['metaId']]);
+  var tag = 'wikindxW!K!NDXidW!K!NDX' + JSON.stringify([url, response.xmlArray['id'], id]);
   document.addNamedRange(tag, rangeBuilder.build());
 // Now insert the actual citation
   var cursor = document.getCursor();
@@ -77,26 +88,29 @@ function insertCitation(url, style, id) {
   };
 }
 function updateReference(element, tag, replacementText) {
-  var document, rangeBuilder;
+  var document, rangeBuilder, oldText;
   deleteArray = []; // reset
 
+  oldText = element.getText();
+  var puncEnd = element.getText().match(/([.,;:!?])$/);
+  var puncStart = element.getText().match(/^([¿¡])/);
   element.setText(replacementText);
-//  updatePosition = element.findText(replacementText).getStartOffset();
   for (var i = 0; i < styles.length; i++) {
     insertHtmlText(element, replacementText, styles[i]);
   }
   deleteTags(element);
+  if (puncEnd != null) {
+    element.appendText(puncEnd[1]);
+  }
+  if (puncStart != null) {
+    element.setText(puncStart[1] + element.getText());
+  }
   var document = DocumentApp.getActiveDocument();
   var rangeBuilder = document.newRange();
   rangeBuilder.addElement(element);
   document.addNamedRange(tag, rangeBuilder.build());
-  for(i = 0; i < deleteArray.length; i++) {
-    debug.push([element.editAsText().getText(), deleteArray[i].start, deleteArray[i].end])
-  }
-  return debug;
 }
 function appendBibliography(text) {
-  updatePosition = 0; // reset
   transformArray = []; // reset
   var document = DocumentApp.getActiveDocument();
   var body = document.getBody();
@@ -205,7 +219,7 @@ function findTags(matches) {
   var openTagStart, openTagEnd, textStart, textEnd, closeTagStart, closeTagEnd;
 
   for (let match of matches) {
-    openTagStart = match.index + updatePosition;
+    openTagStart = match.index;
     openTagEnd = openTagStart + match[1].length - 1;
     textStart = openTagEnd + 1;
     textEnd = textStart + match[2].length - 1;

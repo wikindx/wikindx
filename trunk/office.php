@@ -271,6 +271,10 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
     			if (!$bibStyle->creatorOrderString) {
         			$bibStyle->creatorOrderString = $tos; // default for ordering in ooxml javascript with no creators
         		}
+				if ($this->vars['source'] == 'googleDocs') {
+					$bibEntry = html_entity_decode($bibEntry, ENT_QUOTES, 'UTF-8');
+					$reference = html_entity_decode($reference, ENT_QUOTES, 'UTF-8');
+				}
 	    		$jsonArray[] = ['id' => $row['resourceId'], 'bibEntry' => $bibEntry, 'inTextReference' => $reference, 
     				'creatorOrder' =>  html_entity_decode($bibStyle->creatorOrderString), 'titleOrder' => $tos, 
     				'yearOrder' => $bibStyle->yearOrderString];

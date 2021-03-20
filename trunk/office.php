@@ -138,6 +138,9 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
 			$pageStart = $row['resourcemetadataPageStart'] ? $row['resourcemetadataPageStart'] : FALSE;
 			$pageEnd = $row['resourcemetadataPageEnd'] ? $row['resourcemetadataPageEnd'] : FALSE;
 			$reference = trim($citeStyle->startOoxml($row['resourcemetadataResourceId'], $pageStart, $pageEnd, $row));
+			if ($this->vars['source'] == 'googleDocs') {
+				$reference = html_entity_decode($reference, ENT_QUOTES, 'UTF-8');
+			}
     		$jsonArray[] = ['metaId' => $row['resourcemetadataId'], 'inTextReference' => $reference, 'id' => $row['resourcemetadataResourceId']];
     	}
     	echo json_encode($jsonArray);

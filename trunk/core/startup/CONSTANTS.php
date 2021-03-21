@@ -73,6 +73,11 @@ define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
     'vendor'    => WIKINDX_PUBLIC_VERSION, // Identical to the public version because this type of component is very closely linked to a version of the core
 ]);
 /**
+ * Integer. For office add-ins. In each add-in (Word, Google Docs, LibreOffice etc.) the compatibility variable must equal this.
+ *
+ * @name WIKINDX_OFFICE_VERSION */
+define('WIKINDX_OFFICE_VERSION', 1);
+/**
  * Minimum required PHP version
  *
  * @name WIKINDX_PHP_VERSION_MIN

@@ -22,7 +22,6 @@ class OFFICE
     private $vars;
     private $output = 'html'; // default
     private $stripTags = FALSE;
-    private $officeVersion = 1; // Integer
     
     /**
      * Constructor
@@ -50,7 +49,7 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
     		echo json_encode("access denied");
     		die;
     	}
-    	if ($this->vars['compatibility'] != $this->officeVersion) {
+    	if ($this->vars['compatibility'] != WIKINDX_OFFICE_VERSION) {
     		echo json_encode("incompatible");
     		die;
     	}

@@ -22,6 +22,7 @@ class OFFICE
     private $vars;
     private $output = 'html'; // default
     private $stripTags = FALSE;
+    private $officeVersion = 1; // Integer
     
     /**
      * Constructor
@@ -44,6 +45,16 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
 	 */
     public function init()
     {
+// Check permissions and compatibility
+    	if (WIKINDX_DENY_READONLY) { // not allowed!
+    		echo json_encode("access denied");
+    		die;
+    	}
+    	if ($this->vars['compatibility'] != $this->officeVersion) {
+    		echo json_encode("incompatible");
+    		die;
+    	}
+// All OK
     	if ($this->vars['source'] == 'googleDocs') {
     		$this->output = 'noScan';
     		$this->stripTags = TRUE;
@@ -86,10 +97,6 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
      */
     private function heartbeat()
     {
-    	if (WIKINDX_DENY_READONLY) { // not allowed!
-    		echo json_encode("access denied");
-    		die;
-    	}
     	echo json_encode("It's alive!");
     	die;
     }

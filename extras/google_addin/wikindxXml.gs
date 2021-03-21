@@ -5,85 +5,70 @@ function getBlankBlob() {
 }
 
 function finalizeGetReferences(url, params, style, ids) {
-  url += "office.php";
   var formData = {
     method: 'getBib',
     searchParams: params,
     style: style,
-    source: 'googleDocs',
     ids: ids
   };
   return doXml(url, formData);
 }
 function finalizeGetCitations(url, style, ids) {
-  url += "office.php";
   var formData = {
     method: 'getCiteCCs',
     style: style,
-    source: 'googleDocs',
     ids: ids
   };
   return doXml(url, formData);
 }
 
 function getSearchInputReferences(url, params, style, searchText) {
-  url += "office.php";
   var formData = {
     method: 'getReferences',
     searchWord: searchText,
     searchParams: params,
-    style: style,
-    source: 'googleDocs'
+    style: style
   };
   return doXml(url, formData);
 }
 function getReference(url, style, id) {
-  url += "office.php";
   var formData = {
     method: 'getReference',
     style: style,
-    id: id,
-    source: 'googleDocs'
+    id: id
   };
   return doXml(url, formData);
 }
 function getSearchInputCitations(url, params, style, searchText) {
-  url += "office.php";
   var formData = {
     method: 'getCitations',
     searchWord: searchText,
     searchParams: params,
-    style: style,
-    source: 'googleDocs'
+    style: style
   };
   return doXml(url, formData);
 }
 function getCitation(url, style, id) {
-  url += "office.php";
   var formData = {
     method: 'getCitation',
     style: style,
     id: id,
-    withHtml: '0',
-    source: 'googleDocs'
+    withHtml: '0'
   };
   return doXml(url, formData);
 }
 function heartbeat(url) {
-  url += "office.php";
   var formData = {
-    method: 'heartbeat',
-    source: 'googleDocs'
+    method: 'heartbeat'
   };
-return {
-  xmlResponse: true,
-  message: successHeartbeat
-};
-//  return doXml(url, formData);
+  return doXml(url, formData);
 }
 function userCheckHeartbeat(url) {
-  response = heartbeat(url);
-    if (response.xmlResponse === false) {
+  var formData = {
+    method: 'heartbeat'
+  };
+  var response = doXml(url, formData);
+  if (response.xmlResponse === false) {
     return {
       xmlResponse: false,
       message: response.message
@@ -96,10 +81,8 @@ function userCheckHeartbeat(url) {
   }
 }
 function getStyles(url) {
-  url += "office.php";
   var formData = {
-    method: 'getStyles',
-    source: 'googleDocs'
+    method: 'getStyles'
   };
   return doXml(url, formData);
 }
@@ -136,6 +119,9 @@ function doXmlBlob(url, formData) {
   }
 }
 function doXml(url, formData) {
+  url += "office.php";
+  formData.source = 'googleDocs';
+  formData.compatibility = compatibility; // Set in wikindx.gs
   var options = {
     method: 'post',
     payload: formData,
@@ -153,10 +139,15 @@ function doXml(url, formData) {
         xmlResponse: false,
         message: errorXMLHTTP
       };
-    } else if(JSON.parse(response.getContentText()) == 'access denied'){
+    } else if(JSON.parse(response.getContentText()) == 'access denied') {
       return {
         xmlResponse: false,
         message: errorAccess
+      };
+    } else if(JSON.parse(response.getContentText()) == 'incompatible') {
+      return {
+        xmlResponse: false,
+        message: errorCompatibility
       };
     } else {
       return {

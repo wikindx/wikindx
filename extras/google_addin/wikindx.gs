@@ -8,10 +8,15 @@
  * presented to users will reflect this limited scope.
  */
 
+/**
+ * Compatibility number. Must be equal to office.php's $officeVersion
+ */
+var compatibility = 1;
+
 /** Error messages */
 var errorJSON = "ERROR: Unspecified error. This could be any number of things from not being able to connect to the WIKINDX to no resources found matching your search.";
 var errorAccess = 'The WIKINDX admin has not enabled read-only access.';
-var successHeartbeat = "Yes, I am alive and kicking. Try searching me . . .";
+var errorCompatibility = 'ERROR: Incompatibility between add-in and WIKINDX.';
 var errorXMLHTTP = "ERROR: XMLHTTP error – could not connect to the WIKINDX.  <br/><br/>There could be any number of reasons for this including an incorrect WIKINDX URL, an incompatibility between this add-in and the WIKINDX, the WIKINDX admin has not enabled read-only access, a network error . . .";
 var errorDuplicateUrl = "ERROR: Duplicate URL input.";
 var errorDuplicateName = "ERROR: Duplicate name input.";
@@ -22,6 +27,7 @@ var errorNoResultsCitations = "No citations found matching your search.";
 var errorMissingID = "ERROR: Resource or citation ID not found in the selected WIKINDX.";
 
 /** Success messages */
+var successHeartbeat = "Yes, I am alive and kicking. Try searching me . . .";
 var successNewUrl = "Stored new WIKINDX: ";
 var successRemoveUrl = "Deleted WIKINDX URL(s).";
 var successRemoveAllUrls = "Deleted all WIKINDX URLs.";

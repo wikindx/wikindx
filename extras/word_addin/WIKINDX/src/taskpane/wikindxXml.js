@@ -1,9 +1,12 @@
 import { displayError, displaySuccess } from "./wikindxMessages";
 
 
+/* Compatibility number. Must be equal to office.php's $officeVersion */
+var compatibility = 1;
 var xml;
 var errorJSON = "ERROR: Unspecified error. This could be any number of things from not being able to connect to the WIKINDX to no resources found matching your search.";
 var errorAccess = 'The WIKINDX admin has not enabled read-only access.';
+var errorCompatibility = 'ERROR: Incompatibility between add-in and WIKINDX.';
 var successHeartbeat = "Yes, I am alive and kicking. Try searching me . . .";
 export var errorXMLHTTP = "ERROR: XMLHTTP error – could not connect to the WIKINDX.  <br/><br/>There could be any number of reasons for this including an incorrect WIKINDX URL, an incompatibility between this add-in and the WIKINDX, the WIKINDX admin has not enabled read-only access, a network error . . .";
 export var xmlResponse = null;
@@ -23,7 +26,6 @@ export function getReference(id) {
   searchURL = wikindxURL.value 
     + "office.php" + '?method=getReference' 
     + '&style=' + encodeURI(styleSelectBox.value) 
-    + '&source=' + encodeURI('Word') 
     + '&id=' + encodeURI(id);
   doXml();
 }
@@ -39,7 +41,6 @@ export function getCitation(id) {
   searchURL = wikindxURL.value 
     + "office.php" + '?method=getCitation' 
     + '&style=' + encodeURI(styleSelectBox.value) 
-    + '&source=' + encodeURI('Word') 
     + '&id=' + encodeURI(id)
     + html;
   doXml();
@@ -52,7 +53,6 @@ export function finalizeGetReferences(wikindxURL, ids) {
     + "office.php" + '?method=getBib' 
     + '&style=' + encodeURI(styleSelectBox.value) 
     + '&searchParams=' + encodeURI(searchParams.value) 
-    + '&source=' + encodeURI('Word') 
     + '&ids=' + encodeURI(ids);
   doXml();
 }
@@ -62,7 +62,6 @@ export function finalizeGetCitations(wikindxURL, ids) {
   searchURL = wikindxURL 
     + "office.php" + '?method=getCiteCCs' 
     + '&style=' + encodeURI(styleSelectBox.value) 
-    + '&source=' + encodeURI('Word') 
     + '&ids=' + encodeURI(ids);
   doXml();
 }
@@ -70,8 +69,7 @@ export function finalizeGetCitations(wikindxURL, ids) {
 export function getStyles() {
   var wikindxURL = document.getElementById("wikindx-url");
   searchURL = wikindxURL.value 
-    + "office.php" + '?method=getStyles' 
-    + '&source=' + encodeURI('Word');
+    + "office.php" + '?method=getStyles';
   doXml();
   // As this is triggered from a change in the WIKINDX selection, store also the currently selected URL and name
   var jsonArray = JSON.parse(window.localStorage.getItem('wikindx-localStorage'));
@@ -109,7 +107,6 @@ export function getSearchInputReferences(searchText) {
     + "office.php" + '?method=getReferences' 
     + '&searchWord=' + encodeURI(searchText)
     + '&style=' + encodeURI(styleSelectBox.value) 
-    + '&source=' + encodeURI('Word') 
     + '&searchParams=' + encodeURI(searchParams.value)
   doXml();
 }
@@ -122,13 +119,17 @@ export function getSearchInputCitations(searchText) {
     + "office.php" + '?method=getCitations' 
     + '&searchWord=' + encodeURI(searchText)
     + '&style=' + encodeURI(styleSelectBox.value) 
-    + '&source=' + encodeURI('Word') 
     + '&searchParams=' + encodeURI(searchParams.value);
   doXml();
 }
 
 export function userCheckHeartbeat() {
   if (heartbeat(document.getElementById("wikindx-url").value) !== true) {
+    if(xmlResponse == 'incompatible') {
+      return displayError(errorCompatibility); 
+    } else if(xmlResponse == 'access denied') {
+      return displayError(errorAccess); 
+    }
     displayError(errorXMLHTTP);
     return false;
   }
@@ -140,19 +141,22 @@ export function heartbeat(url) {
   if (!url) {
     url = document.getElementById("wikindx-url").value;
   }
-  searchURL = url + "office.php" + '&source=' + encodeURI('Word') + '?method=heartbeat';
+  searchURL = url + "office.php" + '?method=heartbeat';
   doXml();
   if (xmlResponse == null) {
     return displayError(errorXMLHTTP);
-  } else if(xmlResponse == 'access denied'){
+  } else if(xmlResponse == 'incompatible') {
+    return displayError(errorCompatibility); 
+  } else if(xmlResponse == 'access denied') {
     return displayError(errorAccess); 
   }
   return true;
 }
 
 export function doXml() {
+  searchURL += '&source=' + encodeURI('Word') + '&compatibility=' + compatibility;
 // For debugging – log message can be copied into a web browser . . .
-//  console.log('doXml(): ' + searchURL);
+// console.log('doXml(): ' + searchURL);
   xmlResponse = null;
   xml.open("POST", searchURL, false);
   xml.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

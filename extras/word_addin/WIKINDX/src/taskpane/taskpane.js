@@ -15,7 +15,9 @@ import * as LocalStorage from "./wikindxLocalStorage";
 import * as Styles from "./wikindxStyles";
 import * as UrlManagement from "./wikindxUrlManagement";
 import * as Finalize from "./wikindxFinalize";
-//import { testPromise } from "./testPromise";
+
+/* Compatibility number. Must be equal to office.php's $officeVersion */
+export var compatibility = '1';
 
 /* global vars */
 var bibEntry = '';

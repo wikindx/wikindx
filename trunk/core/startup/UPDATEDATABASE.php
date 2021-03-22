@@ -1811,6 +1811,17 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 46 (6.4.4)
+     *
+     * Add again missing indices from step 43 because some queries
+     * could have failed with a MySQL engine during 6.4.2 upgrade.
+     */
+    private function upgradeTo46()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

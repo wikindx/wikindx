@@ -6,6 +6,7 @@ Focus: bug fixes
 
 BUG FIXES:
 1. Add missing indices, again. 
+2. In the distribution, rename override.css to override.css.dist. This stops any required override.css being overwritten at upgrade. To make use of override.css.dist for CSS control, rename override.css.dist to override.css.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

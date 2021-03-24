@@ -366,8 +366,8 @@ class URLS
         $pString .= \HTML\trStart();
             $pString .= \HTML\th($this->messages->text("resources", "url"));
             $pString .= \HTML\th($this->messages->text("resources", "urlLabel"));
-            $pString .= \HTML\th($this->messages->text('misc', 'delete'));
             $pString .= \HTML\th($this->messages->text('resources', 'primaryUrl'));
+            $pString .= \HTML\th($this->messages->text('misc', 'delete'));
         $pString .= \HTML\trEnd();
         
         $pString .= \HTML\trStart();

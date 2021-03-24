@@ -359,85 +359,95 @@ class URLS
         $pString .= \FORM\hidden('function', 'edit');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
         $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
+        
         // Form elements for adding another URL
         $pString .= \HTML\tableStart('left');
+        
         $pString .= \HTML\trStart();
-        $field = array_key_exists('url', $this->formData) ? $this->formData['url'] : WIKINDX_RESOURCE_URL_PREFIX;
-        $pString .= \HTML\td($this->messages->text("resources", "url") . ":&nbsp;" . \FORM\textInput(FALSE, "url", $field, 70), 'left bottom');
-        $field = array_key_exists('name', $this->formData) ? $this->formData['name'] : FALSE;
-        $pString .= \HTML\td($this->messages->text("resources", "urlLabel") . ":&nbsp;" . \FORM\textInput(FALSE, "name", $field, 50), 'left bottom');
+            $pString .= \HTML\th($this->messages->text("resources", "url"));
+            $pString .= \HTML\th($this->messages->text("resources", "urlLabel"));
+            $pString .= \HTML\th($this->messages->text('misc', 'delete'));
+            $pString .= \HTML\th($this->messages->text('resources', 'primaryUrl'));
         $pString .= \HTML\trEnd();
+        
+        $pString .= \HTML\trStart();
+            $field = array_key_exists('url', $this->formData) ? $this->formData['url'] : WIKINDX_RESOURCE_URL_PREFIX;
+            $pString .= \HTML\td(\FORM\textInput(FALSE, "url", $field, 70), 'left bottom');
+            $field = array_key_exists('name', $this->formData) ? $this->formData['name'] : FALSE;
+            $pString .= \HTML\td(\FORM\textInput(FALSE, "name", $field, 50), 'left bottom');
+            $pString .= \HTML\td("&nbsp;");
+            $pString .= \HTML\td("&nbsp;");
+        $pString .= \HTML\trEnd();
+        
         $numLinks = count($links);
         $index = 0;
         foreach ($links as $link)
         {
-            $pString .= \HTML\tableEnd();
-            $pString .= \HTML\p('&nbsp;');
-            $pString .= \HTML\tdEnd() . \HTML\trEnd() . \HTML\trStart() . \HTML\tdStart();
-            $pString .= \HTML\tableStart('left');
             $pString .= \HTML\trStart();
+            
             $field = array_key_exists('links', $this->formData) && array_key_exists("urlEditLink_$index", $this->formData['links']) ?
                 $this->formData['links']["urlEditLink_$index"] : $link;
-            $td = $this->messages->text('resources', 'url') . ':&nbsp;' . \FORM\textInput(
-                FALSE,
-                "urlEditLink_$index",
-                $field,
-                70
-            );
+            $tdUrl = \FORM\textInput(FALSE, "urlEditLink_$index", $field, 70);
+            
+            $tdName = "";
             if (!empty($names))
             {
                 $field = array_key_exists('names', $this->formData) && array_key_exists("urlEditName_$index", $this->formData['names']) ?
                     $this->formData['names']["urlEditName_$index"] : \HTML\dbToFormTidy(array_shift($names));
-                $td .= '&nbsp;&nbsp;' . $this->messages->text('resources', 'urlLabel') . ':&nbsp;' .
-                    \FORM\textInput(FALSE, "urlEditName_$index", $field, 50);
             }
             else
             {
                 $field = array_key_exists('names', $this->formData) && array_key_exists("urlEditName_$index", $this->formData['names']) ?
                     $this->formData['names']["urlEditName_$index"] : FALSE;
-                $td .= '&nbsp;&nbsp;' . $this->messages->text('resources', 'urlLabel') . ':&nbsp;' .
-                    \FORM\textInput(FALSE, "urlEditName_$index", $field, 50);
             }
+            $tdName .= \FORM\textInput(FALSE, "urlEditName_$index", $field, 50);
+            
+            
             $checked = array_key_exists('deletes', $this->formData) && array_key_exists("urlDelete_$index", $this->formData['deletes']) ?
                 TRUE : FALSE;
-            $td .= '&nbsp;&nbsp;' . $this->messages->text('misc', 'delete') . ':&nbsp;' . \FORM\checkBox(
-                FALSE,
-                "urlDelete_$index",
-                $checked
-            );
+            $tdDelete = \FORM\checkBox( FALSE, "urlDelete_$index", $checked);
+            
+            
+            $tdUrlPrimary = "";
             if ($numLinks > 1)
             {
-                $td .= '&nbsp;&nbsp;' . $this->messages->text('resources', 'primaryUrl') . ':&nbsp;';
                 if (empty($this->formData))
                 {
                     if ($index == 0)
                     {
-                        $td .= \FORM\radioButton(FALSE, 'urlPrimary', $index, TRUE);
+                        $tdUrlPrimary .= \FORM\radioButton(FALSE, 'urlPrimary', $index, TRUE);
                     }
                     else
                     {
-                        $td .= \FORM\radioButton(FALSE, 'urlPrimary', $index);
+                        $tdUrlPrimary .= \FORM\radioButton(FALSE, 'urlPrimary', $index);
                     }
                 }
                 else
                 {
                     if (array_key_exists('urlPrimary', $this->formData) && ($index == $this->formData['urlPrimary']))
                     {
-                        $td .= \FORM\radioButton(FALSE, 'urlPrimary', $index, TRUE);
+                        $tdUrlPrimary .= \FORM\radioButton(FALSE, 'urlPrimary', $index, TRUE);
                     }
                     else
                     {
-                        $td .= \FORM\radioButton(FALSE, 'urlPrimary', $index);
+                        $tdUrlPrimary .= \FORM\radioButton(FALSE, 'urlPrimary', $index);
                     }
                 }
             }
             ++$index;
-            $pString .= \HTML\td($td);
+            
+            $pString .= \HTML\td($tdUrl);
+            $pString .= \HTML\td($tdName);
+            $pString .= \HTML\td($tdUrlPrimary);
+            $pString .= \HTML\td($tdDelete);
+            
             $pString .= \HTML\trEnd();
         }
+        
         $pString .= \HTML\tableEnd();
-        $pString .= \HTML\trEnd() . \HTML\tdEnd() . \HTML\trStart() . \HTML\tdStart();
-        $pString .= \HTML\p('&nbsp;' . BR . \FORM\formSubmit($this->messages->text("submit", "Save")));
+        
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
+        
         $pString .= \FORM\formEnd();
 
         return $pString;
@@ -453,20 +463,25 @@ class URLS
     {
         $pString = $message;
         $pString .= \FORM\formHeader("urls_URLS_CORE");
+        
         $pString .= \FORM\hidden('function', 'add');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
         $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
+        
         $pString .= \HTML\tableStart('left');
-        $pString .= \HTML\trStart();
-        $pString .= \HTML\td($this->messages->text("resources", "url") . ":&nbsp;" .
-            \FORM\textInput(FALSE, "url", WIKINDX_RESOURCE_URL_PREFIX, 70), 'left bottom');
-        $field = array_key_exists('name', $this->formData) ? $this->formData['name'] : FALSE;
-        $pString .= \HTML\td($this->messages->text("resources", "urlLabel") . ":&nbsp;" .
-            \FORM\textInput(FALSE, "name", $field, 50), 'left bottom');
-        $pString .= \HTML\trEnd();
+        
+            $pString .= \HTML\trStart();
+                $pString .= \HTML\td($this->messages->text("resources", "url") . ": " .
+                    \FORM\textInput(FALSE, "url", WIKINDX_RESOURCE_URL_PREFIX, 70), 'left bottom');
+                $field = array_key_exists('name', $this->formData) ? $this->formData['name'] : FALSE;
+                $pString .= \HTML\td($this->messages->text("resources", "urlLabel") . ": " .
+                    \FORM\textInput(FALSE, "name", $field, 50), 'left bottom');
+            $pString .= \HTML\trEnd();
+            
         $pString .= \HTML\tableEnd();
-        $pString .= \HTML\trEnd() . \HTML\tdEnd() . \HTML\trStart() . \HTML\tdStart();
-        $pString .= \HTML\p('&nbsp;' . BR . \FORM\formSubmit($this->messages->text("submit", "Save")));
+        
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
+        
         $pString .= \FORM\formEnd();
 
         return $pString;

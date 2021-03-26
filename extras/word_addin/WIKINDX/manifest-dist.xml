@@ -77,7 +77,7 @@
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="GetStarted.Description" DefaultValue="WIKINDX loaded."/>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue=""/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="WIKINDX"/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>

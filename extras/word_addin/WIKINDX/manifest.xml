@@ -4,7 +4,7 @@
   <Version>0.9</Version>
   <ProviderName>Wikindx</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="WIKINDX-Dev"/>
+  <DisplayName DefaultValue="WIKINDX"/>
   <Description DefaultValue="WIKINDX Citation Tool. Beta 0.9"/>
   <IconUrl DefaultValue="https://localhost:3000/assets/wikindx-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/wikindx-64.png"/>

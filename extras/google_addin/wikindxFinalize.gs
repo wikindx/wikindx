@@ -9,6 +9,7 @@ var cleanIDs = new Object();
 var citeIDs = new Object();
 var xmlError = false;
 var errorNoInserts = "You have not inserted any references or citations yet so there is nothing to finalize.";
+var misc = false;
 
 function finalizeDisplay() {
 // Before displaying the pane, check we have references and remove any empty wikindx-based namedranges
@@ -106,7 +107,11 @@ function finalizeRun(params, style) {
     var ranges = document.getNamedRanges('wikindx-bibliography');
     ranges[0].remove();
     var rangeElements = ranges[0].getRange().getRangeElements();
-    rangeElements[0].getElement().asText().setText('');
+// !!!! Even on a completely blank document that then has one reference inserted, google sometimes thinks it finds this tag . . .
+// Check it has defined elements before using setText();
+    if (rangeElements[0] != undefined) {
+      rangeElements[0].getElement().asText().setText('');
+    }
   }
   appendBibliography('\n\n\n\n' + bibliography);
   return {

@@ -59,7 +59,7 @@ MySql database:     'wikindx'
 * Type in your browser <http://wikindx.test>. You can see a welcome message
   with some instructions. Some tools are also available at <http://localhost>.
 
-At this point you have a working virtual host readyfor installing some PHP code.
+At this point you have a working virtual host ready for installing some PHP code.
 We need a few more tweaks to accommodate WIKINDX.
 
 
@@ -313,10 +313,10 @@ server {
 
 Instead we will focus on the `C:\WinNMP\conf\nginx.conf` file.
 This file is the global config of Nginx and `C:\WinNMP\conf\domains.d\wikindx.conf`
-inherit of it. This will improve Adminer configuration at the same time,
-allow the upload of big files (128MB) and long script execution
+inherits of it. This will improve Adminer configuration at the same time,
+allow the upload of big files (128MB), and long script execution
 for database backups from Adminer. Add or set the following options
-like in the sample file bellow:
+as in the sample file below:
 
 ~~~~nginx
 ## Timeouts ##
@@ -534,6 +534,9 @@ Some resources:
 WinNMP creates a database on its own. For the other server environments
 you need to create by hand the database with a MySQL client.
 Hosting providers have often a dedicated tool.
+
+The suggested database name, user name, and password below must match those in WIKINDX's
+top-level `config.php` (`$WIKINDX_DB`, `$WIKINDX_DB_USER`, `$WIKINDX_DB_PASSWORD`).
 
 
 ### With phpMyAdmin

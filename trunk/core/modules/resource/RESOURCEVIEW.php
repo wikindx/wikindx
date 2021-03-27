@@ -775,24 +775,17 @@ class RESOURCEVIEW
      */
     private function urls($resourceId, $userAddId)
     {
-        $this->db->formatConditions(['resourcetextId' => $resourceId]);
-        $recordset = $this->db->select('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
+        $this->db->formatConditions(['resourceurlResourceId' => $resourceId]);
+        $this->db->ascDesc = $this->db->desc;
+        $this->db->orderBy('resourceurlPrimary');
+        $this->db->ascDesc = $this->db->asc;
+        $this->db->orderBy('resourceurlId');
+        $recordset = $this->db->select('resource_url', ['resourceurlUrl', 'resourceurlName']);
         while ($row = $this->db->fetchRow($recordset))
         {
-            if ($row['resourcetextUrls'])
-            {
-                $links = \URL\getUrls($row['resourcetextUrls']);
-                if ($row['resourcetextUrlText'])
-                {
-                    $names = \URL\getUrls($row['resourcetextUrlText']);
-                }
-                foreach ($links as $url)
-                {
-                    $name = isset($names) ? array_shift($names) : FALSE;
-                    $name = $name ? $name : $url;
-                    $urls[] = \HTML\a('link', \URL\reduceUrl(\HTML\nlToHtml($name)), $url, '_new');
-                }
-            }
+            $url = $row['resourceurlUrl'];
+            $name = $row['resourceurlName'] ? $row['resourceurlName'] : $url;
+            $urls[] = \HTML\a('link', \URL\reduceUrl(\HTML\nlToHtml($name)), $url, '_new');
         }
         if ($this->session->getVar("setup_Write") && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($userAddId == $this->userId)
             || $this->session->getVar("setup_Superadmin")))

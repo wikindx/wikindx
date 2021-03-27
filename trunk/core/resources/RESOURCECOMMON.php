@@ -503,6 +503,8 @@ class RESOURCECOMMON
         $this->textFields = ['resourcetextId', 'resourcetextNote', 'resourcetextAbstract', 'resourcetextUrls', 'resourcetextUrlText',
             'resourcetextEditUserIdNote', 'resourcetextAddUserIdNote', 'resourcetextEditUserIdAbstract', 'resourcetextAddUserIdAbstract', ];
 
+        $this->urlFields = ['resourceurlId', 'resourceurlUrl', 'resourceurlName', 'resourceurlPrimary'];
+
         $this->yearFields = ['resourceyearId', 'resourceyearYear1', 'resourceyearYear2', 'resourceyearYear3', 'resourceyearYear4'];
 
         $this->pageFields = ['resourcepageId', 'resourcepagePageStart', 'resourcepagePageEnd'];

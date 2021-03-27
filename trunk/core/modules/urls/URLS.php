@@ -66,8 +66,9 @@ class URLS
             'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&browserTabID=' . $this->browserTabID
         );
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "url", $this->messages->text('misc', 'edit') . '&nbsp;&nbsp;' . $return));
-        $this->db->formatConditions(['resourcetextId' => $this->resourceId]);
-        $recordset = $this->db->select('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
+        $this->db->formatConditions(['resourceurlResourceId' => $this->resourceId]);
+        $this->db->orderBy('resourceurlId');
+        $recordset = $this->db->select('resource_url', ['resourceurlId', 'resourceurlUrl', 'resourceurlName', 'resourceurlPrimary']);
         if ($this->db->numRows($recordset))
         { // URLs exist for this resource
             GLOBALS::addTplVar('content', $this->urlEditForm($recordset, $message));
@@ -83,7 +84,22 @@ class URLS
     private function add()
     {
         $this->validateInput('add');
-        $this->storeUrl();
+        
+        // Insert
+        $fields[] = 'resourceurlResourceId';
+        $values[] = $this->resourceId;
+        
+        $fields[] = 'resourceurlUrl';
+        $values[] = $this->formData['url'];
+        
+        $fields[] = 'resourceurlName';
+        $values[] = $this->formData['name'];
+        
+        $fields[] = 'resourceurlPrimary';
+        $values[] = 1;
+        
+        $this->db->insert('resource_url', $fields, $values);
+        
         // send back to view this resource with success message
         $navigate = FACTORY_NAVIGATE::getInstance();
         $navigate->resource($this->resourceId, "urlAdd");
@@ -94,6 +110,17 @@ class URLS
     private function edit()
     {
         $this->validateInput();
+        if (array_key_exists('ids', $this->formData))
+        {
+            foreach ($this->formData['ids'] as $key => $var)
+            {
+                $split = \UTF8\mb_explode('_', $key);
+                if ($split[0] == 'urlEditId')
+                {
+                    $editIds[$split[1]] = $var;
+                }
+            }
+        }
         if (array_key_exists('links', $this->formData))
         {
             foreach ($this->formData['links'] as $key => $var)
@@ -116,6 +143,17 @@ class URLS
                 }
             }
         }
+        if (array_key_exists('ids', $this->formData))
+        {
+            foreach ($this->formData['ids'] as $key => $var)
+            {
+                $split = \UTF8\mb_explode('_', $key);
+                if ($split[0] == 'urlEditId')
+                {
+                    $editIds[$split[1]] = $var;
+                }
+            }
+        }
         if (array_key_exists('deletes', $this->formData))
         {
             foreach ($this->formData['deletes'] as $key => $var)
@@ -123,218 +161,89 @@ class URLS
                 $split = \UTF8\mb_explode('_', $key);
                 if ($split[0] == 'urlDelete')
                 {
-                    $deletes[$split[1]] = $var;
+                    if (array_key_exists($split[1], $editIds))
+                    {
+                        $deletes[$split[1]] = $editIds[$split[1]];
+                    }
                 }
             }
         }
+        
+        if (array_key_exists('url', $this->formData))
+        {
+            // Insert
+            $fields[] = 'resourceurlResourceId';
+            $values[] = $this->resourceId;
+            
+            $fields[] = 'resourceurlUrl';
+            $values[] = $this->formData['url'];
+            
+            $fields[] = 'resourceurlName';
+            $values[] = array_key_exists('name', $this->formData) ? $this->formData['name'] : "";
+            
+            $fields[] = 'resourceurlPrimary';
+            $values[] = 0;
+            
+            $this->db->insert('resource_url', $fields, $values);
+        }
+        
         // Edit URLs
         if (isset($editLinks))
         {
-            $names = [];
-            $urlTextExists = FALSE;
             foreach ($editLinks as $number => $link)
             {
-                $links[$number] = $link;
-                if (isset($editNames) && array_key_exists($number, $editNames))
-                {
-                    $urlTextExists = TRUE;
-                    $names[$number] = $editNames[$number];
-                }
-                else
-                {
-                    $names[$number] = FALSE;
-                }
+                $updateArray['resourceurlUrl'] = $link;
+                $updateArray['resourceurlName'] = array_key_exists($number, $editNames) ? $editNames[$number] : "";
+                $updateArray['resourceurlPrimary'] = $this->formData['urlPrimary'] == $number ? 1 : 0;
+                $this->db->formatConditions(["resourceurlId" => $editIds[$number]]);
+                $this->db->formatConditions(["resourceurlResourceId" => $this->resourceId]);
+                $this->db->update('resource_url', $updateArray);
             }
-            $updateArray['resourcetextUrls'] = base64_encode(serialize($links));
-            if ($urlTextExists)
-            {
-                $updateArray['resourcetextUrlText'] = base64_encode(serialize($names));
-            }
-            // Remove first then edit
-            $this->db->formatConditions(['resourcetextId' => $this->resourceId]);
-            $this->db->updateNull('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
-            $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-            $this->db->update('resource_text', $updateArray);
         }
-        // store new URL
-        $this->storeUrl();
+        
         if (isset($deletes))
         {
-            $this->delete($deletes);
+            $this->db->formatConditionsOneField($deletes, 'resourceurlId');
+            $this->db->formatConditions(["resourceurlResourceId" => $this->resourceId]);
+            $this->db->delete('resource_url');
         }
-        // set primary URL
-        $this->setPrimaryUrl();
+        
+        $this->setPrimaryUrl($this->resourceId);
+        
         // send back to view this resource with success message (deleteConfirm breaks out before this)
         $navigate = FACTORY_NAVIGATE::getInstance();
         $navigate->resource($this->resourceId, 'urlEdit');
     }
+    
     /**
-     * delete URLs
+     * Set the primary URL
      *
-     * @param array $deletes
+     * @param int $resourceurlResourceId
      */
-    private function delete($deletes)
+    private function setPrimaryUrl($resourceurlResourceId)
     {
-        $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-        $recordSet = $this->db->select(["resource_text"], ["resourcetextUrls", "resourcetextUrlText"]);
-        $row = $this->db->fetchRow($recordSet);
-        $links = array_diff_key(\URL\getUrls($row['resourcetextUrls']), $deletes);
-        if ($row['resourcetextUrlText'])
+        
+        // Find the previous first URL
+        $this->db->formatConditions(["resourceurlResourceId" => $resourceurlResourceId]);
+        $this->db->formatConditions(["resourceurlPrimary" => 1]);
+        $minArray = $this->db->selectMin('resource_url', 'resourceurlId');
+        $resourceurlId = $minArray[0]['resourceurlId'];
+        
+        if ($resourceurlId == NULL)
         {
-            $names = array_diff_key(\URL\getUrls($row['resourcetextUrlText']), $deletes);
-        }
-        else
-        {
-            $names = [];
-        }
-        $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-        $recordset = $this->db->select('resource_text', ['resourcetextAbstract', 'resourcetextNote']);
-        $row = $this->db->fetchRow($recordset);
-        // If all fields are null, delete the row
-        if (empty($links) && !$row['resourcetextAbstract'] && !$row['resourcetextNote'])
-        {
-            $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-            $this->db->delete('resource_text');
-        }
-        elseif (empty($links))
-        {
-            $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-            $this->db->updateNull('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
-        }
-        else
-        {
-            $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-            $updateArray['resourcetextUrls'] = base64_encode(serialize($links));
-            if (empty($names) || ((count($names) == 1) && !$names[0]))
-            { // set to NULL
-                $this->db->updateNull('resource_text', 'resourcetextUrlText');
-                $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-            }
-            else
-            {
-                $updateArray['resourcetextUrlText'] = base64_encode(serialize($names));
-            }
-            $this->db->update('resource_text', $updateArray);
-        }
-        // set primary URL
-        $this->setPrimaryUrl();
-        // send back to view this resource with success message
-        $navigate = FACTORY_NAVIGATE::getInstance();
-        $navigate->resource($this->resourceId, "urlEdit");
-    }
-    /**
-     * set primary URL
-     *
-     * Key 0 in the list is the primary URL so this is a matter of re-ordering
-     */
-    private function setPrimaryUrl()
-    {
-        $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-        $recordSet = $this->db->select(["resource_text"], ["resourcetextUrls", "resourcetextUrlText"]);
-        $row = $this->db->fetchRow($recordSet);
-        $links = \URL\getUrls($row['resourcetextUrls']);
-        if (empty($links))
-        { // Nothing to do
-            return;
-        }
-        if ($row['resourcetextUrlText'])
-        {
-            $names = \URL\getUrls($row['resourcetextUrlText']);
-        }
-        else
-        {
-            $names = [];
-        }
-        if (array_key_exists('urlPrimary', $this->formData) && array_key_exists($this->formData['urlPrimary'], $links))
-        {
-            $link = $links[$this->formData['urlPrimary']];
-            unset($links[$this->formData['urlPrimary']]);
-            array_unshift($links, $link);
-            if (!empty($names))
-            {
-                $name = $names[$this->formData['urlPrimary']];
-                unset($names[$this->formData['urlPrimary']]);
-                array_unshift($names, $name);
-            }
-        }
-        // Ensure we start from key 0
-        $index = 0;
-        if (!array_key_exists(0, $links))
-        {
-            foreach ($links as $key => $var)
-            {
-                $newLinks[$index] = $var;
-                if (array_key_exists($key, $names))
-                {
-                    $newNames[$index] = $names[$key];
-                }
-                ++$index;
-            }
-            if (isset($newLinks))
-            {
-                $links = $newLinks;
-            }
-            if (isset($newNames))
-            {
-                $names = $newNames;
-            }
-        }
-        $updateArray['resourcetextUrls'] = base64_encode(serialize($links));
-        $updateArray['resourcetextUrlText'] = base64_encode(serialize($names));
-        $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-        $this->db->update('resource_text', $updateArray);
-    }
-    /**
-     * Store new URL
-     */
-    private function storeUrl()
-    {
-        $names = [];
-        if (!array_key_exists('url', $this->formData))
-        { // Nothing to do
-            return;
-        }
-        $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-        $recordSet = $this->db->select(["resource_text"], ["resourcetextUrls", "resourcetextUrlText"]);
-        if ($this->db->numRows($recordSet))
-        { // URLs already exist for this resource so need to update rather than insert
-            $row = $this->db->fetchRow($recordSet);
-            $links = \URL\getUrls($row['resourcetextUrls']);
-            if ($row['resourcetextUrlText'])
-            {
-                $names = \URL\getUrls($row['resourcetextUrlText']);
-            }
-            else
-            {
-                $names = [];
-            }
-            $links[] = $this->formData['url'];
-            if (empty($names))
-            {
-                $names[] = FALSE;
-            }
-            $names[] = $this->formData['name'];
-            $updateArray['resourcetextUrls'] = base64_encode(serialize($links));
-            $updateArray['resourcetextUrlText'] = base64_encode(serialize($names));
-            $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
-            $this->db->update('resource_text', $updateArray);
-        }
-        else
-        {	// insert
-            $links[] = $this->formData['url'];
-            if ($this->formData['name'])
-            { // else leave as default NULL
-                $names[] = $this->formData['name'];
-                $fields[] = 'resourcetextUrlText';
-                $values[] = base64_encode(serialize($names));
-            }
-            $fields[] = 'resourcetextId';
-            $values[] = $this->resourceId;
-            $fields[] = 'resourcetextUrls';
-            $values[] = base64_encode(serialize($links));
-            $this->db->insert('resource_text', $fields, $values);
+            // Find the first URL inserted
+            $this->db->formatConditions(["resourceurlResourceId" => $resourceurlResourceId]);
+            $minArray = $this->db->selectMin('resource_url', 'resourceurlId');
+            $resourceurlId = $minArray[0]['resourceurlId'];
+            
+            // Set the primary URL
+            $updateArray['resourceurlPrimary'] = 1;
+            $this->db->formatConditions(["resourceurlId" => $resourceurlId]);
+            $this->db->formatConditions(["resourceurlResourceId" => $resourceurlResourceId]);
+            $this->db->update('resource_url', $updateArray);
         }
     }
+    
     /**
      * Form for editing urls
      *
@@ -345,15 +254,18 @@ class URLS
      */
     private function urlEditForm($recordset, $message = FALSE)
     {
+        $ids = [];
+        $links = [];
         $names = [];
+        $primaries = [];
         while ($row = $this->db->fetchRow($recordset))
         {
-            $links = \URL\getUrls($row['resourcetextUrls']);
-            if ($row['resourcetextUrlText'])
-            {
-                $names = \URL\getUrls($row['resourcetextUrlText']);
-            }
+            $ids[] = $row['resourceurlId'];
+            $links[] = $row['resourceurlUrl'];
+            $names[] = $row['resourceurlName'];
+            $primaries[] = $row['resourceurlPrimary'];
         }
+        
         $pString = $message;
         $pString .= \FORM\formHeader("urls_URLS_CORE");
         $pString .= \FORM\hidden('function', 'edit');
@@ -381,26 +293,18 @@ class URLS
         
         $numLinks = count($links);
         $index = 0;
-        foreach ($links as $link)
+        
+        foreach ($links as $k => $link)
         {
-            $pString .= \HTML\trStart();
+            $tdId = \FORM\hidden("urlEditId_$index", $ids[$index]);
             
             $field = array_key_exists('links', $this->formData) && array_key_exists("urlEditLink_$index", $this->formData['links']) ?
                 $this->formData['links']["urlEditLink_$index"] : $link;
             $tdUrl = \FORM\textInput(FALSE, "urlEditLink_$index", $field, 70);
             
-            $tdName = "";
-            if (!empty($names))
-            {
-                $field = array_key_exists('names', $this->formData) && array_key_exists("urlEditName_$index", $this->formData['names']) ?
-                    $this->formData['names']["urlEditName_$index"] : \HTML\dbToFormTidy(array_shift($names));
-            }
-            else
-            {
-                $field = array_key_exists('names', $this->formData) && array_key_exists("urlEditName_$index", $this->formData['names']) ?
-                    $this->formData['names']["urlEditName_$index"] : FALSE;
-            }
-            $tdName .= \FORM\textInput(FALSE, "urlEditName_$index", $field, 50);
+            $field = array_key_exists('names', $this->formData) && array_key_exists("urlEditName_$index", $this->formData['names']) ?
+                $this->formData['names']["urlEditName_$index"] : \HTML\dbToFormTidy($names[$index]);
+            $tdName = \FORM\textInput(FALSE, "urlEditName_$index", $field, 50);
             
             
             $checked = array_key_exists('deletes', $this->formData) && array_key_exists("urlDelete_$index", $this->formData['deletes']) ?
@@ -413,7 +317,7 @@ class URLS
             {
                 if (empty($this->formData))
                 {
-                    if ($index == 0)
+                    if ($primaries[$index])
                     {
                         $tdUrlPrimary .= \FORM\radioButton(FALSE, 'urlPrimary', $index, TRUE);
                     }
@@ -436,11 +340,11 @@ class URLS
             }
             ++$index;
             
-            $pString .= \HTML\td($tdUrl);
-            $pString .= \HTML\td($tdName);
-            $pString .= \HTML\td($tdUrlPrimary);
-            $pString .= \HTML\td($tdDelete);
-            
+            $pString .= \HTML\trStart();
+                $pString .= \HTML\td($tdId . $tdUrl);
+                $pString .= \HTML\td($tdName);
+                $pString .= \HTML\td($tdUrlPrimary);
+                $pString .= \HTML\td($tdDelete);
             $pString .= \HTML\trEnd();
         }
         
@@ -518,6 +422,10 @@ class URLS
         {
             $delete = FALSE;
             $split = \UTF8\mb_explode('_', $key);
+            if (($split[0] == 'urlEditId'))
+            {
+                $this->formData['ids'][$key] = trim($var);
+            }
             if (($split[0] == 'urlEditLink'))
             {
                 if (trim($var))

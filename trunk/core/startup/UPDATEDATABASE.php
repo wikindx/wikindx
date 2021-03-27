@@ -1822,6 +1822,35 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 47 (6.4.4)
+     *
+     * Create table resource_url.
+     */
+    private function upgradeTo47()
+    {
+        $this->updateDbSchema('47');
+        
+        $this->transferUrls();
+        
+        /*$this->db->queryNoError("DROP TABLE IF EXISTS " . WIKINDX_DB_TABLEPREFIX . "statistics;");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccesses");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccessesPeriod");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloads");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloadsPeriod");
+        
+        // For a period mid-2018 to mid-2019, resourceattachmentsTimestamp was not written – set these NULL values to current timestamp
+        $this->db->formatConditions(['resourceattachmentsTimestamp' => 'IS NULL']);
+        $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId']);
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            $this->db->formatConditions(['resourceattachmentsId' => $row['resourceattachmentsId']]);
+            $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
+        }*/
+        
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()
@@ -1874,6 +1903,119 @@ END;
 				}
 			}
         }
+    }
+
+    /**
+     * Transfer urls data from resource_text to resource_url table
+     */
+    private function transferUrls()
+    {
+        $countTransfered = 0;
+        $insertUrlsValues = [];
+        $deleteUrls = [];
+        
+        $this->db->formatConditions(['resourcetextUrls' => ' IS NOT NULL']);
+        $resultSet = $this->db->select('resource_text', ['resourcetextId', 'resourcetextUrls', 'resourcetextUrlText']);
+        
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            // Unserialize urls
+            $Urls = [];
+            if ($row['resourcetextUrls'] !== NULL)
+            {
+                $Urls = base64_decode($row['resourcetextUrls']);
+                $Urls = unserialize($Urls);
+            }
+            
+            if (!is_array($Urls))
+            {
+                $Urls = [];
+            }
+            
+            // Unserialize url names
+            $Names = [];
+            if ($row['resourcetextUrlText'] !== NULL)
+            {
+                $Names = base64_decode($row['resourcetextUrlText']);
+                $Names = unserialize($Names);
+            }
+            
+            if (!is_array($Names))
+            {
+                $Names = [];
+            }
+            
+            $deleteUrls[] = $row['resourcetextId'];
+            
+            foreach($Urls as $k => $u)
+            {                
+                $name = array_key_exists($k, $Names) ? $Names[$k] : "";
+                $insertUrlsValues[] = '(' . implode(',', [
+                    $row['resourcetextId'],
+                    $this->db->tidyInput($u),
+                    $this->db->tidyInput($name),
+                    $k == 0 ? 1 : 0
+                ]) . ')';
+            }
+                
+            if (count($deleteUrls) % 100 == 0)
+            {
+                if (count($insertUrlsValues) > 0)
+                {
+                    $this->db->multiInsert(
+                        'resource_url',
+                        [
+                            'resourceurlResourceId',
+                            'resourceurlUrl',
+                            'resourceurlName',
+                            'resourceurlPrimary',
+                        ],
+                        implode(', ', $insertUrlsValues)
+                    );
+                }
+                
+                $this->db->formatConditionsOneField($deleteUrls, 'resourcetextId');
+                $this->db->updateNull('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
+                
+                $countTransfered += count($deleteUrls);
+                
+                $insertUrlsValues = [];
+                $deleteUrls = [];
+            }
+            
+            // Check we have more than 6 seconds buffer before max_execution_time times out.
+            if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
+            {
+                $this->interruptStepMessage  = "<span style='color:red;font-weight:bold'>Caution : stage 47 could require you increase the memory limit (\$WIKINDX_MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time). This step can also take many pauses depending on the amount of urls accumulated.</span>";
+                $this->interruptStepMessage .= "<br>stage47 continuing: $countTransfered urls records created this pass.&nbsp;&nbsp;";
+                $this->pauseUpdateDisplay();
+            }
+        }
+        
+        if (count($deleteUrls) > 0)
+        {
+            if (count($insertUrlsValues) > 0)
+            {
+                $this->db->multiInsert(
+                    'resource_url',
+                    [
+                        'resourceurlResourceId',
+                        'resourceurlUrl',
+                        'resourceurlName',
+                        'resourceurlPrimary',
+                    ],
+                    implode(', ', $insertUrlsValues)
+                );
+            }
+            
+            $this->db->formatConditionsOneField($deleteUrls, 'resourcetextId');
+            $this->db->updateNull('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
+        }
+        
+        // Remove empty row of resource_text
+        $this->db->formatConditions(['resourcetextNote' => 'IS NULL']);
+        $this->db->formatConditions(['resourcetextAbstract' => 'IS NULL']);
+        $this->db->delete('resource_text');
     }
 
     /**

@@ -9,7 +9,7 @@ weight = 5
 
 This website is made with a PHP wrapper script `release/cli-make-web.php` on top of [Hugo](https://gohugo.io/) static generator (fixed version). The theme is derivated from [Grav Learn theme to Hugo v2.5.0](https://github.com/matcornic/hugo-theme-learn/releases/tag/2.5.0) for Hugo.
 
-Use only the non extended version of [Hugo v0.80](https://github.com/gohugoio/hugo/releases/tag/v0.80.0) for your OS. Other version have not been tested.
+Use only the non extended version of [Hugo v0.80](https://github.com/gohugoio/hugo/releases/tag/v0.80.0) for your OS. Other versions have not been tested.
 
 After downloading the binary from github, place it in the tools folder and name it __hugo.exe__ for Windows OS or __hugo__ for other OSes. Give 777 permissions so that the wrapper script can run Hugo.
 
@@ -51,11 +51,11 @@ Help Topics are special pages. WIKINDX code points to them. So if you want to re
 
 ## Configuration and changes to the Grav Learn theme
 
-The configuration file is `website/web/src/config.toml`. It follow the documentation of the theme and Hugo with some exceptions. The __pre__ attribut of the `[[menu.shortcuts]]` section have been hacked to set the id of a SVN icon bundled in a custom webfont build with the [icomoon.io](icomoon.io) tool. It's not anymore some HTML code displayed before an entry of the __more__ menu. The file `website/web/src/icomoon.io.wikindx.project.json` is a configuration for `website/web/src/themes/hugo-theme-learn/static/fonts/custom-font-awesome.svg`, build with icomoon.io tool.
+The configuration file is `website/web/src/config.toml`. It follow the documentation of the theme and Hugo with some exceptions. The __pre__ attribute of the `[[menu.shortcuts]]` section have been hacked to set the id of a SVN icon bundled in a custom webfont build with the [icomoon.io](icomoon.io) tool. It's no longer HTML code displayed before an entry of the __more__ menu. The file `website/web/src/icomoon.io.wikindx.project.json` is a configuration for `website/web/src/themes/hugo-theme-learn/static/fonts/custom-font-awesome.svg`, and is built with the icomoon.io tool.
 
 Others customization are extensive changes to layout and static files of the theme to optimise the loading time and reduce the size of the generated website. The left column is also entirely customised. 
 
-The three files below are called by `cli-make-web.php` to bundle and minify CSS and JS scripts on the fly during the generation. Only their byproducts are included in the final website. The build script also minify all HTML files after Hugo generation.
+The three files below are called by `cli-make-web.php` to bundle and minify CSS and JS scripts on the fly during the generation. Only their byproducts are included in the final website. The build script also minifies all HTML files after Hugo generation.
 
 ~~~~plain
 website/web/src/themes/hugo-theme-learn/static/css/minified.css.php
@@ -72,4 +72,4 @@ Mermaid JS is not enabled because this JS file is huge but could be used later.
 
 ## Version selector
 
-The last customization is a version selector displayed in the left column of the website. The PHP file `website/web/version-switch.php`, included in the final website, provides a live list in JSON format of all version of the website installed on SF. A JS script included in the left column of each page uses this list of versions to allow a visitor to switch the current version instantly, without rebuilding old versions.
+The last customization is a version selector displayed in the left column of the website. The PHP file `website/web/version-switch.php`, included in the final website, provides a live list in JSON format of all versions of the website installed on SF. A JS script included in the left column of each page uses this list of versions to allow a visitor to switch the current version instantly, without rebuilding old versions.

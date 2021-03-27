@@ -44,7 +44,7 @@ __X.Y.Z__ is the number of the released version defined by the constant
    Increment it by one (and one only) if a core upgrade is needed.
 
 6. Check that **WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"]**
-   and $wikindxVersion in plugins have the same value.
+   and $wikindxVersion in compatible plugins have the same value.
 
 7. Check that the core upgrade stage for this version is complete and
    functional: database, constants, variables, files, folders, messages,
@@ -123,7 +123,7 @@ __X.Y.Z__ is the number of the released version defined by the constant
 21. Try the update server. Don't forget to switch the Trunk Version flag
     in debug configuration.
 
-22. When the components are ready commit them to SVN and don't change
+22. When the components are ready, commit them to SVN and don't change
     them anymore because their signature must be definitively fixed.
 
 
@@ -146,11 +146,11 @@ The __Contributing  > API Manual__ give details about that.
 
 3. Mirror the content of `CHANGELOG.txt` file in __Install & Upgrade > Release Notes__ section.
 
-4. Check the __Help Topics__ section is up to date and any topic is missing or misnamed.
+4. Check the __Help Topics__ section is up to date and no topic is missing or misnamed.
 
-5. Check all the pages and correct what no longer matches the new version.
+5. Check all the pages, and correct what no longer matches the new version.
 
-6. Check the main SourceForge page of the project and correct what no
+6. Check the main SourceForge page of the project, and correct what no
    longer matches the new version.
 
 7. Generate the website for the trunk and the current version and upload them on SF.
@@ -163,7 +163,7 @@ The __Contributing  > API Manual__ give details about that.
 
 ## SVN Release
 
-During this step it is preferable that the release manager is the only
+During this step, it is preferable that the release manager is the only
 one to modify SVN.
 
 1. Update your working copy.
@@ -202,7 +202,7 @@ of the published code you should only use this method.
 
 ## Public Release
 
-In case you need to release and old version, use svn checkout xxx before
+In case you need to release an old version, use svn checkout xxx before
 switching on the last commit of this release. Don't forget to switch again
 to HEAD after the release!
 
@@ -213,7 +213,7 @@ to HEAD after the release!
    $ php release/cli-make-package.php
 ~~~~
 
-   The layout created by this script matchs exactly the layout of FTP.
+   The layout created by this script matches exactly the layout of FTP.
 
 2. Without overwriting files already online, upload the content of
     `release/X.Y.Z/files` in the `/home/pfs/project/wikindx/` directory
@@ -223,7 +223,7 @@ to HEAD after the release!
     `release/X.Y.Z/cus` in the `/home/project-web/wikindx/htdocs/cus` directory
     of the SourceForge WIKINDX Project FTP.
 
-4. Update the WIKINDX TEST DRIVE website and check if nothing bad append before
+4. Update the WIKINDX TEST DRIVE website and check that nothing bad happened before
    publishing to directories that are not archives. If things go wrong, correct
    and redo the release from the begining.
 
@@ -236,7 +236,7 @@ to HEAD after the release!
     it as the default download for all systems (Link: Select all) and save.
 
 7. If an old A.B.C version should no longer be highlighted, remove its A.B.C
-    folder of the SourceForge WIKINDX Project FTP. The automatic update for
+    folder from the SourceForge WIKINDX Project FTP. The automatic update for
     the A.B.C version will continue to work because it uses the copies of the
     `archives/` folders, which have not been deleted.
 
@@ -257,16 +257,16 @@ to HEAD after the release!
 3. Click on "Field Management" menu
 
 4. Update or create a "Found in" milestone entry for the release X.Y.Z
-   and fill it with the same infos than the SVN History (put the revision
+   and fill it with the same infos as the SVN History (put the revision
    number in the Description field). Check the "Complete" column for older
    versions that are no longer supported.
 
 5. Update or create a "Target" milestone entry for the release X.Y.Z
-   and fill it with the same infos than the SVN History (put the revision
+   and fill it with the same infos as the SVN History (put the revision
    number in the Description field). Check the "Complete" column of the
    current release.
 
 6. Save these changes.
 
-7. If this is not done, assign all the tickets processed in this release
+7. If it has not already been done, assign all the tickets processed in this release
    and close them. Reassign unprocessed tickets if necessary.

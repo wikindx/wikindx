@@ -11,11 +11,11 @@ data and database update system (each change is applied between
 the installed version and the target version). However, always
 read the Upgrade chapter for instructions on upgrading.
 
-So we recommend that you regularly update to the latest version from the
+We recommend that you regularly update to the latest version from the
 tarball version available in the [SourceForge File](https://sourceforge.net/projects/wikindx/files/) section,
 especially if your WIKINDX is hosted on the web.
 
-If you prefer an installation from a [Version Control Systems](https://en.wikipedia.org/wiki/Version_control) (VCS),
+If you prefer an installation from a [Version Control System](https://en.wikipedia.org/wiki/Version_control) (VCS),
 __we strongly recommend__ that you use one of the __point release__ described
 in the README.txt file at the [root of SF SVN](https://sourceforge.net/p/wikindx/svn/HEAD/tree/)
 with the __trunk__ branch on a __production__ server.
@@ -35,8 +35,10 @@ WIKINDX comes with __default__ template, __APA__ style and main vendor
 components pre-installed. No plugins are pre-installed. Translations are
 included in the core or plugins.
 
-All components are available on [SourceForge File](https://sourceforge.net/projects/wikindx/files/) section for a manual
-installation or via the component update system embedded in WIKINDX.
+All components are available on the
+[SourceForge File](https://sourceforge.net/projects/wikindx/files/)
+section for a manual installation or via the component update system
+embedded in WIKINDX.
 
 Each official vendor component is released with a new version of the
 application and only for the last version. Others components could
@@ -51,7 +53,7 @@ of WIKINDX.
 ## Installation
 
 In all cases, the following steps need to be taken once the web server
-is up and running, and the database have been created.
+is up and running and the database has been created.
 
 The details may be slightly different (especially steps 4 to 7) depending
 on your MySQL client or whether running WIKINDX on a hosted web environment
@@ -69,7 +71,7 @@ of the web server.
 
 4. Copy the `config.php.dist` file to `config.php`.
 
-5. Edit the `config.php` file and set the RDBMS connection parameters
+5. Edit the `config.php` file and set the database connection parameters
    (more if needed). Each setting is documented in the file.
 
 ```php
@@ -81,7 +83,7 @@ public $WIKINDX_DB_PASSWORD = "wikindx";
 ```
 
 6. Optionally, ensure the web server environment is running
-   (with ps, top or an other process monitoring software).
+   (with ps, top, or an other process monitoring software).
 
 7. Type in the WIKINDX address in the web browser – if running locally,
    this will be <http://wikindx.test/> – to complete your WIKINDX configuration. You will go through the following steps:
@@ -101,16 +103,16 @@ public $WIKINDX_DB_PASSWORD = "wikindx";
 
 10. Finally install and enable components from the __Components Manager__  (__Admin > Components__ menu).
 
-You single user install of WIKINDX is ready. Have fun!
+Your single-user install of WIKINDX is ready. Have fun!
 
 
 ## Permissions
 
 If you are running WIKINDX locally on Windows (using something like
-XAMPP), you can skip the perms step as the folders will be writable by
+XAMPP), you can skip the permissions step as the folders will be writable by
 default.
 
-If you are running a Unix machine WIKINDX will not function correctly
+If you are running a Unix-type machine, WIKINDX will not function correctly
 if various folders and files within them are not writeable for the web server user.
 
 The install process will show with current Unix permissions. You should made folders
@@ -136,7 +138,7 @@ chmod -R 777 *
 ~~~~
 
 As a last resort you can use the 777 mode but it is a major security
-flaw.  You don't have to get to this end if the owners are set up
+flaw. You shouldn't need this extreme case if the owners are set up
 correctly.
 
 When your web site code is a clone of the SVN repository (not
@@ -144,7 +146,7 @@ recommended) the owner of the root SVN folder, .svn folders, and all
 files and folders under .svn need to be readable, writable and
 executable (7).
 
-WIKINDX create folders with 777 permissions so that it works in all
+WIKINDX creates folders with 777 permissions so that it works in all
 cases, notably the installation of the core and components, for managing
 caches and data. You can correct it later if you want the best possible
 security.
@@ -162,6 +164,7 @@ The `data/files/` directory is used for the temporary storage of RTF,
 RIS, Endnote, BibTeX and other files for the user to download. The
 scripts within WIKINDX will mark these files for deletion after so many
 seconds have passed since their last modification (you can configure
-this through the web browser) . This doesn't necessarily mean that they
-will be immediately deleted: they will be deleted the next time someone
-exports a file.
+this In WIKINDX: __Admin > Configure__ menu).
+This doesn't necessarily mean that they will be immediately deleted:
+they will be deleted the next time someone logs on.
+

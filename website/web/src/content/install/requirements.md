@@ -177,7 +177,7 @@ In normal use WIKINDX consumes less than 20 MB of RAM by process. It is recommen
 
 ## Execution time
 
-Generally a script responds in less than 1 s but searches can go up to 5 or 15 s depending on the size of the database and the complexity of the request. This can be more during a database upgrade, extracting texts from PDF, or importing data. It is recommended to limit the execution time of scripts to 120 s to allow the upgrade and imports.
+Generally a script responds in less than 1 s but searches can go up to 5 or 15s depending on the size of the database and the complexity of the request. This can be more during a database upgrade, extracting texts from PDF, or importing data. It is recommended to limit the execution time of scripts to 120s to allow the upgrade and imports.
 
 
 ## Browser compatibility

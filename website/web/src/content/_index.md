@@ -108,7 +108,7 @@ WIKINDX uses a components system to extend or alter its capabilities. All offica
 * RepairKit – fix corrupted character codes in imported data, missing rows, database integrity, and other fixes. The Swiss Army Knife for WIKINDX . . .
 * BackupMysql – back up the WIKINDX
 * DbAdminer – embed a db editor for debug/admin
-* DebugTools – get usefull debugging info
+* DebugTools – get useful debugging info
 
 
 ### Bibliographic styles
@@ -126,7 +126,7 @@ There are a variety of bibliographic and citation styles available from the Comp
 * Turabian
 * Wikindx
 
-Create your own styles and contribute to extend our public repository of bibliographic styles!
+Create your own styles and contribute to our public repository of bibliographic styles!
 
 
 ### Templates

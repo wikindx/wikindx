@@ -18,7 +18,7 @@ __BACK UP YOUR DATA FILES BEFORE ANY UPGRADING!!!!!!!__
 
 __BACK UP YOUR SOURCE CODE BEFORE ANY UPGRADING!!!!!!!__
 
-Backup doesn't cost more, is quick and prevents any definitive lost of data.
+Backup doesn't cost more, is quick and prevents any permanent lost of data.
 
 Use our BackupMysql plugin which make a backup with PHP or the
 [mysqldump](https://mariadb.com/kb/en/mysqldump/) tool from the cli.
@@ -52,7 +52,7 @@ a component with the top form of the __Components Manager__ from a local copy do
 Without Zip, you cannot install components via the __Components Manager__ and
 have to do it by hand.
 
-If you are upgrading a components by hand, follow these steps:
+If you are upgrading a component by hand, follow these steps:
 
 1. Download the component source code from the [SourceForge Files](https://sourceforge.net/projects/wikindx/files/) section.
    Until v6.3.5 each version has a `archives/X.y.Z/components` folder on SF
@@ -70,9 +70,9 @@ If you are upgrading a components by hand, follow these steps:
 4. Enable the component if the core upgrade disabled it.
 
 
-## Upgrading from v6.x serie
+## Upgrading from v6.x series
 
-You no longer need to update the `config.php` file by hand as in previous versions.
+You no longer need to update the `config.php` file by hand with new variables as in previous versions.
 This step is automatic. If `config.php` changes, the previous file will be
 saved with the current date and time in the website root directory.
 
@@ -80,7 +80,8 @@ WIKINDX uses caching in the database _cache table for lists of
 creators, keywords etc. For large WIKINDX databases, if you receive
 messages such as 'MySQL server has gone away', try increasing
 **max_allowed_packet** in the MySQL server.
-4/ If your database is over 1500 resources and you expect to export
+
+If your database is over 1500 resources and you expect to export
 (with the importexport plugin) lists of resources of at least this
 length, then you should set `public $WIKINDX_MEMORY_LIMIT = "128M"` (128MB minimum); in
 `config.php` in order to avoid memory allocation errors.
@@ -136,7 +137,7 @@ several folders are writeable including:
     - If anything is not writeable, you will be prompted to correct this.
     - Logon as Super Administrator (simple administrators cannot upgrade).
     - If the MySQL version is wrong, you will be prompted to correct this.
-    - If the database needs upgrading, you will be prompted.
+    - If the database needs upgrading, you will be prompted to correct this.
     - Upgrade of the database schema step by step. In order to account for
       potential PHP timeouts when used on a large database, the database
       upgrade takes place over numerous stages.
@@ -149,7 +150,7 @@ several folders are writeable including:
    After their update, enable them again.
 
 8. If you have created custom components you must adapt
-them to keep them working. Particularly in version 5.9.1, the
+them to keep them working. Starting from version 5.9.1, the
 `component.json` file is added to describe the component.
 
    a) Administrators who have written their own bibliographic styles for
@@ -186,15 +187,15 @@ their UTF-8 repaired with the plugin, should follow this procedure:
    plugin’s __Fix chars__ code.
 4. If you do not have PHP 7.0 or greater, you cannot go further than using
    WIKINDX v6.0.8. If you have PHP 7.0 or greater, then you can now safely download
-   and install the highest version of WIKINDX available.
+   and install the latest version of WIKINDX.
 
 The above results from a code clean-out and the understanding that there are
 very few (if any) current users of WIKINDX with pre-v5.1 databases.
 
 
-## Upgrading from v5.x serie
+## Upgrading from v5.x series
 
-Upgrading v5.x database is supported by this version. If you use an old version
+Upgrading v5.x database is __NOT__ supported by this version. If you use an old version
 of PHP the oldest versions supporting an upgrade form v5.x serie are (see `docs/UPGRADE.txt`):
 
 - v6.2.0 which supports PHP 7.0 to 7.4.

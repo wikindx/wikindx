@@ -15,7 +15,7 @@ WIKINDX can also be installed on a private network within a company, institution
 
 Inside a private network you probably need to contact your administrator who will provide the infrastructure support necessary for your installation.
 
-For a single installation there are a variety of [LAMP software bundle](https://en.wikipedia.org/wiki/LAMP_(software_bundle)) that can be downloaded to create the required web server environment. Users reported to setup successfully:
+For a single installation there are a variety of [LAMP software bundles](https://en.wikipedia.org/wiki/LAMP_(software_bundle)) that can be downloaded to create the required web server environment. Users reported to setup successfully:
 
 * [Caddy2](https://caddyserver.com/v2) (Web server only, OS versatile, Go based, for advanced users only)
 * [WAMP](https://www.wampserver.com/) (Windows only, Apache based)
@@ -24,9 +24,13 @@ For a single installation there are a variety of [LAMP software bundle](https://
 * [XAMPP](http://www.apachefriends.org/en/xampp.html) (Windows, Linux, MacOS, Apache based)
 * [Homebrew](https://brew.sh/) (package manager for MacOS)
 
-If you have a BSD or Linux server then choose the softwares available from the package manager of your distribution / OS. They are usually very well endowed. Favor Apache over Nginx which is much easier to configure. As a general rule we follow the [software versions](https://distrowatch.com/table.php?distribution=debian) to be compatible with the latest [stable version of Debian](https://www.debian.org/releases/).
+If you have a BSD or Linux server then choose the softwares available
+from the package manager of your distribution / OS.
+They are usually very well endowed. Favour Apache over Nginx as it is much easier to configure.
+As a general rule we follow the [software versions](https://distrowatch.com/table.php?distribution=debian)
+to be compatible with the latest [stable version of Debian](https://www.debian.org/releases/).
 
-If a third party is configuring for hosting, provide them with the information on this page.
+If a third party is configuring your hosting, provide them with the information on this page.
 
 
 ## MariaDB & MySQL versions
@@ -34,13 +38,14 @@ If a third party is configuring for hosting, provide them with the information o
 WIKINDX does not use advanced features of MariaDB / MySQL database engines which should
 allow to install it without problems on a recent version. However, there
 is no guarantee that MySQL will change its default options to stricter
-uses as in the past. We are finding that more and more [MariaDB and MySQL
-diverge](https://mariadb.com/kb/en/mariadb-vs-mysql-compatibility/) which
-may lead to the removal of MySQL support in the future.
-If you encounter a problem let us know it.
+uses as in the past. We are finding that, more and more,
+[MariaDB and MySQL are diverging](https://mariadb.com/kb/en/mariadb-vs-mysql-compatibility/)
+which may lead to the removal of MySQL support in the future.
+If you encounter a problem let us know please.
 
-Minimal versions are strictly understood for decent support of UTF-8 and
-runtime-checked. The setup blocks the installation if the db engine does not correspond to the minimum required.
+Minimal versions are required for good support of UTF-8 and are
+runtime-checked when WIKINDX is first setup: the setup blocks
+the installation if the db engine does not correspond to the minimum required.
 
 WIKINDX use the following options and sets them on db connection:
 
@@ -51,8 +56,9 @@ WIKINDX use the following options and sets them on db connection:
 
 __Disclaimer: *WIKINDX is not supposed to share its database with any other software. This widespread practice involves serious security breaches and possible data loss in the event of software bugs. Dedicate a database to WIKINDX!*__
 
-Support for another database engine is not considered and is
-limited to the [mysqli](https://www.php.net/manual/fr/book.mysqli.php) PHP driver.
+Support for another database engine is not possible
+and WIKINDX limits its code to the
+[mysqli](https://www.php.net/manual/fr/book.mysqli.php) PHP driver.
 
 |WIKINDX / MariaDB | 10.2 | 10.3 | 10.4 | 10.5
 |------------------|------|------|------|------
@@ -66,12 +72,13 @@ limited to the [mysqli](https://www.php.net/manual/fr/book.mysqli.php) PHP drive
 ## PHP versions
 
 PHP support is tested for the core, components, and third party software
-included. For security purpose we recommend to use an [officialy
-supported PHP version](https://www.php.net/supported-versions.php)
-of the PHP Team. mod_php, CGI, and and FastCGI are compliant with PHP and WIKINDX.
+included. For security purposes, we recommend the use of an
+[officially supported PHP version](https://www.php.net/supported-versions.php)
+from the PHP Team. mod_php, CGI, and and FastCGI are compliant with PHP and WIKINDX.
 
 WIKINDX can support older versions to facilitate the migration
-of an installation but are not intended to support a large number of versions.
+of an installation but does not support a large number of PHP versions
+in its __trunk/head__ installation.
 
 All current versions of PHP have a good support of UTF-8.
 
@@ -96,7 +103,7 @@ PHP version | Min WIKINDX Version | Max WIKINDX Version
 
 The version numbers in this section are those of WIKINDX, not those of a
 PHP extension or a library used by a PHP extension. When the version is
-not specified the need is valid for all versions of WIKINDX.
+not specified the extension/library is supported in all versions of WIKINDX.
 
 
 #### Mandatory extensions
@@ -141,7 +148,8 @@ for proper functioning, which should be the case for almost all installations.
 | Phar             |                 | Used by the release process.
 | zlib             |                 | Used by the release process.
 
-If **allow_url_fopen** is disabled WIKINDX will be not be able to embed an external image in an RTF export.
+If **allow_url_fopen** is disabled on php.ini,
+WIKINDX will be not be able to embed an external image in an RTF export.
 
 
 #### Official plugins requirements
@@ -163,7 +171,8 @@ Database disk space can vary greatly. The initial size is around 10 MB (50 KB fo
 
 ## Memory consumption
 
-In normal use WIKINDX consumes less than 20 MB of RAM by process. It is recommended to limit to 128MB (default official value of PHP memory_limit) for the proper functioning of updating, searching, and extracting texts from PDF. 
+In normal use WIKINDX consumes less than 20 MB of RAM by process. It is recommended to limit to 128MB (default official value of PHP memory_limit) for the proper functioning of updating, searching, and extracting texts from PDF
+– processes that can greatly increase memory consumption.
 
 
 ## Execution time

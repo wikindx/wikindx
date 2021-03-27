@@ -64,7 +64,7 @@ message in the translation language, sometimes several depending on the
 number of plural forms of the target language. Some metadata in the
 header provide information about the contents of the file (translation
 language, number of plural forms, encoding, last translator ...). Here
-is the example the French __PO__ file:
+is the example of the French __PO__ file:
 
 ~~~~
 # WIKINDX's Français Translation ressource.
@@ -215,10 +215,10 @@ of the message including typography for a better layout. You also have the
 capabilities of UTF-8 so do not use an [HTML entity] – rather input the
 character directly.
 
-When you have finished translating the domains, report it so that it is
-integrated into the core software as soon as possible. As a general rule,
-share your intentions or difficulties with the developers or coordinators
-of your language. We can help you.
+When you have finished translating the domains, report it to the WIKINDX
+developers so that it is integrated into the core software as soon as possible.
+As a general rule, share your intentions or difficulties with the developers
+or coordinators of your language. We can help you.
 
 For translation difficulties and help resources you can contact groups
 of translators of your languages as indicated on this page of the
@@ -310,25 +310,25 @@ contact the developers. In any event, let us know your names and
 surnames or your nickname, your email and / or website, the license (to
 be discussed if it is different from that of the core) for the credits.
 
-For non official plugins, you have to send your translations to its
-developer.
+For non-official plugins, you have to send your translations to the
+translation developer.
 
 
 ## Internationalisation (i18n)
 
 ### Operation
 
-_This is a quick introduction, for details read the code._
+_This is a quick introduction, for full details, read the code._
 
 To update the POT files on Transifex, copy the files to the
 `/home/project-web/wikindx/htdocs/transifex/pot` directory on the SF
-WIKINDX Website FTP folder. Transifex update the resources (twice a day)
+WIKINDX Website FTP folder. Transifex updates the resources (twice a day)
 from these files.  You can force the update by hand but put the POT file
 online before.
 
-Deleting, damaging, or pushning outdated POT files in the
+Deleting, damaging, or pushing outdated POT files in the
 `/home/project-web/wikindx/htdocs/transifex/pot` folder can result in
-lost of translations when references strings are removed or modified.
+loss of translations when references strings are removed or modified.
 The same can happen when pushing a file by hand.
 
 POT files circulate in the SVN => Transifex direction. And the PO in the
@@ -351,10 +351,10 @@ __dngettext__ (plurial) with a single domain (see
 WIKINDX_LANGUAGE_DOMAIN_DEFAULT) for the whole core without taking into
 account the sub-key partitioning.
 
-However, messages can be defined in any PHP file as long as they use the
-official PHP Gettext functions, and that the PHP files are placed
+However, messages can be defined in any PHP file as long as they a) use the
+official PHP Gettext functions, and that b) the PHP files are placed
 elsewhere than in the components, cache, and data directories. For the
-exact list see cli-make-languages.php. For the moment we have chosen to
+exact list, see cli-make-languages.php. For the moment we have chosen to
 group the messages in the `core/messages` folder.
 
 These classes do not load the translation catalogs. It is assumed that
@@ -376,7 +376,7 @@ conditions:
 - The PHP strings files are in the source directory of the plugin.
 
 `core/startup/WEBSERVERCONFIG.php` script is responsible for calling the
-\LOCALES\load_locales() function which load the translation catalogs
+\LOCALES\load_locales() function which loads the translation catalogs
 into memory according to the preferences of the user session. Catalogs
 of only one language can be loaded at the same time for the same
 process. The catalog closest to the desired locale is loaded, if there
@@ -390,7 +390,7 @@ catalogs. A script that changes directory with chdir() will lose the
 translation functionality but if it restores its original working
 directory it will be able to recover the translation functionality.
 
-\LOCALES\getAllLocales() provide a prebuilt list of locales (see SVN
+\LOCALES\getAllLocales() provides a prebuilt list of locales (see SVN
 `wikindx/tools/i18n/` scripts used to establish it) for macOS, Linux,
 OpenBSD and Windows (7), in the hope that it is as complete as possible.
 Their names (language + country name) are in the locale language itself
@@ -415,7 +415,7 @@ locale but that which corresponds to it in the [BCP47] encoding.
 
 It is up to the user to choose a locale and not a language to benefit
 from all the culture-related behaviors even if there is no translation
-for his language. It is not possible for the user at the moment to
+for his/her language. It is not possible for the user at the moment to
 choose different subtypes of locale.
 
 The core does not necessarily exploit all of the localized PHP features
@@ -434,7 +434,7 @@ localization.
 
 There is no distinction between the language desired by the user for the
 graphical interface and the language of the content entered in resources
-and other data. The data simply has no language at the moment.
+and other data. The data simply have no language at the moment.
 
 The language of bibliographic styles is defined which can contradict a
 user preference when formatting.

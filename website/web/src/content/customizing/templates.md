@@ -12,7 +12,7 @@ Smarty HTML Templating System -- documentation on Smarty can be found at
 various `.tpl` files in `wikindx/components/templates/default/`.
 
 Certain files must be present for the template to be available to the
-user in _WIKINDX > Preferences_:
+user in __WIKINDX > Preferences__ or __WIKINDX > My Wikindx__:
 
  * display.tpl
    * header.tpl (optional if merged with display.tpl)
@@ -57,13 +57,13 @@ The "images" folder must contain the images that you want to include
 directly by a hardcoded link in a `.tpl` file. For example:
 
 `{$tplPath}/images/wikindx-logo.png`, where `{$tplPath}` is the
-resource location see by the browser to the root dir of the template.
+resource location set by the browser to the root dir of the template.
 
-The icons folder contains the images of icons (for buttons for example)
+The icons folder contains the images of icons (for buttons, for example)
 whose name is predefined by the core. You can replace the images with
-your own icon set, partial or complete for example to have a larger
+your own icon set, partial or complete - for example, to have a larger
 size.  If you do not provide an icon or even do not create the "icons"
-folder, the missing icons will be taken into the "default" template.
+folder, the `default` template icons will be used.
 The image formats accepted in this folder are gif, jpg, jpeg, png, svg, webp.
 
 
@@ -86,10 +86,10 @@ This can be 0, 1, 2, 0$, 1$, or 2$ where
  - 1 indicates that the number of levels should be reduced by 1.
  - 2 indicates that the number of levels should be reduced by 2.
  - $ indicates that number of menu levels is mandatory and the user has
-     no choice --useful where the template is to be used in special
+     no choice -- useful where the template is to be used in special
      circumstances such as on mobile devices. Without a '$', read-only
      users will initially be presented with the number of menu levels set by
-     the template designer and this can be overridden in _WIKINDX > Preferences_.
+     the template designer and this can be overridden in __WIKINDX > Preferences__.
 
 If there is only one line in `config.txt` or the value of the line 1
 is wrong, then 0 is assumed for line 1.
@@ -132,14 +132,14 @@ which are not in the templates.
 Of course there are implicit rules or presentation choices that it is
 not possible to question or circumvent without modifying the core even
 if you are a CSS expert. This system was designed to give flexibility
-without allowing a design change free of any constraints as could offer
-a blog engine.
+without allowing a design change free of any constraints
+(as might be offered by a blog engine).
 
 The most important variables are commented in the code of the `.tpl`
 files.
 
 For an in-depth understanding of the template system, read the PHP files
-in the core / display folder, and `core/startup/GLOBALS.php`.
+in the `core/display/` folder, and `core/startup/GLOBALS.php`.
 
 
 ## display.tpl

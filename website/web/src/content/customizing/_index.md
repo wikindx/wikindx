@@ -16,7 +16,7 @@ To prevent access problems between different operating systems and file systems,
 
 - ASCII characters allowed: a to z, 0 to 9, - (hyphen), or _ (underscore).
 - All lowercase.
-- The `<id>` folder name of `install/folder/components/<type>/<id>` = `component_id` field of the its component.json file.
+- The `<id>` folder name of `install/folder/components/<type>/<id>` = `component_id` field of the component.json file.
 
 A component of type __plugin__ is a set of PHP code files that add new functionality.
 It must respect an interface with the core code.

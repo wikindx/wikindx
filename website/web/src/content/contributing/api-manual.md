@@ -5,7 +5,7 @@ weight = 4
 +++
 
 
-The API Manual is a documentation of all PHP classes, functions, namespaces, etc provided by WIKINDX. It is useful for core and component developers. 
+The API Manual is a documentation of all PHP classes, functions, namespaces, etc. provided by WIKINDX. It is useful for core and component developers. 
 
 
 ## Setting the build environment

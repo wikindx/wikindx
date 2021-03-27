@@ -16,7 +16,7 @@ reformat bibliographies to different style guides.
 
 As this is a system designed to run on any web server, I thought its
 use could be expanded to groups of researchers who could all contribute
-to and read the index. This concept is very similar to a Wiki
+to and read the WIKINDX. This concept is very similar to a Wiki
 Encyclopaedia where anyone can add or edit entries in an on-line
 encyclopaedia.
 
@@ -26,3 +26,6 @@ incorporation of a WYSIWYG word processor that can insert citations and
 (re)format them with a few clicks of the mouse. This was powerful
 enough for me to write my entire PhD thesis in. (v4 removed this feature
 to a plug-in rather than being a core feature.)
+
+The first release of WIKINDX was way back in 2003 and it has been
+in continual development since then.

@@ -17,7 +17,7 @@ The versions are numbered for the history and semi-automatic update
 system of the data and the database (each change is applied between the installed
 version and the target version).
 
-The [README.txt file](https://sourceforge.net/p/wikindx/svn/HEAD/tree/) at the root of SVN describes how to get the source code.
+The [README.txt](https://sourceforge.net/p/wikindx/svn/HEAD/tree/) file at the root of SVN describes how to get the source code.
 
 The __trunk__ branch (for developers and testers) can be broken at any
 (and for a long) time and damage your database.

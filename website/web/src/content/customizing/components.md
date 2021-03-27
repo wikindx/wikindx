@@ -13,66 +13,66 @@ key/value entry. The format is under development and may change further.
 
 Description of fields:
 
-|Field                | Type   | O| Description
+|Field                | Type   | M| Description
 |---------------------| -------| -| ------------------------------------------------------------------
-|component_type       | string | Y| Name of a type of component. Must be: style, template, or vendor.
+|component_type       | string | Y| Name of a type of component. Must be: plugin, style, template, or vendor.
 |component_id         | string | Y| Component identifier. Must be identical to the name of the root component directory.
-|component_version    | string | Y| Component public version number: this number is completely free.
+|component_version    | string | Y| Component public version number: what this number is is up to you.
 |component_builtin    | bool   | Y| If true, the component will be pre-installed/released with the core. Thie field is independent of component_updatable.
 |component_updatable  | bool   | Y| If true, the component will be released in a separate package that can be updated via the component admin panel.
 |component_name       | string | Y| Component short name.
 |component_description| string | Y| Component short description (without line break). Use the README.txt file for long description, notes...
 |component_licence    | string | N| Component license name or abbreviation (abbreviation recommended).
 |component_website    | string | N| A single full URL to the vendor or maintainer website to use as a link.
-|component_sha256     | string | Y| Unique signature corresponding to a sha256 hash of the component files. Use cli-sign-components.php to compute it.
-|component_authors    | array  | N| An array of objects unserialized as a PHP array of PHP arrays. Each object is an author or contributor.
+|component_sha256     | string | Y| Unique signature corresponding to a sha256 hash of the component files. Use cli-sign-components.php in the top level of the wikindx folder to compute it.
+|component_authors    | array  | N| An array of objects that, unserialized, will be a PHP array of PHP arrays. Each object is an author or contributor.
 |author_name          | string | Y| Name of the author.
-|author_role          | string | Y| Role of the author. Something like: developper, packager, translator, tester, maintainer.
+|author_role          | string | Y| Role of the author. Something like: developer, packager, translator, tester, maintainer.
 |author_copyright     | string | Y| Contribution period. E.g. the years: 2004-2017.
 |author_email         | string | Y| A single email address of the author that could be embedded in a href with mailto.
 |author_website       | string | Y| A single full URL to the author website/personnal page to use as a link.
 
 
-Column O indicates a mandatory field: Y=Yes, N=No.
+Column M indicates a mandatory field: Y=Yes, N=No.
 
 Any additional fields will be ignored.
 
 For the exact syntax of each data type, consult the official format
-specifications JSON.
+specifications for JSON.
 
 When WIKINDX starts or the components admin panel is opened a
 `components.json` file is created in the cache folder, and a
 `components.json` file is created in the data folder.
 
 The file in cache folder, listing all components installed, is an array
-of object in JSON format. Each object is the content of a
+of objects in JSON format. Each object is the content of a
 component.json file with additional fields. Original `component.json`
 fields remain inchanged.
 
-|Field                | Type   | O| Description
+|Field                | Type   | M| Description
 |---------------------| -------| -| ------------------------------------------------------------------
 |component_integrity  | integer| Y| Error code returned when the component is checked. 0 is OK. Not 0 is an error.
 
 The file in data folder, listing persistent data of some components, is
-an array of object in JSON format. Each object is a short component
+an array of objects in JSON format. Each object is a short component
 description (component_type + component_id) like a `component.json` file
-with additionnal persistent fields. This list can contain data about
+with additional persistent fields. This list can contain data about
 components that are no longer installed but that we want to keep for a
 future reinstallation. Original component.json fields remain inchanged.
 
-|Field                | Type   | O| Description
+|Field                | Type   | M| Description
 |---------------------| -------| -| ------------------------------------------------------------------
 |component_status     | string | Y| Code status value: enabled or disabled. "enabled", if the component is executed on WIKINDX startup.
 
-When the release script `release/cli-make-package.php` script is executed it create
+When the release script `release/cli-make-package.php` script is executed, it creates
 also a `components.json`, listing all components released with the current
 core.
 
-As the previous file, it is an array of object in JSON format. Each
+As with the previous file, it is an array of objects in JSON format. Each
 object is the content of a `component.json` file with additional fields,
 but different. Original `component.json` fields remain inchanged.
 
-|Field                | Type   | O| Description
+|Field                | Type   | M| Description
 |---------------------| -------| -| ------------------------------------------------------------------
 |component_packages   | array  | N| Array of object. Each object is the description of a downloadable package of the component.
 |package_location     | string | Y| A single full URL to a downloadable package in zip, tar.gz, or tar.bz2 format.
@@ -96,7 +96,7 @@ Example of a single `component.json` file for the smarty vendor component:
     "component_authors": [
         {
             "author_name": "New Digital Group, Inc.",
-            "author_role": "Developpers",
+            "author_role": "Developers",
             "author_copyright": "2002-2019"
         },
         {

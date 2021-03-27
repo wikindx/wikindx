@@ -31,11 +31,11 @@ To get your plugins working, a few conditions are required:
    `$wikindxVersion = 8;` From WIKINDX 5.8, compatible plugins are required to
    explicitly state their compatibility with the constant
    __WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"]__. This is a value that matches
-   an internal core version that could be validate for more than one public version.
+   an internal core version that could be validated against more than one public version.
    In the plugin's `config.php`, set `$wikindxVersion` to match
    __WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"]__ in order to state compatibility.
    Incompatible plugins will not load. They will still be present
-   and editable in the _Admin > Components_ interface.
+   and editable in the __Admin > Components__ interface.
 
 The plugin directory may optionally have a file called `description.txt`
 which may be used as a README providing instructions and credits. The
@@ -63,10 +63,10 @@ a database table that stores user IDs, then that field should be named
 check plugin database tables for fields that follow that convention).
 
 To run the SQL code for a creation call the function
-`createDbSchema(<plugindirrame>)` of the UPDATEDATABASE class.
+`createDbSchema(<plugindirname>)` of the UPDATEDATABASE class.
 
 To run the SQL code for an upgrade call the function
-`updateDbSchema(<plugindirrame>, <versionnumberstring>)` of the UPDATEDATABASE class.
+`updateDbSchema(<plugindirname>, <versionnumberstring>)` of the UPDATEDATABASE class.
 
 
 ## Menu plugins
@@ -100,15 +100,15 @@ public function __construct($menuInit = FALSE)
   either 0 (public readonly access), 1 (login required) or 2 (admin only).
   This should come from your config.php file (see below).
 
-* Both $this-Menus and `$this->authorize` should only be set when
+* Both `$this-Menus` and `$this->authorize` should only be set when
   `$menuInit` is TRUE in which case the constructor should return after
   they have been set without doing anything else (`$menuInit` is set
   automatically to TRUE by the MENU class in `wikindx/core/navigation/MENU.php`).
 
 You should also have a `config.php` file (see the example below) which
 defines the access level for the plugin and in which menu(s) the plugin
-is displayed. These values can be altered through the WIKINDX _Admin > Components_
-interface and so you must have a public $menus array and a public
+is displayed. These values can be altered through the WIKINDX __Admin > Components__
+interface and so you must have a public `$menus` array and a public
 `$authorize` variable.
 
 Unless using the basic `GLOBALS::buildOutputString()` method, you must
@@ -117,7 +117,7 @@ string to the calling process. Furthermore, in the interests of
 compatibility and future WIKINDX upgrades, you should use the WIKINDX
 functions where possible.
 
-Constructor parameters could be $db and $vars that are the database object (see
+Constructor parameters could be `$db` and `$vars` that are the database object (see
 the SQL class in `wikindx/core/libs/SQL.php`) and an array of all input values from
 the web browser form or querystring.
 

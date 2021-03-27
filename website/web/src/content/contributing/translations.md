@@ -311,7 +311,7 @@ surnames or your nickname, your email and / or website, the license (to
 be discussed if it is different from that of the core) for the credits.
 
 For non official plugins, you have to send your translations to its
-developper.
+developer.
 
 
 ## Internationalisation (i18n)

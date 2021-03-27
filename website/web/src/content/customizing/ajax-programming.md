@@ -44,9 +44,7 @@ will include your own javascript file. `loadJavascript()` can also take
 an array of javascript include files if you happen to have several.
 
 2. Add the AJAX instructions to your form element(s). In this case,
-there are two AJAX actions to be performed when the user clicks on an
-<OPTION> in the select box trigger_Field 'search_Type'. An example from
-`core/modules/list/SEARCHRESOURCES.php` is:
+there are two AJAX actions to be performed when the user clicks on clicks on a form field.
 
 ~~~~php
 $jScript = 'index.php?action=list_LISTSHOWHIDE_CORE&method=initCategories&type=search';

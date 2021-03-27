@@ -9,3 +9,4 @@ chapter = true
 We are happy to welcome new contributors.  Join us to contribute
 to the creation of official components or the development of WIKINDX.
 There is a lot to do, not just development.
+Contact the WIKINDX developers at <https://sourceforge.net/projects/wikindx/>.

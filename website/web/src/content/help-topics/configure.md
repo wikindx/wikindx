@@ -20,13 +20,13 @@ You can add system users from the Admin menu.
 
 When adding or editing resources, each resource can belong to multiple categories and subcategories, be assigned custom fields or defined as belonging to a language -- admins can add new categories, subcategories, custom fields and languages from the Admin menu.
 
-**Because user sessions are created only once on login, changes to the configuration will not be registered until a user (logs out and) logs in.**
+**Because user sessions are created only once on login, some changes to the configuration will not be registered until a user (logs out and) logs in.**
 
 ## LDAP authentication
 
 With LDAP enabled and configured, user authentication bypasses the usual WIKINDX logon protocols and is redirected to a LDAP server instead.
 
-The meaning of each option is given by the tooltips. In addition this help explains how LDAP authentication is done so that you choose the best configuration according to your domain controller.
+The meaning of each option is given by the tooltips. In addition, this help explains how LDAP authentication is done so that you choose the best configuration according to your domain controller.
 
 The LDAP connection test function runs exactly the same code as during user connection. The debugging trace is very comprehensive but the level of detail depends on the loquacity of your server.
 
@@ -40,11 +40,11 @@ When LDAP authentication is successful, the user is created in WIKINDX if it did
 
 Passwords are not stored in WIKINDX database when performing an LDAP authentication. If the LDAP server is offline or any error during the communication with the server occurs, the LDAP authentication will fail.
 
-If the Super Admin subsequently disables LDAP authentication, users created in this way will not be able to log in with builtin authentication without changing their password or asking Super Admin to register one.
+If the Super Admin subsequently disables LDAP authentication, users created in this way will not be able to log in with built-in authentication without changing their password or asking Super Admin to register one.
 
-The user MUST enter his login WITHOUT domain information. When you have specified the domain name and the 'user' or 'binduser'  binding methods (connection to the server) are set, the domain name will be added automatically to the login according to the configuration.
+The user MUST enter the login details WITHOUT domain information. When you have specified the domain name and the 'user' or 'binduser'  binding methods (connection to the server) are set, the domain name will be added automatically to the login according to the configuration.
 
-First, the binding is configured with the chosen protocol. If the binding is encrypted, the certificates will be ignored. Referrals are always ignored. The network connection timeout is set to 10 s. The LDAP search timeout is set to 15 s. The server is contacted and if the connection is successful then WIKINDX searches for the user and verifies its password.
+First, the binding is configured with the chosen protocol. If the binding is encrypted, the certificates will be ignored. Referrals are always ignored. The network connection timeout is set to 10s. The LDAP search timeout is set to 15s. The server is contacted, and if the connection is successful, then WIKINDX searches for the user and verifies its password.
 
 The user is found in five steps:
 
@@ -58,4 +58,4 @@ The user is found in five steps:
 * The remaining entries are filtered to retain only the user objects whose login is the one entered.
 * Finally the password of each remaining **DN** is verified. The first one with a matching password will be authenticated.
 
-A user should not have more than one DN but in the unlikely event that he has two with the same password only the first of the DNs in alphabetical order (regardless of locale) will be authenticated.,
+A user should not have more than one DN but in the unlikely event that there are two users with the same password only the first of the DNs in alphabetical order (regardless of locale) will be authenticated.

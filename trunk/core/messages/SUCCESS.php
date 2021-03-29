@@ -176,7 +176,7 @@ class SUCCESS
 				"quarantined" => dgettext($domain, "Resource has been quarantined from public view until approved by an administrator"),
 				"plugins" => dgettext($domain, "Successfully configured plugins"),
 				"componentSuccess" => dgettext($domain, "Admin action successful. ###"),
-				"componentUpToDate" =>"The list is up-to-date.",
+				"componentUpToDate" => dgettext($domain, "The list is up-to-date."),
 				"keywordGroupNew" => dgettext($domain, "Successfully added keyword group"),
 				"keywordGroupEdit" => dgettext($domain, "Successfully edited keyword group"),
 				"unquarantineResource" => dgettext($domain, "Successfully approved resource(s)"),

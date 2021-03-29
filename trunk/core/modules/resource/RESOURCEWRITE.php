@@ -236,18 +236,7 @@ class RESOURCEWRITE
             $writeArray['resourcepageId'] = $this->resourceId;
             $this->db->insert('resource_page', array_keys($writeArray), array_values($writeArray));
         }
-        // Abstract, notes, URLS.  NB, if editing, we don't edit URLs from this form so need to store any existing URLs and labels
-        if ($this->edit)
-        {
-            $this->db->formatConditions(['resourcetextId' => $this->resourceId]);
-            $resultset = $this->db->select('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
-            if ($this->db->numRows($resultset))
-            {
-                $row = $this->db->fetchRow($resultset);
-                $existingUrls = $row['resourcetextUrls'];
-                $existingUrlLabels = $row['resourcetextUrlText'];
-            }
-        }
+        // Abstract and notes
         $this->db->formatConditions(['resourcetextId' => $this->resourceId]);
         $this->db->delete('resource_text');
         $writeArray = [];
@@ -262,47 +251,7 @@ class RESOURCEWRITE
             {
                 $writeArray['resourcetextNote'] = $this->formData['resourcetext']['resourcetextNote'];
             }
-            // We can only edit the first URL of multiple URLs so need to remove the existing initial URL and label first
-            if ($this->edit && array_key_exists('resourcetextUrl', $this->formData['resourcetext']))
-            {
-                $urlSet = FALSE;
-                if (isset($existingUrls))
-                {
-                    $urlArray = unserialize(base64_decode($existingUrls));
-                    $urlArray[0] = $this->formData['resourcetext']['resourcetextUrl'];
-                    $writeArray['resourcetextUrls'] = base64_encode(serialize($urlArray));
-                    $urlSet = TRUE;
-                }
-                else
-                { // new URL
-                    $urlArray = [];
-                    $urlArray[0] = $this->formData['resourcetext']['resourcetextUrl'];
-                    $writeArray['resourcetextUrls'] = base64_encode(serialize($urlArray));
-                    $urlSet = TRUE;
-                }
-                if (isset($existingUrlLabels) && $urlSet && array_key_exists('resourcetextUrlText', $this->formData['resourcetext']))
-                {
-                    $urlArray = unserialize(base64_decode($existingUrlLabels));
-                    $urlArray[0] = $this->formData['resourcetext']['resourcetextUrlText'];
-                    $writeArray['resourcetextUrlText'] = base64_encode(serialize($urlArray));
-                }
-                elseif ($urlSet && array_key_exists('resourcetextUrlText', $this->formData['resourcetext']))
-                {
-                    $urlArray = [];
-                    $urlArray[0] = $this->formData['resourcetext']['resourcetextUrlText'];
-                    $writeArray['resourcetextUrlText'] = base64_encode(serialize($urlArray));
-                }
-            }
-            elseif (array_key_exists('resourcetextUrl', $this->formData['resourcetext']))
-            {
-                $writeArray['resourcetextUrls'] =
-                    base64_encode(serialize([$this->formData['resourcetext']['resourcetextUrl']]));
-                if (array_key_exists('resourcetextUrlText', $this->formData['resourcetext']))
-                {
-                    $writeArray['resourcetextUrlText'] =
-                    base64_encode(serialize([$this->formData['resourcetext']['resourcetextUrlText']]));
-                }
-            }
+
             if (array_key_exists('resourcetextNote', $this->formData))
             {
                 $writeArray['resourcetextAddUserIdNote'] = $this->userId;
@@ -313,6 +262,55 @@ class RESOURCEWRITE
             }
             $this->db->insert('resource_text', array_keys($writeArray), array_values($writeArray));
         }
+        // URL
+        // We can only edit the primary URL
+        // First get all URLs for this resource
+        $this->db->formatConditions(['resourceurlResourceId' => $this->resourceId]);
+        $this->db->orderBy('resourceurlId');
+        $resultSet = $this->db->select('resource_url', ['resourceurlId', 'resourceurlPrimary']);
+        $existingUrls = [];
+        $primaryUrlId = false;
+        while ($row = $this->db->fetchRow($resultSet)) {
+        	$existingUrls[$row['resourceurlId']] = $row['resourceurlId'];
+        	if ($row['resourceurlPrimary']) {
+        		$primaryUrlId = $row['resourceurlId'];
+        	}
+        }
+        $writeArray = [];
+		if ($this->edit && array_key_exists('resourceurlUrl', $this->formData['resourceurl'])) {
+			$writeArray['resourceurlUrl'] = $this->formData['resourceurl']['resourceurlUrl'];
+			if (array_key_exists('resourceurlName', $this->formData['resourceurl'])) {
+				$writeArray['resourceurlName'] = $this->formData['resourceurl']['resourceurlName'];
+			} else {// set to ''
+				$writeArray['resourceurlName'] = '';
+			}
+			if (!empty($existingUrls)) { // updating primary URL
+				$this->db->formatConditions(['resourceurlId' => $primaryUrlId]);
+				$this->db->update('resource_url', $writeArray);
+			} else { // new URL
+				$writeArray['resourceurlResourceId'] = $this->resourceId;
+				$writeArray['resourceurlPrimary'] = 1;
+            	$this->db->insert('resource_url', array_keys($writeArray), array_values($writeArray));
+			}
+		} elseif ($this->edit) { // Removing primary URL
+			$this->db->formatConditions(['resourceurlId' => $primaryUrlId]);
+			$this->db->delete('resource_url');
+			unset($existingUrls[$primaryUrlId]);
+			// If other URLs, set the first one to primary
+			if (!empty($existingUrls)) {
+				$primaryUrlId = array_shift($existingUrls);
+				$this->db->formatConditions(['resourceurlId' => $primaryUrlId]);
+				$this->db->update('resource_url', ['resourceurlPrimary' => 1]);
+			}
+		} elseif (array_key_exists('resourceurlUrl', $this->formData['resourceurl'])) { // Inserting new URL
+			$writeArray['resourceurlUrl'] = $this->formData['resourceurl']['resourceurlUrl'];
+			if (array_key_exists('resourceurlName', $this->formData['resourceurl'])) {
+				$writeArray['resourceurlName'] = $this->formData['resourceurl']['resourceurlName'];
+			}
+			$writeArray['resourceurlResourceId'] = $this->resourceId;
+			$writeArray['resourceurlPrimary'] = 1;
+			$this->db->insert('resource_url', array_keys($writeArray), array_values($writeArray));
+		}
         // Collection
         $collectionId = FALSE;
         if (array_key_exists('collection', $this->formData))
@@ -1324,16 +1322,16 @@ class RESOURCEWRITE
             $this->formData['resourcetext']['resourcetextNote'] = $input['resourcetextNote'];
             unset($input['resourcetextNote']);
         }
-        if (array_key_exists('resourcetextUrl', $input) && ($input['resourcetextUrl'] != 'http://') && ($input['resourcetextUrl'] != 'https://'))
+        if (array_key_exists('resourceurlUrl', $input) && ($input['resourceurlUrl'] != 'http://') && ($input['resourceurlUrl'] != 'https://'))
         {
-            $this->formData['resourcetext']['resourcetextUrl'] = $input['resourcetextUrl'];
-            unset($input['resourcetextUrl']);
+            $this->formData['resourceurl']['resourceurlUrl'] = $input['resourceurlUrl'];
+            unset($input['resourceurlUrl']);
         }
-        if (array_key_exists('resourcetext', $this->formData) && array_key_exists('resourcetextUrl', $this->formData['resourcetext'])
-            && array_key_exists('resourcetextUrlText', $input) && $input['resourcetextUrlText'])
+        if (array_key_exists('resourceurl', $this->formData) && array_key_exists('resourceurlUrl', $this->formData['resourceurl'])
+            && array_key_exists('resourceurlName', $input) && $input['resourceurlName'])
         {
-            $this->formData['resourcetext']['resourcetextUrlText'] = $input['resourcetextUrlText'];
-            unset($input['resourcetextUrlText']);
+            $this->formData['resourceurl']['resourceurlName'] = $input['resourceurlName'];
+            unset($input['resourceurlName']);
         }
         if (array_key_exists('resourceIsbn', $input) && $input['resourceIsbn'])
         {

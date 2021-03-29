@@ -48,7 +48,7 @@ class SQLSTATEMENTS
         'resourceTransTitle', 'resourceTransSubtitle', 'resourceTransShortTitle', 'resourceField1', 'resourceField2', 'resourceField3',
         'resourceField4', 'resourceField5', 'resourceField6', 'resourceField7', 'resourceField8', 'resourceField9', 'resourceNoSort',
         'resourceTransNoSort', 'resourceIsbn', 'resourceBibtexKey', 'resourceDoi', 'resourcetextId', 'resourcetextNote', 'resourcetextAbstract',
-        'resourcetextUrls', 'resourcetextUrlText', 'resourcetextEditUserIdNote', 'resourcetextAddUserIdNote', 'resourcetextEditUserIdAbstract',
+        'resourcetextEditUserIdNote', 'resourcetextAddUserIdNote', 'resourcetextEditUserIdAbstract',
         'resourcetextAddUserIdAbstract', 'resourceyearId', 'resourceyearYear1', 'resourceyearYear2', 'resourceyearYear3', 'resourceyearYear4',
         'resourcepageId', 'resourcepagePageStart', 'resourcepagePageEnd', 'resourcesummaryId', 'resourcesummaryQuotes', 'resourcesummaryParaphrases',
         'resourcesummaryMusings', 'resourcetimestampId', 'resourcetimestampTimestamp', 'resourcetimestampTimestampAdd', 'publisherId', 'publisherName',
@@ -155,6 +155,9 @@ class SQLSTATEMENTS
 		while ($row = $this->db->fetchRow($resultSet))
 		{
 			$ids[] = $row['resourceId'];
+		}
+		if (empty($ids)) {
+			return FALSE;
 		}
 		$ids = array_filter($ids); // array_filter() to ensure no null ids
 		$total = count($ids);

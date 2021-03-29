@@ -516,18 +516,13 @@ class BIBSTYLE
      */
     private function createUrl()
     {
-        if (!$this->row['resourcetextUrls'])
-        {
-            return FALSE;
-        }
-        $urls = \URL\getUrls($this->row['resourcetextUrls']);
-        if (empty($urls))
-        {
-            return FALSE;
-        }
-        // In $urls array, [0] index is primary URL
-        $url = ($this->output == 'html') ? htmlspecialchars($urls[0]) : $urls[0];
-        unset($this->row['resourcetextUrls']);
+    	$this->db->formatConditions(['resourceurlResourceId' => $this->row['resourceId'], 'resourceurlPrimary' => 1]);
+    	$resultSet = $this->db->select('resource_url', 'resourceurlUrl');
+    	if (!$this->db->numRows($resultSet)) {
+    		return FALSE;
+    	}
+    	$url = $this->db->fetchOne($resultSet);
+        $url = ($this->output == 'html') ? htmlspecialchars($url) : $url;
         if ($this->output == 'html')
         {
             $label = $this->ooxml ? $url : \URL\reduceUrl($url, 50);
@@ -556,7 +551,6 @@ class BIBSTYLE
         {
             return FALSE;
         }
-        // In $urls array, [0] index is primary URL
         $doi = ($this->output == 'html') ? htmlspecialchars($this->row['resourceDoi']) : $this->row['resourceDoi'];
         unset($this->row['resourceDoi']);
         $doi = 'https://dx.doi.org/' . $doi;

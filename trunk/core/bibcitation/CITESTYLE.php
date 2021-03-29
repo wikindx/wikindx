@@ -609,13 +609,13 @@ class CITESTYLE
      */
     public function createUrl()
     {
-        if (!$this->rowSingle['resourcetextUrls'])
-        {
-            return FALSE;
-        }
-        $urls = \URL\getUrls($this->rowSingle['resourcetextUrls']);
-        // In $urls array, [0] index is primary URL
-        $url = ($this->output == 'html') ? htmlspecialchars($urls[0]) : $urls[0];
+    	$this->db->formatConditions(['resourceurlResourceId' => $this->rowSingle['resourceId'], 'resourceurlPrimary' => 1]);
+    	$resultSet = $this->db->select('resource_url', 'resourceurlUrl');
+    	if (!$this->db->numRows($resultSet)) {
+    		return FALSE;
+    	}
+    	$url = $this->db->fetchOne($resultSet);
+        $url = ($this->output == 'html') ? htmlspecialchars($url) : $url;
         if ($this->output == 'html')
         { 
             $url = $this->ooxml ? $url : \URL\reduceUrl($url, 50);

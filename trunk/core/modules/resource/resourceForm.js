@@ -99,9 +99,9 @@ function validateInput(names, values)
 	if((resourceType == 'web_article') || (resourceType == 'web_encyclopedia_article') || 
 	(resourceType == 'web_encyclopedia') || (resourceType == 'web_site'))
 	{
-		if(!coreTrim(coreGetElementById('resourcetextUrl').value) || (coreTrim(coreGetElementById('resourcetextUrl').value) == 'http://') || (coreTrim(coreGetElementById('resourcetextUrl').value) == 'https://'))
+		if(!coreTrim(coreGetElementById('resourceurlUrl').value) || (coreTrim(coreGetElementById('resourceurlUrl').value) == 'http://') || (coreTrim(coreGetElementById('resourceurlUrl').value) == 'https://'))
 		{
-			validateError('resourcetextUrl', 'missing', uuid);
+			validateError('resourceurlUrl', 'missing', uuid);
 			return false;
 		}
 	}

@@ -16,25 +16,6 @@
 namespace URL
 {
     /**
-     * grab URLs from provided db field value
-     *
-     * Function does: unserialize(base64_decode($field))
-     *
-     * @param string $field
-     *
-     * @return array
-     */
-    function getUrls($field)
-    {
-        $array = unserialize(base64_decode($field));
-        if (!is_array($array))
-        {
-            $array = []; // empty array
-        }
-
-        return $array;
-    }
-    /**
      * reduce the size of long URL to keep web browser display tidy
      *
      * @param string $text

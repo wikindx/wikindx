@@ -1021,20 +1021,15 @@ class RESOURCEFORM
         {
             $this->formData['resourceTransNoSort'] = $row['resourceTransNoSort'];
         }
-        if (array_key_exists('resourcetextUrls', $row) && $row['resourcetextUrls'])
-        {
-            $tmp = base64_decode($row['resourcetextUrls']);
-            $tmp = unserialize($tmp);
-            $tmp = array_shift($tmp);
-            $this->formData['resourcetextUrl'] = $tmp;
-            if (array_key_exists('resourcetextUrlText', $row) && $row['resourcetextUrlText'])
-            {
-                $tmp = base64_decode($row['resourcetextUrlText']);
-                $tmp = unserialize($tmp);
-                $tmp = array_shift($tmp);
-                $this->formData['resourcetextUrlText'] = $tmp;
+    	$this->db->formatConditions(['resourceurlResourceId' => $row['resourceId'], 'resourceurlPrimary' => 1]);
+    	$resultSet2 = $this->db->select('resource_url', ['resourceurlUrl', 'resourceurlName']);
+    	if ($this->db->numRows($resultSet2)) {
+    		$row2 = $this->db->fetchRow($resultSet2);
+            $this->formData['resourceurlUrl'] = $row2['resourceurlUrl'];
+            if (array_key_exists('resourceurlName', $row2) && $row2['resourceurlName']) {
+                $this->formData['resourceurlName'] = $row2['resourceurlName'];
             }
-        }
+    	}
         $ids = [];
         foreach ($this->resourceMap->getTables($this->resourceType) as $table)
         {
@@ -2551,10 +2546,10 @@ class RESOURCEFORM
         $tdContent1 .= \HTML\trEnd() . \HTML\tableEnd();
         $tdContent1 .= BR . '&nbsp;' . BR;
         $tdContent2 = \HTML\tableStart() . \HTML\trStart();
-        $text = array_key_exists('resourcetextUrl', $this->formData) ? $this->formData['resourcetextUrl'] : WIKINDX_RESOURCE_URL_PREFIX;
+        $text = array_key_exists('resourceurlUrl', $this->formData) ? $this->formData['resourceurlUrl'] : WIKINDX_RESOURCE_URL_PREFIX;
         $urlContent = \FORM\textInput(
             $this->messages->text("resources", "url"),
-            "resourcetextUrl",
+            "resourceurlUrl",
             $text,
             50,
             255
@@ -2566,12 +2561,12 @@ class RESOURCEFORM
             "",
             $this->messages->text("hint", "url")
         ), 'hint');
-        $text = array_key_exists('resourcetextUrlText', $this->formData) ?
-            \HTML\dbToFormTidy($this->formData['resourcetextUrlText']) : FALSE;
+        $text = array_key_exists('resourceurlName', $this->formData) ?
+            \HTML\dbToFormTidy($this->formData['resourceurlName']) : FALSE;
         $urlContent .= BR . '&nbsp;' . BR;
         $urlContent .= \FORM\textInput(
             $this->messages->text("resources", "urlLabel"),
-            "resourcetextUrlText",
+            "resourceurlName",
             $text,
             50,
             255

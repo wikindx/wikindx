@@ -110,65 +110,7 @@ class URLS
     private function edit()
     {
         $this->validateInput();
-        if (array_key_exists('ids', $this->formData))
-        {
-            foreach ($this->formData['ids'] as $key => $var)
-            {
-                $split = \UTF8\mb_explode('_', $key);
-                if ($split[0] == 'urlEditId')
-                {
-                    $editIds[$split[1]] = $var;
-                }
-            }
-        }
-        if (array_key_exists('links', $this->formData))
-        {
-            foreach ($this->formData['links'] as $key => $var)
-            {
-                $split = \UTF8\mb_explode('_', $key);
-                if ($split[0] == 'urlEditLink')
-                {
-                    $editLinks[$split[1]] = $var;
-                }
-            }
-        }
-        if (array_key_exists('names', $this->formData))
-        {
-            foreach ($this->formData['names'] as $key => $var)
-            {
-                $split = \UTF8\mb_explode('_', $key);
-                if ($split[0] == 'urlEditName')
-                {
-                    $editNames[$split[1]] = $var;
-                }
-            }
-        }
-        if (array_key_exists('ids', $this->formData))
-        {
-            foreach ($this->formData['ids'] as $key => $var)
-            {
-                $split = \UTF8\mb_explode('_', $key);
-                if ($split[0] == 'urlEditId')
-                {
-                    $editIds[$split[1]] = $var;
-                }
-            }
-        }
-        if (array_key_exists('deletes', $this->formData))
-        {
-            foreach ($this->formData['deletes'] as $key => $var)
-            {
-                $split = \UTF8\mb_explode('_', $key);
-                if ($split[0] == 'urlDelete')
-                {
-                    if (array_key_exists($split[1], $editIds))
-                    {
-                        $deletes[$split[1]] = $editIds[$split[1]];
-                    }
-                }
-            }
-        }
-        
+// Add any new URL first
         if (array_key_exists('url', $this->formData))
         {
             // Insert
@@ -182,33 +124,33 @@ class URLS
             $values[] = array_key_exists('name', $this->formData) ? $this->formData['name'] : "";
             
             $fields[] = 'resourceurlPrimary';
-            $values[] = 0;
+            $values[] = $this->vars['primary'] == 'new' ? 1 : 0;
             
             $this->db->insert('resource_url', $fields, $values);
+            unset($this->formData['url']);
+            unset($this->formData['name']);
         }
-        
-        // Edit URLs
-        if (isset($editLinks))
-        {
-            foreach ($editLinks as $number => $link)
-            {
-                $updateArray['resourceurlUrl'] = $link;
-                $updateArray['resourceurlName'] = array_key_exists($number, $editNames) ? $editNames[$number] : "";
-                $updateArray['resourceurlPrimary'] = $this->formData['urlPrimary'] == $number ? 1 : 0;
-                $this->db->formatConditions(["resourceurlId" => $editIds[$number]]);
-                $this->db->formatConditions(["resourceurlResourceId" => $this->resourceId]);
-                $this->db->update('resource_url', $updateArray);
-            }
+        $deletes = [];
+        foreach ($this->formData as $id => $array) {
+        	$updateArray = [];
+        	if (array_key_exists('delete', $array)) {
+        		$deletes[] = $id;
+        		continue;
+        	}
+			$updateArray['resourceurlUrl'] = $this->formData[$id]['url'];
+			$updateArray['resourceurlName'] = array_key_exists('name', $this->formData[$id]) ? $this->formData[$id]['name'] : "";
+			$updateArray['resourceurlPrimary'] = array_key_exists('primary', $this->formData[$id]) ? 1 : 0;
+			$this->db->formatConditions(["resourceurlId" => $id]);
+			$this->db->update('resource_url', $updateArray);
         }
-        
-        if (isset($deletes))
+        // Delete
+        if (!empty($deletes))
         {
             $this->db->formatConditionsOneField($deletes, 'resourceurlId');
-            $this->db->formatConditions(["resourceurlResourceId" => $this->resourceId]);
             $this->db->delete('resource_url');
         }
-        
-        $this->setPrimaryUrl($this->resourceId);
+
+        $this->checkPrimaryUrl();
         
         // send back to view this resource with success message (deleteConfirm breaks out before this)
         $navigate = FACTORY_NAVIGATE::getInstance();
@@ -216,15 +158,12 @@ class URLS
     }
     
     /**
-     * Set the primary URL
-     *
-     * @param int $resourceurlResourceId
+     * Check there is a primary URL
      */
-    private function setPrimaryUrl($resourceurlResourceId)
+    private function checkPrimaryUrl()
     {
-        
         // Find the previous first URL
-        $this->db->formatConditions(["resourceurlResourceId" => $resourceurlResourceId]);
+        $this->db->formatConditions(["resourceurlResourceId" => $this->resourceId]);
         $this->db->formatConditions(["resourceurlPrimary" => 1]);
         $minArray = $this->db->selectMin('resource_url', 'resourceurlId');
         $resourceurlId = $minArray[0]['resourceurlId'];
@@ -232,14 +171,14 @@ class URLS
         if ($resourceurlId == NULL)
         {
             // Find the first URL inserted
-            $this->db->formatConditions(["resourceurlResourceId" => $resourceurlResourceId]);
+            $this->db->formatConditions(["resourceurlResourceId" => $this->resourceId]);
             $minArray = $this->db->selectMin('resource_url', 'resourceurlId');
             $resourceurlId = $minArray[0]['resourceurlId'];
             
             // Set the primary URL
             $updateArray['resourceurlPrimary'] = 1;
             $this->db->formatConditions(["resourceurlId" => $resourceurlId]);
-            $this->db->formatConditions(["resourceurlResourceId" => $resourceurlResourceId]);
+            $this->db->formatConditions(["resourceurlResourceId" => $this->resourceId]);
             $this->db->update('resource_url', $updateArray);
         }
     }
@@ -254,16 +193,9 @@ class URLS
      */
     private function urlEditForm($recordset, $message = FALSE)
     {
-        $ids = [];
-        $links = [];
-        $names = [];
-        $primaries = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            $ids[] = $row['resourceurlId'];
-            $links[] = $row['resourceurlUrl'];
-            $names[] = $row['resourceurlName'];
-            $primaries[] = $row['resourceurlPrimary'];
+        while ($row = $this->db->fetchRow($recordset)) {
+            $urls[$row['resourceurlId']] = ['url' => $row['resourceurlUrl'], 
+            	'name' => $row['resourceurlName'], 'primary' => $row['resourceurlPrimary']];
         }
         
         $pString = $message;
@@ -284,67 +216,57 @@ class URLS
         
         $pString .= \HTML\trStart();
             $field = array_key_exists('url', $this->formData) ? $this->formData['url'] : WIKINDX_RESOURCE_URL_PREFIX;
-            $pString .= \HTML\td(\FORM\textInput(FALSE, "url", $field, 70), 'left bottom');
+            $pString .= \HTML\td(\FORM\textInput($this->messages->text("misc", "add"), "url", $field, 70), 'left bottom');
             $field = array_key_exists('name', $this->formData) ? $this->formData['name'] : FALSE;
             $pString .= \HTML\td(\FORM\textInput(FALSE, "name", $field, 50), 'left bottom');
-            $pString .= \HTML\td("&nbsp;");
+            $pString .= \HTML\td(\FORM\radioButton(FALSE, 'primary', 'new'), 'left bottom');
             $pString .= \HTML\td("&nbsp;");
         $pString .= \HTML\trEnd();
         
-        $numLinks = count($links);
-        $index = 0;
-        
-        foreach ($links as $k => $link)
+        foreach ($urls as $id => $array)
         {
-            $tdId = \FORM\hidden("urlEditId_$index", $ids[$index]);
+            $tdId = \FORM\hidden("editId_$id", $id);
             
-            $field = array_key_exists('links', $this->formData) && array_key_exists("urlEditLink_$index", $this->formData['links']) ?
-                $this->formData['links']["urlEditLink_$index"] : $link;
-            $tdUrl = \FORM\textInput(FALSE, "urlEditLink_$index", $field, 70);
+            $field = array_key_exists($id, $this->formData) && array_key_exists('url', $this->formData[$id]) ? 
+            	$this->formData[$id]['url'] : $array['url'];
+            $tdUrl = \FORM\textInput($this->messages->text("misc", "edit"), "editUrl_$id", $field, 70);
             
-            $field = array_key_exists('names', $this->formData) && array_key_exists("urlEditName_$index", $this->formData['names']) ?
-                $this->formData['names']["urlEditName_$index"] : \HTML\dbToFormTidy($names[$index]);
-            $tdName = \FORM\textInput(FALSE, "urlEditName_$index", $field, 50);
+            $field = array_key_exists($id, $this->formData) && array_key_exists('names', $this->formData[$id]) ? 
+            	$this->formData[$id]['name'] : \HTML\dbToFormTidy($array['name']);
+            $tdName = \FORM\textInput(FALSE, "editName_$id", $field, 50);
             
-            
-            $checked = array_key_exists('deletes', $this->formData) && array_key_exists("urlDelete_$index", $this->formData['deletes']) ?
-                TRUE : FALSE;
-            $tdDelete = \FORM\checkBox( FALSE, "urlDelete_$index", $checked);
-            
+            $checked = array_key_exists($id, $this->formData) && array_key_exists('delete', $this->formData[$id]) ? TRUE : FALSE;
+            $tdDelete = \FORM\checkBox( FALSE, "delete_$id", $checked);
             
             $tdUrlPrimary = "";
-            if ($numLinks > 1)
-            {
-                if (empty($this->formData))
-                {
-                    if ($primaries[$index])
-                    {
-                        $tdUrlPrimary .= \FORM\radioButton(FALSE, 'urlPrimary', $index, TRUE);
-                    }
-                    else
-                    {
-                        $tdUrlPrimary .= \FORM\radioButton(FALSE, 'urlPrimary', $index);
-                    }
-                }
-                else
-                {
-                    if (array_key_exists('urlPrimary', $this->formData) && ($index == $this->formData['urlPrimary']))
-                    {
-                        $tdUrlPrimary .= \FORM\radioButton(FALSE, 'urlPrimary', $index, TRUE);
-                    }
-                    else
-                    {
-                        $tdUrlPrimary .= \FORM\radioButton(FALSE, 'urlPrimary', $index);
-                    }
-                }
-            }
-            ++$index;
+			if (empty($this->formData))
+			{
+				if ($array['primary'])
+				{
+					$tdUrlPrimary .= \FORM\radioButton(FALSE, 'primary', $id, TRUE);
+				}
+				else
+				{
+					$tdUrlPrimary .= \FORM\radioButton(FALSE, 'primary', $id);
+				}
+			}
+			else
+			{
+				if (array_key_exists('primary', $array))
+				{
+					$tdUrlPrimary .= \FORM\radioButton(FALSE, 'primary', $id, TRUE);
+				}
+				else
+				{
+					$tdUrlPrimary .= \FORM\radioButton(FALSE, 'primary', $id);
+				}
+			}
             
             $pString .= \HTML\trStart();
-                $pString .= \HTML\td($tdId . $tdUrl);
-                $pString .= \HTML\td($tdName);
-                $pString .= \HTML\td($tdUrlPrimary);
-                $pString .= \HTML\td($tdDelete);
+                $pString .= \HTML\td($tdId . $tdUrl, 'left bottom');
+                $pString .= \HTML\td($tdName, 'left bottom');
+                $pString .= \HTML\td($tdUrlPrimary, 'left bottom');
+                $pString .= \HTML\td($tdDelete, 'left bottom');
             $pString .= \HTML\trEnd();
         }
         
@@ -415,48 +337,48 @@ class URLS
         {
             $error = $this->errors->text("inputError", "missing");
         }
-        // Get primary URL if multiple URLs
-        $this->formData['urlPrimary'] = array_key_exists('urlPrimary', $this->vars) ? $this->vars['urlPrimary'] : FALSE;
+// Get IDs first
+        foreach ($this->vars as $key => $var)
+        {
+            $split = \UTF8\mb_explode('_', $key);
+            if (($split[0] == 'editId')) {
+            	$this->formData[$split[1]]['id'] = $split[1];
+            }
+        }
         // find any URLs to edit and files to delete
         foreach ($this->vars as $key => $var)
         {
-            $delete = FALSE;
+            $delete = $name = $url = FALSE;
             $split = \UTF8\mb_explode('_', $key);
-            if (($split[0] == 'urlEditId'))
-            {
-                $this->formData['ids'][$key] = trim($var);
-            }
-            if (($split[0] == 'urlEditLink'))
+            if (($split[0] == 'editUrl'))
             {
                 if (trim($var))
                 {
-                    $this->formData['links'][$key] = trim($var);
+                    $this->formData[$split[1]]['url'] = trim($var);
+                    if ($this->vars['primary'] == $split[1]) {
+                    	$this->formData[$split[1]]['primary'] = TRUE;
+                    }
                 }
-                else
+            }
+            else if (($split[0] == 'editName') && $var)
+            {
+                if (trim($var))
                 {
-                    $this->formData['deletes']['urlDelete_' . $split[1]] = 'on';
+                	$this->formData[$split[1]]['name'] = trim($var);
                 }
             }
-            if (($split[0] == 'urlEditName') && $var)
+            else if ($split[0] == 'delete')
             {
-                $this->formData['names'][$key] = trim($var);
-            }
-            if ($split[0] == 'urlDelete')
-            {
-                $this->formData['deletes'][$key] = $var;
+                $this->formData[$split[1]]['delete'] = TRUE;
             }
         }
-        if (array_key_exists('names', $this->formData))
-        {
-            foreach ($this->formData['names'] as $key => $var)
-            {
-                $split = \UTF8\mb_explode('_', $key);
-                if (array_key_exists('links', $this->formData) && !array_key_exists('urlEditLink_' . $split[1], $this->formData['links']))
-                {
-                    $error = $this->errors->text("inputError", "missing");
-                }
-            }
-        }
+		foreach ($this->formData as $id => $array)
+		{
+			if (array_key_exists('name', $array) && !array_key_exists('url', $array))
+			{
+				$error = $this->errors->text("inputError", "missing");
+			}
+		}
         if ($error)
         {
             $this->badInput->close($error, $this, 'editInit');

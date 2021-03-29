@@ -276,32 +276,19 @@ class RSS
     private function getUser($db, $addId, $editId)
     {
         $add = $edit = FALSE;
-        if ($addId)
+
+        $db->formatConditionsOneField([$addId, $editId], 'usersId');
+        $resultSet = $db->select('users', ['usersId', 'usersUsername', 'usersFullname']);
+        while ($row = $db->fetchRow($resultSet))
         {
-            $db->formatConditions(['usersId' => $addId]);
-            $resultSet = $db->select('users', ['usersUsername', 'usersFullname']);
-            $row = $db->fetchRow($resultSet);
-            if ($row['usersFullname'])
+            $name = $row['usersFullname'] ? $row['usersFullname'] : $row['usersUsername'];
+            if ($row['usersId'] == $addId)
             {
-                $add = $row['usersFullname'];
+                $add = $name;
             }
-            elseif ($row['usersUsername'])
+            if ($row['usersId'] == $editId)
             {
-                $add = $row['usersUsername'];
-            }
-        }
-        if ($editId)
-        {
-            $db->formatConditions(['usersId' => $editId]);
-            $resultSet = $db->select('users', ['usersUsername', 'usersFullname']);
-            $row = $db->fetchRow($resultSet);
-            if ($row['usersFullname'])
-            {
-                $edit = $row['usersFullname'];
-            }
-            elseif ($row['usersUsername'])
-            {
-                $edit = $row['usersUsername'];
+                $edit = $name;
             }
         }
 

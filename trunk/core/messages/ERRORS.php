@@ -89,14 +89,7 @@ class ERRORS
 		return array(
 /// dbError_ General database errors
 			"dbError" => array(
-				"open" => dgettext($domain, "Unable to open ### database."),
-				"write" => dgettext($domain, "Unable to write to database."),
 				"read" => dgettext($domain, "Unable to read database."),
-				"config" => dgettext($domain, "Missing Configuration Parameter in config.php."),
-				"fileOpen" => dgettext($domain, "Unable to open update/createMySQL.txt."),
-				"dbSpecified" => dgettext($domain, "No RDBMS type selected in config.php."),
-				"subQuery" => dgettext($domain, "Missing subQuery statement."),
-				"formData" => dgettext($domain, "Unable to write temporary form data to the database."),
 			),
 /// sessionError_ PHP Session errors
 			"sessionError" => array(

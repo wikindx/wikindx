@@ -1851,6 +1851,20 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 48 (6.4.4)
+     *
+     * Drop url-related columns from resource_text.
+     */
+    private function upgradeTo48()
+    {
+        $this->updateDbSchema('48');
+        
+        $this->flushTempStorage();
+        
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

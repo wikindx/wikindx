@@ -56,11 +56,12 @@ class EXPORTCOINS extends EXPORTER
         {
             $authors = $this->convertEntryAuthors();
         }
-        if (array_key_exists('resourcetextUrls', $row) && $row['resourcetextUrls'])
-        {
-            $urls = unserialize(base64_decode($row['resourcetextUrls']));
-            $url = '&amp;rft_id=' . urlencode(array_shift($urls));
-        }
+        $this->db->formatConditions(['resourceurlResourceId' => $row['resourceId'], 'resourceurlPrimary' => 1]);
+    	$resultSet = $this->db->select('resource_url', 'resourceurlUrl');
+    	if ($this->db->numRows($resultSet)) {
+    		$url = $this->db->fetchOne($resultSet);
+            $url = '&amp;rft_id=' . urlencode($url);
+    	}
         if (array_key_exists('resourceDoi', $row) && $row['resourceDoi'])
         {
             $doi = '&amp;rft_id=info:doi/' . $this->uEncode($row['resourceDoi']);

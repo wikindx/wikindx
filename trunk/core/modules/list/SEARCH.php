@@ -3669,11 +3669,11 @@ class SEARCH
         }
         if (array_search('withUrl', $options) !== FALSE)
         {
-            $this->db->formatConditions(['resourcetextUrls' => ' IS NOT NULL']);
+            $this->db->formatConditions(['resourceurlUrl' => ' IS NOT NULL']);
             if ((!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR'))
                 && ($valueArray['OriginalField'] != 'note') && ($valueArray['OriginalField'] != 'abstract'))
             {
-                $this->db->leftJoin('resource_text', 'resourcetextId', $rId);
+                $this->db->leftJoin('resource_url', 'resourceurlResourceId', $rId);
             }
         }
     }

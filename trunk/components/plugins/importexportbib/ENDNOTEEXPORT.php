@@ -270,23 +270,25 @@ class ENDNOTEEXPORT
                     if ($this->xml)
                     {
                         $field = array_search($enField, $this->map->endnoteXmlFields8);
-                        if (($field !== FALSE) && array_key_exists($wkField, $row) && $row[$wkField])
+						if ($field == 'url')
+						{
+						    $this->db->formatConditions(['resourceurlResourceId' => $row['resourceId']]);
+							$resultSet2 = $this->db->select('resource_url', 'resourceurlUrl');
+							$urls = '';
+							while ($row2 = $this->db->fetchRow($resultSet2)) {
+								$urls .= "<$field><style>" . $this->spCharFormat($row2['resourceurlUrl']) . "</style></$field>";
+							}
+							if ($urls) {
+								$this->pString .= "<urls><related-urls>$urls</related-urls></urls>";
+							}
+						}
+                        elseif (($field !== FALSE) && array_key_exists($wkField, $row) && $row[$wkField])
                         {
                             if (($field == 'secondary-title') || ($field == 'tertiary-title') ||
                                     ($field == 'alt-title') || ($field == 'short-title'))
                             {
                                 $titles[] = "<$field><style>" . $this->spCharFormat(HTML\stripHtml(stripslashes($row[$wkField]))) .
                                     "</style></$field>";
-                            }
-                            elseif ($field == 'url')
-                            {
-                                $urls = '';
-                                foreach (unserialize(base64_decode($row['resourcetextUrls'])) as $url)
-                                {
-                                    $urls .= "<$field><style>" . $this->spCharFormat($url) .
-                                        "</style></$field>";
-                                }
-                                $this->pString .= "<urls><related-urls>$urls</related-urls></urls>";
                             }
                             else
                             {
@@ -298,19 +300,17 @@ class ENDNOTEEXPORT
                     else
                     {
                         $fieldNameIndex = array_search($enField, $fieldNameArray);
-                        if (array_key_exists($wkField, $row) && $row[$wkField])
+						if ($enField == 'URL')
+						{ // grab primary URL
+							$this->db->formatConditions(['resourceurlResourceId' => $row['resourceId'], 'resourceurlPrimary' => 1]);
+    						$resultSet = $this->db->select('resource_url', 'resourceurlUrl');
+							if ($this->db->numRows($resultSet)) {
+								$lineArray[$fieldNameIndex] = $this->db->fetchOne($resultSet);
+							}
+						}
+                        elseif (array_key_exists($wkField, $row) && $row[$wkField])
                         {
-                            if ($enField == 'URL')
-                            { // grab first URL
-                                $tmp = base64_decode($row['resourcetextUrls']);
-                                $tmp = unserialize($tmp);
-                                $tmp = array_shift($tmp);
-                                $lineArray[$fieldNameIndex] = $tmp;
-                            }
-                            else
-                            {
                                 $lineArray[$fieldNameIndex] = stripslashes($row[$wkField]);
-                            }
                         }
                     }
                 }

@@ -761,7 +761,7 @@ class ENDNOTEIMPORT
         $this->common->writePageTable($fields, $values);
     }
     /**
-     * writeResourceNoteTable - write WKX_resource_note table
+     * writeResourceTextTable - write WKX_resource_text table
      */
     private function writeResourceTextTable()
     {
@@ -964,7 +964,6 @@ class ENDNOTEIMPORT
         {
             $this->entry['date'] = $this->accessDate . ' ' . $this->accessYear;
         }
-
         return TRUE;
     }
     /**
@@ -1227,7 +1226,7 @@ class ENDNOTEIMPORT
                 foreach ($value[0] as $urlKey => $urlValue)
                 {
                     if (($urlKey == 'url') && array_key_exists($urlKey, $this->endnoteXmlFields) &&
-                        (FALSE !== array_search($this->endnoteXmlFields[$urlKey], $this->map->{$type}['resource'])))
+                        (FALSE !== array_search($this->endnoteXmlFields[$urlKey], $this->map->{$type}['resource_url'])))
                     {
                         $uArray[] = $this->extractFromStyleArray($urlValue[0]);
                     }

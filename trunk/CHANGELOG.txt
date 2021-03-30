@@ -2,13 +2,17 @@ RELEASES:
 
 
 v6.4.4
-Focus: bug fixes
+Focus: bug fixes, maintenance
 
 BUG FIXES:
 1. Add missing indices, again. 
 2. In the distribution, rename override.css to override.css.dist. This stops any required override.css being overwritten at upgrade. To make use of override.css.dist for CSS control, rename override.css.dist to override.css.
 3. Fix bug #324 – search on titles with hyphens.
 4. Align textboxes on “File URLs edit” screen.
+
+MAINTENANCE:
+1. Shift resource URLs from the resource_text table to a new resource_url table.
+
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

@@ -326,15 +326,14 @@ class EDITMETADATA
         $this->navigate($message);
     }
     /**
-     * If all abstract, note and url fields are null, delete the row
+     * If all abstract and note fields are null, delete the row
      */
     private function checkDeleteRow()
     {
         $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
-        $recordset = $this->db->select('resource_text', ['resourcetextAbstract', 'resourcetextNote',
-            'resourcetextUrls', ]);
+        $recordset = $this->db->select('resource_text', ['resourcetextAbstract', 'resourcetextNote']);
         $row = $this->db->fetchRow($recordset);
-        if (!$row['resourcetextAbstract'] && !$row['resourcetextNote'] && !$row['resourcetextUrls'])
+        if (!$row['resourcetextAbstract'] && !$row['resourcetextNote'])
         {
             $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
             $this->db->delete('resource_text');

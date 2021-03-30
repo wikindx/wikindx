@@ -128,35 +128,40 @@ class RIS
                 foreach ($tableArray as $wkField => $risField)
                 {
                     $wkField = str_replace('_', '', $table) . ucfirst($wkField);
-                    if (array_key_exists($wkField, $row) && $row[$wkField])
+					if ($risField == 'UR') {
+						$this->db->formatConditions(['resourceurlResourceId' => $row['resourceId']]);
+						$resultSet = $this->db->select('resource_url', 'resourceurlUrl');
+						if (!$this->db->numRows($resultSet)) {
+							continue;
+						}
+						$urls = [];
+						while ($row2 = $this->db->fetchRow($resultSet)) {
+							$urls[] = $row2['resourceurlUrl'];
+						}
+						if (($row['resourceType'] == 'web_article') ||
+							($row['resourceType'] == 'web_site') || 
+							($row['resourceType'] == 'web_encyclopedia') ||
+							($row['resourceType'] == 'web_encyclopedia_article') ||
+							($row['resourceType'] == 'database')) 
+						{
+							$item = $this->webFormat($row, $urls);
+							$entryArray[$row['resourceId']][] = $item;
+						}
+						else
+						{
+                            $entryArray[$row['resourceId']][] = $risField . '  - ' . implode(';', $urls);
+						}
+					}
+                    elseif (array_key_exists($wkField, $row) && $row[$wkField])
                     {
                         // asterisk (character 42) is not allowed in the author, keywords, or periodical name fields - replace with '#'
                         if ($risField == 'JF')
                         {
                             $entryArray[$row['resourceId']][] = $risField . '  - ' . preg_replace("/\\*/u", "#", stripslashes($row[$wkField]));
                         }
-                        elseif (($risField == 'UR') && (($row['resourceType'] == 'web_article') ||
-                            ($row['resourceType'] == 'web_site') || ($row['resourceType'] == 'web_encyclopedia') ||
-                            ($row['resourceType'] == 'web_encyclopedia_article') ||
-                            ($row['resourceType'] == 'database')) &&
-                            ($item = $this->webFormat($row)))
-                        {
-                            $entryArray[$row['resourceId']][] = $item;
-                        }
                         else
                         {
-                            if ($risField == 'UR')
-                            {
-                                $tmp = base64_decode($row['resourcetextUrls']);
-                                $tmp = unserialize($tmp);
-                                $tmp = array_values($tmp);
-                                $tmp = implode(';', $tmp);
-                            }
-                            else
-                            {
-                                $tmp = stripslashes($row[$wkField]);
-                            }
-
+                            $tmp = stripslashes($row[$wkField]);
                             $entryArray[$row['resourceId']][] = $risField . '  - ' . $tmp;
                         }
                     }
@@ -249,16 +254,14 @@ class RIS
      * web_article,  URL and accessed date
      *
      * @param array $row
+     * @param array $urls
      *
      * @return string
      */
-    private function webFormat($row)
+    private function webFormat($row, $urls)
     {
         $url = $year = $month = $day = FALSE;
-        $tmp = base64_decode($row['resourcetextUrls']);
-        $tmp = unserialize($tmp);
-        $tmp = array_values($tmp);
-        $tmp = implode(';', $tmp);
+        $tmp = implode(';', $urls);
         $url = "L2  - " . $tmp;
         if (array_key_exists('resourceyearYear2', $row) && $row['resourceyearYear2'])
         {

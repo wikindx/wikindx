@@ -412,6 +412,8 @@ class DELETERESOURCE
         $this->db->delete('resource_misc');
         $this->db->formatConditionsOneField($this->idsRaw, 'resourcetextId');
         $this->db->delete('resource_text');
+        $this->db->formatConditionsOneField($this->idsRaw, 'resourceurlResourceId');
+        $this->db->delete('resource_url');
         $this->db->formatConditionsOneField($this->idsRaw, 'resourcecreatorResourceId');
         $this->db->delete('resource_creator');
         $this->db->formatConditionsOneField($this->idsRaw, 'resourcekeywordResourceId');

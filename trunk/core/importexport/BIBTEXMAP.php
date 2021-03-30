@@ -214,8 +214,8 @@ class BIBTEXMAP
                 1 => 'author',
                 2 => 'editor',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->book['resource_publisher']['publisherName'] = 'publisher';
@@ -253,8 +253,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->journal_article['resource_publisher'] = []; // need empty array
@@ -276,8 +276,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->newspaper_article['resource_publisher'] = []; // need empty array
@@ -300,8 +300,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->magazine_article['resource_publisher'] = []; // need empty array
@@ -326,8 +326,8 @@ class BIBTEXMAP
                 1 => 'author',
                 2 => 'editor',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->proceedings_article['resource_collection']['conferenceOrganiser'] = 'organization';
@@ -352,8 +352,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->conference_paper['resource_publisher']['publisherName'] = 'organization';
@@ -374,8 +374,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->conference_poster['resource_publisher']['publisherName'] = 'organization';
@@ -396,8 +396,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 2 => 'editor',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->proceedings['resource_publisher']['publisherName'] = 'organization';
@@ -421,8 +421,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->thesis['resource_publisher']['publisherName'] = 'school';
@@ -447,8 +447,8 @@ class BIBTEXMAP
                 1 => 'author',
                 2 => 'editor',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->web_article['resource_publisher'] = []; // need empty array
@@ -470,8 +470,8 @@ class BIBTEXMAP
                 1 => 'author',
                 2 => 'editor',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->web_site['resource_publisher'] = []; // need empty array
@@ -493,8 +493,8 @@ class BIBTEXMAP
                 1 => 'author',
                 2 => 'editor',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->web_encyclopedia['resource_publisher']['publisherName'] = 'publisher';
@@ -517,8 +517,8 @@ class BIBTEXMAP
                 1 => 'author',
                 2 => 'editor',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->web_encyclopedia_article['resource_publisher']['publisherName'] = 'publisher';
@@ -540,8 +540,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author', // director
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'film',
         ];
@@ -562,8 +562,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author', // director
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'broadcast',
         ];
@@ -586,8 +586,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author', // Performer
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];
@@ -609,8 +609,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];
@@ -635,8 +635,8 @@ class BIBTEXMAP
                 1 => 'author', // Composer
                 2 => 'editor', // Editor
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'Music Score',
         ];
@@ -660,8 +660,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author', // Programmer
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];
@@ -683,8 +683,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];
@@ -710,8 +710,8 @@ class BIBTEXMAP
                 1 => 'author',
                 'creator5' => 'editor', // Series Editor
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];
@@ -734,8 +734,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->database['resource_publisher']['publisherName'] = 'publisher';
@@ -760,8 +760,8 @@ class BIBTEXMAP
                 1 => 'author',
                 2 => 'editor',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'Government Report',
         ];
@@ -788,8 +788,8 @@ class BIBTEXMAP
                 1 => 'author',
                 2 => 'editor',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->report['resource_publisher']['publisherName'] = 'institution';
@@ -814,8 +814,8 @@ class BIBTEXMAP
             ],
             'resource_creator' => [// empty array required
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'Hearing',
         ];
@@ -841,8 +841,8 @@ class BIBTEXMAP
             ],
             'resource_creator' => [// empty array required
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'Statute',
         ];
@@ -868,8 +868,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'Legal Ruling/Regulation',
         ];
@@ -894,8 +894,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 'creator3' => 'author', // Counsel
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'Legal Case',
         ];
@@ -919,8 +919,8 @@ class BIBTEXMAP
             ],
             'resource_creator' => [// we require an empty array to still be present
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'Bill',
         ];
@@ -945,8 +945,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author', // Inventor
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->patent['resource_publisher']['publisherName'] = 'publisher'; // assignee
@@ -967,8 +967,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author', // company
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->brochure['resource_publisher'] = []; // need empty array
@@ -989,8 +989,8 @@ class BIBTEXMAP
                 1 => 'author',
                 2 => 'editor', // Recipient
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];
@@ -1012,8 +1012,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
         ];
         $this->unpublished['resource_publisher']['publisherName'] = 'institution'; // Institution
@@ -1036,8 +1036,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author', // Attribution
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'Classical Work',
         ];
@@ -1059,8 +1059,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];
@@ -1084,8 +1084,8 @@ class BIBTEXMAP
                 1 => 'author', // Cartographer
                 'creator5' => 'editor', // Series Editor
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];
@@ -1111,8 +1111,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author', // Created By
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'field4',
         ];
@@ -1135,8 +1135,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];
@@ -1158,8 +1158,8 @@ class BIBTEXMAP
             'resource_creator' => [
                 1 => 'author',
             ],
-            'resource_text' => [
-                'resourcetextUrls' => 'URL',
+            'resource_url' => [
+                'resourceurlUrl' => 'URL',
             ],
             'howpublished' => 'resourceField2',
         ];

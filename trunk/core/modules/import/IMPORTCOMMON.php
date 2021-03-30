@@ -945,16 +945,26 @@ class IMPORTCOMMON
             $fields[] = 'resourcetextAddUserIdAbstract';
             $values[] = $this->session->getVar("setup_UserId");
         }
+        $this->db->insert('resource_text', $fields, $values);
+// For historical reasons, writing the URLs also takes place here (once upon a time, URLs were part of the resource_text table)
         if ($url)
         {
             if (!is_array($url))
             {
                 $url = [$url];
             }
-            $fields[] = 'resourcetextUrls';
-            $values[] = base64_encode(serialize($url));
+            $setPrimary = FALSE;
+            foreach ($url as $u) {
+            	$fields = ['resourceurlResourceId', 'resourceurlUrl'];
+            	$values = [$this->resourceId, $u];
+            	if (!$setPrimary) {
+            		array_push($fields, 'resourceurlPrimary');
+            		array_push($values, 1);
+            		$setPrimary = TRUE;
+            	}
+            	$this->db->insert('resource_url', $fields, $values);
+            }
         }
-        $this->db->insert('resource_text', $fields, $values);
     }
     /**
      * Write keyword tables

@@ -554,16 +554,27 @@ class VIEWBIBTEX
                             }
                             $entryArray[$this->resourceId][] = "$bibField = " . $this->convertCharacter2($title, $short, $long);
                         }
-                        elseif ($wkField == 'resourcetextUrls')
-                        {
-                            $urls = unserialize(base64_decode($row[$wkField]));
-                            $entryArray[$this->resourceId][] = "$bibField = " . $this->startField . array_shift($urls) . $this->endField;
-                        }
                         else
                         {
                             $entryArray[$this->resourceId][] = "$bibField = " . $this->convertCharacter($row[$wkField]);
                         }
                     }
+					else if (($wkField == 'resourceurlUrl') && ($bibField == 'URL'))
+					{
+						$this->db->formatConditions(['resourceurlResourceId' => $this->resourceId, 'resourceurlPrimary' => 1]);
+						$resultSet = $this->db->select('resource_url', 'resourceurlUrl');
+						if ($this->db->numRows($resultSet)) {
+							$url = $this->db->fetchOne($resultSet);
+							if (($rowTypes[$row['resourceId']]['resourceType'] == 'web_article') ||
+								($rowTypes[$row['resourceId']]['resourceType'] == 'database')) { // 'misc' types
+								$entryArray[$row['resourceId']][] = "howpublished = " . 
+									$this->startField . "\\url{" . $url . "}" . $this->endField;
+								$howPublishedDone[$row['resourceId']] = TRUE;
+							} else {
+								$entryArray[$this->resourceId][] = "$bibField = " . $this->startField . $url . $this->endField;
+							}
+						}
+					}
                 }
             }
             if ($item = $this->pageFormat($row))
@@ -605,8 +616,8 @@ class VIEWBIBTEX
         }
         // Get creators
         $this->grabNames($rowTypes, $entryArray, $resourceIds);
-        // Get notes and abstracts and URLs
-        $this->grabNoteAbstractUrl($rowTypes, $entryArray, $howPublishedDone, $resourceIds);
+        // Get notes and abstracts
+        $this->grabNoteAbstract($rowTypes, $entryArray, $howPublishedDone, $resourceIds);
         // Get publisher
         $this->grabPublisher($rowTypes, $entryArray, $miscField1, $miscPublishers);
         unset($miscField1);
@@ -1453,17 +1464,17 @@ class VIEWBIBTEX
         }
     }
     /**
-     * grabNoteAbstractUrl
+     * grabNoteAbstract
      *
      * @param array $rowTypes
      * @param array $entryArray
      * @param array $howPublishedDone
      * @param array $rIds
      */
-    private function grabNoteAbstractUrl(&$rowTypes, &$entryArray, &$howPublishedDone, $rIds)
+    private function grabNoteAbstract(&$rowTypes, &$entryArray, &$howPublishedDone, $rIds)
     {
         $this->db->formatConditionsOneField($rIds, 'resourcetextId');
-        $resultSet = $this->db->select('resource_text', ['resourcetextId', 'resourcetextNote', 'resourcetextAbstract', 'resourcetextUrls']);
+        $resultSet = $this->db->select('resource_text', ['resourcetextId', 'resourcetextNote', 'resourcetextAbstract']);
         while ($row = $this->db->fetchRow($resultSet))
         {
             // Ensure first letter is capitalized
@@ -1476,17 +1487,6 @@ class VIEWBIBTEX
             {
                 $abstract = \UTF8\mb_ucfirst(\HTML\stripHtml($row['resourcetextAbstract']));
                 $entryArray[$row['resourcetextId']][] = "abstract = " . $this->convertCharacter($this->parseCitation($abstract));
-            }
-            if ($row['resourcetextUrls'] &&
-                (($rowTypes[$row['resourcetextId']]['resourceType'] == 'web_article') ||
-                ($rowTypes[$row['resourcetextId']]['resourceType'] == 'database')))
-            { // 'misc' types
-                // Only take the first URL for this field
-                $tmp = base64_decode($row['resourcetextUrls']);
-                $tmp = unserialize($tmp);
-                $url = array_shift($tmp);
-                $entryArray[$row['resourcetextId']][] = "howpublished = " . $this->startField . "\\url{" . $url . "}" . $this->endField;
-                $howPublishedDone[$row['resourcetextId']] = TRUE;
             }
             unset($row);
         }

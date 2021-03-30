@@ -106,8 +106,8 @@ class RISMAP
                 'creator2' => 'A2', // Editor
                 'creator5' => 'A3', // Series Editor
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->book['resource_publisher']['publisherName'] = 'PB';
@@ -132,8 +132,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1', // Author
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->journal_article['resource_publisher'] = []; // need empty array
@@ -151,8 +151,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->newspaper_article['resource_publisher'] = []; // need empty array
@@ -171,8 +171,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->proceedings_article['resource_publisher']['publisherName'] = 'PB';
@@ -193,8 +193,8 @@ class RISMAP
                 'creator1' => 'A1',
                 'creator2' => 'A2',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->web_article['resource_publisher']['publisherName'] = 'PB';
@@ -213,8 +213,8 @@ class RISMAP
                 'creator1' => 'A1',
                 'creator2' => 'A2',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->web_site['resource_publisher'] = []; // need empty array
@@ -233,8 +233,8 @@ class RISMAP
                 'creator1' => 'A1',
                 'creator2' => 'A2', // Editor
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->web_encyclopedia['resource_publisher']['publisherName'] = 'PB';
@@ -254,8 +254,8 @@ class RISMAP
                 'creator1' => 'A1',
                 'creator2' => 'A2',  // Editor
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->web_encyclopedia_article['resource_publisher']['publisherName'] = 'PB';
@@ -275,8 +275,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->thesis['resource_publisher']['publisherName'] = 'PB';
@@ -295,8 +295,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1', // director
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->film['resource_publisher']['publisherName'] = 'A3'; // distributor
@@ -313,8 +313,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1', // director
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->broadcast['resource_publisher']['publisherName'] = 'A3'; // distributor
@@ -334,8 +334,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1', // Programmer
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->software['resource_publisher']['publisherName'] = 'PB';
@@ -354,8 +354,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->artwork['resource_publisher']['publisherName'] = 'PB';
@@ -373,8 +373,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->audiovisual['resource_publisher']['publisherName'] = 'PB';
@@ -394,8 +394,8 @@ class RISMAP
             'resource_creator' => [
                 'creator3' => 'A1', // Counsel
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->case['resource_publisher']['publisherName'] = 'PB'; // Court
@@ -413,8 +413,8 @@ class RISMAP
             ],
             'resource_creator' => [// we require an empty array to still be present
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->bill['resource_publisher'] = []; // need empty array
@@ -432,8 +432,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1', // Attribution
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->classical['resource_publisher'] = []; // need empty array
@@ -450,8 +450,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->conference_paper['resource_publisher']['publisherName'] = 'PB';
@@ -469,8 +469,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->conference_poster['resource_publisher']['publisherName'] = 'PB';
@@ -490,8 +490,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->legal_ruling['resource_publisher']['publisherName'] = 'PB';
@@ -513,8 +513,8 @@ class RISMAP
                 'creator1' => 'A1',
                 'creator2' => 'A2', // Editor
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->government_report['resource_publisher']['publisherName'] = 'PB';
@@ -535,8 +535,8 @@ class RISMAP
                 'creator1' => 'A1',
                 'creator2' => 'A2', // Editor
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->report['resource_publisher']['publisherName'] = 'PB';
@@ -556,8 +556,8 @@ class RISMAP
             ],
             'resource_creator' => [// empty array required
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->hearing['resource_publisher']['publisherName'] = []; // need empty array
@@ -574,8 +574,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->database['resource_publisher']['publisherName'] = 'PB';
@@ -594,8 +594,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->magazine_article['resource_publisher'] = []; // need empty array
@@ -614,8 +614,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->manuscript['resource_publisher'] = []; // need empty array
@@ -634,8 +634,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1', // Cartographer
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->map['resource_publisher']['publisherName'] = 'PB';
@@ -657,8 +657,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1', // Created By
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->chart['resource_publisher']['publisherName'] = 'PB';
@@ -677,8 +677,8 @@ class RISMAP
             ],
             'resource_creator' => [// empty array required
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->statute['resource_publisher'] = []; // need empty array
@@ -699,8 +699,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1', // Inventor
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->patent['resource_publisher']['publisherName'] = 'A2'; // Assignees
@@ -720,8 +720,8 @@ class RISMAP
                 'creator1' => 'A1',
                 'creator2' => 'A2', // Recipient
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->personal['resource_publisher'] = []; // need empty array
@@ -738,8 +738,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->unpublished['resource_publisher'] = []; // need empty array
@@ -756,8 +756,8 @@ class RISMAP
             'resource_creator' => [
                 'creator2' => 'A2', // Editor
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->proceedings['resource_publisher']['publisherName'] = 'PB';
@@ -777,8 +777,8 @@ class RISMAP
                 'creator1' => 'A2', // Performer
                 'creator2' => 'A1', // Composer
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->music_album['resource_publisher']['publisherName'] = 'PB';
@@ -798,8 +798,8 @@ class RISMAP
                 'creator1' => 'A2', // Performer
                 'creator2' => 'A1', // Composer
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->music_track['resource_publisher']['publisherName'] = 'PB';
@@ -819,8 +819,8 @@ class RISMAP
                 'creator1' => 'A1', // Composer
                 'creator2' => 'A2', // Editor
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->music_score['resource_publisher']['publisherName'] = 'PB';
@@ -838,8 +838,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->miscellaneous['resource_publisher']['publisherName'] = 'PB';
@@ -857,8 +857,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
         $this->miscellaneous_section['resource_publisher']['publisherName'] = 'PB';
@@ -876,8 +876,8 @@ class RISMAP
             'resource_creator' => [
                 'creator1' => 'A1',
             ],
-            'resource_text' => [
-                'urls' => 'UR', // URL
+            'resource_url' => [
+                'url' => 'UR', // URL
             ],
         ];
     }

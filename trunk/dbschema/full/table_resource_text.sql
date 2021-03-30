@@ -15,8 +15,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_text` (
   `resourcetextEditUserIdAbstract` int(11) DEFAULT NULL,
   `resourcetextNote` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourcetextAbstract` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourcetextUrls` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourcetextUrlText` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`resourcetextId`),
   KEY `resourcetextAddUserIdNote` (`resourcetextAddUserIdNote`),
   KEY `resourcetextEditUserIdNote` (`resourcetextEditUserIdNote`),

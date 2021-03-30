@@ -360,7 +360,6 @@ class ENDNOTEMAP
         // Book resource type
         $this->book = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Secondary Title', // Series Title
                 'resourceField2' => 'Edition',
@@ -380,6 +379,9 @@ class ENDNOTEMAP
                 3 => 'Subsidiary Author', // Translator
                 5 => 'Tertiary Author', // Series Editor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->book['resource_publisher']['publisherName'] = 'Publisher';
         $this->book['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -397,7 +399,6 @@ class ENDNOTEMAP
         // Journal article resource type
         $this->journal_article = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Volume',
                 'resourceField2' => 'Number',
@@ -412,6 +413,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->journal_article['resource_publisher'] = []; // need empty array
         $this->journal_article['resource_collection']['collectionTitle'] = 'Secondary Title';
@@ -420,7 +424,6 @@ class ENDNOTEMAP
         // Newspaper article type
         $this->newspaper_article = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Section',
                 'resourceField2' => 'Place Published',
@@ -436,6 +439,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->newspaper_article['resource_publisher'] = []; // need empty array
         $this->newspaper_article['resource_collection']['collectionTitle'] = 'Secondary Title';
@@ -446,7 +452,6 @@ class ENDNOTEMAP
             'resource' => [
                 'resourceField1' => 'Tertiary Title', // Series Title
                 'resourceField3' => 'Volume',
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceDoi' => 'Electronic Resource Number',
             ],
@@ -458,6 +463,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->proceedings_article['resource_publisher']['publisherName'] = 'Publisher';
         $this->proceedings_article['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -467,7 +475,6 @@ class ENDNOTEMAP
         // Web article resource type
         $this->web_article = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceDoi' => 'Electronic Resource Number',
             ],
@@ -482,6 +489,9 @@ class ENDNOTEMAP
                 1 => 'Author',
                 2 => 'Secondary Author', // Editor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->web_article['resource_publisher']['publisherName'] = 'Publisher';
         $this->web_article['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -490,7 +500,6 @@ class ENDNOTEMAP
         // Web site resource type
         $this->web_site = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceDoi' => 'Electronic Resource Number',
             ],
@@ -503,13 +512,15 @@ class ENDNOTEMAP
                 1 => 'Author',
                 2 => 'Secondary Author', // Editor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->web_site['resource_publisher'] = []; // need empty array
         $this->web_site['resource_collection'] = []; // need empty array
 // Web encyclopedia resource type
         $this->web_encyclopedia = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Edition',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -522,6 +533,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
                 2 => 'Secondary Author', // Editor
+            ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
             ],
         ];
         $this->web_encyclopedia['resource_publisher']['publisherName'] = 'Publisher';
@@ -530,7 +544,6 @@ class ENDNOTEMAP
         // Web encyclopedia article resource type
         $this->web_encyclopedia_article = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Edition',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -543,6 +556,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
                 2 => 'Secondary Author', // Editor
+            ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
             ],
         ];
         $this->web_encyclopedia_article['resource_publisher']['publisherName'] = 'Publisher';
@@ -553,7 +569,6 @@ class ENDNOTEMAP
         // Thesis resource type
         $this->thesis = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Volume', // thesis or dissertation?
                 'resourceField2' => 'Type of Work',
@@ -568,6 +583,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->thesis['resource_publisher']['publisherName'] = 'Publisher';
         $this->thesis['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -576,7 +594,6 @@ class ENDNOTEMAP
         // Film resource type
         $this->film = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Place Published',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -590,13 +607,15 @@ class ENDNOTEMAP
                 1 => 'Author',
                 2 => 'Subsidiary Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->film['resource_publisher']['publisherName'] = 'Publisher';
         $this->film['resource_collection'] = []; // need empty array
         // Broadcast resource type
         $this->broadcast = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceDoi' => 'Electronic Resource Number',
             ],
@@ -611,6 +630,9 @@ class ENDNOTEMAP
                 1 => 'Author',
                 2 => 'Subsidiary Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->broadcast['resource_publisher']['publisherName'] = 'Publisher';
         $this->broadcast['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -618,7 +640,6 @@ class ENDNOTEMAP
         // Software resource type
         $this->software = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceField4' => 'Edition', // Version
@@ -632,6 +653,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author', // Programmer
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->software['resource_publisher']['publisherName'] = 'Publisher';
         $this->software['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -639,7 +663,6 @@ class ENDNOTEMAP
         // Artwork resource type
         $this->artwork = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -652,6 +675,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->artwork['resource_publisher']['publisherName'] = 'Publisher';
         $this->artwork['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -659,7 +685,6 @@ class ENDNOTEMAP
         // Audiovisual resource type
         $this->audiovisual = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Secondary Title',
                 'resourceField2' => 'Type of Work',
@@ -678,6 +703,9 @@ class ENDNOTEMAP
                 2 => 'Subsidiary Author', // Performers
                 5 => 'Secondary Author', // Series Editor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->audiovisual['resource_publisher']['publisherName'] = 'Publisher';
         $this->audiovisual['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -685,7 +713,6 @@ class ENDNOTEMAP
         // case resource type
         $this->case = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Secondary Title', // Reporter
                 'resourceField4' => 'Volume', // Reporter Volume
@@ -701,6 +728,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 3 => 'Subsidiary Author', // Counsel
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->case['resource_publisher']['publisherName'] = 'Publisher';
         $this->case['resource_collection'] = []; // need empty array
@@ -708,7 +738,6 @@ class ENDNOTEMAP
         // bill resource type
         $this->bill = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Section', // Code Section
                 'resourceField2' => 'Secondary Title', // Code
@@ -724,6 +753,9 @@ class ENDNOTEMAP
             ],
             'resource_creator' => [// we require an empty array to still be present
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->bill['resource_publisher'] = []; // need empty array
         $this->bill['resource_collection'] = []; // need empty array
@@ -731,7 +763,6 @@ class ENDNOTEMAP
         // classical resource type
         $this->classical = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField4' => 'Volume',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -744,13 +775,15 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author', // Attribution
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->classical['resource_publisher'] = []; // need empty array
         $this->classical['resource_collection'] = []; // need empty array
 // Conference Paper resource type
         $this->conference_paper = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceDoi' => 'Electronic Resource Number',
             ],
@@ -761,6 +794,9 @@ class ENDNOTEMAP
             ],
             'resource_creator' => [
                 1 => 'Author',
+            ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
             ],
         ];
         $this->conference_paper['resource_publisher'] = []; // need empty array
@@ -770,7 +806,6 @@ class ENDNOTEMAP
         $this->conference_poster = [
             'resource' => [
                 'resourceIsbn' => 'ISBN/ISSN',
-                'resourcetextUrls' => 'URL',
                 'resourceDoi' => 'Electronic Resource Number',
             ],
             'resource_misc' => [// we require an empty array to still be present
@@ -781,6 +816,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->conference_poster['resource_publisher'] = []; // need empty array
         $this->conference_poster['resource_collection']['collectionTitle'] = 'Secondary Title';
@@ -788,7 +826,6 @@ class ENDNOTEMAP
         // Legal Rule/Regulation resource type
         $this->legal_ruling = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Section', // Section Number
                 'resourceField2' => 'Type of Work',
@@ -806,6 +843,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->legal_ruling['resource_publisher']['publisherName'] = 'Publisher';
         $this->legal_ruling['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -814,7 +854,6 @@ class ENDNOTEMAP
         // Government Report/Documentation resource type
         $this->government_report = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Section',
                 'resourceField2' => 'Secondary Author', // Department
@@ -832,6 +871,9 @@ class ENDNOTEMAP
                 1 => 'Author',
                 2 => 'Secondary Author', // Editor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->government_report['resource_publisher']['publisherName'] = 'Publisher';
         $this->government_report['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -840,7 +882,6 @@ class ENDNOTEMAP
         // Report/Documentation resource type
         $this->report = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceField1' => 'Secondary Title', // Series Title
                 'resourceField2' => 'Type of Work',
                 'resourceField5' => 'ISBN/ISSN', // Report number
@@ -857,6 +898,9 @@ class ENDNOTEMAP
                 1 => 'Author',
                 2 => 'Secondary Author', // Editor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->report['resource_publisher']['publisherName'] = 'Publisher';
         $this->report['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -865,7 +909,6 @@ class ENDNOTEMAP
         // Hearing resource type
         $this->hearing = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Secondary Title', // Committee
                 'resourceField2' => 'Tertiary Title', // Legislative Body
@@ -883,6 +926,9 @@ class ENDNOTEMAP
             ],
             'resource_creator' => [// empty array required
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->hearing['resource_publisher']['publisherName'] = 'Publisher';
         $this->hearing['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -891,7 +937,6 @@ class ENDNOTEMAP
         // Online database resource type
         $this->database = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceDoi' => 'Electronic Resource Number',
             ],
@@ -903,13 +948,15 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->database['resource_publisher']['publisherName'] = 'Publisher';
         $this->database['resource_collection'] = []; // need empty array
         // Magazine article type
         $this->magazine_article = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceField4' => 'Volume',
@@ -927,6 +974,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->magazine_article['resource_publisher'] = []; // need empty array
         $this->magazine_article['resource_collection']['collectionTitle'] = 'Secondary Title';
@@ -935,7 +985,6 @@ class ENDNOTEMAP
         // Manuscript type
         $this->manuscript = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceField3' => 'Number',
@@ -951,6 +1000,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->manuscript['resource_publisher'] = []; // need empty array
         $this->manuscript['resource_collection']['collectionTitle'] = 'Secondary Title';
@@ -959,7 +1011,6 @@ class ENDNOTEMAP
         // Map type
         $this->map = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Secondary Title', // Series Title
                 'resourceField2' => 'Type of Work',
@@ -975,6 +1026,9 @@ class ENDNOTEMAP
                 1 => 'Author', // Cartographer
                 5 => 'Secondary Author', // Series Editor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->map['resource_publisher']['publisherName'] = 'Publisher';
         $this->map['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -982,7 +1036,6 @@ class ENDNOTEMAP
         // Chart type
         $this->chart = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Secondary Author', // Name of File
                 'resourceField2' => 'Secondary Title', // Image Source Program
@@ -1000,6 +1053,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author', // Created By
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->chart['resource_publisher']['publisherName'] = 'Publisher';
         $this->chart['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -1007,7 +1063,6 @@ class ENDNOTEMAP
         // Statute type
         $this->statute = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField1' => 'Number', // Public Law Number
                 'resourceField2' => 'Secondary Title', // Code
@@ -1025,6 +1080,9 @@ class ENDNOTEMAP
             ],
             'resource_creator' => [// empty array required
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->statute['resource_publisher'] = []; // need empty array
         $this->statute['resource_collection'] = []; // need empty array
@@ -1032,7 +1090,6 @@ class ENDNOTEMAP
         // Patent type
         $this->patent = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceField1' => 'Secondary Title', // Published Source
                 'resourceField2' => 'Volume', // Patent Version Number
                 'resourceField3' => 'Number', // Application Number
@@ -1057,6 +1114,9 @@ class ENDNOTEMAP
                 3 => 'Custom 4', // Attorney/Agent
                 4 => 'Tertiary Title', // International Author (careful!)
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->patent['resource_publisher']['publisherName'] = 'Publisher';
         $this->patent['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -1064,7 +1124,6 @@ class ENDNOTEMAP
         // Personal Communication type
         $this->personal = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -1080,13 +1139,15 @@ class ENDNOTEMAP
                 1 => 'Author',
                 2 => 'Secondary Author', // Recipient
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->personal['resource_publisher'] = []; // need empty array
         $this->personal['resource_collection'] = []; // need empty array
 // Unpublished type
         $this->unpublished = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -1099,6 +1160,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 1 => 'Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->unpublished['resource_publisher']['publisherName'] = 'Publisher'; // Institution
         $this->unpublished['resource_publisher']['publisherLocation'] = 'Place Published'; // Institution Location
@@ -1107,7 +1171,6 @@ class ENDNOTEMAP
         // proceedings (complete set)
         $this->proceedings = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceDoi' => 'Electronic Resource Number',
             ],
@@ -1119,6 +1182,9 @@ class ENDNOTEMAP
             'resource_creator' => [
                 2 => 'Secondary Author', // Editor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->proceedings['resource_publisher']['publisherName'] = 'Publisher';
         $this->proceedings['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -1126,7 +1192,6 @@ class ENDNOTEMAP
         // Music Album type
         $this->music_album = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -1141,6 +1206,9 @@ class ENDNOTEMAP
                 2 => 'Subsidiary Author', // Composer
                 3 => 'Tertiary Author', // Conductor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->music_album['resource_publisher']['publisherName'] = 'Publisher';
         $this->music_album['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -1148,7 +1216,6 @@ class ENDNOTEMAP
         // Music Track type
         $this->music_track = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -1163,6 +1230,9 @@ class ENDNOTEMAP
                 2 => 'Subsidiary Author',
                 3 => 'Tertiary Author',
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->music_track['resource_publisher']['publisherName'] = 'Publisher';
         $this->music_track['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -1171,7 +1241,6 @@ class ENDNOTEMAP
         // Music Score type
         $this->music_score = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField3' => 'Edition',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -1185,6 +1254,9 @@ class ENDNOTEMAP
                 1 => 'Author', // Composer
                 2 => 'Secondary Author', // Editor
             ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
+            ],
         ];
         $this->music_score['resource_publisher']['publisherName'] = 'Publisher';
         $this->music_score['resource_publisher']['publisherLocation'] = 'Place Published';
@@ -1192,7 +1264,6 @@ class ENDNOTEMAP
         // Miscellaneous resource type
         $this->miscellaneous = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -1204,6 +1275,9 @@ class ENDNOTEMAP
             ],
             'resource_creator' => [
                 1 => 'Author',
+            ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
             ],
         ];
         $this->miscellaneous['resource_publisher']['publisherName'] = 'Publisher';
@@ -1212,7 +1286,6 @@ class ENDNOTEMAP
         // Miscellaneous Section resource type
         $this->miscellaneous_section = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
                 'resourceField2' => 'Type of Work',
                 'resourceDoi' => 'Electronic Resource Number',
@@ -1224,6 +1297,9 @@ class ENDNOTEMAP
             ],
             'resource_creator' => [
                 1 => 'Author',
+            ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
             ],
         ];
         $this->miscellaneous_section['resource_publisher']['publisherName'] = 'Publisher';
@@ -1233,7 +1309,6 @@ class ENDNOTEMAP
         // Brochure resource type
         $this->brochure = [
             'resource' => [
-                'resourcetextUrls' => 'URL',
                 'resourceIsbn' => 'ISBN/ISSN',
             ],
             'resource_misc' => [// we require an empty array to still be present
@@ -1243,6 +1318,9 @@ class ENDNOTEMAP
             ],
             'resource_creator' => [
                 1 => 'Author',
+            ],
+            'resource_url' => [
+                'resourceurlUrl' => 'URL'
             ],
         ];
         $this->brochure['resource_publisher'] = []; // need empty array

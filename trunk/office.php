@@ -135,7 +135,7 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
     	$this->db->leftJoin('resource_year', 'resourceyearId', 'resourcemetadataResourceId');
     	$resultSet = $this->db->select('resource_metadata', ['resourcemetadataPageStart', 'resourcemetadataPageEnd', 
     		'resourcemetadataResourceId', 'resourcemetadataId', 'resourceType', 'resourceTitle', 'resourceSubtitle', 
-    		'resourceShortTitle', 'resourceNoSort', 'resourcetextUrls', 'resourceyearYear1', 'resourceyearYear2', 'resourceyearYear3']);
+    		'resourceShortTitle', 'resourceNoSort', 'resourceyearYear1', 'resourceyearYear2', 'resourceyearYear3']);
     	if (!$this->db->numRows($resultSet)) {
     		echo json_encode("Bad ID");
     		die;

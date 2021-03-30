@@ -1300,7 +1300,7 @@ class SQL
         }
     }
     /**
-     * Execute an multiple INSERT statement
+     * Execute a multiple INSERT statement
      *
      * @param string $table
      * @param array $fields

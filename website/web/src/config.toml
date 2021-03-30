@@ -71,14 +71,6 @@ identifier = "cr"
 url = "/credits"
 weight = 9
 
-[[menu.shortcuts]]
-pre = "icon-user-secret"
-name = "Privacy"
-identifier = "pv"
-url = "/privacy"
-weight = 10
-
-
 # For search functionality
 [outputs]
 home = [ "HTML", "RSS", "JSON"]

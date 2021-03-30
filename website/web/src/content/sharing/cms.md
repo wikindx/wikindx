@@ -9,9 +9,9 @@ weight = 5
 The Content Management System Hooks (CMS Hooks) is for users
 wishing to display various output from a WIKINDX database into a CMS
 (Content Management System). It requires some minimal configuration
-in the WIKINDX admin panel.
+in the __Admin > Configure__ panel.
 
-In examples, we assume you use an CMS written in PHP as most are but
+In the examples below, we assume you use a CMS written in PHP, as most are, but
 the approach remains valid for any program capable of using the HTTP protocol.
 
 The following is required in the `php.ini` of the CMS system if you use
@@ -24,9 +24,9 @@ using CURL for use with WIKINDX's CMS hooks may be found at:
 
 This introduction to CMS Hooks has three parts:
 
-- Deals with the display of single or multiple resources from a WIKINDX in a CMS.
-- Deals with sending an encoded complex SQL SELECT statement to WIKINDX from the CMS.
-- Deals with the parsing and formatting of citations in a block of text sent from the CMS to the WIKINDX.
+- the display of single or multiple resources from a WIKINDX in a CMS.
+- sending an encoded, complex SQL SELECT statement to WIKINDX from the CMS.
+- the parsing and formatting of citations in a block of text sent from the CMS to the WIKINDX.
 
 
 ## Displaying single or multiple WIKINDX resources in a CMS
@@ -285,7 +285,7 @@ CMS text that uses the CMS replacement tags. The CMS replacement tag may
 be automatically generated for pasting into the CMS text by using the
 WIKINDX CMS pop-up window if you have set the CMS hyperlink to display
 in your WIKINDX preferences. The citation style, by default, uses the
-style set in WIKINDX admin panel. At the end of this file
+style set in the WIKINDX admin panel. At the end of this file
 is example PHP code for formatting citations in a block of text in the
 CMS phpWcms.
 
@@ -351,7 +351,7 @@ same host).
 
 2. You can select the bibliographic style used by adding, for example,
 the following to the querystring `&bibStyle=HARVARD`. Without this, the
-default bibliographic style set in admin panel will be used.
+default bibliographic style set in the WIKINDX admin panel will be used.
 
 3. $string will contain not only the formatted text block but will
 also contain an appended bibliography of the citations in the text.
@@ -361,7 +361,7 @@ similar HTML code for line breaks and you wish to be able to split this
 bibliography from the text for some reason, you should replace all
 occurrences of `<br>` in $text with a unique string prior to sending
 it to the WIKINDX and then split the result on `<br><br>` before
-reverting that unique string back to `<br>` before finally printing
+reverting that unique string back to `<br>` and finally printing
 the result back to the CMS. If the current style is a style using
 footnotes such as Chicago, the WIKINDX result contains the formatted
 text, the required footnote citations and the appended bibliography.
@@ -398,7 +398,7 @@ formatting citations in a block of text in the CMS phpWcms:
 
 function citeText($contentString)
 {
-	// Temp file must be written with unique filename espeically
+	// Temp file must be written with unique filename especially
 	// in a multi-user environment; here we use the session ID
 	session_start();
 	$session_handle = session_id();

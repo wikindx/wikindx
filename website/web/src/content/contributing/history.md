@@ -5,7 +5,7 @@ weight = 1
 +++
 
 
-I (Mark Grimshaw-Aagaard) originally started developing this as a means to help organise my PhD
+I originally started developing this as a means to help organise my PhD
 research by cataloguing bibliographic notations, references, quotes
 and thoughts on a computer via a program that was not tied to a single
 operating system (like similar and expensively commercial software) and
@@ -29,3 +29,5 @@ to a plug-in rather than being a core feature.)
 
 The first release of WIKINDX was way back in 2003 and it has been
 in continual development since then.
+
+Mark Grimshaw-Aagaard

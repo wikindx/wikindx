@@ -208,6 +208,7 @@ class URLS
         $pString .= \HTML\tableStart('left');
         
         $pString .= \HTML\trStart();
+            $pString .= \HTML\th("&nbsp;");
             $pString .= \HTML\th($this->messages->text("resources", "url"));
             $pString .= \HTML\th($this->messages->text("resources", "urlLabel"));
             $pString .= \HTML\th($this->messages->text('resources', 'primaryUrl'));
@@ -215,8 +216,9 @@ class URLS
         $pString .= \HTML\trEnd();
         
         $pString .= \HTML\trStart();
+            $pString .= \HTML\td($this->messages->text("misc", "add"), 'left bottom');
             $field = array_key_exists('url', $this->formData) ? $this->formData['url'] : WIKINDX_RESOURCE_URL_PREFIX;
-            $pString .= \HTML\td(\FORM\textInput($this->messages->text("misc", "add"), "url", $field, 70), 'left bottom');
+            $pString .= \HTML\td(\FORM\textInput("", "url", $field, 70), 'left bottom');
             $field = array_key_exists('name', $this->formData) ? $this->formData['name'] : FALSE;
             $pString .= \HTML\td(\FORM\textInput(FALSE, "name", $field, 50), 'left bottom');
             $pString .= \HTML\td(\FORM\radioButton(FALSE, 'primary', 'new'), 'left bottom');
@@ -229,7 +231,7 @@ class URLS
             
             $field = array_key_exists($id, $this->formData) && array_key_exists('url', $this->formData[$id]) ? 
             	$this->formData[$id]['url'] : $array['url'];
-            $tdUrl = \FORM\textInput($this->messages->text("misc", "edit"), "editUrl_$id", $field, 70);
+            $tdUrl = \FORM\textInput("", "editUrl_$id", $field, 70);
             
             $field = array_key_exists($id, $this->formData) && array_key_exists('names', $this->formData[$id]) ? 
             	$this->formData[$id]['name'] : \HTML\dbToFormTidy($array['name']);
@@ -263,6 +265,7 @@ class URLS
 			}
             
             $pString .= \HTML\trStart();
+                $pString .= \HTML\td($this->messages->text("misc", "edit"), 'left bottom');
                 $pString .= \HTML\td($tdId . $tdUrl, 'left bottom');
                 $pString .= \HTML\td($tdName, 'left bottom');
                 $pString .= \HTML\td($tdUrlPrimary, 'left bottom');

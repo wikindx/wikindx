@@ -1832,21 +1832,6 @@ END;
         
         $this->transferUrls();
         
-        /*$this->db->queryNoError("DROP TABLE IF EXISTS " . WIKINDX_DB_TABLEPREFIX . "statistics;");
-        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccesses");
-        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccessesPeriod");
-        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloads");
-        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloadsPeriod");
-        
-        // For a period mid-2018 to mid-2019, resourceattachmentsTimestamp was not written – set these NULL values to current timestamp
-        $this->db->formatConditions(['resourceattachmentsTimestamp' => 'IS NULL']);
-        $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId']);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
-            $this->db->formatConditions(['resourceattachmentsId' => $row['resourceattachmentsId']]);
-            $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
-        }*/
-        
         $this->updateCoreInternalVersion();
     }
     

@@ -1839,6 +1839,8 @@ END;
      * Upgrade database schema to version 48 (6.4.4)
      *
      * Drop url-related columns from resource_text.
+     * Rename the old table resource_text to resource_text_48 and mirror data,
+     * it's quicker that removing the fields because there are FULLTEXT indices in this table.
      */
     private function upgradeTo48()
     {

@@ -2036,7 +2036,7 @@ class SQL
      */
     public function writeCache($field, $array)
     {
-        $this->updateSingle('cache', $this->formatFields($field) . "=" . $this->tidyInput(base64_encode(serialize($array))));
+        $this->updateSingle('cache', $this->formatFields($field) . "=" . $this->tidyInput(serialize($array)));
     }
     /**
      * Read a WIKINDX database cache
@@ -2053,7 +2053,7 @@ class SQL
 
         if ($this->numRows($recordset) > 0)
         {
-            $result = unserialize(base64_decode($this->fetchOne($recordset)));
+            $result = unserialize($this->fetchOne($recordset));
         }
 
         return $result;

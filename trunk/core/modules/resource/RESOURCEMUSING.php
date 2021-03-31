@@ -249,7 +249,6 @@ class RESOURCEMUSING
             }
             $this->db->insert('resource_metadata', $fields, $values);
             $lastAutoId = $this->db->lastAutoId();
-            $this->textqp->summary(1, 'resourcesummaryMusings');
             $this->textqp->writeKeywords($lastAutoId, 'resourcekeywordMetadataId');
         }
         // else edit/delete?
@@ -263,7 +262,6 @@ class RESOURCEMUSING
                 $this->db->delete('resource_metadata');
                 $this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->delete('resource_keyword');
-                $this->textqp->summary(-1, 'resourcesummaryMusings');
             }
             else
             {
@@ -380,7 +378,6 @@ class RESOURCEMUSING
         $this->db->delete('resource_metadata');
         $this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
         $this->db->delete('resource_keyword');
-        $this->textqp->summary(-1, 'resourcesummaryMusings');
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // send back to view this resource with success message

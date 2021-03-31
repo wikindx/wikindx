@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.4');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 48.0);
+define('WIKINDX_INTERNAL_VERSION', 50.0);
 /**
  * WIKINDX minimum internal version upgradable
  *

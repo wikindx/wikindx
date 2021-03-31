@@ -424,8 +424,6 @@ class DELETERESOURCE
         $this->db->delete('resource_category');
         $this->db->formatConditionsOneField($this->idsRaw, 'resourcepageId');
         $this->db->delete('resource_page');
-        $this->db->formatConditionsOneField($this->idsRaw, 'resourcesummaryId');
-        $this->db->delete('resource_summary');
         $this->db->formatConditionsOneField($this->idsRaw, 'resourcetimestampId');
         $this->db->delete('resource_timestamp');
         $this->db->formatConditionsOneField($this->idsRaw, 'resourceyearId');

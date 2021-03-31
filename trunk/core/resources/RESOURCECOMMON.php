@@ -32,8 +32,6 @@ class RESOURCECOMMON
     /** array */
     public $pageFields;
     /** array */
-    public $summaryFields;
-    /** array */
     public $timestampFields;
     /** array */
     public $unixTimestampFields;
@@ -338,7 +336,6 @@ class RESOURCECOMMON
         $this->db->leftJoin('resource_year', "resourceyearId", 'resourceId');
         $this->db->leftJoin('resource_page', "resourcepageId", 'resourceId');
         $this->db->leftJoin('resource_timestamp', "resourcetimestampId", 'resourceId');
-        $this->db->leftJoin('resource_summary', 'resourcesummaryId', 'resourceId');
         $this->db->leftJoin('publisher', "publisherId", 'resourcemiscPublisher');
         $this->db->leftJoin('collection', "collectionId", 'resourcemiscCollection');
         $this->db->leftJoin('users', $this->db->formatFields('usersId'), $this->db->caseWhen(
@@ -370,7 +367,6 @@ class RESOURCECOMMON
                     $this->pageFields,
                     $this->yearFields,
                     $this->resourceMiscFields,
-                    $this->summaryFields,
                     $this->textFields,
                     $this->timestampFields,
                     $this->unixTimestampFields,
@@ -394,7 +390,6 @@ class RESOURCECOMMON
                 $this->pageFields,
                 $this->yearFields,
                 $this->resourceMiscFields,
-                $this->summaryFields,
                 $this->textFields,
                 $this->timestampFields,
                 $this->unixTimestampFields,
@@ -426,7 +421,6 @@ class RESOURCECOMMON
                     $this->pageFields,
                     $this->yearFields,
                     $this->resourceMiscFields,
-                    $this->summaryFields,
                     $this->textFields,
                     $this->timestampFields,
                     $this->userFields,
@@ -449,7 +443,6 @@ class RESOURCECOMMON
                 $this->pageFields,
                 $this->yearFields,
                 $this->resourceMiscFields,
-                $this->summaryFields,
                 $this->textFields,
                 $this->timestampFields,
                 $this->userFields,
@@ -484,11 +477,10 @@ class RESOURCECOMMON
             'resourceTransNoSort', 'resourceIsbn', 'resourceBibtexKey', 'resourceDoi', 'resourcetextId', 'resourcetextNote', 'resourcetextAbstract',
             'resourcetextEditUserIdNote', 'resourcetextAddUserIdNote', 'resourcetextEditUserIdAbstract',
             'resourcetextAddUserIdAbstract', 'resourceyearId', 'resourceyearYear1', 'resourceyearYear2', 'resourceyearYear3', 'resourceyearYear4',
-            'resourcepageId', 'resourcepagePageStart', 'resourcepagePageEnd', 'resourcesummaryId', 'resourcesummaryQuotes', 'resourcesummaryParaphrases',
-            'resourcesummaryMusings', 'resourcetimestampId', 'resourcetimestampTimestamp', 'resourcetimestampTimestampAdd', 'publisherId', 'publisherName',
+            'resourcepageId', 'resourcepagePageStart', 'resourcepagePageEnd', 'resourcetimestampId', 'resourcetimestampTimestamp', 'resourcetimestampTimestampAdd', 'publisherId', 'publisherName',
             'publisherLocation', 'publisherType', 'collectionId', 'collectionTitle', 'collectionTitleShort', 'collectionType', 'usersId', 'usersUsername',
             'usersFullname', 'resourcemiscId', 'resourcemiscCollection', 'resourcemiscPublisher', 'resourcemiscField1', 'resourcemiscField2',
-            'resourcemiscField3', 'resourcemiscField4', 'resourcemiscField5', 'resourcemiscField6', 'resourcemiscTag', 'resourcemiscAddUserIdResource',
+            'resourcemiscField3', 'resourcemiscField4', 'resourcemiscField5', 'resourcemiscField6', 'resourcemiscTag', 'resourcemiscAddUserIdResource', 'resourcemiscMetadata', 
             'resourcemiscEditUserIdResource', 'resourcemiscMaturityIndex', 'resourcemiscPeerReviewed', 'resourcemiscQuarantine', ];
 
         $this->resourceFields = ['resourceId', 'resourceType', 'resourceTitle', 'resourceSubtitle', 'resourceShortTitle', 'resourceTitleSort',
@@ -506,8 +498,6 @@ class RESOURCECOMMON
         $this->yearFields = ['resourceyearId', 'resourceyearYear1', 'resourceyearYear2', 'resourceyearYear3', 'resourceyearYear4'];
 
         $this->pageFields = ['resourcepageId', 'resourcepagePageStart', 'resourcepagePageEnd'];
-
-        $this->summaryFields = ['resourcesummaryId', 'resourcesummaryQuotes', 'resourcesummaryParaphrases', 'resourcesummaryMusings'];
 
         $this->timestampFields = ['resourcetimestampId', 'resourcetimestampTimestamp', 'resourcetimestampTimestampAdd'];
 

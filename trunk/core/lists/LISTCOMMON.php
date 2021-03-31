@@ -330,13 +330,11 @@ class LISTCOMMON
                 }
             }
 
-            // Although quotes and paraphrases are not useful in all cases,
-            // we add them to force the count in the subsequent procedure.
-            $resources[$row['resourceId']] = ['quotes' => $row['resourcesummaryQuotes'], 'paraphrases' => $row['resourcesummaryParaphrases']];
+            // Although metadata are not useful in all cases, we add them to force the count in the subsequent procedure.
+            $resources[$row['resourceId']] = ['metadata' => $row['resourcemiscMetadata']];
             $resIds[] = $row['resourceId'];
             unset($row);
         }
-
         if (count($resources) > 0)
         {
             $this->session->setVar("list_NextPreviousIds", $resIds);
@@ -813,7 +811,7 @@ class LISTCOMMON
 
             foreach ($resources as $resourceId => $resourceArray)
             {
-                if ($resourceArray['quotes'] || $resourceArray['paraphrases'] || array_key_exists($resourceId, $musings))
+                if ($resourceArray['metadata'] || array_key_exists($resourceId, $musings))
                 {
                     if (array_key_exists($resourceId, $attachments))
                     {

@@ -422,7 +422,6 @@ class TEXTQP
         $chapter = 'Chapter';
         $typeText = 'Text';
         $typeComment = 'Comment';
-        $summaryType = $this->type == 'quote' ? 'resourcesummaryQuotes' : 'resourcesummaryParaphrases';
         $userId = $this->session->getVar("setup_UserId");
         $this->checkInput();
         // insert
@@ -480,7 +479,8 @@ class TEXTQP
             $this->db->deleteCache('cacheMetadataCreators');
             $this->db->deleteCache('cacheMetadataCollections');
             $this->db->deleteCache('cacheMetadataPublishers');
-            $this->summary(1, $summaryType);
+            $this->db->formatConditions(['resourcemiscId' => $this->vars['resourceId']]);
+        	$this->db->update('resource_misc', ['resourcemiscMetadata' => 1]);
             // Write comments table
             if (array_key_exists($typeComment, $this->vars) && $this->vars[$typeComment])
             {
@@ -495,7 +495,7 @@ class TEXTQP
             if (!array_key_exists('commentOnly', $this->vars) && !\UTF8\mb_trim($this->vars[$typeText]))
             {
                 $addEdit = 'deleted';
-                $this->delete($summaryType);
+                $this->delete();
             }
             else
             {
@@ -631,10 +631,8 @@ class TEXTQP
     }
     /**
      * Delete the quote or paraphrase and all peripheral data
-     *
-     * @param string $summaryType
      */
-    public function delete($summaryType)
+    public function delete()
     {
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $this->db->delete('resource_metadata');
@@ -642,70 +640,22 @@ class TEXTQP
         $this->db->delete('resource_metadata');
         $this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
         $this->db->delete('resource_keyword');
-        $metadataExists = $this->summary(-1, $summaryType);
-        // remove cache files for keywords
+        $this->db->formatConditions(['resourcemetadataResourceId' => $this->vars['resourceId']]);
+        $this->db->formatConditionsOneField(['q', 'p'], 'resourcemetadataType');
+        $resultSet = $this->db->select('resource_metadata', 'resourcemetadataResourceId', TRUE);
+        if (!$this->db->numRows($resultSet)) {
+        	$this->db->formatConditions(['resourcemiscId' => $this->vars['resourceId']]);
+        	$this->db->update('resource_misc', ['resourcemiscMetadata' => 0]);
+        }
+        // remove cache files for keywords and metadata
         $this->db->deleteCache('cacheResourceKeywords');
         $this->db->deleteCache('cacheMetadataKeywords');
         $this->db->deleteCache('cacheQuoteKeywords');
         $this->db->deleteCache('cacheParaphraseKeywords');
         $this->db->deleteCache('cacheMusingKeywords');
-        // Remove these cache files if no metadata left in resource
-        if (!$metadataExists)
-        {
-            $this->db->deleteCache('cacheMetadataCreators');
-            $this->db->deleteCache('cacheMetadataCollections');
-            $this->db->deleteCache('cacheMetadataPublishers');
-        }
-    }
-    /**
-     * update or insert resource_summary
-     *
-     * @param string $incDec
-     * @param string $field
-     *
-     * @return bool
-     */
-    public function summary($incDec, $field)
-    {
-        $metadataExists = TRUE;
-        if ($field == 'resourcesummaryQuotes')
-        {
-            $totalsField = 'databasesummaryTotalQuotes';
-        }
-        elseif ($field == 'resourcesummaryParaphrases')
-        {
-            $totalsField = 'databasesummaryTotalParaphrases';
-        }
-        else
-        {
-            $totalsField = 'databasesummaryTotalMusings';
-        }
-        $this->db->formatConditions(['resourcesummaryId' => $this->vars['resourceId']]);
-        if ($this->db->numRows($this->db->select('resource_summary', 'resourcesummaryId')))
-        { // update
-            $this->db->updateSingle('resource_summary', $this->db->formatFields($field) . "=" .
-            "COALESCE(" . $this->db->formatFields($field) . "+" .
-            $this->db->tidyInput($incDec) . ", " . $this->db->tidyInput($incDec) . ")");
-        }
-        else
-        {  // insert
-            $this->db->insert('resource_summary', ['resourcesummaryId', $field], [$this->vars['resourceId'], 1]);
-        }
-        // if a decrement leaves nothing, delete row.
-        $this->db->formatConditions(['resourcesummaryId' => $this->vars['resourceId']]);
-        $recordset = $this->db->select(
-            ['resource_summary'],
-            ['resourcesummaryMusings', 'resourcesummaryParaphrases', 'resourcesummaryQuotes']
-        );
-        $row = $this->db->fetchRow($recordset);
-        if (!$row['resourcesummaryMusings'] && !$row['resourcesummaryParaphrases'] && !$row['resourcesummaryQuotes'])
-        {
-            $this->db->formatConditions(['resourcesummaryId' => $this->vars['resourceId']]);
-            $this->db->delete('resource_summary');
-            $metadataExists = FALSE;
-        }
-
-        return $metadataExists;
+        $this->db->deleteCache('cacheMetadataCreators');
+        $this->db->deleteCache('cacheMetadataCollections');
+        $this->db->deleteCache('cacheMetadataPublishers');
     }
     /**
      * Write new keywords to keyword table and gather keyword ids

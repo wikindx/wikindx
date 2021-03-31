@@ -1852,6 +1852,49 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 49 (6.4.4)
+     *
+     * Add column resourcemiscMetadata to resource_misc.
+     */
+    private function upgradeTo49()
+    {
+        $this->updateDbSchema('49'); // Add the column
+        // Return all resource IDs from resource_metadata
+        $ids = [];
+        $this->db->formatConditions(['resourcemetadataResourceId' => ' IS NOT NULL']);
+        $this->db->formatConditionsOneField(['q', 'p'], 'resourcemetadataType');
+        $resultSet = $this->db->select('resource_metadata', 'resourcemetadataResourceId', TRUE);
+        while ($row = $this->db->fetchRow($resultSet)) {
+        	$ids[] = $row['resourcemetadataResourceId'];
+        }
+        if (!empty($ids)) {
+        	$this->db->formatConditionsOneField($ids, 'resourcemiscId');
+        	$this->db->update('resource_misc', ['resourcemiscMetadata' => 1]);
+        }
+        
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 50 (6.4.4)
+     *
+     * Drop resource_summary table
+     * Flush cache table as no longer using base64 encoding/decoding
+     * Remove all sessions
+     */
+    private function upgradeTo50()
+    {
+        $this->updateDbSchema('50');
+        
+        $this->db->updateNull('cache', ['cacheResourceCreators', 'cacheMetadataCreators', 'cacheResourceKeywords', 
+        	'cacheMetadataKeywords', 'cacheQuoteKeywords', 'cacheParaphraseKeywords', 'cacheMusingKeywords', 'cacheResourcePublishers', 
+        	'cacheMetadataPublishers', 'cacheConferenceOrganisers', 'cacheResourceCollections', 'cacheMetadataCollections', 
+        	'cacheResourceCollectionTitles', 'cacheResourceCollectionShorts', 'cacheKeywords']);
+
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

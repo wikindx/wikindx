@@ -246,7 +246,6 @@ class RESOURCEMETA
         $patterns = FALSE;
         $action = $type == 'quote' ? 'quoteEdit' : 'paraphraseEdit';
         $phpFile = $type == 'quote' ? 'resource_RESOURCEQUOTE_CORE' : 'resource_RESOURCEPARAPHRASE_CORE';
-        $summaryType = $type == 'quote' ? 'resourcesummaryQuotes' : 'resourcesummaryParaphrases';
         $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $index = 0;
         $thisUserId = $this->session->getVar("setup_UserId");
@@ -347,7 +346,7 @@ class RESOURCEMETA
                     $this->icons->getHTML("delete"),
                     "index.php?action=$phpFile&method=deleteInit" .
                 	htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'] . 
-                	'&summaryType=' . $summaryType . '&browserTabID=' . $this->browserTabID)
+                	'&browserTabID=' . $this->browserTabID)
                 );
             }
             $index++;

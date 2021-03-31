@@ -109,7 +109,6 @@ class RESOURCEPARAPHRASE
         $pString .= \FORM\hidden("method", 'delete');
         $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);
         $pString .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
-        $pString .= \FORM\hidden("summaryType", 'resourcesummaryParaphrases');
         $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Confirm")));
         $pString .= \FORM\formEnd();
@@ -120,11 +119,11 @@ class RESOURCEPARAPHRASE
      */
     public function delete()
     {
-        if (!array_key_exists('resourcemetadataId', $this->vars) || !array_key_exists('summaryType', $this->vars))
+        if (!array_key_exists('resourcemetadataId', $this->vars))
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        $this->textqp->delete($this->vars['summaryType']);
+        $this->textqp->delete();
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // send back to view this resource with success message

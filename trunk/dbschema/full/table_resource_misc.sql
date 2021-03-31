@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_misc` (
   `resourcemiscMaturityIndex` double DEFAULT 0,
   `resourcemiscPeerReviewed` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourcemiscQuarantine` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
+  `resourcemiscMetadata` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`resourcemiscId`),
   KEY `resourcemiscCollection` (`resourcemiscCollection`),
   KEY `resourcemiscPublisher` (`resourcemiscPublisher`),

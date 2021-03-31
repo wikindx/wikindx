@@ -212,11 +212,11 @@ class SITEMAP
             'resourceTransNoSort', 'resourceIsbn', 'resourceBibtexKey', 'resourceDoi', 'resourcetextId', 'resourcetextNote', 'resourcetextAbstract',
             'resourcetextEditUserIdNote', 'resourcetextAddUserIdNote', 'resourcetextEditUserIdAbstract',
             'resourcetextAddUserIdAbstract', 'resourceyearId', 'resourceyearYear1', 'resourceyearYear2', 'resourceyearYear3', 'resourceyearYear4',
-            'resourcepageId', 'resourcepagePageStart', 'resourcepagePageEnd', 'resourcesummaryId', 'resourcetimestampId',
+            'resourcepageId', 'resourcepagePageStart', 'resourcepagePageEnd', 'resourcetimestampId',
             'resourcetimestampTimestamp', 'resourcetimestampTimestampAdd', 'publisherId', 'publisherName',
             'publisherLocation', 'publisherType', 'collectionId', 'collectionTitle', 'collectionTitleShort', 'collectionType', 'usersId', 'usersUsername',
             'usersFullname', 'resourcemiscId', 'resourcemiscCollection', 'resourcemiscPublisher', 'resourcemiscField1', 'resourcemiscField2',
-            'resourcemiscField3', 'resourcemiscField4', 'resourcemiscField5', 'resourcemiscField6', 'resourcemiscTag', 'resourcemiscAddUserIdResource',
+            'resourcemiscField3', 'resourcemiscField4', 'resourcemiscField5', 'resourcemiscField6', 'resourcemiscTag', 'resourcemiscMetadata', 'resourcemiscAddUserIdResource',
             'resourcemiscEditUserIdResource', 'resourcemiscMaturityIndex', 'resourcemiscPeerReviewed', 'resourcemiscQuarantine', ];
         $messages = FACTORY_MESSAGES::getInstance();
         $session = FACTORY_SESSION::getInstance();
@@ -257,7 +257,6 @@ class SITEMAP
         $db->leftJoin('resource_year', 'resourceyearId', 't2.resourcetimestampId');
         $db->leftJoin('resource_text', 'resourcetextId', 't2.resourcetimestampId');
         $db->leftJoin('resource_page', 'resourcepageId', 't2.resourcetimestampId');
-        $db->leftJoin('resource_summary', 'resourcesummaryId', 't2.resourcetimestampId');
         $db->leftJoin('publisher', 'resourcemiscPublisher', 'publisherId');
         $db->leftJoin('collection', 'resourcemiscCollection', 'collectionId');
         $db->leftJoin('users', 'usersId', $db->caseWhen(

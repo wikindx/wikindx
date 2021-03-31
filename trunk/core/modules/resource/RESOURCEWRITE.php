@@ -786,7 +786,7 @@ class RESOURCEWRITE
             }
         }
         $this->writeBibtexKey();
-        // timestamp and summary tables
+        // timestamp table
         $writeArray = [];
         if ($this->edit)
         {

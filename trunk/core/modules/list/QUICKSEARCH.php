@@ -200,12 +200,13 @@ class QUICKSEARCH
             $field = $this->db->formatFields($field);
         }
         // title
-//        $field = $this->db->concat([$this->db->formatFields('resourceNoSort'), $this->db->formatFields('resourceTitleSort')], ' ');
-        $field = $this->db->concat([
-        	$this->db->formatFields('resourceNoSort'), 
-        	$this->db->formatFields('resourceTitle'),
-        	$this->db->formatFields('resourceSubtitle')
-        	], ' ');
+        $field = $this->db->replace($this->db->replace(
+				$this->db->concat([
+				$this->db->formatFields('resourceNoSort'), 
+				$this->db->formatFields('resourceTitle'),
+				$this->db->formatFields('resourceSubtitle')
+				], ' '), 
+        	'{', '', FALSE), '}', '', FALSE);
         $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', $field, $search));
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource', [['resourceId' => 'rId']]));
         // creatorSurname

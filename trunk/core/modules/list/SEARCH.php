@@ -1264,11 +1264,13 @@ class SEARCH
                 {
                     if ($value3['Field'] == 'resourceTitleSort')
                     {
-                        $replace = $this->db->concat([
-                        	$this->db->formatFields('resourceNoSort'), 
-                        	$this->db->formatFields('resourceTitle'),
-                        	$this->db->formatFields('resourceSubtitle'),
-                        	], ' ');
+						$replace = $this->db->replace($this->db->replace(
+								$this->db->concat([
+								$this->db->formatFields('resourceNoSort'), 
+								$this->db->formatFields('resourceTitle'),
+								$this->db->formatFields('resourceSubtitle')
+								], ' '), 
+							'{', '', FALSE), '}', '', FALSE);
                     }
                     else
                     {

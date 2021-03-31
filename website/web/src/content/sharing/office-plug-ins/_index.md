@@ -14,8 +14,8 @@ Now, from v6.4.3, WIKINDX extends this functionality to external word processors
 
 If you use one of these word processors, you can download the appropriate plug-in for WIKINDX and then:
 
-- save and search through multiple wikindices for metadata (quotations, paraphrases, etc.) and references
-- insert metadata and references in your document in a variety of in-text bibliographic styles (e.g., APA, harvard, MLA as available on the chosen WIKINDX)
+- Save and search through multiple wikindices for metadata (quotations, paraphrases, etc.) and references
+- Insert metadata and references in your document in a variety of in-text bibliographic styles (e.g., APA, Harvard, MLA as available on the chosen WIKINDX)
 - 'finalize' the document. This last step (re)formats the in-text references to the chosen bibliographic style and appends a bibliography in the specified order. You can continue inserting metadata and references and 'finalize' (with different styles and orders) as often as you like.
 
 

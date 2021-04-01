@@ -15,6 +15,7 @@ MAINTENANCE:
 1. Shift resource URLs from the resource_text table to a new resource_url table [#284].
 2. Remove base64 encoding/decoding from the cache table.
 3. Drop the resource_summary table, create a new resourcemiscMetadata column in resource_misc, and set it to 1 if the resource has metadata.
+4. Update PHPMailer (v6.4.0).
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

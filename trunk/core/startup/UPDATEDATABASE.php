@@ -1914,7 +1914,7 @@ END;
 		$this->session->clearArray("sql");
 		$this->session->clearArray("bookmark");
     	if ($this->db->tableExists('plugin_soundexplorer')) {
-    		$this->db->formatConditions(['pluginsoundexplorerUserId' => 1]);
+    		$this->db->formatConditions(['pluginsoundexplorerUserId' => WIKINDX_SUPERADMIN_ID]);
     		$this->db->delete('plugin_soundexplorer');
     	}
         $this->updateCoreInternalVersion();

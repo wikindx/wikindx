@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersBlock` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
   `usersHomeBib` tinyint(1) NOT NULL DEFAULT 0,
   `usersBrowseBibliography` int(11) NOT NULL DEFAULT 0,
+  `usersLastInternalVersion` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`usersId`),
   UNIQUE KEY `usersUsernameUnique` (`usersUsername`),
   KEY `usersBlock` (`usersBlock`)

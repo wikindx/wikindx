@@ -65,7 +65,15 @@ class RESOURCEWRITE
      */
     public function init()
     {
-        if (!array_key_exists('resourceFormType', $this->formData) || ($this->formData["resourceFormType"] == 'new')) {
+        $this->gatherInput();
+        if (!$this->edit && !$this->checkDuplicate()) {
+            return;
+        }
+        $this->writeTables();
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        $emailClass = new EMAIL();
+        $newResource = $this->edit === FALSE ? TRUE : FALSE;
+        if ($newResource) {
             if (($this->session->getVar("setup_Superadmin") != 1) && (WIKINDX_QUARANTINE))
             {
                 $success[] = $this->success->text("resourceAdd") . \HTML\p($this->success->text('quarantined'));
@@ -80,14 +88,6 @@ class RESOURCEWRITE
             $success[] = $this->success->text("resourceEdit");
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource'));
         }
-        $this->gatherInput();
-        if (!$this->edit && !$this->checkDuplicate()) {
-            return;
-        }
-        $this->writeTables();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
-        $emailClass = new EMAIL();
-        $newResource = $this->edit === FALSE ? TRUE : FALSE;
         if (!$emailClass->notify($this->resourceId, $newResource)) {
             $success[] = $this->errors->text("inputError", "mail", GLOBALS::getError());
         }

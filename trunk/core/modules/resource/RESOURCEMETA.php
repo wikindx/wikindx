@@ -293,8 +293,8 @@ class RESOURCEMETA
                 $this->db->formatConditions(['resourcemetadataType' => 'pc']);
             }
             $this->db->orderBy('resourcemetadataTimestamp', TRUE, FALSE);
-            $recordset2 = $this->db->select('resource_metadata', ['resourcemetadataText', 'resourcemetadataTimestamp',
-                'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
+            $recordset2 = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataText', 'resourcemetadataTimestamp',
+                'resourcemetadataAddUserId', 'resourcemetadataPrivate']);
             if ($this->db->numRows($recordset2))
             {
                 $index2 = 0;
@@ -322,11 +322,22 @@ class RESOURCEMETA
                             continue;
                         }
                     }
-                    // Else, comment is public
+                    // Else, comment is either public if owned by quote/paraphrase owner or will only be seen by comment owner
+                    // Add delete icon if the latter
                     $text = $this->cite->parseCitations(\HTML\nlToHtml($rowComment['resourcemetadataText']), 'html');
+                    $deleteIcon = FALSE;
+                    if (($this->userId != $row['resourcemetadataAddUserId']) && ($this->userId == $rowComment['resourcemetadataAddUserId'])) {
+                    	$deleteIcon = \HTML\a(
+							$this->icons->getClass("delete"),
+							$this->icons->getHTML("delete"),
+							"index.php?action=$phpFile&method=deleteInit" . 
+							htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $rowComment['resourcemetadataId'] . 
+							'&comment=' . TRUE . '&browserTabID=' . $this->browserTabID)
+						) . '&nbsp;';
+                    }
                     $users = $this->user->displayUserAddEdit($rowComment['resourcemetadataAddUserId'], TRUE, 'comment');
                     $this->{$type}[$index]['comments'][$index2]['userAdd'] = $users[0];
-                    $this->{$type}[$index]['comments'][$index2]['comment'] = $this->common->doHighlight($text);
+                    $this->{$type}[$index]['comments'][$index2]['comment'] = $deleteIcon . $this->common->doHighlight($text);
                     $this->{$type}[$index]['comments'][$index2]['timestamp'] = $rowComment['resourcemetadataTimestamp'];
                     $index2++;
                 }
@@ -340,14 +351,15 @@ class RESOURCEMETA
                 htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'] . 
                 	'&browserTabID=' . $this->browserTabID)
                 );
-                
-                $this->{$type}[$index]['editLink'] .= '&nbsp;' . \HTML\a(
-                    $this->icons->getClass("delete"),
-                    $this->icons->getHTML("delete"),
-                    "index.php?action=$phpFile&method=deleteInit" .
-                	htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'] . 
-                	'&browserTabID=' . $this->browserTabID)
-                );
+                if ($this->userId == $row['resourcemetadataAddUserId']) {
+					$this->{$type}[$index]['editLink'] .= '&nbsp;' . \HTML\a(
+						$this->icons->getClass("delete"),
+						$this->icons->getHTML("delete"),
+						"index.php?action=$phpFile&method=deleteInit" .
+						htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'] . 
+						'&browserTabID=' . $this->browserTabID)
+					);
+				}
             }
             $index++;
         }

@@ -89,6 +89,7 @@ class SUCCESS
 				"categoryKeywordDelete" => dgettext($domain, "Successfully deleted categories and keywords"),
 				"quoteAdd" => dgettext($domain, "Successfully added quote"),
 				"quoteEdit" => dgettext($domain, "Successfully edited quote"),
+				"commentDelete" => dgettext($domain, "Successfully deleted comment"),
 				"quoteDelete" => dgettext($domain, "Successfully deleted quote"),
 				"paraphraseAdd" => dgettext($domain, "Successfully added paraphrase"),
 				"paraphraseEdit" => dgettext($domain, "Successfully edited paraphrase"),

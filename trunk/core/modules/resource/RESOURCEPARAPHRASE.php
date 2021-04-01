@@ -104,9 +104,14 @@ class RESOURCEPARAPHRASE
      */
     public function deleteInit()
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "paraphraseDelete") . $this->return);
+    	if (array_key_exists('comment', $this->vars)) {
+        	GLOBALS::setTplVar('heading', $this->messages->text("heading", "commentDelete") . $this->return);
+        } else {
+        	GLOBALS::setTplVar('heading', $this->messages->text("heading", "paraphraseDelete") . $this->return);
+        }
         $pString = \FORM\formHeader('resource_RESOURCEPARAPHRASE_CORE');
         $pString .= \FORM\hidden("method", 'delete');
+        $pString .= \FORM\hidden("comment", TRUE);
         $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);
         $pString .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
         $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
@@ -127,6 +132,10 @@ class RESOURCEPARAPHRASE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // send back to view this resource with success message
-        $this->navigate->resource($this->vars['resourceId'], "paraphraseDelete");
+    	if (array_key_exists('comment', $this->vars)) {
+        	$this->navigate->resource($this->vars['resourceId'], "commentDelete");
+        } else {
+        	$this->navigate->resource($this->vars['resourceId'], "paraphraseDelete");
+        }
     }
 }

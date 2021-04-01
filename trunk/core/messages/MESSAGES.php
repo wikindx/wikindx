@@ -155,6 +155,7 @@ class MESSAGES
 				"ideaThread" => dgettext($domain, "Idea Thread"),
 				"abstractDelete" => dgettext($domain, "Delete Resource Abstract"),
 				"notesDelete" => dgettext($domain, "Delete Resource Notes"),
+				"commentDelete" => dgettext($domain, "Delete Comment"),
 				"quoteDelete" => dgettext($domain, "Delete Resource Quote"),
 				"paraphraseDelete" => dgettext($domain, "Delete Resource Paraphrase"),
 				"musingDelete" => dgettext($domain, "Delete Resource Musing"),

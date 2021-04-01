@@ -878,6 +878,11 @@ END;
             $version = (string) $version;
             
         \UPDATE\setCoreInternalVersion($this->db, $version);
+        // From v51, update super admin's usersLastInternalVersion
+        if ($version >= 51) {
+	        $this->db->formatConditions(['usersId' => 1]);
+	        $this->db->update('users', ['usersLastInternalVersion' => $version]);
+	    }
     }
     
     /**
@@ -1839,8 +1844,6 @@ END;
      * Upgrade database schema to version 48 (6.4.4)
      *
      * Drop url-related columns from resource_text.
-     * Rename the old table resource_text to resource_text_48 and mirror data,
-     * it's quicker that removing the fields because there are FULLTEXT indices in this table.
      */
     private function upgradeTo48()
     {
@@ -1880,7 +1883,6 @@ END;
      *
      * Drop resource_summary table
      * Flush cache table as no longer using base64 encoding/decoding
-     * Remove all sessions
      */
     private function upgradeTo50()
     {
@@ -1892,6 +1894,25 @@ END;
         	'cacheResourceCollectionTitles', 'cacheResourceCollectionShorts', 'cacheKeywords']);
 
         $this->updateCoreInternalVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 51 (6.4.4)
+     *
+     * Add column usersLastInternalVersion to users
+     * Remove super admin's bookmark and other session variables storing SQL statements to account for changes at upgradeTo49()
+     */
+    private function upgradeTo51()
+    {
+        $this->updateDbSchema('51');
+        // Remove 
+        $this->updateCoreInternalVersion();
+		$this->session->clearArray("sql");
+		$this->session->clearArray("bookmark");
+    	if ($this->db->tableExists('plugin_soundexplorer')) {
+    		$this->db->formatConditions(['pluginsoundexplorerUserId' => 1]);
+    		$this->db->delete('plugin_soundexplorer');
+    	}
     }
     
     /**

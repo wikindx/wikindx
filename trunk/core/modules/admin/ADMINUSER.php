@@ -201,6 +201,9 @@ class ADMINUSER
         {
             $this->badInput->close($this->errors->text("inputError", "userExists"), $this, "addInit");
         }
+        $this->db->formatConditions(['usersId' => $this->session->getVar('addUserId')]);
+	    $this->db->update('users', ['usersLastInternalVersion' => WIKINDX_INTERNAL_VERSION]);
+	    $this->session->delVar('addUserId');
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerUserAdd(TRUE))

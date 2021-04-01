@@ -263,6 +263,7 @@ class USER
             
             $this->db->insert('users', $field, $value);
             $userId = $this->db->lastAutoId();
+            $this->session->setVar('addUserId', $userId);
             // insert preferences to table
             $this->writePreferences($userId, TRUE);
             

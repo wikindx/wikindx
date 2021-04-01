@@ -103,6 +103,15 @@ class AUTHORIZE
                 $this->logonCheck($this->vars['usersUsername'], $this->vars['password']);
                 // tidy up old files
                 FILE\tidyFiles();
+// TODO: Delete at some point in the future . . .
+                $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
+				$resultSet2 = $this->db->select('users', 'usersLastInternalVersion');
+				if ($this->db->fetchOne($resultSet2) < 51) { // See UPDATEDATABASE::upgradeTo51()
+					$this->session->clearArray("sql");
+					$this->session->clearArray("bookmark");
+				}
+                $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
+	        	$this->db->update('users', ['usersLastInternalVersion' => WIKINDX_INTERNAL_VERSION]);
                 // FALSE means go to front of WIKINDX
                 return FALSE;
             }

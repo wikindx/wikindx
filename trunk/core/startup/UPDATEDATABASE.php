@@ -880,7 +880,7 @@ END;
         \UPDATE\setCoreInternalVersion($this->db, $version);
         // From v51, update super admin's usersLastInternalVersion
         if ($version >= 51) {
-	        $this->db->formatConditions(['usersId' => 1]);
+	        $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
 	        $this->db->update('users', ['usersLastInternalVersion' => $version]);
 	    }
     }

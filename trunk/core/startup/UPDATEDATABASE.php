@@ -866,6 +866,11 @@ END;
     /**
      * Write the internal version in the database
      *
+     * This function should be called as the last instruction of an upgradeToXXX() function.
+     *
+     * If a crash occurs, updateCoreInternalVersion() is not called
+     * and the upgrade can resume safly at the start of the failed step after a fix.
+     *
      * If $version is NULL, the version number used it $this->targetVersion.
      *
      * @param string $version (Default is NULL)
@@ -1906,13 +1911,13 @@ END;
     {
         $this->updateDbSchema('51');
         // Remove 
-        $this->updateCoreInternalVersion();
 		$this->session->clearArray("sql");
 		$this->session->clearArray("bookmark");
     	if ($this->db->tableExists('plugin_soundexplorer')) {
     		$this->db->formatConditions(['pluginsoundexplorerUserId' => 1]);
     		$this->db->delete('plugin_soundexplorer');
     	}
+        $this->updateCoreInternalVersion();
     }
     
     /**

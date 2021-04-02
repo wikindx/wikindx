@@ -851,7 +851,7 @@ class RESOURCEWRITE
             if (!empty($collectionDefaults))
             {
                 $this->db->formatConditions(['collectionId' => $newCollection]);
-                $this->db->update('collection', ['collectionDefault' => base64_encode(serialize($collectionDefaults))]);
+                $this->db->update('collection', ['collectionDefault' => serialize($collectionDefaults)]);
             }
         }
     }

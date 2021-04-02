@@ -18,6 +18,7 @@ MAINTENANCE:
 3. Drop the resource_summary table, create a new resourcemiscMetadata column in resource_misc, and set it to 1 if the resource has metadata.
 4. Update PHPMailer (v6.4.0).
 5. As part of the upgrade process for 1., this version deletes all registered users sessions related to SQL including bookmarks, last multi view etc.
+6. Remove base64 encoding on collection defaults [#331].
 
 FEATURE ENHANCEMENT:
 1. Registered users can add comments to others' quotes and paraphrases – added ability to delete those comments.

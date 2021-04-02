@@ -1921,6 +1921,26 @@ END;
     }
     
     /**
+     * Upgrade database to version 52 (6.4.4)
+     *
+     * Remove base64 encoding from collectionDefault field in collection table
+     */
+    private function upgradeTo52()
+    {
+    	$colls = [];
+		$this->db->formatConditions(['collectionDefault' => ' IS NOT NULL']);
+        $resultSet = $this->db->select('collection', ['collectionId', 'collectionDefault']);
+        while ($row = $this->db->fetchRow($resultSet)) {
+        	$colls[$row['collectionId']] = base64_decode($row['collectionDefault']); // result is serialized array
+        }
+		foreach ($colls AS $key => $value) {
+			$this->db->formatConditions(['collectionId' => $key]);
+			$this->db->update('collection', ['collectionDefault' => $value]);
+		}
+		$this->updateCoreInternalVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

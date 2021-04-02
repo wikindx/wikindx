@@ -186,7 +186,7 @@ class EDITCOLLECTION
             $row = $this->db->fetchRow($recordset);
             if ($row['collectionDefault'])
             {
-                $this->defaults = unserialize(base64_decode($row['collectionDefault']));
+                $this->defaults = unserialize($row['collectionDefault']);
             }
             $title = \HTML\dbToTinyMCE($row['collectionTitle']);
             $titleShort = \HTML\dbToFormTidy($row['collectionTitleShort']);
@@ -342,7 +342,7 @@ class EDITCOLLECTION
         $row = $this->db->fetchRow($recordset);
         if ($row['collectionDefault'])
         {
-            $this->defaults = unserialize(base64_decode($row['collectionDefault']));
+            $this->defaults = unserialize($row['collectionDefault']);
         }
         $updateArray = $temp = $miscArray = $yearArray = $resourceArray = [];
         // Deal with creators
@@ -446,7 +446,7 @@ class EDITCOLLECTION
         }
         // Update collection defaults field
         $this->db->formatConditions(['collectionId' => $this->formData['collectionId']]);
-        $this->db->update('collection', ['collectionDefault' => base64_encode(serialize($collectionDefaults))]);
+        $this->db->update('collection', ['collectionDefault' => serialize($collectionDefaults)]);
         header("Location: index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&success=collection" .
             "&collectionType=" . $this->vars['collectionTypeOriginal']);
         die;

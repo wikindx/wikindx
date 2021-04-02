@@ -428,7 +428,7 @@ class RESOURCEFORM
         $row = $this->db->fetchRow($recordset);
         if ($row['collectionDefault'])
         {
-            $this->collectionDefaults = unserialize(base64_decode($row['collectionDefault']));
+            $this->collectionDefaults = unserialize($row['collectionDefault']);
             $this->collectionType = $row['collectionType'];
             foreach ($this->collectionDefaultMap->{$this->collectionType}['resource'] as $key => $value)
             {

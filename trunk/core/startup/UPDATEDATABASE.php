@@ -233,18 +233,24 @@ class UPDATEDATABASE
             foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
             {
                 $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
-                if (!is_readable($fsql))
+                if (\UTILS\matchSuffix($fsql, ".sql"))
                 {
-                    GLOBALS::addTplVar('content', "Fatal error: schema creation not possible. " . $fsql . " doesn't exist or is not readable.");
-                    $this->endDisplay();
+                    if (!is_readable($fsql))
+                    {
+                        GLOBALS::addTplVar('content', "Fatal error: schema creation not possible. " . $fsql . " doesn't exist or is not readable.");
+                        $this->endDisplay();
+                    }
                 }
             }
             foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
             {
-                $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
-                $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-                $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
-                $this->db->queryNoError($sql);
+                if (is_readable($fsql) && \UTILS\matchSuffix($fsql, ".sql"))
+                {
+                    $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
+                    $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
+                    $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
+                    $this->db->queryNoError($sql);
+                }
             }
         }
         else
@@ -283,18 +289,24 @@ class UPDATEDATABASE
             foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
             {
                 $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
-                if (!is_readable($fsql))
+                if (\UTILS\matchSuffix($fsql, ".sql"))
                 {
-                    GLOBALS::addTplVar('content', "Fatal error: upgrade not possible. " . $fsql . " doesn't exist or is not readable.");
-                    $this->endDisplay();
+                    if (!is_readable($fsql))
+                    {
+                        GLOBALS::addTplVar('content', "Fatal error: upgrade not possible. " . $fsql . " doesn't exist or is not readable.");
+                        $this->endDisplay();
+                    }
                 }
             }
             foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
             {
-                $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
-                $sql = file_get_contents($fsql);
-                $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
-                $this->db->queryNoError($sql);
+                if (is_readable($fsql) && \UTILS\matchSuffix($fsql, ".sql"))
+                {
+                    $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
+                    $sql = file_get_contents($fsql);
+                    $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
+                    $this->db->queryNoError($sql);
+                }
             }
         }
         else

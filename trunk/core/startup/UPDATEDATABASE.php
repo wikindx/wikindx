@@ -226,7 +226,7 @@ class UPDATEDATABASE
             WIKINDX_DIR_BASE
             . $pluginPath . WIKINDX_DIR_DB_SCHEMA
             . DIRECTORY_SEPARATOR . 'full';
-        if (file_exists($dbSchemaPath) && is_dir($dbSchemaPath))
+        if (is_readable($dbSchemaPath) && is_dir($dbSchemaPath))
         {
             // Check if all files are redeable before executing them,
             // because you have to do them all together, or none
@@ -255,7 +255,7 @@ class UPDATEDATABASE
         }
         else
         {
-            GLOBALS::addTplVar('content', "Fatal error: schema creation not possible. " . $dbSchemaPath . " is not a directory or doesn't exist.");
+            GLOBALS::addTplVar('content', "Fatal error: upgrade not possible. " . $dbSchemaPath . " is not a directory, doesn't exist, or is not readable.");
             $this->endDisplay();
         }
     }
@@ -282,7 +282,7 @@ class UPDATEDATABASE
             . $pluginPath . WIKINDX_DIR_DB_SCHEMA
             . DIRECTORY_SEPARATOR . 'update'
             . DIRECTORY_SEPARATOR . $wkxVersion;
-        if (file_exists($dbSchemaPath) && is_dir($dbSchemaPath))
+        if (is_readable($dbSchemaPath) && is_dir($dbSchemaPath))
         {
             // Check if all files are redeable before executing them,
             // because you have to do them all together, or none
@@ -311,7 +311,7 @@ class UPDATEDATABASE
         }
         else
         {
-            GLOBALS::addTplVar('content', "Fatal error: upgrade not possible. " . $dbSchemaPath . " is not a directory or doesn't exist.");
+            GLOBALS::addTplVar('content', "Fatal error: upgrade not possible. " . $dbSchemaPath . " is not a directory, doesn't exist, or is not readable.");
             $this->endDisplay();
         }
     }

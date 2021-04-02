@@ -20,6 +20,7 @@ MAINTENANCE:
 5. As part of the upgrade process for 1., this version deletes all registered users sessions related to SQL including bookmarks, last multi view etc.
 6. Remove base64 encoding on collection defaults [#331].
 7. Protects the upgrade against SQL files with incorrect permissions.
+8. Protects the upgrade against rogue files (.DS_Store, thumb...): execute only file with a .sql extension.
 
 FEATURE ENHANCEMENT:
 1. Registered users can add comments to others' quotes and paraphrases – added ability to delete those comments.

@@ -1959,17 +1959,7 @@ END;
      */
     private function upgradeTo52()
     {
-    	$colls = [];
-		$this->db->formatConditions(['collectionDefault' => ' IS NOT NULL']);
-        $resultSet = $this->db->select('collection', ['collectionId', 'collectionDefault']);
-        while ($row = $this->db->fetchRow($resultSet)) {
-        	$colls[$row['collectionId']] = base64_decode($row['collectionDefault']); // result is serialized array
-        }
-		foreach ($colls AS $key => $value) {
-			$this->db->formatConditions(['collectionId' => $key]);
-			$this->db->update('collection', ['collectionDefault' => $value]);
-		}
-		$this->updateCoreInternalVersion();
+        $this->upgradeToTargetVersion();
     }
     
     /**

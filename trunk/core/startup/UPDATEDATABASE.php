@@ -226,11 +226,31 @@ class UPDATEDATABASE
             WIKINDX_DIR_BASE
             . $pluginPath . WIKINDX_DIR_DB_SCHEMA
             . DIRECTORY_SEPARATOR . 'full';
-        foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+        if (file_exists($dbSchemaPath) && is_dir($dbSchemaPath))
         {
-            $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-            $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
-            $this->db->queryNoError($sql);
+            // Check if all files are redeable before executing them,
+            // because you have to do them all together, or none
+            foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+            {
+                $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
+                if (!is_readable($fsql))
+                {
+                    GLOBALS::addTplVar('content', "Fatal error: schema creation not possible. " . $fsql . " doesn't exist or is not readable.");
+                    $this->endDisplay();
+                }
+            }
+            foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+            {
+                $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
+                $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
+                $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
+                $this->db->queryNoError($sql);
+            }
+        }
+        else
+        {
+            GLOBALS::addTplVar('content', "Fatal error: schema creation not possible. " . $dbSchemaPath . " is not a directory or doesn't exist.");
+            $this->endDisplay();
         }
     }
     

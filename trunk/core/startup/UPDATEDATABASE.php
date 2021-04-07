@@ -1975,6 +1975,16 @@ END;
     }
     
     /**
+     * Upgrade database to version 53 (6.4.4)
+     *
+     * Remove base64 encoding from global options
+     */
+    private function upgradeTo53()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

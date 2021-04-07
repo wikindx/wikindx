@@ -101,10 +101,10 @@ class CONFIGDBSTRUCTURE
                 // Unserialize the value for some options
                 if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
                 {
-                    $configValue = unserialize(base64_decode($configValue));
+                    $configValue = unserialize($configValue);
                     if (!is_array($configValue))
                     {
-                        $configValue = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                        $configValue = unserialize(constant($constName . "_DEFAULT"));
                     }
                 }
                 
@@ -124,7 +124,7 @@ class CONFIGDBSTRUCTURE
                 // Unserialize some options
                 if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
                 {
-                    $value = unserialize(base64_decode($value));
+                    $value = unserialize($value);
                 }
                 
                 $row[$configName] = $value;
@@ -150,7 +150,7 @@ class CONFIGDBSTRUCTURE
         // Serialize some options
         if (in_array($name, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
         {
-            $value = base64_encode(serialize($value));
+            $value = serialize($value);
         }
         
         $value = $this->convertVarPHP2DB(WIKINDX_LIST_CONFIG_OPTIONS[$name]["type"], $value);

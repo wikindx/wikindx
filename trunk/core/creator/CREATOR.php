@@ -482,13 +482,13 @@ class CREATOR
         $recordset = $this->db->select('collection', ['collectionId', 'collectionDefault']);
         while ($row = $this->db->fetchRow($recordset))
         {
-            $defaults = unserialize(base64_decode($row['collectionDefault']));
+            $defaults = unserialize($row['collectionDefault']);
             if (!is_array($defaults) || !array_key_exists('creators', $defaults) || empty(array_intersect($deleteIds, $defaults['creators'])))
             {
                 continue;
             }
             $defaults['creators'] = $this->reOrderCreator($defaults['creators'], $deleteIds);
-            $updateArray['collectionDefault'] = base64_encode(serialize($defaults));
+            $updateArray['collectionDefault'] = serialize($defaults);
             $this->db->formatConditions(['collectionId' => $row['collectionId']]);
             $this->db->update('collection', $updateArray);
         }

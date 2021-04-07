@@ -175,7 +175,17 @@ class LOADCONFIG
                     }
                     else
                     {
-                        $cms = unserialize(base64_decode($row[$rowKey]));
+                        $cms = $row[$rowKey];
+                        // TODO(LkpPo): remove base64_decode() when upgrading from db version 53 is not supported anymore
+                        if (WIKINDX_INTERNAL_VERSION < 53)
+                            $cms = unserialize(base64_decode($cms));
+                        elseif (WIKINDX_INTERNAL_VERSION > 53)
+                            $cms = unserialize($cms);
+                        elseif (preg_match("/^YTo[A-Za-z0-9+\\/=]+/u", $cms) > 0)
+                            $cms = unserialize(base64_decode($cms));
+                        else
+                            $cms = unserialize($cms);
+                        
                         GLOBALS::setUserVar('CmsTagStart', $cms[0]);
                         GLOBALS::setUserVar('CmsTagEnd', $cms[1]);
                     }
@@ -285,7 +295,16 @@ class LOADCONFIG
             // Unserialize some options
             if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
             {
-                $value = unserialize(base64_decode($value));
+                // TODO(LkpPo): remove base64_decode() when upgrading from db version 53 is not supported anymore
+                if (WIKINDX_INTERNAL_VERSION < 53)
+                    $value = unserialize(base64_decode($value));
+                elseif (WIKINDX_INTERNAL_VERSION > 53)
+                    $value = unserialize($value);
+                elseif (preg_match("/^YTo[A-Za-z0-9+\\/=]+/u", $value) > 0)
+                    $value = unserialize(base64_decode($value));
+                else
+                    $value = unserialize($value);
+                
                 // at some point in the past, incorrect values have crept in – remove them
                 if ($configName == 'configDeactivateResourceTypes')
                 {
@@ -301,7 +320,7 @@ class LOADCONFIG
                 }
                 if (!is_array($value))
                 {
-                    $value = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                    $value = unserialize(constant($constName . "_DEFAULT"));
                 }
             }
             

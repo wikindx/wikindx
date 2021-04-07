@@ -301,12 +301,12 @@ class CONFIGURE
                     {
                         $deactivateResourceTypes[$key] = $value;
                     }
-                    $value = base64_encode(serialize($deactivateResourceTypes));
+                    $value = serialize($deactivateResourceTypes);
                 }
                 else
                 {
                     $deactivateResourceTypes = [];
-                    $value = base64_encode(serialize([]));
+                    $value = serialize([]);
                 }
                 $this->session->setVar("config_deactivateResourceTypes", $value);
             }
@@ -336,7 +336,7 @@ class CONFIGURE
             if ($field == 'configNoSort')
             {
                 $array = [];
-                $oldNoSort = base64_encode(serialize(WIKINDX_NO_SORT));
+                $oldNoSort = serialize(WIKINDX_NO_SORT);
                 if ($value)
                 {
                     foreach (\UTF8\mb_explode(',', $value) as $word)
@@ -347,7 +347,7 @@ class CONFIGURE
                             $array[] = $word;
                         }
                     }
-                    $value = base64_encode(serialize($array));
+                    $value = serialize($array);
                 }
                 if (isset($oldNoSort) && $oldNoSort != $value)
                 {
@@ -368,7 +368,7 @@ class CONFIGURE
                             $array[] = $word;
                         }
                     }
-                    $value = base64_encode(serialize($array));
+                    $value = serialize($array);
                     $this->session->setVar("config_searchFilter", $value);
                 }
             }
@@ -823,7 +823,7 @@ class CONFIGURE
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "noSort"));
         if ($this->session->getVar("config_noSort"))
         { // After updating the field
-            $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_noSort"))));
+            $input = implode(', ', unserialize($this->session->getVar("config_noSort")));
             $this->session->delVar("config_noSort");
         }
         else
@@ -840,7 +840,7 @@ class CONFIGURE
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "searchFilter"));
         if ($this->session->getVar("config_searchFilter"))
         { // After updating the field
-            $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_searchFilter"))));
+            $input = implode(', ', unserialize($this->session->getVar("config_searchFilter")));
             $this->session->delVar("config_searchFilter");
         }
         else
@@ -1633,7 +1633,7 @@ class CONFIGURE
         asort($types);
         if ($this->session->getVar("config_deactivateResourceTypes"))
         { // After updating the field
-            $array = unserialize(base64_decode($this->session->getVar("config_deactivateResourceTypes")));
+            $array = unserialize($this->session->getVar("config_deactivateResourceTypes"));
             $this->session->delVar("config_deactivateResourceTypes");
         }
         else
@@ -1946,7 +1946,7 @@ class CONFIGURE
      */
     private function updateNoSort($oldNoSort)
     {
-        $oldArray = unserialize(base64_decode($oldNoSort));
+        $oldArray = unserialize($oldNoSort);
         $arrayNewNoSort = array_diff(WIKINDX_NO_SORT, $oldArray);
         $arrayRemoveNoSort = array_diff($oldArray, WIKINDX_NO_SORT);
         $newNSPattern = $newNSPatternBrace = FALSE;

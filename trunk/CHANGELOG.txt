@@ -21,6 +21,7 @@ MAINTENANCE:
 6. Remove base64 encoding on collection defaults [#331].
 7. Protects the upgrade against SQL files with incorrect permissions.
 8. Protects the upgrade against rogue files (.DS_Store, thumb...): execute only file with a .sql extension.
+9. Remove the base64 encoding of config / constants [#329].
 
 FEATURE ENHANCEMENT:
 1. Registered users can add comments to others' quotes and paraphrases – added ability to delete those comments.

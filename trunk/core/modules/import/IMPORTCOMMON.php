@@ -1459,7 +1459,7 @@ class IMPORTCOMMON
                 foreach ($collectionArray as $collectionId => $array)
                 {
                     ++$count;
-                    $updateArray[$collectionId] = base64_encode(serialize($array));
+                    $updateArray[$collectionId] = serialize($array);
                     if ($count >= $maxCounts)
                     {
                         $this->db->multiUpdate('collection', 'collectiondefault', 'collectionId', $updateArray);

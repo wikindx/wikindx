@@ -945,7 +945,7 @@ class CMS
         }
         if ($cmsTagChanged && $this->session->getVar("setup_UserId"))
         {
-            $string = base64_encode(serialize([$this->vars['cmsTagStart'], $this->vars['cmsTagEnd']]));
+            $string = serialize([$this->vars['cmsTagStart'], $this->vars['cmsTagEnd']]);
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $this->db->update('users', ['usersCmsTag' => $string]);
         }

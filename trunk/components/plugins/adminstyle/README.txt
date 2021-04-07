@@ -17,6 +17,7 @@ Thus, plugins/adminstyle/index.php etc.
 
 CHANGELOG:
 
+2021-04-08 : CHG : Shift resource URLs from the resource_text table to a new resource_url table [#284].
 2021-02-10 : CHG : move the help on the website [#294].
 2021-01-08 : FIX : restore temporarily the old languages list for style components [#305].
 2020-12-21 : CHG : make PHP includes independent of the web server layout [#244].

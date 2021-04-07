@@ -177,9 +177,7 @@ class LOADCONFIG
                     {
                         $cms = $row[$rowKey];
                         // TODO(LkpPo): remove base64_decode() when upgrading from db version 53 is not supported anymore
-                        if (WIKINDX_INTERNAL_VERSION < 53)
-                            $cms = unserialize(base64_decode($cms));
-                        elseif (WIKINDX_INTERNAL_VERSION > 53)
+                        if (WIKINDX_INTERNAL_VERSION > 53)
                             $cms = unserialize($cms);
                         elseif (preg_match("/^YTo[A-Za-z0-9+\\/=]+/u", $cms) > 0)
                             $cms = unserialize(base64_decode($cms));
@@ -296,9 +294,7 @@ class LOADCONFIG
             if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
             {
                 // TODO(LkpPo): remove base64_decode() when upgrading from db version 53 is not supported anymore
-                if (WIKINDX_INTERNAL_VERSION < 53)
-                    $value = unserialize(base64_decode($value));
-                elseif (WIKINDX_INTERNAL_VERSION > 53)
+                if (WIKINDX_INTERNAL_VERSION > 53)
                     $value = unserialize($value);
                 elseif (preg_match("/^YTo[A-Za-z0-9+\\/=]+/u", $value) > 0)
                     $value = unserialize(base64_decode($value));

@@ -1,18 +1,18 @@
 {
-    "component_version": "383",
-    "component_description": "Attempt to fix to a number of errors that can occur over time in the database. For developers, testers, or difficult situations when a db schema is corrupted.",
+    "component_sha256": "0540b4b58ba2db2dd551cbdf105d467025bb7ddac30cd7338c4b1797aedbbaf7",
+    "component_version": "452",
+    "component_name": "Admin Styles",
+    "component_description": "Create, edit and share with WIKINDX users your bibliographic and citation styles.",
     "component_licence": "ISC License",
-    "component_name": "Repair Kit",
-    "component_sha256": "a007718793d24cd5b42e4fb2ab87105842f91d35a10022ad98e61c0980e9a25c",
+    "component_id": "adminstyle",
     "component_builtin": "false",
     "component_type": "plugin",
-    "component_id": "repairkit",
     "component_updatable": "true",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2013, 2016-2017, 2019-2021",
+            "author_copyright": "2013-2014, 2016-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
@@ -26,9 +26,9 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_repairkit_383.zip",
-            "package_sha256": "c800a8408b55dbed735f0590c9c9837e16370f0e0b67860acbb2c9a01305bccf",
-            "package_size": 45312
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_adminstyle_452.zip",
+            "package_sha256": "b06263ddea07b93ae909ee397afde169bdd4c7c784f70f66d0584a6912f80007",
+            "package_size": 110324
         }
     ]
 }

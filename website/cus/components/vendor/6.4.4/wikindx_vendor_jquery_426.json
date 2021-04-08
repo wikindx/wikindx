@@ -1,6 +1,6 @@
 {
-    "component_sha256": "128ed7c048f97120750a22053325698b6f785e527be8fb750cfdcf916a727e02",
-    "component_version": "175",
+    "component_sha256": "2ab84188bfb532926e04745696af12e110ef170161c37d3ea05396dc43c44cc3",
+    "component_version": "426",
     "component_licence": "MIT License",
     "component_website": "https://jquery.com/",
     "component_name": "jQuery JS library",
@@ -13,28 +13,28 @@
         {
             "author_name": "JS Foundation and other contributors",
             "author_role": "Developers",
-            "author_copyright": "2006-2020"
+            "author_copyright": "2006-2021"
         },
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Packager",
-            "author_copyright": "2017-2016, 2020",
+            "author_copyright": "2017-2016, 2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Packager",
-            "author_copyright": "2017-2020",
+            "author_copyright": "2017-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/trunk/wikindx_vendor_jquery_175.zip",
-            "package_sha256": "e099b802d79f66ebb4680db1aee4732e17b062d1ec092861e531679272ef15df",
-            "package_size": 31720
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/6.4.4/wikindx_vendor_jquery_426.zip",
+            "package_sha256": "36d5e12db144f052cc06386d6f996c7161933b4f9d06bd71b688f6a8c7956038",
+            "package_size": 31717
         }
     ]
 }

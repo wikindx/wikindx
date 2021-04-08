@@ -1,9 +1,9 @@
 {
-    "component_version": "426",
+    "component_sha256": "146115d9f31ca2b5f29b6234afdab5781273fc880e53d3da72332a1615418edd",
+    "component_version": "452",
     "component_name": "Bibliography Import/Export",
     "component_licence": "ISC License",
     "component_description": "Import and export bibliographies in various formats (Bibtex, EndNote, HTML, PubMed, RIS, RTF).",
-    "component_sha256": "ef3a5437b1e826e5d18b7ea5264e2bba8e56be1e57eab64d99c94bc2bb25b2be",
     "component_builtin": "false",
     "component_id": "importexportbib",
     "component_type": "plugin",
@@ -32,9 +32,9 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_importexportbib_426.zip",
-            "package_sha256": "7c50b5a9c696d754e8cb7c6ce5bcf6acbb4b4cfa5da17ad0fe66e29a51aef7bf",
-            "package_size": 127360
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/9/wikindx_plugin_importexportbib_452.zip",
+            "package_sha256": "0ab360e67434f343d4c39d5478938435126a0b7e260a0a45002a239b28b29b9c",
+            "package_size": 127549
         }
     ]
 }

@@ -257,14 +257,12 @@ to HEAD after the release!
 3. Click on "Field Management" menu
 
 4. Update or create a "Found in" milestone entry for the release X.Y.Z
-   and fill it with the same infos as the SVN History (put the revision
-   number in the Description field). Check the "Complete" column for older
-   versions that are no longer supported.
+   and fill it with the same date as the SVN History. Check the "Complete"
+   column for older versions that are no longer supported.
 
 5. Update or create a "Target" milestone entry for the release X.Y.Z
-   and fill it with the same infos as the SVN History (put the revision
-   number in the Description field). Check the "Complete" column of the
-   current release.
+   and fill it with the same date as the SVN History. Check the "Complete"
+   column of the current release.
 
 6. Save these changes.
 

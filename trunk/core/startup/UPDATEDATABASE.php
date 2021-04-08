@@ -869,6 +869,12 @@ END;
     {
         if ($version == WIKINDX_INTERNAL_VERSION)
             return WIKINDX_PUBLIC_VERSION;
+        elseif ($version >= 54)
+            return "6.4.5";
+        elseif ($version >= 46)
+            return "6.4.4";
+        elseif ($version >= 42)
+            return "6.4.2";
         elseif ($version >= 38)
             return "6.4.1";
         elseif ($version >= 23)

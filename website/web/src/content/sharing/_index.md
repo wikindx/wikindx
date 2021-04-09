@@ -5,4 +5,6 @@ weight = 3
 chapter = true
 +++
 
-This chapter describes some ways to access WIKINDX data from outside.
+There are a number of ways in which WIKINDX data can be accessed and used in software external to WIKINDX.
+These include an interface for plugging WIKINDX data into Content Management Systems (CMS),
+an interface to RSS feeds, and a range of plug-ins for word processors that facilitate the writing of academic articles.

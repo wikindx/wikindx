@@ -47,16 +47,9 @@ class LOADCONFIG
      */
     public function startSession()
     {
-        // Protect from a session already launched by an other page but not well loaded (plugins)
-        if (session_status() === PHP_SESSION_ACTIVE)
-        {
-            session_write_close();
-        }
-        
-        wkx_session_set_db_handler();
-        
         if (session_status() === PHP_SESSION_NONE)
         {
+            wkx_session_set_db_handler();
             // start session
             session_start();
         }

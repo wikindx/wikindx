@@ -30,6 +30,7 @@ include_once("core/startup/CONSTANTS.php");
 include_once("core/libs/FILE.php");
 include_once("core/libs/LOCALES.php");
 include_once("core/libs/UTILS.php");
+include_once("core/startup/SESSIONHANDLERS.php");
 
 // Begin page execution timer and define globals for rendering by template
 include_once("core/startup/GLOBALS.php");

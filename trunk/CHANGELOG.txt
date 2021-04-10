@@ -2,7 +2,7 @@ RELEASES:
 
 
 v6.4.5
-Focus: ...
+Focus: bug fixes, maintenance
 
 IMPORTANT INFORMATION:
 

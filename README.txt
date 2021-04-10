@@ -131,6 +131,7 @@ Release History (Active repository)
 
  Version    Release Date   Revision Note
  ---------  ------------   -------- --------------
+  6.4.5      2021-04-10        1590
   6.4.4      2021-04-08        1570
   6.4.3      2021-03-14        1473
   6.4.2      2021-03-13        1465 Broken upgrade

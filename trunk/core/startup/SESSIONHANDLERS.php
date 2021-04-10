@@ -112,14 +112,69 @@ function wkx_session_read(string $sessionId) : string
  */
 function wkx_session_write(string $sessionId, string $sessionData) : bool
 {
-    $db = FACTORY_DB::getInstance();
+    $ua = $_SERVER['HTTP_USER_AGENT'] ?? "";
+    $isbot = FALSE;
     
-    $sql = "
-        REPLACE INTO " . $db->formatTables("session") . " (sessionId, sessionData)
-        VALUES (" . $db->tidyInput($sessionId) . ", " . $db->tidyInput($sessionData) . ");
-    ";
+    // Don't store the session data for the most popular Web crawlers
+    // cf. https://www.keycdn.com/blog/web-crawlers
+    foreach ([
+        // Google: https://developers.google.com/search/docs/advanced/crawling/overview-google-crawlers
+        "APIs-Google",
+        "Googlebot",
+        "AdsBot-Google",
+        "AdsBot-Google-Mobile",
+        "AdsBot-Google-Mobile-Apps",
+        "DuplexWeb-Google",
+        "FeedFetcher-Google",
+        "Google Favicon",
+        "Google-Read-Aloud",
+        "googleweblight",
+        "Mediapartners-Google",
+        "Storebot-Google",
+        // Bing: https://www.bing.com/webmasters/help/which-crawlers-does-bing-use-8c184ec0
+        "adidxbot",
+        "bingbot",
+        "BingPreview",
+        // Yahoo!: https://help.yahoo.com/kb/SLN22600.html
+        "Slurp",
+        // Apple: https://seoapi.com/applebot/
+        "Applebot",
+        // DuckDuckGo: https://help.duckduckgo.com/duckduckgo-help-pages/results/duckduckbot/
+        "DuckDuckBot",
+        // Baidu: http://www.baiduguide.com/baidu-spider/
+        "Baiduspider",
+        // Yandex: https://yandex.com/support/webmaster/robot-workings/check-yandex-robots.html
+        "Yandex",
+        // Sogou: https://seoapi.com/sogouwebspider/#utm_source=sogou.dev
+        "sogou",
+        // Exabot: https://www.exalead.com/search/webmasterguide
+        "Exabot",
+        // Facebook: https://developers.facebook.com/docs/sharing/webmasters/crawler
+        "facebook",
+        // Alexa: https://support.alexa.com/hc/en-us/articles/200450194-Alexa-s-Web-and-Site-Audit-Crawlers
+        "ia_archiver"
+    ] as $botua)
+    {
+        if (strstr($ua, $botua))
+        {
+            $isbot = TRUE;
+            break;
+        }
+    }
     
-    $db->query($sql);
+    if (!$isbot)
+    {
+        $db = FACTORY_DB::getInstance();
+        $sql = "
+            INSERT INTO " . $db->formatTables("session") . " (sessionId, sessionData)
+            VALUES (" . $db->tidyInput($sessionId) . ", " . $db->tidyInput($sessionData) . ")
+            ON DUPLICATE KEY UPDATE
+                sessionId = " . $db->tidyInput($sessionId) . ",
+                sessionData= " . $db->tidyInput($sessionData) . ";
+        ";
+        
+        $db->query($sql);
+    }
     
     return TRUE;
 }

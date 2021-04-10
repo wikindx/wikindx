@@ -1,6 +1,20 @@
 RELEASES:
 
 
+v6.4.6
+Focus: ...
+
+BUG FIXES:
+
+MAINTENANCE:
+
+
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
+
 v6.4.5
 Focus: bug fixes, maintenance
 
@@ -17,6 +31,7 @@ MAINTENANCE:
 2. Store sessions in db [#274].
 3. Restore garbage collection of sessions (except during an upgrade).
 4. Remove the barrier against double session launching from plugins. The change of includes must have corrected this problem.
+
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

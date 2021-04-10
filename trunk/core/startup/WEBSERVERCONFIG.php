@@ -67,6 +67,10 @@ ini_set('short_open_tag', 'Off');
 ini_set('register_argc_argv', 'Off');
 ini_set('cgi.check_shebang_line', 'Off');
 
+// cf. https://www.php.net/manual/en/session.configuration.php#ini.session.serialize-handler
+// Using php_serialize avoid numeric index or special character errors at script shutdown. 
+ini_set('session.serialize_handler', 'php_serialize');
+
 //TODO : this option can only be activated when the plugins
 //       start the session after the inclusion of this code.
 // Disallow access to session cookie by JavaScript

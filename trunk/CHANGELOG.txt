@@ -7,6 +7,9 @@ Focus: ...
 BUG FIXES:
 1. Allow missing directory for SQL on upgrade (but not creation).
 
+MAINTENANCE:
+1. Use the php_serialize handler for session serialization which can managed corner cases.
+
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

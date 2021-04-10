@@ -165,11 +165,24 @@ function wkx_session_write(string $sessionId, string $sessionData) : bool
     if (!$isbot)
     {
         $db = FACTORY_DB::getInstance();
+        
+        // Add the userId
+        $sessionUserId = $_SESSION["setup_UserId"] ?? 0;
+        if (is_string($sessionUserId) && is_numeric($sessionUserId))
+        {
+            $sessionUserId = intval($sessionUserId);
+        }
+        if (!is_int($sessionUserId) || $sessionUserId < 0)
+        {
+            $sessionUserId = 0;
+        }
+        
         $sql = "
-            INSERT INTO " . $db->formatTables("session") . " (sessionId, sessionData)
-            VALUES (" . $db->tidyInput($sessionId) . ", " . $db->tidyInput($sessionData) . ")
+            INSERT INTO " . $db->formatTables("session") . " (sessionId, sessionUserId, sessionData)
+            VALUES (" . $db->tidyInput($sessionId) . ", " . $db->tidyInput($sessionUserId) . ", " . $db->tidyInput($sessionData) . ")
             ON DUPLICATE KEY UPDATE
                 sessionId = " . $db->tidyInput($sessionId) . ",
+                sessionUserId = " . $db->tidyInput($sessionUserId) . ",
                 sessionData= " . $db->tidyInput($sessionData) . ";
         ";
         

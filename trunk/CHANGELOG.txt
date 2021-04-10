@@ -6,7 +6,8 @@ Focus: bug fixes, maintenance
 
 IMPORTANT INFORMATION:
 
-The storage and format of sessions change. All sessions will be lost when upgrading to this version.
+The storage (file to db) and format (php_serialize) of sessions change.
+All sessions will be lost when upgrading to this version.
 
 BUG FIXES:
 1. Allow missing directory for SQL on upgrade (but not creation).

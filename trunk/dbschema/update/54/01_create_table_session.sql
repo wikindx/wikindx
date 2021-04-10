@@ -16,5 +16,7 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%session` (
     `sessionLastAccessTimestamp` TIMESTAMP NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     -- Session data serialized with serialize()
     `sessionData` LONGTEXT COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-    PRIMARY KEY (`sessionId`)
+    PRIMARY KEY (`sessionId`),
+    KEY `sessionUserId` (`sessionUserId`),
+    KEY `sessionLastAccessTimestamp` (`sessionLastAccessTimestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

@@ -309,9 +309,9 @@ class UPDATEDATABASE
                 }
             }
         }
-        else
+        elseif (file_exists($dbSchemaPath))
         {
-            GLOBALS::addTplVar('content', "Fatal error: upgrade not possible. " . $dbSchemaPath . " is not a directory, doesn't exist, or is not readable.");
+            GLOBALS::addTplVar('content', "Fatal error: upgrade not possible. " . $dbSchemaPath . " is not a directory or is not readable.");
             $this->endDisplay();
         }
     }

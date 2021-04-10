@@ -57,7 +57,6 @@ class LOADCONFIG
         
         if (session_status() === PHP_SESSION_NONE)
         {
-            ini_set('session.gc_probability', 0);
             // start session
             session_start();
         }

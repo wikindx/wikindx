@@ -10,6 +10,7 @@ BUG FIXES:
 MAINTENANCE:
 1. Use the php_serialize handler for session serialization which can managed corner cases.
 2. Store sessions in db [#274].
+3. Restore garbage collection of sessions (except during an upgrade).
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

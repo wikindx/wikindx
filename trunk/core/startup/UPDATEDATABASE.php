@@ -54,6 +54,7 @@ class UPDATEDATABASE
         
         if (session_status() === PHP_SESSION_NONE)
         {
+            // Don't garbage the session during an upgrade
             ini_set('session.gc_probability', 0);
             // start session
             session_start();

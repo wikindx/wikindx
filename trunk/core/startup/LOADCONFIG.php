@@ -52,6 +52,9 @@ class LOADCONFIG
         {
             session_write_close();
         }
+        
+        wkx_session_set_db_handler();
+        
         if (session_status() === PHP_SESSION_NONE)
         {
             ini_set('session.gc_probability', 0);

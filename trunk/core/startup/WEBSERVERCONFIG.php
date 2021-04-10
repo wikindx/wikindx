@@ -340,11 +340,11 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FACTORY.php"]));
 // Initialize the static config read from config.php file
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "LOADSTATICCONFIG.php"]));
 
-/**
- *	Initialize the system
- *  The static part of the config is loaded.
- */
-FACTORY_LOADCONFIG::getInstance();
+// Load the code of session storage handlers
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "SESSIONHANDLERS.php"]));
+
+// NB: the upgrade uses its own session stored inside a file by the native session handler
+// When the upgrade is bypassed, a db storage handler is used for sessions.
 
 // Attempt an upgrade only if we are on the main script
 if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE)
@@ -364,6 +364,12 @@ if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['S
         die("Fatal error: upgrade / install had not ended successfully");
     }
 }
+
+/**
+ *	Initialize the system
+ *  The dynamic part of the config is loaded.
+ */
+FACTORY_LOADCONFIG::getInstance();
 
 // Load auth object but diff. login after upgrade stage
 // Upgrade will request login to superadmin if needed

@@ -9,6 +9,7 @@ BUG FIXES:
 
 MAINTENANCE:
 1. Use the php_serialize handler for session serialization which can managed corner cases.
+2. Store sessions in db [#274].
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

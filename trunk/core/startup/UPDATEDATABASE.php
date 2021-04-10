@@ -21,8 +21,6 @@ class UPDATEDATABASE
     private $session;
     /** object */
     private $db;
-    /** array */
-    private $vars;
     /** int */
     private $oldTime;
     /** string */
@@ -43,9 +41,28 @@ class UPDATEDATABASE
         ini_set('display_errors', TRUE);
         
         $this->db = FACTORY_DB::getInstance();
+        
+        // Protect from a session already launched by an other page but not well loaded (plugins)
+        if (session_status() === PHP_SESSION_ACTIVE)
+        {
+            session_write_close();
+        }
+        
+        // Store the session in a file because we have not yet a db access
+        // As the upgrade always die before an other call of session_start() the code is safe.
+        wkx_session_set_file_handler();
+        
+        if (session_status() === PHP_SESSION_NONE)
+        {
+            ini_set('session.gc_probability', 0);
+            // start session
+            session_start();
+        }
+        
+        // Use only the session and access the $_POST global directly as we don't need to load the global
+        // or user's config and don't want to mess them before the end of the upgrade
         $this->session = FACTORY_SESSION::getInstance();
         
-        $this->vars = GLOBALS::getVars();
         $this->oldTime = time();
         
         // Force the update of the components.json files in case WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] changes
@@ -71,7 +88,7 @@ class UPDATEDATABASE
         {
             $this->startInstallDisplay();
             
-            if (array_key_exists('action', $this->vars) && ($this->vars['action'] == 'createdatabase'))
+            if (array_key_exists('action', $_POST) && ($_POST['action'] == 'createdatabase'))
             {
                 $this->createDbSchema();
                 
@@ -111,11 +128,6 @@ class UPDATEDATABASE
         
         // At this step we can retrieve the current version of the database
         $dbVersion = \UPDATE\getCoreInternalVersion($this->db);
-        
-        // Initialize the system
-        // The dynamic part of the config is loaded (db).
-        // We need that for ther SESSION ONLY
-        FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
         
         // Required for gatekeep function in CONFIG.php
         $this->session->setVar("setup_Superadmin", TRUE);
@@ -438,7 +450,7 @@ class UPDATEDATABASE
             From the Admin menu, after configuration, you can add and edit other settings.
         ");
         
-        if (array_key_exists('action', $this->vars) && ($this->vars['action'] == 'usersgroups_INITSUPERADMIN_CORE'))
+        if (array_key_exists('action', $_POST) && ($_POST['action'] == 'usersgroups_INITSUPERADMIN_CORE'))
         {
             $status = $config->writeDb();
             if ($status === TRUE)
@@ -561,11 +573,10 @@ class UPDATEDATABASE
         
         $pString = "";
         
-        $vars = GLOBALS::getVars();
-        $vars['usersUsername'] = isset($vars['usersUsername']) ? $vars['usersUsername'] : '';
-        $vars['password'] = isset($vars['password']) ? $vars['password'] : '';
+        $_POST['usersUsername'] = isset($_POST['usersUsername']) ? $_POST['usersUsername'] : '';
+        $_POST['password'] = isset($_POST['password']) ? $_POST['password'] : '';
         
-        if (\UPDATE\logonCheckUpgradeDB($this->db, $vars['usersUsername'], $vars['password'], $currentdbVersion))
+        if (\UPDATE\logonCheckUpgradeDB($this->db, $_POST['usersUsername'], $_POST['password'], $currentdbVersion))
         {
             $this->session->setVar("setup_Write", TRUE);
             $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
@@ -1986,6 +1997,16 @@ END;
      * Remove base64 encoding from global options
      */
     private function upgradeTo53()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
+     * Upgrade database to version 54 (6.4.5)
+     *
+     * Store session in wkx_session table
+     */
+    private function upgradeTo54()
     {
         $this->upgradeToTargetVersion();
     }

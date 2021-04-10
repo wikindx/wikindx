@@ -4,6 +4,10 @@ RELEASES:
 v6.4.5
 Focus: ...
 
+IMPORTANT INFORMATION:
+
+The storage and format of sessions change. All sessions will be lost when upgrading to this version.
+
 BUG FIXES:
 1. Allow missing directory for SQL on upgrade (but not creation).
 

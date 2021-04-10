@@ -30,7 +30,7 @@ class INITSUPERADMIN
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->db = FACTORY_DB::getInstance();
-        $this->vars = GLOBALS::getVars();
+        $this->vars = $_POST;
     }
     /**
      * init

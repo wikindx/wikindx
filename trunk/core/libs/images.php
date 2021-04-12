@@ -661,40 +661,6 @@ class EncodeExplorer
         return $link;
     }
     /**
-     * Make the image icon link
-     *
-     * @param string $l extension
-     *
-     * @return string
-     */
-    public function makeIcon($l)
-    {
-        $l = mb_strtolower($l);
-
-        if (($l == 'jpeg') || ($l == 'jpg'))
-        {
-            $img = 'img/jpeg.png';
-        }
-        elseif ($l == 'gif')
-        {
-            $img = 'img/gif.png';
-        }
-        elseif ($l == 'png')
-        {
-            $img = 'img/png.png';
-        }
-        elseif ($l == 'webp')
-        {
-            $img = 'img/webp.webp';
-        }
-        else
-        {
-            $img = $l;
-        }
-
-        return $img;
-    }
-    /**
      * Format the file modification time for display
      *
      * @param int $time Unix file time
@@ -922,7 +888,6 @@ class EncodeExplorer
         $pString .= "<table class=\"table\">"
             . "<thead class=\"fixedHeader\">"
             . "<tr class=\"row one header\">" . LF
-            . "<th class=\"iconH\">&nbsp;</th>" . LF
             . "<th class=\"nameH\">" . EncodeExplorer::makeArrow("name") . "</th>" . LF
             . "<th class=\"sizeH\">" . EncodeExplorer::makeArrow("size") . "</th>" . LF
             . "<th class=\"changedH\">" . EncodeExplorer::makeArrow("mod") . "</th>" . LF
@@ -964,7 +929,6 @@ class EncodeExplorer
                 $row_style = ($row ? "one" : "two");
                 $pString .= '<tr class="row ' . $row_style . (++$count == count($this->files) ? ' last' : '') . '">' . LF;
                 //$pString .= '<tbody><tr class="row ' . $row_style . (++$count == count($this->files) ? ' last' : '') . '">'. LF;
-                $pString .= '<td class="icon"><img alt="' . $file->getType() . '" src="' . $this->makeIcon($file->getType()) . '"></td>' . LF;
                 $pString .= '<td class="name">' . LF;
                 // For some reason, only width is accepted here. But, adding width automatically proportionately sets height when the image is inserted
                 $pString .= '<a href="' . implode("/", [WIKINDX_URL_DATA_IMAGES, $file->getNameEncoded()]) . '?width=' . $width . '&amp;height=' . $height . '"';

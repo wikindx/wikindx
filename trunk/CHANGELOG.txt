@@ -5,12 +5,13 @@ v6.4.6
 Focus: ...
 
 BUG FIXES:
+1. Remove dead code about Etag HTTP headers and fix a wrong image mimetype in images dialog [333].
 
 FEATURE ENHANCEMENT:
 1. Localize the dates in the images dialog.
+2. Accept the webp image format because since September 2020 all browsers support it (TinyMCE included).
 
 MAINTENANCE:
-1. Accept the webp image format because since September 2020 all browsers support it (TinyMCE included).
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

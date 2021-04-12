@@ -113,22 +113,22 @@ class ImageServer
     public static function openImage($file)
     {
         $size = getimagesize($file);
-        switch ($size["mime"]) {
+        switch ($size["mime"])
+        {
             case "image/jpeg":
                 $im = imagecreatefromjpeg($file);
-
             break;
             case "image/gif":
                 $im = imagecreatefromgif($file);
-
             break;
             case "image/png":
                 $im = imagecreatefrompng($file);
-
+            break;
+            case "image/webp":
+                $im = imagecreatefromwebp($file);
             break;
             default:
                 $im = NULL;
-
             break;
         }
 
@@ -210,7 +210,7 @@ class FileManager
 
             return;
         }
-        $mimetypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif'];
+        $mimetypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif', 'image/webp'];
         if (($key = array_search($hash . '.' . $extension, $existingHashes)) !== FALSE)
         {
             $_ERROR = 'imageExists';

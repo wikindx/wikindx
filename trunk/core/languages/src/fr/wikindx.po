@@ -8294,7 +8294,7 @@ msgstr "Taille"
 
 #: core/messages/messages.php:1766
 msgid "Upload file"
-msgstr "Fichier téléversé"
+msgstr "Téléverser le fichier"
 
 #: core/messages/success.php:84
 msgid "Successfully added notes"

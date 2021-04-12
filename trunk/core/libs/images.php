@@ -660,19 +660,7 @@ class EncodeExplorer
 
         return $link;
     }
-    /**
-     * Format the file modification time for display
-     *
-     * @param int $time Unix file time
-     *
-     * @return string
-     */
-    public function formatModTime($time)
-    {
-        $timeformat = "d.m.y H:i:s";
-
-        return date($timeformat, $time);
-    }
+    
     /**
      * Comparison callback for sorting by name
      *
@@ -942,7 +930,7 @@ class EncodeExplorer
                 $pString .= '</a>';
                 $pString .= '</td>' . LF;
                 $pString .= '<td class="size">' . \FILE\formatSize($file->getSize()) . '</td>' . LF;
-                $pString .= '<td class="changed">' . $this->formatModTime($file->getModTime()) . '</td>' . LF;
+                $pString .= '<td class="changed">' . strftime("%x %X", $file->getModTime()) . '</td>' . LF;
                 //$pString .= "</tr></tbody>". LF;
                 $pString .= '</tr>' . LF;
                 $row = !$row;

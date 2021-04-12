@@ -6,6 +6,9 @@ Focus: ...
 
 BUG FIXES:
 
+FEATURE ENHANCEMENT:
+1. Localize the dates in the images dialog.
+
 MAINTENANCE:
 1. Accept the webp image format because since September 2020 all browsers support it (TinyMCE included).
 

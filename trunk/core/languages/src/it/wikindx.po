@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-04-08 00:54+0200\n"
+"POT-Creation-Date: 2021-04-13 01:45+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2314,7 +2314,7 @@ msgid "Image already exists as ###"
 msgstr ""
 
 #: core/messages/errors.php:161
-msgid "File type not allowed (only JPEG, GIF and PNG)"
+msgid "File type not allowed (only JPEG, GIF, PNG, and WEBP)"
 msgstr ""
 
 #: core/messages/errors.php:162
@@ -9524,11 +9524,6 @@ msgstr "Risorsa approvata con successo"
 #~ "di utenti che hai definito in My Wikindx.</li>\n"
 #~ "</ul>"
 
-#, fuzzy
-#~| msgid "Unable to write to database."
-#~ msgid "Unable to write temporary form data to the database."
-#~ msgstr "Impossibile scrivere nel database"
-
 #~ msgid "<h3>Search</h3>"
 #~ msgstr "<h3>Cerca</h3>"
 
@@ -9547,3 +9542,8 @@ msgstr "Risorsa approvata con successo"
 #~| msgid "My Wikindx"
 #~ msgid "My Wikindxx"
 #~ msgstr "My Wikindx"
+
+#, fuzzy
+#~| msgid "Unable to write to database."
+#~ msgid "Unable to write temporary form data to the database."
+#~ msgstr "Impossibile scrivere nel database"

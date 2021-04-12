@@ -158,7 +158,7 @@ class ERRORS
 				"attachmentExists" => dgettext($domain, "Attachment already exists for this resource"),
 				"missing" => dgettext($domain, "File not found"),
 				"imageExists" => dgettext($domain, "Image already exists as ###"),
-				"uploadType" => dgettext($domain, "File type not allowed (only JPEG, GIF and PNG)"),
+				"uploadType" => dgettext($domain, "File type not allowed (only JPEG, GIF, PNG, and WEBP)"),
 				"imageSize" => dgettext($domain, "Image above maximum allowed size of ###MB"),
 				"uploadSize" => dgettext($domain, "One or more attachments exceed the maximum size (>### bytes). If you are the admin, try editing both 'post_max_size' and 'upload_max_filesize' in php.ini."),
 			),

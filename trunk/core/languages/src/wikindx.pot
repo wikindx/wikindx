@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-04-08 00:54+0200\n"
+"POT-Creation-Date: 2021-04-13 01:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2304,7 +2304,7 @@ msgid "Image already exists as ###"
 msgstr ""
 
 #: core/messages/errors.php:161
-msgid "File type not allowed (only JPEG, GIF and PNG)"
+msgid "File type not allowed (only JPEG, GIF, PNG, and WEBP)"
 msgstr ""
 
 #: core/messages/errors.php:162

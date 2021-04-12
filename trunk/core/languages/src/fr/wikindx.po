@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-04-08 00:54+0200\n"
+"POT-Creation-Date: 2021-04-13 01:45+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2021\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -2322,7 +2322,9 @@ msgid "Image already exists as ###"
 msgstr "L'image existe déjà sous le nom ###."
 
 #: core/messages/errors.php:161
-msgid "File type not allowed (only JPEG, GIF and PNG)"
+#, fuzzy
+#| msgid "File type not allowed (only JPEG, GIF and PNG)"
+msgid "File type not allowed (only JPEG, GIF, PNG, and WEBP)"
 msgstr "Type d'image non autorisé (seulement JPEG, GIF, PNG)"
 
 #: core/messages/errors.php:162

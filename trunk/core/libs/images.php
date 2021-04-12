@@ -182,20 +182,10 @@ class FileManager
         $upload_file .= '_' . $hash . '.' . $extension;
         $postMax = FILE\return_bytes(ini_get('post_max_size'));
         $uploadMax = FILE\return_bytes(ini_get('upload_max_filesize'));
-        if ($postMax < $uploadMax)
-        {
-            $maxSize = $postMax;
-        }
-        else
-        {
-            $maxSize = $uploadMax;
-        }
+        $maxSize = min($postMax, $uploadMax);
         if (WIKINDX_IMAGES_MAXSIZE)
         {
-            if ($maxSize > (WIKINDX_IMAGES_MAXSIZE * 1024 * 1024))
-            {
-                $maxSize = WIKINDX_IMAGES_MAXSIZE * 1024 * 1024;
-            }
+            $maxSize = min($maxSize, WIKINDX_IMAGES_MAXSIZE * 1024 * 1024);
         }
         if ($userfile['size'] > $maxSize)
         {
@@ -881,14 +871,11 @@ class EncodeExplorer
             . "<th class=\"changedH\">" . EncodeExplorer::makeArrow("mod") . "</th>" . LF
             . "</tr>" . LF
             . "</thead>" . LF;
-        //
+        
         // Ready to display folders and files.
-        //
         $row = 1;
 
-        //
         // Now the files
-        //
         if ($this->files)
         {
             $pString .= '<tbody class="scrollContent">' . LF;
@@ -916,7 +903,6 @@ class EncodeExplorer
                 }
                 $row_style = ($row ? "one" : "two");
                 $pString .= '<tr class="row ' . $row_style . (++$count == count($this->files) ? ' last' : '') . '">' . LF;
-                //$pString .= '<tbody><tr class="row ' . $row_style . (++$count == count($this->files) ? ' last' : '') . '">'. LF;
                 $pString .= '<td class="name">' . LF;
                 // For some reason, only width is accepted here. But, adding width automatically proportionately sets height when the image is inserted
                 $pString .= '<a href="' . implode("/", [WIKINDX_URL_DATA_IMAGES, $file->getNameEncoded()]) . '?width=' . $width . '&amp;height=' . $height . '"';
@@ -931,7 +917,6 @@ class EncodeExplorer
                 $pString .= '</td>' . LF;
                 $pString .= '<td class="size">' . \FILE\formatSize($file->getSize()) . '</td>' . LF;
                 $pString .= '<td class="changed">' . strftime("%x %X", $file->getModTime()) . '</td>' . LF;
-                //$pString .= "</tr></tbody>". LF;
                 $pString .= '</tr>' . LF;
                 $row = !$row;
             }
@@ -943,9 +928,7 @@ class EncodeExplorer
 
         $pString .= '</div>' . LF;
 
-//
         // The files have been displayed
-//
         $pString .= '<!-- START: Upload area -->';
         $pString .= '<form enctype="multipart/form-data" method="post"><div id="upload"><div id="upload_container">';
         $pString .= '<input name="userfile" type="file" class="upload_file">';

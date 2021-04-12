@@ -24,37 +24,7 @@ class ImageServer
      */
     public static function showImage()
     {
-        global $_IMAGES;
-        if (isset($_GET['img']))
-        {
-            $mtime = gmdate('r', filemtime($_SERVER['SCRIPT_FILENAME']));
-            $etag = md5($mtime . $_SERVER['SCRIPT_FILENAME']);
-
-            if ((isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $mtime)
-                || (isset($_SERVER['HTTP_IF_NONE_MATCH']) && str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == $etag))
-            {
-                header('HTTP/1.1 304 Not Modified');
-
-                return TRUE;
-            }
-            else
-            {
-                header('ETag: "' . $etag . '"');
-                header('Last-Modified: ' . $mtime);
-                header('Content-type: image/gif');
-                if (mb_strlen($_GET['img']) > 0 && isset($_IMAGES[$_GET['img']]))
-                {
-                    echo base64_decode($_IMAGES[$_GET['img']]);
-                }
-                else
-                {
-                    echo base64_decode($_IMAGES["unknown"]);
-                }
-            }
-
-            return TRUE;
-        }
-        elseif (isset($_GET['thumb']))
+        if (isset($_GET['thumb']))
         {
             if (mb_strlen($_GET['thumb']) > 0)
             {
@@ -127,32 +97,10 @@ class ImageServer
      */
     public static function showThumbnail($file)
     {
-        if (filemtime($file) < filemtime($_SERVER['SCRIPT_FILENAME']))
-        {
-            $mtime = gmdate('r', filemtime($_SERVER['SCRIPT_FILENAME']));
-        }
-        else
-        {
-            $mtime = gmdate('r', filemtime($file));
-        }
-
-        $etag = md5($mtime . $file);
-
-        if ((isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $mtime)
-            || (isset($_SERVER['HTTP_IF_NONE_MATCH']) && str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == $etag))
-        {
-            header('HTTP/1.1 304 Not Modified');
-
-            return;
-        }
-        else
-        {
-            header('ETag: "' . $etag . '"');
-            header('Last-Modified: ' . $mtime);
-            header('Content-Type: image/png');
-            $image = ImageServer::createThumbnail($file);
-            imagepng($image);
-        }
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s", filemtime($file)) . " GMT");
+        header('Content-Type: image/png');
+        $image = ImageServer::createThumbnail($file);
+        imagepng($image);
     }
 
     /**

@@ -2019,6 +2019,7 @@ END;
      *
      * Rename configImagesMaxSize option to configImgUploadMaxSize
      * Rename configImagesAllow option to configImgAllow
+     * Rename configFileAttach option to configFileAttachAllow
      */
     private function upgradeTo55()
     {

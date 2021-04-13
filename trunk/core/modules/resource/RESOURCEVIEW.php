@@ -37,7 +37,6 @@ class RESOURCEVIEW
     private $custom;
     private $allowEdit = FALSE;
     private $multiUser = FALSE;
-    private $languageClass;
     private $execNP = TRUE;
     private $startNP = FALSE;
     private $browserTabID = FALSE;
@@ -68,7 +67,6 @@ class RESOURCEVIEW
         $this->meta = new RESOURCEMETA();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCECUSTOM.php"]));
         $this->custom = new RESOURCECUSTOM();
-        $this->languageClass = FACTORY_CONSTANTS::getInstance();
         $this->browserTabID = GLOBALS::getBrowserTabID();
         GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('resource'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "resources"));
@@ -368,25 +366,13 @@ class RESOURCEVIEW
         if ($this->multiUser)
         {
             list($resourceSingle['userAdd'], $resourceSingle['userEdit']) = $this->user->displayUserAddEdit($row, TRUE);
-            if (method_exists($this->languageClass, "dateFormat"))
-            {
-                $resourceSingle['timestampAdd'] = \LOCALES\dateFormat($row['resourcetimestampTimestampAdd']);
-            }
-            else
-            {
-                $resourceSingle['timestampAdd'] = $row['resourcetimestampTimestampAdd'];
-            }
-            if ($row['resourcetimestampTimestamp'] && $resourceSingle['userEdit'] &&
-                ($row['resourcetimestampTimestampAdd'] != $row['resourcetimestampTimestamp']))
-            {
-                if (method_exists($this->languageClass, "dateFormat"))
-                {
-                    $resourceSingle['timestampEdit'] = \LOCALES\dateFormat($row['resourcetimestampTimestamp']);
-                }
-                else
-                {
-                    $resourceSingle['timestampEdit'] = $row['resourcetimestampTimestamp'];
-                }
+            $resourceSingle['timestampAdd'] = \LOCALES\dateFormatFromString($row['resourcetimestampTimestampAdd']);
+            if (
+                $row['resourcetimestampTimestamp'] &&
+                $resourceSingle['userEdit'] &&
+                ($row['resourcetimestampTimestampAdd'] != $row['resourcetimestampTimestamp'])
+            ){
+                $resourceSingle['timestampEdit'] = \LOCALES\dateFormatFromString($row['resourcetimestampTimestamp']);
             }
             $month = date('Ym');
             $this->db->formatConditions(['statisticsresourceviewsResourceId' => $this->vars['id']]);

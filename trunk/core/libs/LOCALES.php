@@ -24,11 +24,26 @@ namespace LOCALES
      *
      * @return string
      */
-    function dateFormat($datetime)
+    function dateFormatFromString($datetime)
     {
         // NB: "%c" is not the same as "%x %X" when the locale is not set correctly
         // We want the numeric format, not literary format
-        return date("%x %X", strtotime($timestamp));
+        return strftime("%x %X", strtotime($datetime));
+    }
+    /**
+     * Format dates and times for localization
+     *
+     * Use it for displaying data to the user, not formatting data for the db
+     *
+     * @param int $timestamp
+     *
+     * @return string
+     */
+    function dateFormatFromTimeStamp($timestamp)
+    {
+        // NB: "%c" is not the same as "%x %X" when the locale is not set correctly
+        // We want the numeric format, not literary format
+        return strftime("%x %X", $timestamp);
     }
 
     /**

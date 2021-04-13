@@ -916,7 +916,7 @@ class EncodeExplorer
                 $pString .= '</a>';
                 $pString .= '</td>' . LF;
                 $pString .= '<td class="size">' . \FILE\formatSize($file->getSize()) . '</td>' . LF;
-                $pString .= '<td class="changed">' . strftime("%x %X", $file->getModTime()) . '</td>' . LF;
+                $pString .= '<td class="changed">' . \LOCALES\dateFormatFromTimeStamp($file->getModTime()) . '</td>' . LF;
                 $pString .= '</tr>' . LF;
                 $row = !$row;
             }

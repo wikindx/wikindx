@@ -6,6 +6,7 @@ Focus: ...
 
 BUG FIXES:
 1. Remove dead code about Etag HTTP headers and fix a wrong image mimetype in images dialog [333].
+2. Localize dates with the current locale.
 
 FEATURE ENHANCEMENT:
 1. Localize the dates in the images dialog.

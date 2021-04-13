@@ -73,8 +73,6 @@ class LISTCOMMON
     private $cite;
     /** object */
     private $resCommon;
-    /** object */
-    private $languageClass;
     /** array */
     private $rows = [];
     /** string */
@@ -101,7 +99,6 @@ class LISTCOMMON
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
         $this->resCommon = FACTORY_RESOURCECOMMON::getInstance();
-        $this->languageClass = FACTORY_CONSTANTS::getInstance();
         $this->stats->list = TRUE;
         $this->browserTabID = GLOBALS::getBrowserTabID();
     }
@@ -254,7 +251,6 @@ class LISTCOMMON
             GLOBALS::addTplVar('multiUser', TRUE);
         }
         $quarantineSwitch = (WIKINDX_QUARANTINE);
-        $useDateFormatMethod = method_exists($this->languageClass, "dateFormat");
         //$citeRadioButtonFirst = TRUE;
 
         if ($this->metadataKeyword || !empty($this->metadataKGKeywords))
@@ -320,14 +316,7 @@ class LISTCOMMON
                         : FALSE;
                 }
 
-                if ($useDateFormatMethod)
-                {
-                    $resourceList[$row['resourceId']]['timestamp'] = \LOCALES\dateFormat($row['resourcetimestampTimestamp']);
-                }
-                else
-                {
-                    $resourceList[$row['resourceId']]['timestamp'] = $row['resourcetimestampTimestamp'];
-                }
+                $resourceList[$row['resourceId']]['timestamp'] = \LOCALES\dateFormatFromString($row['resourcetimestampTimestamp']);
             }
 
             // Although metadata are not useful in all cases, we add them to force the count in the subsequent procedure.

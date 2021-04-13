@@ -24,7 +24,6 @@ class NEWS
     private $gatekeep;
     private $badInput;
     private $newsTimestamp;
-    private $languageClass;
     private $formData = [];
 
     // Constructor
@@ -38,7 +37,6 @@ class NEWS
         $this->session = FACTORY_SESSION::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
-        $this->languageClass = FACTORY_CONSTANTS::getInstance();
     }
     /**
      * display options
@@ -361,16 +359,7 @@ class NEWS
         $this->db->formatConditions(['newsId' => $id]);
         $recordset = $this->db->select('news', ['newsTimestamp', 'newsTitle', 'newsNews']);
         $row = $this->db->fetchRow($recordset);
-        if (method_exists($this->languageClass, "dateFormat"))
-        {
-            $date = \LOCALES\dateFormat($row['newsTimestamp']);
-        }
-        else
-        {
-            $dateSplit = \UTF8\mb_explode(' ', $row['newsTimestamp']);
-            $dateSplit = \UTF8\mb_explode('-', $dateSplit[0]);
-            $date = date("d/M/Y", mktime(0, 0, 0, $dateSplit[1], $dateSplit[2], $dateSplit[0]));
-        }
+        $date = \LOCALES\dateFormatFromString($row['newsTimestamp']);
         $pString = \HTML\p(\HTML\strong(\HTML\nlToHtml($row['newsTitle'])) . BR . $date);
         $pString .= \HTML\p(\HTML\nlToHtml($row['newsNews']));
         GLOBALS::addTplVar('content', $pString);
@@ -388,14 +377,7 @@ class NEWS
         while ($row = $this->db->fetchRow($recordset))
         {
             $news[$row['newsId']] = \HTML\dbToFormTidy($row['newsTitle']);
-            if (method_exists($this->languageClass, "dateFormat"))
-            {
-                $this->newsTimestamp[$row['newsId']] = \LOCALES\dateFormat($row['newsTimestamp']);
-            }
-            else
-            {
-                $this->newsTimestamp[$row['newsId']] = $row['newsTimestamp'];
-            }
+            $this->newsTimestamp[$row['newsId']] = \LOCALES\dateFormatFromString($row['newsTimestamp']);
         }
         if (isset($news))
         {

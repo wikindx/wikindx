@@ -20,7 +20,6 @@ class STATS
     private $errors;
     private $session;
     private $resourceMap;
-    private $languageClass;
     private $indexes = [];
     private $sum = [];
     private $totalResources;
@@ -39,7 +38,6 @@ class STATS
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
-        $this->languageClass = FACTORY_CONSTANTS::getInstance();
         $type = '';
         if ($this->vars['method'] == 'totals')
         {
@@ -680,32 +678,13 @@ class STATS
     {
         $recordset = $this->db->selectMin('resource_timestamp', 'resourcetimestampTimestampAdd');
         $row = $this->db->fetchRow($recordset);
-        if (method_exists($this->languageClass, "dateFormat"))
-        {
-            $string = $this->messages->text("statistics", "firstAdded") .
-            "&nbsp;&nbsp;" . \HTML\em(\LOCALES\dateFormat($row['resourcetimestampTimestampAdd']));
-        }
-        else
-        {
-            $string = $this->messages->text("statistics", "firstAdded") .
-            "&nbsp;&nbsp;" . \HTML\em($row['resourcetimestampTimestampAdd']);
-        }
+        $string = $this->messages->text("statistics", "firstAdded") .
+            "&nbsp;&nbsp;" . \HTML\em(\LOCALES\dateFormatFromString($row['resourcetimestampTimestampAdd']));
         $row = $this->db->selectMax('resource_timestamp', 'resourcetimestampTimestampAdd');
-        if (method_exists($this->languageClass, "dateFormat"))
-        {
-            $string .= BR . $this->messages->text("statistics", "lastAdded") .
-            "&nbsp;&nbsp;" . \HTML\em(\LOCALES\dateFormat($row['resourcetimestampTimestampAdd']));
-        }
-        else
-        {
-            $string .= BR . $this->messages->text("statistics", "lastAdded") .
-                "&nbsp;&nbsp;" . \HTML\em($row['resourcetimestampTimestampAdd']);
-        }
+        $string .= BR . $this->messages->text("statistics", "lastAdded") .
+        "&nbsp;&nbsp;" . \HTML\em(\LOCALES\dateFormatFromString($row['resourcetimestampTimestampAdd']));
         $average = $this->db->selectAverageDate('resource_timestamp', 'resourcetimestampTimestampAdd');
-        if (method_exists($this->languageClass, "dateFormat"))
-        {
-            $average = \LOCALES\dateFormat($average);
-        }
+        $average = \LOCALES\dateFormatFromString($average);
         $string .= BR . $this->messages->text("statistics", "meanAddedResource") .
             "&nbsp;&nbsp;" . \HTML\em($average);
 

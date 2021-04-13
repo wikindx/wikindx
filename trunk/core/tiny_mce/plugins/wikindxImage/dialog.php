@@ -76,6 +76,7 @@ class imageDialog
         $pString = \FORM\formHeaderVisibleAction("dialog.php", "insertImage", $js);
         $pString .= \FORM\hidden("method", "addImage");
         $pString .= \FORM\textInput($this->messages->text('tinymce', "imagePath"), 'imagePath', 'http://', 50);
+        $pString .= " (max.&nbsp;" . \FILE\formatSize(\FILE\imageUploadMaxSize()) . ") ";
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Submit"), 'insert'));
         $pString .= \FORM\formEnd();
 

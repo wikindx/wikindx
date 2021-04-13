@@ -677,7 +677,8 @@ class ATTACHMENTS
         GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileAttachUploadMaxSize() . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var browserTabID = "' . $this->browserTabID . '"; </script>');
-        $td = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
+        $td = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop")
+        . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") " . '</div>';
         GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
             $this->messages->text("resources", "fileAttachFallback") . '"; </script>');
         $td .= '<div id="fallback"></div>';
@@ -695,6 +696,7 @@ class ATTACHMENTS
             "file",
             50
         );
+        $td .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") ";
         $td .= \HTML\p(\FORM\textInput($this->messages->text("resources", "fileName"), "fileName"));
         $td .= $this->embargoForm();
         $td .= \HTML\p(\FORM\textareaInput(
@@ -714,6 +716,7 @@ class ATTACHMENTS
         $td .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
         $td .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td .= \FORM\fileUploadMultiple($this->messages->text("resources", "fileAttachMultiple"), "file[]", 50);
+        $td .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") ";
         $td .= $this->embargoForm(FALSE, TRUE);
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
         $td .= \FORM\formEnd();
@@ -836,10 +839,12 @@ class ATTACHMENTS
         GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileAttachUploadMaxSize() . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var browserTabID = "' . $this->browserTabID . '"; </script>');
-        $td1 = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
+        $td1 = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop")
+            . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") " . '</div>';
         GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
             $this->messages->text("resources", "fileAttachFallback") . '"; </script>');
         $td1 .= '<div id="fallback"></div>';
+        
         // Single file upload with filename, description and embargo
         $td2 = \FORM\formMultiHeader("attachments_ATTACHMENTS_CORE");
         $td2 .= \FORM\hidden('function', 'add');
@@ -847,6 +852,7 @@ class ATTACHMENTS
         $td2 .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
         $td2 .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td2 .= \FORM\fileUpload($this->messages->text("resources", "fileAttach"), "file", 50);
+        $td2 .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") ";
         $td2 .= \HTML\p(\FORM\textInput($this->messages->text("resources", "fileName"), "fileName"));
         $td2 .= $this->embargoForm();
         $td2 .= \HTML\p(\FORM\textareaInput(
@@ -865,6 +871,7 @@ class ATTACHMENTS
         $td3 .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
         $td3 .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td3 .= \FORM\fileUploadMultiple($this->messages->text("resources", "fileAttachMultiple"), "file[]", 50);
+        $td3 .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") ";
         $td3 .= $this->embargoForm(FALSE, TRUE);
         $td3 .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")), '', 3);
         $td3 .= \FORM\formEnd();

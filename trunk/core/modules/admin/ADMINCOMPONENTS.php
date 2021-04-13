@@ -487,7 +487,10 @@ class ADMINCOMPONENTS
             $h .= \FORM\hidden('dummy', \UTILS\uuid());
             
             $h .= \HTML\p($this->messages->text("components", "manualComponent"));
-            $h .= \HTML\p($this->messages->text("components", "packageFile") . \FORM\fileUpload("", "packaqefile", 30));
+            $h .= \HTML\p(
+                $this->messages->text("components", "packageFile") . \FORM\fileUpload("", "packaqefile", 30, ".zip")
+                . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ")"
+            );
             $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "hashFile"));
             $h .= \HTML\p($this->messages->text("components", "hashFile") . \FORM\fileUpload("", "hashfile", 30) . BR . \HTML\span($hint, 'hint'));
             $h .= \FORM\formSubmit($this->messages->text("submit", "Submit"));

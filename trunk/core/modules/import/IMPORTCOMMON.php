@@ -151,11 +151,14 @@ class IMPORTCOMMON
         }
         else
         {
-            $pString .= \HTML\td(\FORM\fileUpload(
-                $this->messages->text("import", "file"),
-                "import_File",
-                30
-            ));
+            $pString .= \HTML\td(
+                \FORM\fileUpload(
+                    $this->messages->text("import", "file"),
+                    "import_File",
+                    30
+                )
+                . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ")"
+            );
         }
         // Load tags
         if (($this->importType != 'pasteBibtex') || $this->session->getVar('setup_Superadmin'))

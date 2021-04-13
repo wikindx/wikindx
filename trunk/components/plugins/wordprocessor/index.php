@@ -234,7 +234,10 @@ class wordprocessor_MODULE
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingImport'));
         $pString .= HTML\p($this->pluginmessages->text("import2"));
         $pString .= FORM\formMultiHeader("wordprocessor_import");
-        $pString .= HTML\p(FORM\fileUpload($this->pluginmessages->text("import"), "import_file", 30));
+        $pString .= HTML\p(
+            FORM\fileUpload($this->pluginmessages->text("import"), "import_file", 30)
+            . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ")"
+        );
         $pString .= HTML\p(FORM\textInput($this->pluginmessages->text("import3"), "import_fileName", FALSE, 30));
         $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Proceed")));
         $pString .= FORM\formEnd();

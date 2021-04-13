@@ -13,6 +13,7 @@ FEATURE ENHANCEMENT:
 2. Accept the webp image format because since September 2020 all browsers support it (TinyMCE included).
 3. Distinct image, attachment and file upload max file size [#278].
 4. Display max file sizes on upload forms [#278].
+5. Restrict the uploadable file type when possible.
 
 
 MAINTENANCE:

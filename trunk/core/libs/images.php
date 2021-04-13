@@ -925,6 +925,12 @@ class EncodeExplorer
         // The files have been displayed
         $pString .= '<!-- START: Upload area -->';
         $pString .= '<form enctype="multipart/form-data" method="post"><div id="upload"><div id="upload_container">';
+        $pString .= \FORM\fileUpload(
+            "",
+            "userfile",
+            50,
+            ".gif,.png,.jpg,.jpeg,.webp"
+        );
         $pString .= " (max.&nbsp;" . \FILE\formatSize(\FILE\imageUploadMaxSize()) . ") ";
         $pString .= '<input type="submit" value="' . $this->messages->text('tinymce', "upload") . '" class="upload_sumbit">';
         $pString .= '</div><div class="bar"></div></div></form><!-- END: Upload area -->';

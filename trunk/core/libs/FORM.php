@@ -853,11 +853,12 @@ namespace FORM
      * @param string $label
      * @param string $name
      * @param int $size Default is 20
+     * @param string $accept Default is "" (all file types)
      * @param string $js Default is ''
      *
      * @return string
      */
-    function fileUpload($label, $name, $size = 20, $js = '')
+    function fileUpload($label, $name, $size = 20, $accept = "", $js = '')
     {
         if ($label)
         {
@@ -872,6 +873,7 @@ namespace FORM
             . \FORM\_inlineHtmlAttribute('type', 'file')
             . \FORM\_inlineHtmlAttribute('name', $name)
             . \FORM\_inlineHtmlAttribute('size', $size)
+            . \FORM\_inlineHtmlAttribute('accept', $accept)
             . \FORM\_inlineHtmlAttribute('class', \FORM\FORM_CLASS)
             . " $js>";
 
@@ -883,11 +885,12 @@ namespace FORM
      * @param string $label
      * @param array $name
      * @param int $size Default is 20
+     * @param string $accept Default is "" (all file types)
      * @param string $js Default is ''
      *
      * @return string
      */
-    function fileUploadMultiple($label, $name, $size = 20, $js = '')
+    function fileUploadMultiple($label, $name, $size = 20, $accept = "", $js = '')
     {
         if ($label)
         {
@@ -903,6 +906,7 @@ namespace FORM
             . \FORM\_inlineHtmlAttribute('multiple', 'multiple')
             . \FORM\_inlineHtmlAttribute('name', $name)
             . \FORM\_inlineHtmlAttribute('size', $size)
+            . \FORM\_inlineHtmlAttribute('accept', $accept)
             . \FORM\_inlineHtmlAttribute('class', \FORM\FORM_CLASS)
             . " $js>";
         

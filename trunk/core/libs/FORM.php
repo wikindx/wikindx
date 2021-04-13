@@ -852,7 +852,7 @@ namespace FORM
      *
      * @param string $label
      * @param string $name
-     * @param int $size Default is 30
+     * @param int $size Default is 20
      * @param string $js Default is ''
      *
      * @return string
@@ -882,7 +882,7 @@ namespace FORM
      *
      * @param string $label
      * @param array $name
-     * @param int $size Default is 30
+     * @param int $size Default is 20
      * @param string $js Default is ''
      *
      * @return string

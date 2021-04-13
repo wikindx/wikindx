@@ -11,9 +11,12 @@ BUG FIXES:
 FEATURE ENHANCEMENT:
 1. Localize the dates in the images dialog.
 2. Accept the webp image format because since September 2020 all browsers support it (TinyMCE included).
+3. Distinct image, attachment and file upload max file size.
 
 MAINTENANCE:
-
+1. Rename configImagesMaxSize option to configImgUploadMaxSize for consistency.
+2. Rename configImagesAllow option to configImgAllow for consistency.
+3. Rename configFileAttach option to configFileAttachAllow for consistency.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

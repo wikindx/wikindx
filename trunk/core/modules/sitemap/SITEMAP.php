@@ -103,14 +103,14 @@ class SITEMAP
                     $nbResourcePage = 0;
 
                     // Add one page if there are a rest for the euclidean division of the total number of url
-                    if ($nbResource % WIKINDX_SITEMAP_MAXSIZE > 0)
+                    if ($nbResource % WIKINDX_SITEMAP_MAX_SIZE > 0)
                     {
                         $nbResourcePage = 1;
-                        $numResults = $nbResource - ($nbResource % WIKINDX_SITEMAP_MAXSIZE);
+                        $numResults = $nbResource - ($nbResource % WIKINDX_SITEMAP_MAX_SIZE);
                     }
 
-                    // Add one page for each block of WIKINDX_SITEMAP_MAXSIZE urls
-                    $nbResourcePage += $nbResource / WIKINDX_SITEMAP_MAXSIZE;
+                    // Add one page for each block of WIKINDX_SITEMAP_MAX_SIZE urls
+                    $nbResourcePage += $nbResource / WIKINDX_SITEMAP_MAX_SIZE;
 
                     for ($p = 1; $p <= $nbResourcePage; $p++)
                     {
@@ -319,7 +319,7 @@ class SITEMAP
      */
     private function firstResourcePageEntry($numPage)
     {
-        return $numPage * WIKINDX_SITEMAP_MAXSIZE - WIKINDX_SITEMAP_MAXSIZE;
+        return $numPage * WIKINDX_SITEMAP_MAX_SIZE - WIKINDX_SITEMAP_MAX_SIZE;
     }
 
     /**
@@ -329,6 +329,6 @@ class SITEMAP
      */
     private function lastResourcePageEntry($numPage)
     {
-        return $numPage * WIKINDX_SITEMAP_MAXSIZE - 1;
+        return $numPage * WIKINDX_SITEMAP_MAX_SIZE - 1;
     }
 }

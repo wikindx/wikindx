@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.6');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 54.0);
+define('WIKINDX_INTERNAL_VERSION', 55.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -313,9 +313,9 @@ define('WIKINDX_SITEMAP_PAGE', '/index.php?action=sitemap_SITEMAP_CORE');
  *
  * For a response time and analysis of the response 500 links per page seems reasonable, ie below the second, as the search engines expect..
  *
- * @name WIKINDX_SITEMAP_MAXSIZE
+ * @name WIKINDX_SITEMAP_MAX_SIZE
  */
-define('WIKINDX_SITEMAP_MAXSIZE', 500);
+define('WIKINDX_SITEMAP_MAX_SIZE', 500);
 
 /**
  * STATISTICS WEIGHTS
@@ -358,15 +358,16 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configEmailNews"                 => ["constname" => "WIKINDX_EMAIL_NEWS",                    "type" => "configBoolean"],
     "configEmailStatistics"           => ["constname" => "WIKINDX_EMAIL_STATISTICS",              "type" => "configBoolean"],
     "configErrorReport"               => ["constname" => "WIKINDX_DEBUG_ERRORS",                  "type" => "configBoolean"],
-    "configFileAttach"                => ["constname" => "WIKINDX_FILE_ATTACH",                   "type" => "configBoolean"],
+    "configFileAttachAllow"           => ["constname" => "WIKINDX_FILE_ATTACH",                   "type" => "configBoolean"],
+    "configFileAttachUploadMaxSize"   => ["constname" => "WIKINDX_FILE_ATTACH_UPLOAD_MAX_SIZE",   "type" => "configInt"],
     "configFileDeleteSeconds"         => ["constname" => "WIKINDX_FILE_DELETE_SECONDS",           "type" => "configInt"],
     "configFileViewLoggedOnOnly"      => ["constname" => "WIKINDX_FILE_VIEW_LOGGEDON_ONLY",       "type" => "configBoolean"],
     "configGlobalEdit"                => ["constname" => "WIKINDX_GLOBAL_EDIT",                   "type" => "configBoolean"],
     "configGsAllow"                   => ["constname" => "WIKINDX_GS_ALLOW",                      "type" => "configBoolean"],
     "configGsAttachment"              => ["constname" => "WIKINDX_GS_ATTACHMENT",                 "type" => "configBoolean"],
-    "configImagesAllow"               => ["constname" => "WIKINDX_IMAGES_ALLOW",                  "type" => "configBoolean"],
-    "configImagesMaxSize"             => ["constname" => "WIKINDX_IMAGES_MAXSIZE",                "type" => "configInt"],
+    "configImgAllow"                  => ["constname" => "WIKINDX_IMG_ALLOW",                     "type" => "configBoolean"],
     "configImgHeightLimit"            => ["constname" => "WIKINDX_IMG_HEIGHT_LIMIT",              "type" => "configInt"],
+    "configImgUploadMaxSize"          => ["constname" => "WIKINDX_IMG_UPLOAD_MAX_SIZE",           "type" => "configInt"],
     "configImgWidthLimit"             => ["constname" => "WIKINDX_IMG_WIDTH_LIMIT",               "type" => "configInt"],
     "configImportBib"                 => ["constname" => "WIKINDX_IMPORT_BIB",                    "type" => "configBoolean"],
     "configImpressum"				  => ["constname" => "WIKINDX_IMPRESSUM",            		  "type" => "configText"],

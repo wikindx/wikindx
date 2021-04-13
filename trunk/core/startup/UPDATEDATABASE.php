@@ -881,6 +881,8 @@ END;
     {
         if ($version == WIKINDX_INTERNAL_VERSION)
             return WIKINDX_PUBLIC_VERSION;
+        elseif ($version >= 55)
+            return "6.4.6";
         elseif ($version >= 54)
             return "6.4.5";
         elseif ($version >= 46)
@@ -1132,7 +1134,7 @@ END;
             ["fv" => "configBoolean", "fn" => "configErrorReport",            "cn" => "WIKINDX_DEBUG_ERRORS",              "dv" => WIKINDX_DEBUG_ERRORS_DEFAULT],
             ["fv" => "configBoolean", "fn" => "configGsAllow",                "cn" => "WIKINDX_GS_ALLOW",                  "dv" => WIKINDX_GS_ALLOW_DEFAULT],
             ["fv" => "configBoolean", "fn" => "configGsAttachment",           "cn" => "WIKINDX_GS_ATTACHMENT",             "dv" => WIKINDX_GS_ATTACHMENT_DEFAULT],
-            ["fv" => "configBoolean", "fn" => "configImagesAllow",            "cn" => "WIKINDX_IMAGES_ALLOW",              "dv" => WIKINDX_IMAGES_ALLOW_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configImagesAllow",            "cn" => "WIKINDX_IMG_ALLOW",                 "dv" => WIKINDX_IMG_ALLOW_DEFAULT],
             ["fv" => "configBoolean", "fn" => "configMailServer",             "cn" => "WIKINDX_MAIL_SERVER",               "dv" => WIKINDX_MAIL_USE_DEFAULT],
             ["fv" => "configBoolean", "fn" => "configMailSmtpAuth",           "cn" => "WIKINDX_MAIL_SMTPAUTH",             "dv" => WIKINDX_MAIL_SMTP_AUTH_DEFAULT],
             ["fv" => "configBoolean", "fn" => "configMailSmtpPersist",        "cn" => "WIKINDX_MAIL_SMTPPERSIST",          "dv" => WIKINDX_MAIL_SMTP_PERSIST_DEFAULT],
@@ -1141,7 +1143,7 @@ END;
             ["fv" => "configBoolean", "fn" => "configRssDisplay",             "cn" => "WIKINDX_RSS_DISPLAY",               "dv" => WIKINDX_RSS_DISPLAY_DEFAULT],
             ["fv" => "configFloat",   "fn" => "configTagHighSize",            "cn" => "WIKINDX_TAG_HIGH_SIZE",             "dv" => WIKINDX_TAG_HIGH_SIZE_DEFAULT],
             ["fv" => "configFloat",   "fn" => "configTagLowSize",             "cn" => "WIKINDX_TAG_LOW_SIZE",              "dv" => WIKINDX_TAG_LOW_SIZE_DEFAULT],
-            ["fv" => "configInt",     "fn" => "configImagesMaxSize",          "cn" => "WIKINDX_IMAGES_MAXSIZE",            "dv" => WIKINDX_IMAGES_MAXSIZE_DEFAULT],
+            ["fv" => "configInt",     "fn" => "configImagesMaxSize",          "cn" => "WIKINDX_IMG_UPLOAD_MAX_SIZE",       "dv" => WIKINDX_IMG_UPLOAD_MAX_SIZE_DEFAULT],
             ["fv" => "configInt",     "fn" => "configMailSmtpPort",           "cn" => "WIKINDX_MAIL_SMTPPORT",             "dv" => WIKINDX_MAIL_SMTP_PORT_DEFAULT],
             ["fv" => "configInt",     "fn" => "configRestrictUserId",         "cn" => "WIKINDX_RESTRICT_USERID",           "dv" => WIKINDX_RESTRICT_USERID_DEFAULT],
             ["fv" => "configInt",     "fn" => "configRssLimit",               "cn" => "WIKINDX_RSS_LIMIT",                 "dv" => WIKINDX_RSS_LIMIT_DEFAULT],
@@ -2008,6 +2010,17 @@ END;
      * Store session in wkx_session table
      */
     private function upgradeTo54()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
+     * Upgrade database to version 55 (6.4.6)
+     *
+     * Rename configImagesMaxSize option to configImgUploadMaxSize
+     * Rename configImagesAllow option to configImgAllow
+     */
+    private function upgradeTo55()
     {
         $this->upgradeToTargetVersion();
     }

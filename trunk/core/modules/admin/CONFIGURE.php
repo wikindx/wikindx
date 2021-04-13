@@ -966,18 +966,28 @@ class CONFIGURE
             10
         ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "imagesAllow"));
-        $input = array_key_exists("configImagesAllow", $this->formData) && ($this->formData['configImagesAllow']) ? "CHECKED" : WIKINDX_IMAGES_ALLOW_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "imagesAllow"), "configImagesAllow", $input) .
+        $input = array_key_exists("configImgAllow", $this->formData) && ($this->formData['configImgAllow']) ? "CHECKED" : WIKINDX_IMG_ALLOW_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "imagesAllow"), "configImgAllow", $input) .
             BR . \HTML\span($hint, 'hint'));
+        
+        // Scale of the image upload max size (in megabytes)
+        $imgUploadMaxSizeScale = [];
+        foreach (range(1, WIKINDX_IMG_SIZE_UPPER_LIMIT, 1) as $v)
+        {
+            $imgUploadMaxSizeScale[$v] = $v;
+        }
+        
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "imagesMaxSize"));
-        array_key_exists("configImagesMaxSize", $this->formData) ? $input = $this->formData["configImagesMaxSize"] : $input = WIKINDX_IMAGES_MAXSIZE_DEFAULT;
-        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
+        array_key_exists("configImgUploadMaxSize", $this->formData) ? $input = $this->formData["configImgUploadMaxSize"] : $input = WIKINDX_IMG_UPLOAD_MAX_SIZE_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "imagesMaxSize"),
-            "configImagesMaxSize",
-            $input,
-            10,
-            10
+            "configImgUploadMaxSize",
+            $imgUploadMaxSizeScale,
+            array_search($input, $imgUploadMaxSizeScale),
+            1
         ) . BR . \HTML\span($hint, 'hint'));
+        
+        
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
@@ -1598,14 +1608,33 @@ class CONFIGURE
             10,
             10
         ) . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("configFileAttach", $this->formData) && ($this->formData['configFileAttach']) ? "CHECKED" : WIKINDX_FILE_ATTACH_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "fileAttach"), "configFileAttach", $input));
+        $input = array_key_exists("configFileAttachAllow", $this->formData) && ($this->formData['configFileAttachAllow']) ? "CHECKED" : WIKINDX_FILE_ATTACH_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "fileAttach"), "configFileAttachAllow", $input));
         $input = array_key_exists("configFileViewLoggedOnOnly", $this->formData) && ($this->formData['configFileViewLoggedOnOnly']) ? "CHECKED" : WIKINDX_FILE_VIEW_LOGGEDON_ONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "fileViewLoggedOnOnly"),
             "configFileViewLoggedOnOnly",
             $input
         ));
+        
+        
+        // Scale of the attachment upload max size (in megabytes)
+        $fileAttachUploadMaxSizeScale = [];
+        foreach (range(1, WIKINDX_FILE_ATTACH_SIZE_UPPER_LIMIT, 1) as $v)
+        {
+            $fileAttachUploadMaxSizeScale[$v] = $v;
+        }
+        
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "attachmentsMaxSize"));
+        array_key_exists("configFileAttachUploadMaxSize", $this->formData) ? $input = $this->formData["configFileAttachUploadMaxSize"] : $input = WIKINDX_FILE_ATTACH_UPLOAD_MAX_SIZE_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
+            $this->messages->text("config", "attachmentsMaxSize"),
+            "configFileAttachUploadMaxSize",
+            $fileAttachUploadMaxSizeScale,
+            array_search($input, $fileAttachUploadMaxSizeScale),
+            1
+        ) . BR . \HTML\span($hint, 'hint'));
+        
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1788,8 +1817,8 @@ class CONFIGURE
                 break;
             case 'display': // visual display configuration
                 $array = [
-                    "configImagesAllow",
-                    "configImagesMaxSize",
+                    "configImgAllow",
+                    "configImgUploadMaxSize",
                     "configImgHeightLimit",
                     "configImgWidthLimit",
                     "configLanguage",
@@ -1880,7 +1909,8 @@ class CONFIGURE
                 break;
             case 'file': // file/attachment configuration
                 $array = [
-                    "configFileAttach",
+                    "configFileAttachAllow",
+                    "configFileAttachUploadMaxSize",
                     "configFileDeleteSeconds",
                     "configFileViewLoggedOnOnly",
                 ];
@@ -2026,9 +2056,10 @@ class CONFIGURE
             }
         }
         $requireDefault = [
+            "configFileAttachUploadMaxSize" => WIKINDX_FILE_ATTACH_UPLOAD_MAX_SIZE_DEFAULT,
             "configFileDeleteSeconds" => WIKINDX_FILE_DELETE_SECONDS_DEFAULT,
-            "configImagesMaxSize" => WIKINDX_IMAGES_MAXSIZE_DEFAULT,
             "configImgHeightLimit" => WIKINDX_IMG_HEIGHT_LIMIT_DEFAULT,
+            "configImgUploadMaxSize" => WIKINDX_IMG_UPLOAD_MAX_SIZE_DEFAULT,
             "configImgWidthLimit" => WIKINDX_IMG_WIDTH_LIMIT_DEFAULT,
             "configLastChanges" => WIKINDX_LAST_CHANGES_DEFAULT,
             "configLastChangesDayLimit" => WIKINDX_LAST_CHANGES_DAY_LIMIT_DEFAULT,
@@ -2078,9 +2109,10 @@ class CONFIGURE
             $error = $this->errors->text("inputError", 'passwordMismatch');
         }
         $isInt = [
+            "configFileAttachUploadMaxSize",
             "configFileDeleteSeconds",
-            "configImagesMaxSize",
             "configImgHeightLimit",
+            "configImgUploadMaxSize",
             "configImgWidthLimit",
             "configLastChanges",
             "configLastChangesDayLimit",
@@ -2100,9 +2132,10 @@ class CONFIGURE
             "configTagLowFactor",
         ];
         $notNegative = [
+            "configFileAttachUploadMaxSize",
             "configFileDeleteSeconds",
-            "configImagesMaxSize",
             "configImgHeightLimit",
+            "configImgUploadMaxSize",
             "configImgWidthLimit",
             "configLdapPort",
             "configLowSize",
@@ -2134,7 +2167,7 @@ class CONFIGURE
                 $error = $this->errors->text("inputError", 'invalid', " ($value) ");
             }
             // these can be blank, otherwise must be an int
-            if (($value == 'configRestrictUserId') || ($value == 'configImagesMaxSize') || ($value == 'configMailSmtpPort'))
+            if (($value == 'configRestrictUserId') || ($value == 'configFileAttachUploadMaxSize') || ($value == 'configImgUploadMaxSize') || ($value == 'configMailSmtpPort'))
             {
                 if ($input == '')
                 {

@@ -97,22 +97,54 @@ namespace FILE
     }
 
     /**
-     * Get file max upload size
+     * Get attachment max upload size in bytes
+     *
+     * WIKINDX_FILE_ATTACH_SIZE_UPPER_LIMIT is the upper limit
      *
      * @return int
      */
-    function fileMaxSize()
+    function fileAttachUploadMaxSize()
     {
+        return min(return_bytes(WIKINDX_FILE_ATTACH_SIZE_UPPER_LIMIT . "M"), min(fileUploadMaxSize(), return_bytes(WIKINDX_FILE_ATTACH_UPLOAD_MAX_SIZE . "M")));
+    }
+
+    /**
+     * Get image max upload size in bytes
+     *
+     * WIKINDX_IMG_SIZE_UPPER_LIMIT is the upper limit
+     *
+     * @return int
+     */
+    function imageUploadMaxSize()
+    {
+        return min(return_bytes(WIKINDX_IMG_SIZE_UPPER_LIMIT . "M"), min(fileUploadMaxSize(), return_bytes(WIKINDX_IMG_UPLOAD_MAX_SIZE . "M")));
+    }
+
+    /**
+     * Get file max upload size in bytes
+     *
+     * 1G is the upper limit
+     *
+     * @return int
+     */
+    function fileUploadMaxSize()
+    {
+        $maxsize = return_bytes("1G");
+        $memory_limit = return_bytes(ini_get('memory_limit'));
         $postMax = return_bytes(ini_get('post_max_size'));
         $uploadMax = return_bytes(ini_get('upload_max_filesize'));
-        if ($postMax < $uploadMax)
+        
+        // -1 is unlimited
+        if ($memory_limit > -1)
         {
-            return $postMax;
+            $maxsize = min($maxsize, $memory_limit);
         }
-        else
+        // 0 is unlimited
+        if ($postMax > 0)
         {
-            return $uploadMax;
+            $maxsize = min($maxsize, $postMax);
         }
+        return min($maxsize, $uploadMax);
     }
 
     /**

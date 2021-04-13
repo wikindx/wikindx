@@ -180,17 +180,11 @@ class FileManager
         $extension = FileServer::getFileExtension($userfile['name']);
         $extensions = ['gif', 'jpeg', 'jpg', 'png', 'webp'];
         $upload_file .= '_' . $hash . '.' . $extension;
-        $postMax = FILE\return_bytes(ini_get('post_max_size'));
-        $uploadMax = FILE\return_bytes(ini_get('upload_max_filesize'));
-        $maxSize = min($postMax, $uploadMax);
-        if (WIKINDX_IMAGES_MAXSIZE)
-        {
-            $maxSize = min($maxSize, WIKINDX_IMAGES_MAXSIZE * 1024 * 1024);
-        }
+        $maxSize = \FILE\imageUploadMaxSize();
         if ($userfile['size'] > $maxSize)
         {
             $_ERROR = "imageSize";
-            $_ERROR2 = WIKINDX_IMAGES_MAXSIZE;
+            $_ERROR2 = $maxSize;
 
             return;
         }

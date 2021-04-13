@@ -57,7 +57,7 @@ class ATTACHMENTS
         // Warnings about file size are handled BEFORE the script so set a custom error handler here and redirect with header()
         if (isset($_SERVER["CONTENT_LENGTH"]))
         {
-            if ($_SERVER["CONTENT_LENGTH"] > \FILE\fileMaxSize())
+            if ($_SERVER["CONTENT_LENGTH"] > \FILE\fileAttachUploadMaxSize())
             {
                 $url = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&error=file_uploadSize' . 
                 	'&browserTabID=' . $this->browserTabID;
@@ -660,10 +660,11 @@ class ATTACHMENTS
         {
             $tinyEditors[] = $hash;
         }
-        $maxSize = FILE\fileMaxSize();
+        
         // Form elements for adding another attachment
         $pString = \HTML\tableStart('generalTable left');
         $pString .= \HTML\trStart();
+        
         // Quick and dirty multiple upload
         GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' .
             WIKINDX_PUBLIC_VERSION . '"></script>');
@@ -674,19 +675,20 @@ class ATTACHMENTS
         GLOBALS::addTplVar('scripts', '<script>var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&success=attachAdd';
         GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
-        GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileAttachUploadMaxSize() . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var browserTabID = "' . $this->browserTabID . '"; </script>');
         $td = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
         GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
             $this->messages->text("resources", "fileAttachFallback") . '"; </script>');
         $td .= '<div id="fallback"></div>';
         $pString .= \HTML\td($td, 'attachmentBorder');
+        
         // Single upload
         $td = "";
         $td .= \FORM\formMultiHeader("attachments_ATTACHMENTS_CORE");
         $td .= \FORM\hidden('function', 'add');
         $td .= \FORM\hidden('resourceId', $this->resourceId);
-        $td .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $td .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
         $td .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td .= \FORM\fileUpload(
             $this->messages->text("resources", "fileAttach"),
@@ -704,11 +706,12 @@ class ATTACHMENTS
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
         $td .= \FORM\formEnd();
         $pString .= \HTML\td($td, 'attachmentBorder');
+        
         // Multiple file upload with embargo
         $td = \FORM\formMultiHeader("attachments_ATTACHMENTS_CORE");
         $td .= \FORM\hidden('function', 'addMultipleFiles');
         $td .= \FORM\hidden('resourceId', $this->resourceId);
-        $td .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $td .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
         $td .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td .= \FORM\fileUploadMultiple($this->messages->text("resources", "fileAttachMultiple"), "file[]", 50);
         $td .= $this->embargoForm(FALSE, TRUE);
@@ -721,6 +724,7 @@ class ATTACHMENTS
         $pString .= \HTML\h($this->messages->text('resources', 'currentAttachments'), FALSE, 4);
         $numFiles = count($fields);
         $index = $count = 1;
+        
         // Delete all attachments if more than 1
         if ($numFiles > 1)
         {
@@ -741,8 +745,9 @@ class ATTACHMENTS
         $pString .= \FORM\formMultiHeader("attachments_ATTACHMENTS_CORE");
         $pString .= \FORM\hidden('function', 'edit');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
-        $pString .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $pString .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
         $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
+        
         // Edit individual attachments
         $pString .= \HTML\tableStart('generalTable left');
         $pString .= \HTML\trStart();
@@ -817,8 +822,8 @@ class ATTACHMENTS
      */
     private function fileAttachAdd()
     {
-        $maxSize = FILE\fileMaxSize();
         // Three ways to do this:
+        
         // Quick and dirty multiple upload
         GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' .
             WIKINDX_PUBLIC_VERSION . '"></script>');
@@ -829,7 +834,7 @@ class ATTACHMENTS
         GLOBALS::addTplVar('scripts', '<script>var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&success=attachAdd';
         GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
-        GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileAttachUploadMaxSize() . '"; </script>');
         GLOBALS::addTplVar('scripts', '<script>var browserTabID = "' . $this->browserTabID . '"; </script>');
         $td1 = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
         GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
@@ -839,7 +844,7 @@ class ATTACHMENTS
         $td2 = \FORM\formMultiHeader("attachments_ATTACHMENTS_CORE");
         $td2 .= \FORM\hidden('function', 'add');
         $td2 .= \FORM\hidden('resourceId', $this->resourceId);
-        $td2 .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $td2 .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
         $td2 .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td2 .= \FORM\fileUpload($this->messages->text("resources", "fileAttach"), "file", 50);
         $td2 .= \HTML\p(\FORM\textInput($this->messages->text("resources", "fileName"), "fileName"));
@@ -852,11 +857,12 @@ class ATTACHMENTS
         ), FALSE, FALSE, FALSE, 3);
         $td2 .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")), '', 3);
         $td2 .= \FORM\formEnd();
+        
         // Multiple file upload with embargo
         $td3 = \FORM\formMultiHeader("attachments_ATTACHMENTS_CORE");
         $td3 .= \FORM\hidden('function', 'addMultipleFiles');
         $td3 .= \FORM\hidden('resourceId', $this->resourceId);
-        $td3 .= \FORM\hidden("MAX_FILE_SIZE", $maxSize);
+        $td3 .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
         $td3 .= \FORM\hidden("browserTabID", $this->browserTabID);
         $td3 .= \FORM\fileUploadMultiple($this->messages->text("resources", "fileAttachMultiple"), "file[]", 50);
         $td3 .= $this->embargoForm(FALSE, TRUE);

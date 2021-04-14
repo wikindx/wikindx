@@ -41,7 +41,14 @@ class imageDialog
     private function imageDialogueRun()
     {
         $pString = \HTML\h($this->messages->text('tinymce', "headingAddImage"), FALSE, 3);
-        $pString .= $this->urlForm();
+        if (ini_get("file_uploads"))
+        {
+            $pString .= $this->urlForm();
+        }
+        else
+        {
+            $pString .= $this->messages->text("misc", "uploadDisabled");
+        }
         $pString .= \HTML\hr();
         $pString .= \HTML\p();
         GLOBALS::addTplVar('content', $pString);

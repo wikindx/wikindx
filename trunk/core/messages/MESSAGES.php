@@ -1191,6 +1191,7 @@ class MESSAGES
 				"attachmentCache5" => dgettext($domain, "Attempt to only cache this number of files at a time: ###"),
 				"attachmentCache6" => dgettext($domain, "Skip caching until the next login."),
 				"fileAttachDeleteAll" => dgettext($domain, "Delete all attachments for this resource"),
+				"uploadDisabled" => dgettext($domain, "The upload is disabled by the administrator."),
 			),
 /// collection_ Messages relating to collections and publisher types
 		    "collection" => array(

@@ -151,14 +151,21 @@ class IMPORTCOMMON
         }
         else
         {
-            $pString .= \HTML\td(
-                \FORM\fileUpload(
-                    $this->messages->text("import", "file"),
-                    "import_File",
-                    30
-                )
-                . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ")"
-            );
+            if (ini_get("file_uploads"))
+            {
+                $pString .= \HTML\td(
+                    \FORM\fileUpload(
+                        $this->messages->text("import", "file"),
+                        "import_File",
+                        30
+                    )
+                    . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ")"
+                );
+            }
+            else
+            {
+                $pString .= \HTML\td($this->messages->text("misc", "uploadDisabled"));
+            }
         }
         // Load tags
         if (($this->importType != 'pasteBibtex') || $this->session->getVar('setup_Superadmin'))
@@ -263,7 +270,9 @@ class IMPORTCOMMON
         $pString .= \HTML\td($this->titleSubtitleSeparator($formData));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+        
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Submit")));
+        
         GLOBALS::addTplVar('content', $pString);
     }
     /**

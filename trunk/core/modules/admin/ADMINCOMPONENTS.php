@@ -479,14 +479,14 @@ class ADMINCOMPONENTS
         }
         
         // Display the upload form only if an archive format is supported
-        if (in_array("zip", $InstalledExtensions))
+        $h .= \HTML\h($this->messages->text("components", "manualComponent"));
+        if (in_array("zip", $InstalledExtensions) && ini_get("file_uploads"))
         {
             $h .= \FORM\formMultiHeader("admin_ADMINCOMPONENTS_CORE");
             $h .= \FORM\hidden('method', 'installByUpload');
             $h .= \FORM\hidden('type', 'file');
             $h .= \FORM\hidden('dummy', \UTILS\uuid());
             
-            $h .= \HTML\p($this->messages->text("components", "manualComponent"));
             $h .= \HTML\p(
                 $this->messages->text("components", "packageFile") . \FORM\fileUpload("", "packaqefile", 30, ".zip")
                 . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ")"
@@ -494,6 +494,17 @@ class ADMINCOMPONENTS
             $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "hashFile"));
             $h .= \HTML\p($this->messages->text("components", "hashFile") . \FORM\fileUpload("", "hashfile", 30) . BR . \HTML\span($hint, 'hint'));
             $h .= \FORM\formSubmit($this->messages->text("submit", "Submit"));
+        }
+        else
+        {
+            if (!in_array("zip", $InstalledExtensions))
+            {
+                $h .= \HTML\p($this->messages->text("components", 'missingCompression'));
+            }
+            if (!ini_get("file_uploads"))
+            {
+                $h .= \HTML\p($this->messages->text("misc", "uploadDisabled"));
+            }
         }
         
         $h .= HTML\p($nav, "", "right");

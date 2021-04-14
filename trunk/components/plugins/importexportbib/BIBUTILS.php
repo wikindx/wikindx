@@ -111,9 +111,17 @@ class BIBUTILS
         }
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
-        $pString .= HTML\p(FORM\fileUpload($this->pluginmessages->text("bibutilsinputFile"), "file", 30, ".bib"));
-        $pString .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ") ";
-        $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
+        
+        if (ini_get("file_uploads"))
+        {
+            $pString .= HTML\p(FORM\fileUpload($this->pluginmessages->text("bibutilsinputFile"), "file", 30, ".bib"));
+            $pString .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ") ";
+            $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
+        }
+        else
+        {
+            $pString .= \HTML\p($this->coremessages->text("misc", "uploadDisabled"));
+        }
         $pString .= FORM\formEnd();
         AJAX\loadJavascript();
 

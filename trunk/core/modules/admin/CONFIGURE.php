@@ -1608,7 +1608,7 @@ class CONFIGURE
             10,
             10
         ) . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("configFileAttachAllow", $this->formData) && ($this->formData['configFileAttachAllow']) ? "CHECKED" : WIKINDX_FILE_ATTACH_DEFAULT;
+        $input = array_key_exists("configFileAttachAllow", $this->formData) && ($this->formData['configFileAttachAllow']) ? "CHECKED" : WIKINDX_FILE_ATTACH_ALLOW_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "fileAttach"), "configFileAttachAllow", $input));
         $input = array_key_exists("configFileViewLoggedOnOnly", $this->formData) && ($this->formData['configFileViewLoggedOnOnly']) ? "CHECKED" : WIKINDX_FILE_VIEW_LOGGEDON_ONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(

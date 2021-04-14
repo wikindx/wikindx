@@ -358,7 +358,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configEmailNews"                 => ["constname" => "WIKINDX_EMAIL_NEWS",                    "type" => "configBoolean"],
     "configEmailStatistics"           => ["constname" => "WIKINDX_EMAIL_STATISTICS",              "type" => "configBoolean"],
     "configErrorReport"               => ["constname" => "WIKINDX_DEBUG_ERRORS",                  "type" => "configBoolean"],
-    "configFileAttachAllow"           => ["constname" => "WIKINDX_FILE_ATTACH",                   "type" => "configBoolean"],
+    "configFileAttachAllow"           => ["constname" => "WIKINDX_FILE_ATTACH_ALLOW",             "type" => "configBoolean"],
     "configFileAttachUploadMaxSize"   => ["constname" => "WIKINDX_FILE_ATTACH_UPLOAD_MAX_SIZE",   "type" => "configInt"],
     "configFileDeleteSeconds"         => ["constname" => "WIKINDX_FILE_DELETE_SECONDS",           "type" => "configInt"],
     "configFileViewLoggedOnOnly"      => ["constname" => "WIKINDX_FILE_VIEW_LOGGEDON_ONLY",       "type" => "configBoolean"],

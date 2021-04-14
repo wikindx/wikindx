@@ -707,8 +707,8 @@ class RESOURCEVIEW
         }
         if (
             $this->session->getVar("setup_Superadmin") ||
-            (WIKINDX_ORIGINATOR_EDIT_ONLY && WIKINDX_FILE_ATTACH && ($userAddId == $this->userId)) ||
-            (!WIKINDX_ORIGINATOR_EDIT_ONLY && WIKINDX_FILE_ATTACH && $this->session->getVar("setup_Write"))
+            (WIKINDX_ORIGINATOR_EDIT_ONLY && WIKINDX_FILE_ATTACH_ALLOW && ($userAddId == $this->userId)) ||
+            (!WIKINDX_ORIGINATOR_EDIT_ONLY && WIKINDX_FILE_ATTACH_ALLOW && $this->session->getVar("setup_Write"))
         ) {
             if (isset($files))
             {

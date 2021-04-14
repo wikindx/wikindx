@@ -685,7 +685,7 @@ class ATTACHMENTS
             GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileAttachUploadMaxSize() . '"; </script>');
             GLOBALS::addTplVar('scripts', '<script>var browserTabID = "' . $this->browserTabID . '"; </script>');
             $td = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop")
-            . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") " . '</div>';
+            . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . " and " . ini_get("max_file_uploads") . "&nbsp;files) " . '</div>';
             GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
                 $this->messages->text("resources", "fileAttachFallback") . '"; </script>');
             $td .= '<div id="fallback"></div>';
@@ -723,7 +723,7 @@ class ATTACHMENTS
             $td .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
             $td .= \FORM\hidden("browserTabID", $this->browserTabID);
             $td .= \FORM\fileUploadMultiple($this->messages->text("resources", "fileAttachMultiple"), "file[]", 50);
-            $td .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") ";
+            $td .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . " and " . ini_get("max_file_uploads") . "&nbsp;files) ";
             $td .= $this->embargoForm(FALSE, TRUE);
             $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
             $td .= \FORM\formEnd();
@@ -858,7 +858,7 @@ class ATTACHMENTS
             GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileAttachUploadMaxSize() . '"; </script>');
             GLOBALS::addTplVar('scripts', '<script>var browserTabID = "' . $this->browserTabID . '"; </script>');
             $td1 = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop")
-                . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") " . '</div>';
+                . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . " and " . ini_get("max_file_uploads") . "&nbsp;files) " . '</div>';
             GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
                 $this->messages->text("resources", "fileAttachFallback") . '"; </script>');
             $td1 .= '<div id="fallback"></div>';
@@ -889,7 +889,7 @@ class ATTACHMENTS
             $td3 .= \FORM\hidden("MAX_FILE_SIZE", \FILE\fileAttachUploadMaxSize());
             $td3 .= \FORM\hidden("browserTabID", $this->browserTabID);
             $td3 .= \FORM\fileUploadMultiple($this->messages->text("resources", "fileAttachMultiple"), "file[]", 50);
-            $td3 .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . ") ";
+            $td3 .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileAttachUploadMaxSize()) . " and " . ini_get("max_file_uploads") . "&nbsp;files)";
             $td3 .= $this->embargoForm(FALSE, TRUE);
             $td3 .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")), '', 3);
             $td3 .= \FORM\formEnd();

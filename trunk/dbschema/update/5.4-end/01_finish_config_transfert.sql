@@ -7,8 +7,8 @@
 -- Finish transfers of config table
 -- 
 
-DROP TABLE IF EXISTS %%WIKINDX_DB_TABLEPREFIX%%config;
+DROP TABLE IF EXISTS wkx_config;
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%configtemp RENAME `%%WIKINDX_DB_TABLEPREFIX%%config`;
+ALTER TABLE wkx_configtemp RENAME `wkx_config`;
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%config ADD INDEX `configName` (`configName`(768));
+ALTER TABLE wkx_config ADD INDEX `configName` (`configName`(768));

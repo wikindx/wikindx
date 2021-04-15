@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%language` (
+CREATE TABLE IF NOT EXISTS `wkx_language` (
   `languageId` int(11) NOT NULL AUTO_INCREMENT,
   `languageLanguage` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`languageId`)

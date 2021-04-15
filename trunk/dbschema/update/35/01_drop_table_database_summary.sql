@@ -6,4 +6,4 @@
 --
 -- Drop table database_summary
 
-DROP TABLE IF EXISTS %%WIKINDX_DB_TABLEPREFIX%%database_summary;
+DROP TABLE IF EXISTS wkx_database_summary;

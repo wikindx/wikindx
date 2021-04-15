@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourceattachmentsEmbargo.
 
-CREATE INDEX `resourceattachmentsEmbargo` ON %%WIKINDX_DB_TABLEPREFIX%%resource_attachments (`resourceattachmentsEmbargo`);
+CREATE INDEX `resourceattachmentsEmbargo` ON wkx_resource_attachments (`resourceattachmentsEmbargo`);

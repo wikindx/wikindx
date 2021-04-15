@@ -6,5 +6,5 @@
 --
 -- Delete the old internal version number from database_summary
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%database_summary
+ALTER TABLE wkx_database_summary
 DROP COLUMN databasesummarySoftwareVersion;

@@ -6,7 +6,7 @@
 --
 -- Add new table for form data
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%form_data` (
+CREATE TABLE IF NOT EXISTS `wkx_form_data` (
   `formdataId` varchar(128) NOT NULL,
   `formdataData` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `formdataTimestamp` datetime DEFAULT current_timestamp() NOT NULL,

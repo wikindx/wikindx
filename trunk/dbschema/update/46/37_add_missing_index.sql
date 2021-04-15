@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on userbibliographyUserGroupId.
 
-CREATE INDEX `userbibliographyUserGroupId` ON %%WIKINDX_DB_TABLEPREFIX%%user_bibliography (`userbibliographyUserGroupId`);
+CREATE INDEX `userbibliographyUserGroupId` ON wkx_user_bibliography (`userbibliographyUserGroupId`);

@@ -6,4 +6,4 @@
 -- 
 -- Drop the old table resource_text_48
 
-DROP TABLE IF EXISTS %%WIKINDX_DB_TABLEPREFIX%%resource_text_48;
+DROP TABLE IF EXISTS wkx_resource_text_48;

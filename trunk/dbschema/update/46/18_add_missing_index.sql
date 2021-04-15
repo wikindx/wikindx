@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcemiscCollection (previous upgrade code missing).
 
-CREATE INDEX `resourcemiscCollection` ON %%WIKINDX_DB_TABLEPREFIX%%resource_misc (`resourcemiscCollection`);
+CREATE INDEX `resourcemiscCollection` ON wkx_resource_misc (`resourcemiscCollection`);

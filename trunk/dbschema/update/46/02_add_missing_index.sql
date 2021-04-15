@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on publisherType.
 
-CREATE INDEX `publisherType` ON %%WIKINDX_DB_TABLEPREFIX%%publisher (`publisherType`);
+CREATE INDEX `publisherType` ON wkx_publisher (`publisherType`);

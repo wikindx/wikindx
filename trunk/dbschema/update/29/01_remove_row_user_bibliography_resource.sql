@@ -7,5 +7,5 @@
 
 -- Remove unwanted rows in user_bibliography_resource
 
-DELETE FROM %%WIKINDX_DB_TABLEPREFIX%%user_bibliography_resource
+DELETE FROM wkx_user_bibliography_resource
 WHERE userbibliographyresourceBibliographyId IN (-1, -2);

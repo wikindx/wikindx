@@ -6,7 +6,7 @@
 -- 
 -- If configMailSmtpEncrypt is not set to an authorized value replace it by the new default value (none).
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configVarchar = 'none'
 WHERE
 	configName = 'configMailSmtpEncrypt'

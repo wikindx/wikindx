@@ -9,7 +9,7 @@
 -- Redefine resource_attachments.filename size
 -- 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%configtemp` (
+CREATE TABLE IF NOT EXISTS `wkx_configtemp` (
 	`configId` int(11) NOT NULL AUTO_INCREMENT,
 	`configName` varchar(255) NOT NULL,
 	`configInt` int(11) DEFAULT NULL,

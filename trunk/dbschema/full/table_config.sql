@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%config` (
+CREATE TABLE IF NOT EXISTS `wkx_config` (
   `configId` int(11) NOT NULL AUTO_INCREMENT,
   `configName` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `configInt` int(11) DEFAULT NULL,

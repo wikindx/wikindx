@@ -385,7 +385,6 @@ class repairkit_MODULE
         $dbSchemaPath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DB_SCHEMA, "full"]);
         $sqlfile = "table_" . $this->db->basicTable($table) . ".sql";
         $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-        $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
         $this->db->queryNoResult($sql);
     }
     

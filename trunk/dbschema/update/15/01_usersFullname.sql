@@ -7,8 +7,8 @@
 -- Reduce the size of usersUsername column (limited index size)
 -- Add a unique constraint on usersUsername column
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%users
+UPDATE wkx_users
 SET usersFullname = ''
 WHERE usersFullname IS NULL;
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN `usersFullname` varchar(1020) NOT NULL;
+ALTER TABLE wkx_users MODIFY COLUMN `usersFullname` varchar(1020) NOT NULL;

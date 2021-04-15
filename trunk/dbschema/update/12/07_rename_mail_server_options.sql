@@ -6,9 +6,9 @@
 -- 
 -- Rename option configMailServer
 
-DELETE FROM %%WIKINDX_DB_TABLEPREFIX%%config
+DELETE FROM wkx_config
 WHERE configName = 'configMailUse';
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configName = 'configMailUse'
 WHERE configName = 'configMailServer';

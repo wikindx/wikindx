@@ -6,7 +6,7 @@
 -- 
 -- Move the data from the old table to resource_text
 
-INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%resource_text (
+INSERT INTO wkx_resource_text (
     resourcetextId,
     resourcetextAddUserIdNote,
     resourcetextEditUserIdNote,
@@ -23,4 +23,4 @@ INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%resource_text (
         resourcetextEditUserIdAbstract,
         resourcetextNote,
         resourcetextAbstract
-    FROM %%WIKINDX_DB_TABLEPREFIX%%resource_text_48;
+    FROM wkx_resource_text_48;

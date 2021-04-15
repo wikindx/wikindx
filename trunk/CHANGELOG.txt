@@ -22,6 +22,7 @@ MAINTENANCE:
 1. Rename configImagesMaxSize option to configImgUploadMaxSize for consistency.
 2. Rename configImagesAllow option to configImgAllow for consistency.
 3. Rename configFileAttach option to configFileAttachAllow for consistency.
+4. Hardcode the db prefix in SQL files [346].
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

@@ -6,7 +6,7 @@
 --
 -- Transfer the internal version number in version table
 
-INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%version (
+INSERT INTO wkx_version (
 	versionComponentType,
 	versionComponentId,
 	versionInternalVersion
@@ -15,4 +15,4 @@ INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%version (
         'core',
         'core',
         databasesummarySoftwareVersion
-    FROM %%WIKINDX_DB_TABLEPREFIX%%database_summary;
+    FROM wkx_database_summary;

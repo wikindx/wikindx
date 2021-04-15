@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourceusertagsTagId.
 
-CREATE INDEX `resourceusertagsTagId` ON %%WIKINDX_DB_TABLEPREFIX%%resource_user_tags (`resourceusertagsTagId`);
+CREATE INDEX `resourceusertagsTagId` ON wkx_resource_user_tags (`resourceusertagsTagId`);

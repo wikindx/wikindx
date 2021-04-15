@@ -7,6 +7,6 @@
 
 -- Rename configImagesMaxSize option to configImgUploadMaxSize
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configName = 'configImgUploadMaxSize'
 WHERE configName = 'configImagesMaxSize';

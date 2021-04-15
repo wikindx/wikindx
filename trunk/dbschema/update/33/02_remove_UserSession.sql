@@ -6,5 +6,5 @@
 -- 
 -- Remove the UserSession column of the users table
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users
+ALTER TABLE wkx_users
 DROP COLUMN usersUserSession;

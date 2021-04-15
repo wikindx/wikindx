@@ -6,4 +6,4 @@
 --
 -- Drop old form_data table
 
-DROP TABLE IF EXISTS %%WIKINDX_DB_TABLEPREFIX%%form_data;
+DROP TABLE IF EXISTS wkx_form_data;

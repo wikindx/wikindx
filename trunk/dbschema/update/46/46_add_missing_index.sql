@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on usersBlock.
 
-CREATE INDEX `usersBlock` ON %%WIKINDX_DB_TABLEPREFIX%%users (`usersBlock`);
+CREATE INDEX `usersBlock` ON wkx_users (`usersBlock`);

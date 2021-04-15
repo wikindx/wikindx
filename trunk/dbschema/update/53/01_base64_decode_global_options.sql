@@ -6,7 +6,7 @@
 --
 -- Remove base64 encoding from global options
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configText = FROM_BASE64(configText)
 WHERE
     configName IN ('configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes')

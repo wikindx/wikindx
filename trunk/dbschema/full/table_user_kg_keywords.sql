@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_kg_keywords` (
+CREATE TABLE IF NOT EXISTS `wkx_user_kg_keywords` (
   `userkgkeywordsId` int(11) NOT NULL AUTO_INCREMENT,
   `userkgkeywordsKeywordGroupId` int(11) NOT NULL,
   `userkgkeywordsKeywordId` int(11) NOT NULL,

@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on collection.
 
-CREATE INDEX `collectionType` ON %%WIKINDX_DB_TABLEPREFIX%%collection (`collectionType`);
+CREATE INDEX `collectionType` ON wkx_collection (`collectionType`);

@@ -7,4 +7,4 @@
 -- Correct default value for user_kg_usergroups table
 -- Fix the wrong definition of this field in 6.4.0 (36) for a fisrt installation
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%user_kg_usergroups MODIFY COLUMN `userkgusergroupsUserGroupId` int(11) DEFAULT NULL;
+ALTER TABLE wkx_user_kg_usergroups MODIFY COLUMN `userkgusergroupsUserGroupId` int(11) DEFAULT NULL;

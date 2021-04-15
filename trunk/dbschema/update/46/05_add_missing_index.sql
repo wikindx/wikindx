@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourceattachmentsHashFilename.
 
-CREATE INDEX `resourceattachmentsHashFilename` ON %%WIKINDX_DB_TABLEPREFIX%%resource_attachments (`resourceattachmentsHashFilename`);
+CREATE INDEX `resourceattachmentsHashFilename` ON wkx_resource_attachments (`resourceattachmentsHashFilename`);

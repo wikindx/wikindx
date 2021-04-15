@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourceyearYear3.
 
-CREATE INDEX `resourceyearYear3` ON %%WIKINDX_DB_TABLEPREFIX%%resource_year (`resourceyearYear3`(100));
+CREATE INDEX `resourceyearYear3` ON wkx_resource_year (`resourceyearYear3`(100));

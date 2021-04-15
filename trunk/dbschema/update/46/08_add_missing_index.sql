@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourceattachmentsTimestamp.
 
-CREATE INDEX `resourceattachmentsTimestamp` ON %%WIKINDX_DB_TABLEPREFIX%%resource_attachments (`resourceattachmentsTimestamp`);
+CREATE INDEX `resourceattachmentsTimestamp` ON wkx_resource_attachments (`resourceattachmentsTimestamp`);

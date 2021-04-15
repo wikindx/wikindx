@@ -6,4 +6,4 @@
 -- 
 -- Redefine resourceTitle index.
 
-CREATE INDEX `resourceTitle` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceTitle`(768));
+CREATE INDEX `resourceTitle` ON wkx_resource (`resourceTitle`(768));

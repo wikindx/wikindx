@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcetextAddUserIdNote.
 
-CREATE INDEX `resourcetextAddUserIdNote` ON %%WIKINDX_DB_TABLEPREFIX%%resource_text (`resourcetextAddUserIdNote`);
+CREATE INDEX `resourcetextAddUserIdNote` ON wkx_resource_text (`resourcetextAddUserIdNote`);

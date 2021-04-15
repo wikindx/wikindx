@@ -7,6 +7,6 @@
 
 -- Rename configFileAttach option to configFileAttachAllow
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configName = 'configFileAttachAllow'
 WHERE configName = 'configFileAttach';

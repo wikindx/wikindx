@@ -6,4 +6,4 @@
 --
 -- Add column resourcemiscMetadata to resource_misc
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_misc ADD COLUMN `resourcemiscMetadata` tinyint(1) NOT NULL DEFAULT 0;
+ALTER TABLE wkx_resource_misc ADD COLUMN `resourcemiscMetadata` tinyint(1) NOT NULL DEFAULT 0;

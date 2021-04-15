@@ -6,4 +6,4 @@
 -- 
 -- Redefine resourceType index.
 
-CREATE INDEX `resourceType` ON %%WIKINDX_DB_TABLEPREFIX%%resource (`resourceType`);
+CREATE INDEX `resourceType` ON wkx_resource (`resourceType`);

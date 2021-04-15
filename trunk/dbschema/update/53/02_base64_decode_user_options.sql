@@ -6,6 +6,6 @@
 --
 -- Remove base64 encoding from global options
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%users
+UPDATE wkx_users
 SET usersCmsTag = FROM_BASE64(usersCmsTag)
 WHERE usersCmsTag IS NOT NULL;

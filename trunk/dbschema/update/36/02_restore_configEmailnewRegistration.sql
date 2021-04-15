@@ -8,12 +8,12 @@
 -- Copy the value of option configEmailnewRegistration to configEmailnewRegistrations
 -- On some installations the option name is without the S, probably due to a bug that went unnoticed.
 -- We try to retrieve the value of the old option in the new one if the value still exists.
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config AS t1
-    INNER JOIN %%WIKINDX_DB_TABLEPREFIX%%config AS t2
+UPDATE wkx_config AS t1
+    INNER JOIN wkx_config AS t2
         ON t1.configName = 'configEmailnewRegistration'
             AND t2.configName = 'configEmailnewRegistrations'
 SET t2.configVarchar = t1.configVarchar;
 
 -- Remove configEmailnewRegistration option
-DELETE FROM %%WIKINDX_DB_TABLEPREFIX%%config
+DELETE FROM wkx_config
 WHERE configName = 'configEmailnewRegistration';

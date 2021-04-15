@@ -6,4 +6,4 @@
 --
 -- Add column usersLastInternalVersion to users
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users ADD COLUMN usersLastInternalVersion int(11) NOT NULL DEFAULT 0;
+ALTER TABLE wkx_users ADD COLUMN usersLastInternalVersion int(11) NOT NULL DEFAULT 0;

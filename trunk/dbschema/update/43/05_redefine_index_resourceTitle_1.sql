@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcetimestampTimestampAdd (previous upgrade code missing).
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource DROP INDEX title;
+ALTER TABLE wkx_resource DROP INDEX title;

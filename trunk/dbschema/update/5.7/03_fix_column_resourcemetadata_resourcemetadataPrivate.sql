@@ -7,4 +7,4 @@
 -- Fix a mistake on the length of resourcemetadataPrivate field
 -- 
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_metadata MODIFY COLUMN `resourcemetadataPrivate` varchar(1) DEFAULT 'N';
+ALTER TABLE wkx_resource_metadata MODIFY COLUMN `resourcemetadataPrivate` varchar(1) DEFAULT 'N';

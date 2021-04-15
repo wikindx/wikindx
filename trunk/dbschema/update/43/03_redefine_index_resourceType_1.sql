@@ -6,4 +6,4 @@
 -- 
 -- Redefine resourceType index.
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource DROP INDEX resourceType;
+ALTER TABLE wkx_resource DROP INDEX resourceType;

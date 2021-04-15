@@ -6,4 +6,4 @@
 -- 
 -- Redefine categoryCategory index.
 
-CREATE INDEX `categoryCategory` ON %%WIKINDX_DB_TABLEPREFIX%%category (`categoryCategory`(768));
+CREATE INDEX `categoryCategory` ON wkx_category (`categoryCategory`(768));

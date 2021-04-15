@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on usergroupsusersGroupId.
 
-CREATE INDEX `usergroupsusersGroupId` ON %%WIKINDX_DB_TABLEPREFIX%%user_groups_users (`usergroupsusersGroupId`);
+CREATE INDEX `usergroupsusersGroupId` ON wkx_user_groups_users (`usergroupsusersGroupId`);

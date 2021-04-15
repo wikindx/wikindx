@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourceattachmentsPrimary.
 
-CREATE INDEX `resourceattachmentsPrimary` ON %%WIKINDX_DB_TABLEPREFIX%%resource_attachments (`resourceattachmentsPrimary`);
+CREATE INDEX `resourceattachmentsPrimary` ON wkx_resource_attachments (`resourceattachmentsPrimary`);

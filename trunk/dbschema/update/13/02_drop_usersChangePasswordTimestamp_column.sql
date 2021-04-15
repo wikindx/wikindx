@@ -6,5 +6,5 @@
 -- 
 -- Drop usersChangePasswordTimestamp column
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users
+ALTER TABLE wkx_users
 DROP COLUMN usersChangePasswordTimestamp;

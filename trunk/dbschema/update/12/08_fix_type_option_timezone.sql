@@ -6,7 +6,7 @@
 -- 
 -- Change the type of the timezone option
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET
 	configVarchar = configText,
 	configText = NULL

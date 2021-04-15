@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcekeywordMetadataId.
 
-CREATE INDEX `resourcekeywordMetadataId` ON %%WIKINDX_DB_TABLEPREFIX%%resource_keyword (`resourcekeywordMetadataId`);
+CREATE INDEX `resourcekeywordMetadataId` ON wkx_resource_keyword (`resourcekeywordMetadataId`);

@@ -11,24 +11,24 @@
 -- Resize resourcemetadataType field.
 -- Resize resourceType field.
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%collection
+ALTER TABLE wkx_collection
 MODIFY COLUMN collectionType varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL;
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%publisher
+ALTER TABLE wkx_publisher
 MODIFY COLUMN publisherType varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL;
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%resource_attachments
+UPDATE wkx_resource_attachments
 SET resourceattachmentsFileSize = '0'
 WHERE resourceattachmentsFileSize IS NULL;
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_attachments
+ALTER TABLE wkx_resource_attachments
 MODIFY COLUMN resourceattachmentsFileSize int(11) NOT NULL DEFAULT 0;
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_attachments
+ALTER TABLE wkx_resource_attachments
 MODIFY COLUMN resourceattachmentsHashFilename varchar(40) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL;
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_metadata
+ALTER TABLE wkx_resource_metadata
 MODIFY COLUMN resourcemetadataType varchar(2) COLLATE utf8mb4_unicode_520_ci NOT NULL;
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource
+ALTER TABLE wkx_resource
 MODIFY COLUMN resourceType varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL;

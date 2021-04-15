@@ -6,15 +6,15 @@
 --
 
 -- Copy the value of configBrowserTagID to configBrowserTabID option
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET
     configVarchar = IFNULL((
         SELECT configVarchar
-        FROM %%WIKINDX_DB_TABLEPREFIX%%config
+        FROM wkx_config
         WHERE configName = 'configBrowserTagID'
     ), configVarchar)
 WHERE configName = 'configBrowserTabID';
 
 -- Remove configBrowserTagID option
-DELETE FROM %%WIKINDX_DB_TABLEPREFIX%%config
+DELETE FROM wkx_config
 WHERE configName = 'configBrowserTagID';

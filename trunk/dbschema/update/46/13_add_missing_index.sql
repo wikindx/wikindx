@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcelanguageLanguageId (previous upgrade code missing).
 
-CREATE INDEX `resourcelanguageLanguageId` ON %%WIKINDX_DB_TABLEPREFIX%%resource_language (`resourcelanguageLanguageId`);
+CREATE INDEX `resourcelanguageLanguageId` ON wkx_resource_language (`resourcelanguageLanguageId`);

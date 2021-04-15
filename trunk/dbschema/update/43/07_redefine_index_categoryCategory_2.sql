@@ -6,4 +6,4 @@
 -- 
 -- Redefine in FULLTEXT type three indices not well upgraded (categoryCategory, keywordKeyword, resourceTitle).
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%category DROP INDEX categoryCategory;
+ALTER TABLE wkx_category DROP INDEX categoryCategory;

@@ -6,13 +6,13 @@
 --
 
 -- Copy the value of option configLdapDn to configLdapUserOu
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config AS t1
-    INNER JOIN %%WIKINDX_DB_TABLEPREFIX%%config AS t2
+UPDATE wkx_config AS t1
+    INNER JOIN wkx_config AS t2
         ON t1.configName = 'configLdapDn'
             AND t2.configName = 'configLdapUserOu'
 SET t2.configVarchar = t1.configVarchar;
 
 -- Remove configLdapDn option
-DELETE FROM %%WIKINDX_DB_TABLEPREFIX%%config
+DELETE FROM wkx_config
 WHERE configName = 'configLdapDn';
 

@@ -261,7 +261,6 @@ class UPDATEDATABASE
                 if (is_readable($fsql) && \UTILS\matchSuffix($fsql, ".sql"))
                 {
                     $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-                    $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
                     $this->db->queryNoError($sql);
                 }
             }
@@ -317,7 +316,6 @@ class UPDATEDATABASE
                 if (is_readable($fsql) && \UTILS\matchSuffix($fsql, ".sql"))
                 {
                     $sql = file_get_contents($fsql);
-                    $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
                     $this->db->queryNoError($sql);
                 }
             }

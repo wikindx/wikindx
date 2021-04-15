@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcemiscPeerReviewed.
 
-CREATE INDEX `resourcemiscPeerReviewed` ON %%WIKINDX_DB_TABLEPREFIX%%resource_misc (`resourcemiscPeerReviewed`);
+CREATE INDEX `resourcemiscPeerReviewed` ON wkx_resource_misc (`resourcemiscPeerReviewed`);

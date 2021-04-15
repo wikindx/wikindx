@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on tempstorageTimestamp.
 
-CREATE INDEX `tempstorageTimestamp` ON %%WIKINDX_DB_TABLEPREFIX%%temp_storage (`tempstorageTimestamp`);
+CREATE INDEX `tempstorageTimestamp` ON wkx_temp_storage (`tempstorageTimestamp`);

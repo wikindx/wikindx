@@ -7,6 +7,6 @@
 
 -- Rename configImagesAllow option to configImgAllow
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configName = 'configImgAllow'
 WHERE configName = 'configImagesAllow';

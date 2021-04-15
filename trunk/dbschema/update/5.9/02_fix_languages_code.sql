@@ -8,7 +8,7 @@
 -- 
 -- https://mathiasbynens.be/notes/mysql-utf8mb4
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configVarchar =
 	CASE
 		WHEN configVarchar = 'de' THEN 'de_DE'
@@ -21,7 +21,7 @@ SET configVarchar =
 	END
 WHERE configName = 'configLanguage';
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%users
+UPDATE wkx_users
 SET usersLanguage =
 	CASE
 		WHEN usersLanguage = 'de' THEN 'de_DE'

@@ -6,4 +6,4 @@
 --
 -- Drop table resource_summary
 
-DROP TABLE IF EXISTS %%WIKINDX_DB_TABLEPREFIX%%resource_summary;
+DROP TABLE IF EXISTS wkx_resource_summary;

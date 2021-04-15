@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcemiscQuarantine.
 
-CREATE INDEX `resourcemiscQuarantine` ON %%WIKINDX_DB_TABLEPREFIX%%resource_misc (`resourcemiscQuarantine`);
+CREATE INDEX `resourcemiscQuarantine` ON wkx_resource_misc (`resourcemiscQuarantine`);

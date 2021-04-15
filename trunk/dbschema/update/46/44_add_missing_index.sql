@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on userregisterConfirmed.
 
-CREATE INDEX `userregisterConfirmed` ON %%WIKINDX_DB_TABLEPREFIX%%user_register (`userregisterConfirmed`);
+CREATE INDEX `userregisterConfirmed` ON wkx_user_register (`userregisterConfirmed`);

@@ -8,6 +8,6 @@
 -- 
 -- https://mathiasbynens.be/notes/mysql-utf8mb4
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configVarchar = lower(configVarchar)
 WHERE configName = 'configStyle';

@@ -7,14 +7,14 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%category` (
+CREATE TABLE IF NOT EXISTS `wkx_category` (
   `categoryId` int(11) NOT NULL AUTO_INCREMENT,
   `categoryCategory` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`categoryId`),
   KEY `categoryCategory` (`categoryCategory`(768))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%category (
+INSERT INTO wkx_category (
     categoryId,
     categoryCategory
 ) VALUES (

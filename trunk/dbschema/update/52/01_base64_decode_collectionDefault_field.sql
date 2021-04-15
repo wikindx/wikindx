@@ -6,6 +6,6 @@
 --
 -- Remove base64 encoding from collectionDefault field in collection table
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%collection
+UPDATE wkx_collection
 SET collectionDefault = FROM_BASE64(collectionDefault)
 WHERE collectionDefault IS NOT NULL;

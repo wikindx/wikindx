@@ -6,15 +6,15 @@
 --
 
 -- Copy the value of LdapGroupCn to LdapGroupDn option
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET
     configVarchar = IFNULL((
         SELECT configVarchar
-        FROM %%WIKINDX_DB_TABLEPREFIX%%config
+        FROM wkx_config
         WHERE configName = 'LdapGroupCn'
     ), configVarchar)
 WHERE configName = 'LdapGroupDn';
 
 -- Remove LdapGroupCn option
-DELETE FROM %%WIKINDX_DB_TABLEPREFIX%%config
+DELETE FROM wkx_config
 WHERE configName = 'LdapGroupCn';

@@ -9,7 +9,7 @@
 -- Needed because we backtracked it
 DROP TABLE IF EXISTS`WIKINDX_DB_TABLEPREFIX%%version`;
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%version` (
+CREATE TABLE IF NOT EXISTS `wkx_version` (
   `versionComponentType` varchar(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `versionComponentId` varchar(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `versionInternalVersion` int(11) NOT NULL DEFAULT 0,

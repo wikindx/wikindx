@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcemetadataPrivate.
 
-CREATE INDEX `resourcemetadataPrivate` ON %%WIKINDX_DB_TABLEPREFIX%%resource_metadata (`resourcemetadataPrivate`);
+CREATE INDEX `resourcemetadataPrivate` ON wkx_resource_metadata (`resourcemetadataPrivate`);

@@ -6,4 +6,4 @@
 -- 
 -- Redefine keywordKeyword index.
 
-CREATE INDEX `keywordKeyword` ON %%WIKINDX_DB_TABLEPREFIX%%keyword (`keywordKeyword`(768));
+CREATE INDEX `keywordKeyword` ON wkx_keyword (`keywordKeyword`(768));

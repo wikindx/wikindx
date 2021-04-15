@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcemiscAddUserIdResource.
 
-CREATE INDEX `resourcemiscAddUserIdResource` ON %%WIKINDX_DB_TABLEPREFIX%%resource_misc (`resourcemiscAddUserIdResource`);
+CREATE INDEX `resourcemiscAddUserIdResource` ON wkx_resource_misc (`resourcemiscAddUserIdResource`);

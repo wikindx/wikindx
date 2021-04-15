@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcecreatorRole.
 
-CREATE INDEX `resourcecreatorRole` ON %%WIKINDX_DB_TABLEPREFIX%%resource_creator (`resourcecreatorRole`);
+CREATE INDEX `resourcecreatorRole` ON wkx_resource_creator (`resourcecreatorRole`);

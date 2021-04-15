@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%import_raw` (
+CREATE TABLE IF NOT EXISTS `wkx_import_raw` (
   `importrawId` int(11) NOT NULL,
   `importrawStringId` int(11) DEFAULT NULL,
   `importrawText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,

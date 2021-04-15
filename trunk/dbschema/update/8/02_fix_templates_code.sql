@@ -6,9 +6,9 @@
 -- 
 -- Fix the code of templates
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configVarchar = lower(configVarchar)
 WHERE configName IN ('configTemplate');
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%users
+UPDATE wkx_users
 SET usersTemplate = lower(usersTemplate);

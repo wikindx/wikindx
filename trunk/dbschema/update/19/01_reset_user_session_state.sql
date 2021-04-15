@@ -6,5 +6,5 @@
 --
 -- Following change to storage of session arrays, reset the session state variable to NULL
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%users
+UPDATE wkx_users
 SET usersUserSession = NULL

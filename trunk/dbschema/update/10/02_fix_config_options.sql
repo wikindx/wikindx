@@ -6,20 +6,20 @@
 -- 
 -- Fix misconfigured config options
 
-DELETE FROM %%WIKINDX_DB_TABLEPREFIX%%config
+DELETE FROM wkx_config
 WHERE configName IN ('configMaxWriteChunk', 'configCaptchaPublicKey', 'configCaptchaPrivateKey', 'configRegistrationModerate');
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configName = 'configListLink'
 WHERE configName = 'configListlink';
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET
 	configName = 'configDebugEmail',
 	configBoolean = '0'
 WHERE configName = 'configSqlEmail';
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configText = 'YTowOnt9'
 WHERE
 	configName = 'configDeactivateResourceTypes'

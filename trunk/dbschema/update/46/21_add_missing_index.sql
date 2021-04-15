@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcemiscPublisher (previous upgrade code missing).
 
-CREATE INDEX `resourcemiscPublisher` ON %%WIKINDX_DB_TABLEPREFIX%%resource_misc (`resourcemiscPublisher`);
+CREATE INDEX `resourcemiscPublisher` ON wkx_resource_misc (`resourcemiscPublisher`);

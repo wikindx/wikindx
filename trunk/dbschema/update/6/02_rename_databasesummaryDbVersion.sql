@@ -7,4 +7,4 @@
 -- Rename databasesummaryDbVersion field
 -- 
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%database_summary CHANGE `databasesummaryDbVersion` `databasesummarySoftwareVersion` varchar(16);
+ALTER TABLE wkx_database_summary CHANGE `databasesummaryDbVersion` `databasesummarySoftwareVersion` varchar(16);

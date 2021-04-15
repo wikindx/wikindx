@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcecategorySubcategoryId.
 
-CREATE INDEX `resourcecategorySubcategoryId` ON %%WIKINDX_DB_TABLEPREFIX%%resource_category (`resourcecategorySubcategoryId`);
+CREATE INDEX `resourcecategorySubcategoryId` ON wkx_resource_category (`resourcecategorySubcategoryId`);

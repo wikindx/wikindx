@@ -7,14 +7,14 @@
 -- Convert tags sizes options to tags scale factors options
 
 -- Convert from float to int
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET
 	configName = 'configTagLowFactor',
 	configInt = COALESCE(configFloat, 1) * 100,
 	configFloat = NULL
 WHERE configName = 'configTagLowSize';
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET
 	configName = 'configTagHighFactor',
 	configInt = COALESCE(configFloat, 2) * 100,
@@ -23,13 +23,13 @@ WHERE configName = 'configTagHighSize';
 
 
 -- Fix min values
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configInt = 50
 WHERE
 	configName = 'configTagLowFactor'
 	AND configInt < 50;
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configInt = 50
 WHERE
 	configName = 'configTagHighFactor'
@@ -37,13 +37,13 @@ WHERE
 
 
 -- Fix max values
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configInt = 200
 WHERE
 	configName = 'configTagLowFactor'
 	AND configInt > 200;
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configInt = 200
 WHERE
 	configName = 'configTagHighFactor'
@@ -51,6 +51,6 @@ WHERE
 
 
 -- Fix the scalling step to 5
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configInt = configInt - MOD(configInt, 5)
 WHERE configName IN('configTagLowFactor', 'configTagHighFactor');

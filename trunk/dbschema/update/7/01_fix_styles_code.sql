@@ -6,6 +6,6 @@
 -- 
 -- Fix the code of styles
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configVarchar = lower(configVarchar)
 WHERE configName IN ('configStyle', 'configRssBibstyle', 'configCmsBibstyle');

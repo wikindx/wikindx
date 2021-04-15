@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on usertagsUserId.
 
-CREATE INDEX `usertagsUserId` ON %%WIKINDX_DB_TABLEPREFIX%%user_tags (`usertagsUserId`);
+CREATE INDEX `usertagsUserId` ON wkx_user_tags (`usertagsUserId`);

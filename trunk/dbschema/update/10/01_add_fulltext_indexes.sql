@@ -6,7 +6,7 @@
 -- 
 -- Add FULLTEXT indexes to speed the quick search
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_custom ADD FULLTEXT(resourcecustomLong);
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_metadata ADD FULLTEXT(resourcemetadataText);
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_text ADD FULLTEXT(resourcetextAbstract);
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_text ADD FULLTEXT(resourcetextNote);
+ALTER TABLE wkx_resource_custom ADD FULLTEXT(resourcecustomLong);
+ALTER TABLE wkx_resource_metadata ADD FULLTEXT(resourcemetadataText);
+ALTER TABLE wkx_resource_text ADD FULLTEXT(resourcetextAbstract);
+ALTER TABLE wkx_resource_text ADD FULLTEXT(resourcetextNote);

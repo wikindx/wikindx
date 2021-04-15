@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcetimestampTimestamp (previous upgrade code missing).
 
-CREATE INDEX `resourcetimestampTimestamp` ON %%WIKINDX_DB_TABLEPREFIX%%resource_timestamp (`resourcetimestampTimestamp`);
+CREATE INDEX `resourcetimestampTimestamp` ON wkx_resource_timestamp (`resourcetimestampTimestamp`);

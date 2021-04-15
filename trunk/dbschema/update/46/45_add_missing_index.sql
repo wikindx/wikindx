@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on userregisterTimestamp.
 
-CREATE INDEX `userregisterTimestamp` ON %%WIKINDX_DB_TABLEPREFIX%%user_register (`userregisterTimestamp`);
+CREATE INDEX `userregisterTimestamp` ON wkx_user_register (`userregisterTimestamp`);

@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on subcategoryCategoryId.
 
-CREATE INDEX `subcategoryCategoryId` ON %%WIKINDX_DB_TABLEPREFIX%%subcategory (`subcategoryCategoryId`);
+CREATE INDEX `subcategoryCategoryId` ON wkx_subcategory (`subcategoryCategoryId`);

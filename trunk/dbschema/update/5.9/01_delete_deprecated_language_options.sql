@@ -8,5 +8,5 @@
 -- 
 -- https://mathiasbynens.be/notes/mysql-utf8mb4
 
-DELETE FROM %%WIKINDX_DB_TABLEPREFIX%%config
+DELETE FROM wkx_config
 WHERE configName IN ('configCmsLanguage', 'configRssLanguage');

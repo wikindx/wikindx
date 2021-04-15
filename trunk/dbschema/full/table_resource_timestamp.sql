@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_timestamp` (
+CREATE TABLE IF NOT EXISTS `wkx_resource_timestamp` (
   `resourcetimestampId` int(11) NOT NULL,
   `resourcetimestampTimestamp` datetime DEFAULT current_timestamp(),
   `resourcetimestampTimestampAdd` datetime DEFAULT current_timestamp(),

@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%subcategory` (
+CREATE TABLE IF NOT EXISTS `wkx_subcategory` (
   `subcategoryId` int(11) NOT NULL AUTO_INCREMENT,
   `subcategoryCategoryId` int(11) DEFAULT NULL,
   `subcategorySubcategory` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,

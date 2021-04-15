@@ -7,7 +7,7 @@
 -- If configAuthGateMessage was set by mistake to 0/1 because WIKINDX_MAIL_RETURN_PATH was FALSE/TRUE before a migration,
 -- replace it for the empty string
 
-UPDATE %%WIKINDX_DB_TABLEPREFIX%%config
+UPDATE wkx_config
 SET configVarchar = ''
 WHERE
 	configName = 'configAuthGateMessage'

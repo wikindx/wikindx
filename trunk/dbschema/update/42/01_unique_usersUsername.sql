@@ -7,6 +7,6 @@
 -- Recreate the usersUsernameUnique index with a BTREE type (bugfix #318)
 -- The HASH type seems not well supported by InnoDB
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users DROP INDEX usersUsernameUnique;
+ALTER TABLE wkx_users DROP INDEX usersUsernameUnique;
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users ADD UNIQUE KEY `usersUsernameUnique` ( usersUsername ASC );
+ALTER TABLE wkx_users ADD UNIQUE KEY `usersUsernameUnique` ( usersUsername ASC );

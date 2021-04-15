@@ -7,7 +7,7 @@
 -- Create a new empty resource_text table
 -- 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_text` (
+CREATE TABLE IF NOT EXISTS `wkx_resource_text` (
   `resourcetextId` int(11) NOT NULL,
   `resourcetextAddUserIdNote` int(11) DEFAULT NULL,
   `resourcetextEditUserIdNote` int(11) DEFAULT NULL,

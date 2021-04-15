@@ -6,4 +6,4 @@
 --
 -- Add a default value to the users.usersFullname field (bugfix #316)
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '';
+ALTER TABLE wkx_users MODIFY COLUMN `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '';

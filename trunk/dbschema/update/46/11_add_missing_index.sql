@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcecustomCustomId (previous upgrade code missing).
 
-CREATE INDEX `resourcecustomCustomId` ON %%WIKINDX_DB_TABLEPREFIX%%resource_custom (`resourcecustomCustomId`);
+CREATE INDEX `resourcecustomCustomId` ON wkx_resource_custom (`resourcecustomCustomId`);

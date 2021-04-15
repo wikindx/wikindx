@@ -8,5 +8,5 @@
 -- it's quicker that removing the fields because there are FULLTEXT indices in this table
 
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%resource_text
-RENAME `%%WIKINDX_DB_TABLEPREFIX%%resource_text_48`;
+ALTER TABLE wkx_resource_text
+RENAME `wkx_resource_text_48`;

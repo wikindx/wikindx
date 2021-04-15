@@ -6,5 +6,5 @@
 -- 
 -- Remove the float type of the config table
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%config
+ALTER TABLE wkx_config
 DROP COLUMN configFloat;

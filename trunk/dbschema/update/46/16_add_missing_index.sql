@@ -6,4 +6,4 @@
 -- 
 -- Add a missing index on resourcemetadataType.
 
-CREATE INDEX `resourcemetadataType` ON %%WIKINDX_DB_TABLEPREFIX%%resource_metadata (`resourcemetadataType`);
+CREATE INDEX `resourcemetadataType` ON wkx_resource_metadata (`resourcemetadataType`);

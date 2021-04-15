@@ -464,7 +464,7 @@ class SQL
 		    FROM INFORMATION_SCHEMA.COLUMNS
 		    WHERE
 		        TABLE_SCHEMA = '" . WIKINDX_DB . "'
-		        AND LOWER(TABLE_NAME) = LOWER('" . WIKINDX_DB_TABLEPREFIX . $table . "');
+		        AND LOWER(TABLE_NAME) = LOWER('" . "wkx_" . $table . "');
 		");
 
         if ($recordset !== FALSE)
@@ -500,7 +500,7 @@ class SQL
 		    WHERE
 		        TABLE_TYPE = 'BASE TABLE'
 		        AND TABLE_SCHEMA = '" . WIKINDX_DB . "'
-		        AND LOWER(TABLE_NAME) LIKE CONCAT(LOWER('" . WIKINDX_DB_TABLEPREFIX . "'), '%');
+		        AND LOWER(TABLE_NAME) LIKE CONCAT(LOWER('" . "wkx_" . "'), '%');
 		");
 
         if ($recordset !== FALSE)
@@ -510,7 +510,7 @@ class SQL
                 $t = $table['TABLE_NAME'];
                 if (!$withPrefix)
                 {
-                    $t = preg_replace("/^" . preg_quote(WIKINDX_DB_TABLEPREFIX, "/") . "/ui", '', $t);
+                    $t = preg_replace("/^" . preg_quote("wkx_", "/") . "/ui", '', $t);
                 }
                 $tables[] = $t;
                 unset($table);
@@ -539,7 +539,7 @@ class SQL
 				WHERE
 					TABLE_TYPE = 'BASE TABLE'
 					AND TABLE_SCHEMA = '" . WIKINDX_DB . "'
-					AND LOWER(TABLE_NAME) = LOWER('" . WIKINDX_DB_TABLEPREFIX . $table . "')
+					AND LOWER(TABLE_NAME) = LOWER('" . "wkx_" . $table . "')
 			);
 		");
     }
@@ -564,7 +564,7 @@ class SQL
      */
     public function createTable(string $newTable, array $fieldsArray, bool $tempTable = FALSE)
     {
-        $newTable = WIKINDX_DB_TABLEPREFIX . $newTable;
+        $newTable = "wkx_" . $newTable;
         $sql = '(' . implode(', ', $fieldsArray) . ')';
         $sql .= 'ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci';
         if ($tempTable)
@@ -584,7 +584,7 @@ class SQL
      */
     public function createTempTableFromSelect(string $newTable, string $selectStmt)
     {
-        $newTable = WIKINDX_DB_TABLEPREFIX . $newTable;
+        $newTable = "wkx_" . $newTable;
         $sql = ' AS (' . $selectStmt . ')';
         $this->queryNoResult("CREATE TEMPORARY TABLE `$newTable` $sql");
     }
@@ -683,7 +683,7 @@ class SQL
         	FROM INFORMATION_SCHEMA.COLUMNS
         	WHERE
 	        	TABLE_SCHEMA = '" . WIKINDX_DB . "'
-	        	AND LOWER(TABLE_NAME) = LOWER('" . WIKINDX_DB_TABLEPREFIX . $table . "');
+	        	AND LOWER(TABLE_NAME) = LOWER('" . "wkx_" . $table . "');
         ");
 
         return $recordset;
@@ -1614,7 +1614,7 @@ class SQL
         {
             if (!is_array($tables))
             {
-                $tableListe = WIKINDX_DB_TABLEPREFIX . $tables;
+                $tableListe = "wkx_" . $tables;
             }
             else
             {
@@ -1626,7 +1626,7 @@ class SQL
                     }
                     else
                     {
-                        $array[] = WIKINDX_DB_TABLEPREFIX . $table;
+                        $array[] = "wkx_" . $table;
                     }
                 }
 
@@ -1648,7 +1648,7 @@ class SQL
      */
     public function basicTable($table)
     {
-        return preg_replace("/^" . preg_quote(WIKINDX_DB_TABLEPREFIX, "/") . "/ui", "", $table);
+        return preg_replace("/^" . preg_quote("wkx_", "/") . "/ui", "", $table);
     }
     /**
      * Create a WHERE() statement
@@ -3289,11 +3289,11 @@ class SQL
         {
             if ($tidyLeft)
             {
-                return '`' . WIKINDX_DB_TABLEPREFIX . "$key` AS " . WIKINDX_DB_TABLEPREFIX . $value;
+                return '`' . "wkx_" . "$key` AS " . "wkx_" . $value;
             }
             else
             {
-                return       WIKINDX_DB_TABLEPREFIX . "$key AS " . WIKINDX_DB_TABLEPREFIX . $value;
+                return       "wkx_" . "$key AS " . "wkx_" . $value;
             }
         }
         if (count($split = \UTF8\mb_explode('.', $key)) > 1)

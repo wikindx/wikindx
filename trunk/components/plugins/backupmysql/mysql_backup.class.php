@@ -48,7 +48,7 @@ class MySQL_Backup
         $this->username = WIKINDX_DB_USER;
         $this->password = WIKINDX_DB_PASSWORD;
         $this->database = WIKINDX_DB;
-        $this->prefix = WIKINDX_DB_TABLEPREFIX;
+        $this->prefix = "wkx_";
     }
 
 

@@ -396,7 +396,7 @@ class repairkit_MODULE
      */
     private function renameTable($tablesrc, $tabledst)
     {
-        $tmpTable = uniqid(WIKINDX_DB_TABLEPREFIX);
+        $tmpTable = uniqid("wkx_");
         
         // Change the name of all tables to lower case (workaround for mySQL engine on case sensitive files systems)
         $this->db->queryNoResult("ALTER TABLE `" . $tablesrc . "` RENAME AS `" . $tmpTable . "`;");

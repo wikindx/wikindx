@@ -22,7 +22,6 @@ define('WIKINDX_DB_DEFAULT', 'wikindx5');
 define('WIKINDX_DB_HOST_DEFAULT', 'localhost');
 define('WIKINDX_DB_PASSWORD_DEFAULT', 'wikindx');
 define('WIKINDX_DB_USER_DEFAULT', 'wikindx');
-define('WIKINDX_DB_TABLEPREFIX', 'wkx_');
 
 
 // System

@@ -619,7 +619,7 @@ class SQL
         }
     }
     /**
-     * Fetch one row from the database
+     * Fetch one row from a recordset
      *
      * @param array $recordset
      *

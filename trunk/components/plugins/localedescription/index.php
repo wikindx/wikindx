@@ -147,7 +147,7 @@ class localedescription_MODULE
             
             if (array_search('plugin_localedescription', $tables) === FALSE) {
                 $this->db->queryNoError("
-                    CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_localedescription` (
+                    CREATE TABLE `" . $db->formatTables("plugin_localedescription") . "` (
                         `pluginlocaledescriptionLocale` varchar(16) COLLATE utf8mb4_unicode_520_ci NOT NULL,
                         `pluginlocaledescriptionText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
                         PRIMARY KEY (`pluginlocaledescriptionLocale`)

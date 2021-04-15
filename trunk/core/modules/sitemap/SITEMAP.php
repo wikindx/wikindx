@@ -71,18 +71,18 @@ class SITEMAP
 
         // List of resources of the website
         $rsResource = $db->query("
-        	SELECT `resourcetimestampId`, `resourcetimestampTimestamp`
-        	FROM `" . WIKINDX_DB_TABLEPREFIX . "resource_timestamp`
-        	ORDER BY `resourcetimestampTimestamp` DESC, `resourcetimestampTimestampAdd` DESC, `resourcetimestampId` DESC
+        	SELECT resourcetimestampId, resourcetimestampTimestamp
+        	FROM " . $db->formatTables("resource_timestamp") . "
+        	ORDER BY resourcetimestampTimestamp DESC, resourcetimestampTimestampAdd DESC, resourcetimestampId DESC
         ");
 
         $nbResource = $db->numRows($rsResource);
 
         // List of news of the website
         $rsNews = $db->query("
-        	SELECT `newsId`, `newsTimestamp`
-        	FROM `" . WIKINDX_DB_TABLEPREFIX . "news`
-        	ORDER BY `newsTimestamp` DESC, `newsId` DESC
+        	SELECT newsId, newsTimestamp
+        	FROM " . $db->formatTables("news") . "
+        	ORDER BY newsTimestamp DESC, newsId DESC
         ");
 
         $nbNews = $db->numRows($rsNews);

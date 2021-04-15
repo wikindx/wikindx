@@ -1433,11 +1433,11 @@ END;
         
         $this->transferStatistics();
         
-        $this->db->queryNoError("DROP TABLE IF EXISTS " . WIKINDX_DB_TABLEPREFIX . "statistics;");
-        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccesses");
-        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccessesPeriod");
-        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloads");
-        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloadsPeriod");
+        $this->db->queryNoError("DROP TABLE IF EXISTS wkx_statistics;");
+        $this->db->queryNoError("ALTER TABLE wkx_resource_misc DROP COLUMN resourcemiscAccesses");
+        $this->db->queryNoError("ALTER TABLE wkx_resource_misc DROP COLUMN resourcemiscAccessesPeriod");
+        $this->db->queryNoError("ALTER TABLE wkx_resource_attachments DROP COLUMN resourceattachmentsDownloads");
+        $this->db->queryNoError("ALTER TABLE wkx_resource_attachments DROP COLUMN resourceattachmentsDownloadsPeriod");
         
         // For a period mid-2018 to mid-2019, resourceattachmentsTimestamp was not written – set these NULL values to current timestamp
         $this->db->formatConditions(['resourceattachmentsTimestamp' => 'IS NULL']);
@@ -2638,7 +2638,7 @@ END;
         foreach (['category', 'collection', 'config', 'creator', 'keyword', 'publisher', 'resource', 'resource_creator',
             'resource_metadata', 'resource_year', 'user_bibliography', ] as $table)
         {
-            $table = WIKINDX_DB_TABLEPREFIX . $table;
+            $table = "wkx_" . $table;
             $resultSet = $this->db->query("SHOW INDEX FROM `$table` FROM `$db`");
             while ($row = $this->db->fetchRow($resultSet))
             {
@@ -3008,7 +3008,7 @@ END;
             if (array_search('plugin_wordprocessor', $tables) === FALSE)
             {
                 $this->db->queryNoError("
-                    CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
+                    CREATE TABLE `wkx_plugin_wordprocessor` (
                         `pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
                         `pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
                         `pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -3034,23 +3034,23 @@ END;
                 $values[] = $row['papersTimestamp'];
                 $this->db->insert('plugin_wordprocessor', $fields, $values);
             }
-            $this->db->queryNoError("DROP TABLE IF EXISTS " . WIKINDX_DB_TABLEPREFIX . "papers;");
+            $this->db->queryNoError("DROP TABLE IF EXISTS wkx_papers;");
         }
         elseif (array_search('plugin_wordprocessor', $tables) !== FALSE)
         {
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor ENGINE=InnoDB;");
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorHashFilename` varchar(1020) DEFAULT NULL;");
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorFilename` varchar(1020) DEFAULT NULL;");
+            $this->db->queryNoError("ALTER TABLE wkx_plugin_wordprocessor ENGINE=InnoDB;");
+            $this->db->queryNoError("ALTER TABLE wkx_plugin_wordprocessor CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
+            $this->db->queryNoError("ALTER TABLE wkx_plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorHashFilename` varchar(1020) DEFAULT NULL;");
+            $this->db->queryNoError("ALTER TABLE wkx_plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorFilename` varchar(1020) DEFAULT NULL;");
         }
         if (array_search('plugin_soundexplorer', $tables) !== FALSE)
         {
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer RENAME `" . WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5`");
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5 RENAME `" . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer`");
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer ENGINE=InnoDB;");
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
-            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
+            $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer RENAME `wkx_4fc387ba1ae34ac28e6dee712679d7b5`");
+            $this->db->queryNoError("ALTER TABLE wkx_4fc387ba1ae34ac28e6dee712679d7b5 RENAME `wkx_plugin_soundexplorer`");
+            $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer ENGINE=InnoDB;");
+            $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
+            $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
+            $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
         }
     }
 }

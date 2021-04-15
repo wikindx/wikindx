@@ -2025,6 +2025,125 @@ END;
     }
     
     /**
+     * Upgrade database to version 56 (6.4.6)
+     *
+     * Check there are no non wikindx table in the db and block the upgrade if we find one.
+     */
+    private function upgradeTo56()
+    {
+        $tables_errors = [];
+        // Extract the list of tables
+        $tables = $this->listAllTables();
+        foreach ($tables as $k => $table)
+        {
+            if ($table == $this->db->basicTable($table))
+            {
+                $tables_errors[] = $table;
+            }
+        }
+        
+        if (count($tables_errors) == 0)
+        {
+            $this->updateCoreInternalVersion();
+        }
+        else
+        {
+            $h = "
+                <p class='error'>Fatal error.</p>
+                
+                <p>The next version of WIKINDX will remove the prefix from tables.</p>
+                
+                <p>This functionality is only useful for several programs sharing the same database with the same table names or several WIKINDX installations in the same database. These two practices are to be avoided because they are a good way to lose your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. We believe that very few installs use this feature.</p>
+                
+                <p><strong>6.4.0</strong> harcoded the <strong>wkx_</strong> prefix but still offered the possibility of cheating with the constant <strong>WIKINDX_DB_TABLEPREFIX</strong>.</p>
+                
+                <p>This version (<strong>6.4.6</strong>) removes the <strong>cheat mode</strong> and checks that you don't have a mix of tables with another app because the next version will rename all tables without the prefix. Otherwise, collisions could occur. If you are affected by this change please contact us for help with the transition.</p>
+                
+                <p>You must apply one or more of these corrections before you can continue.</p>
+
+                <ul>
+                    <li>If you have written your own plugin with your own tables they should use the default prefix <strong>wkx_</strong> to be portable.</li>
+                    
+                    <li>If you customized the prefix, use the xxx script to replace it with the default prefix <strong>wkx_</strong>.</li>
+                    
+                    <li>If you have installed another application in the same database, move the tables from WIKINDX, or the database objects from the other application, to its own database.</li>
+                    
+                    <li>If you have other tables in the database for various reasons, please drop them or move them to another database.</li>
+                </ul>
+            ";
+            
+            $h .= "<p class='required'>The update is blocked because it found suspicious tables:</p>";
+            $h .= "<ul>";
+            foreach ($tables_errors as $k => $table)
+            {
+                $h .= "<li><strong>" . $table . "</strong></li>";
+            }
+            $h .= "</ul>";
+            
+            
+            $h .= "<p>The official tables for version <strong>6.4.6</strong> are:</p>";
+            $h .= "<ul>";
+            $tables_officials = [
+                "wkx_bibtex_string",
+                "wkx_cache",
+                "wkx_category",
+                "wkx_collection",
+                "wkx_config",
+                "wkx_creator",
+                "wkx_custom",
+                "wkx_import_raw",
+                "wkx_keyword",
+                "wkx_language",
+                "wkx_news",
+                "wkx_plugin_localedescription",
+                "wkx_plugin_soundexplorer",
+                "wkx_plugin_wordprocessor",
+                "wkx_publisher",
+                "wkx_resource",
+                "wkx_resource_attachments",
+                "wkx_resource_category",
+                "wkx_resource_creator",
+                "wkx_resource_custom",
+                "wkx_resource_keyword",
+                "wkx_resource_language",
+                "wkx_resource_metadata",
+                "wkx_resource_misc",
+                "wkx_resource_page",
+                "wkx_resource_text",
+                "wkx_resource_timestamp",
+                "wkx_resource_url",
+                "wkx_resource_user_tags",
+                "wkx_resource_year",
+                "wkx_session",
+                "wkx_statistics_attachment_downloads",
+                "wkx_statistics_resource_views",
+                "wkx_subcategory",
+                "wkx_tag",
+                "wkx_temp_storage",
+                "wkx_user_bibliography",
+                "wkx_user_bibliography_resource",
+                "wkx_user_groups",
+                "wkx_user_groups_users",
+                "wkx_user_keywordgroups",
+                "wkx_user_kg_keywords",
+                "wkx_user_kg_usergroups",
+                "wkx_user_register",
+                "wkx_user_tags",
+                "wkx_users",
+                "wkx_version",
+            ];
+            foreach ($tables_officials as $k => $table)
+            {
+                $h .= "<li>" . $table . "</li>";
+            }
+            $h .= "</ul>";
+            
+            $this->endStepMessage .= $h;
+            $this->pauseUpdateDisplay();
+        }
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()
@@ -3052,5 +3171,37 @@ END;
             $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
             $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
         }
+    }
+    /**
+     * show all tables in db
+     *
+     * @return array
+     */
+    private function listAllTables()
+    {
+        $tables = [];
+
+        // For ANSI behavior (MySQL, PG at least)
+        // We must always use TABLE_SCHEMA in the WHERE clause
+        // and the raw value of TABLE_SCHEMA otherwise MySQL scans
+        // the disk for db names and slow down the server
+        // https://dev.mysql.com/doc/refman/5.7/en/information-schema-optimization.html
+        $recordset = $this->db->query("
+		    SELECT TABLE_NAME
+		    FROM INFORMATION_SCHEMA.TABLES
+		    WHERE
+		        TABLE_TYPE = 'BASE TABLE'
+		        AND TABLE_SCHEMA = '" . WIKINDX_DB . "';
+		");
+
+        if ($recordset !== FALSE)
+        {
+            while ($table = $this->db->fetchRow($recordset))
+            {
+                $tables[] = $table['TABLE_NAME'];
+            }
+        }
+
+        return $tables;
     }
 }

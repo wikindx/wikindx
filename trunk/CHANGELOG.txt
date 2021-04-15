@@ -4,6 +4,42 @@ RELEASES:
 v6.4.6
 Focus: ...
 
+IMPORTANT INFORMATION:
+
+The next version of WIKINDX will remove the prefix from tables.
+
+This functionality is only useful for several programs sharing the same database with the same table names or several WIKINDX installations in the same database. These two practices are to be avoided because they are a good way to lose your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. We believe that very few installs use this feature.
+
+6.4.0 harcoded the 'wkx_' prefix but still offered the possibility of cheating with the constant WIKINDX_DB_TABLEPREFIX.
+
+This version (6.4.6) removes the 'cheat mode' and checks that you don't have a mix of tables with another app because the next version will rename all tables without the prefix. Otherwise, collisions could occur. If you are affected by this change please contact us for help with the transition.
+
+You must apply one or more of these corrections before you can continue.
+
+If you have written your own plugin with your own tables they should use the default prefix 'wkx_' to be portable.
+
+If you customized the prefix, use the xxx script to replace it with the default prefix 'wkx_'.
+
+If you have installed another application in the same database, move the tables from WIKINDX, or the database objects from the other application, to its own database.
+
+If you have other tables in the database for various reasons, please drop them or move them to another database.
+
+The official tables for version 6.4.6 are:
+
+wkx_bibtex_string, wkx_cache, wkx_category, wkx_collection, wkx_config,
+wkx_creator, wkx_custom, wkx_import_raw, wkx_keyword, wkx_language, wkx_news,
+wkx_plugin_localedescription, wkx_plugin_soundexplorer, wkx_plugin_wordprocessor,
+wkx_publisher, wkx_resource, wkx_resource_attachments, wkx_resource_category,
+wkx_resource_creator, wkx_resource_custom, wkx_resource_keyword,
+wkx_resource_language, wkx_resource_metadata, wkx_resource_misc, wkx_resource_page,
+wkx_resource_text, wkx_resource_timestamp, wkx_resource_url, wkx_resource_user_tags,
+wkx_resource_year, wkx_session, wkx_statistics_attachment_downloads, 
+wkx_statistics_resource_views, wkx_subcategory, wkx_tag, wkx_temp_storage,
+wkx_user_bibliography, wkx_user_bibliography_resource, wkx_user_groups,
+wkx_user_groups_users, wkx_user_keywordgroups, wkx_user_kg_keywords,
+wkx_user_kg_usergroups, wkx_user_register, wkx_user_tags, wkx_users, wkx_version
+
+
 BUG FIXES:
 1. Remove dead code about Etag HTTP headers and fix a wrong image mimetype in images dialog [333].
 2. Localize dates with the current locale.
@@ -24,6 +60,7 @@ MAINTENANCE:
 2. Rename configImagesAllow option to configImgAllow for consistency.
 3. Rename configFileAttach option to configFileAttachAllow for consistency.
 4. Hardcode the db prefix in SQL files [346].
+5. Throw a fatal error if the database contains non WIKINDX tables [346].
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

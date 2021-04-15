@@ -18,7 +18,7 @@ You must apply one or more of these corrections before you can continue.
 
 If you have written your own plugin with your own tables they should use the default prefix 'wkx_' to be portable.
 
-If you customized the prefix, use the xxx script to replace it with the default prefix 'wkx_'.
+If you customized the prefix, use the cli-migrate-db-prefix.php script to replace it with the default prefix 'wkx_'.
 
 If you have installed another application in the same database, move the tables from WIKINDX, or the database objects from the other application, to its own database.
 

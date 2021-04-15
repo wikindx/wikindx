@@ -7,7 +7,7 @@
 -- Add new table to keep the current internal version number of components and core
 
 -- Needed because we backtracked it
-DROP TABLE IF EXISTS`WIKINDX_DB_TABLEPREFIX%%version`;
+DROP TABLE IF EXISTS`wkx_version`;
 
 CREATE TABLE IF NOT EXISTS `wkx_version` (
   `versionComponentType` varchar(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,

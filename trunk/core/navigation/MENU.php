@@ -824,7 +824,7 @@ class MENU
      */
     private function menuInsert()
     {
-        $menuHeadings = ["wikindx", "res", "search", "text", "admin", "importexport", "plugin1", "plugin2", "plugin3"];
+        $menuHeadings = ["wikindx", "res", "search", "metadata", "admin", "importexport", "plugin1", "plugin2", "plugin3"];
         
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "startup", "LOADPLUGINS.php"]));
         $loadmodules = new LOADPLUGINS();

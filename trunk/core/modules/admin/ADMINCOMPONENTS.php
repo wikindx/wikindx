@@ -962,7 +962,7 @@ class ADMINCOMPONENTS
             }
             foreach ($config->menus as $menu)
             {
-                if (array_search($menu, ['wikindx', 'res', 'search', 'text', 'admin', 'plugin1', 'plugin2', 'plugin3']) === FALSE)
+                if (array_search($menu, ['wikindx', 'res', 'search', 'metadata', 'admin', 'plugin1', 'plugin2', 'plugin3']) === FALSE)
                 {
                     $this->messageString = $this->errors->text('components', 'invalidMenu');
 

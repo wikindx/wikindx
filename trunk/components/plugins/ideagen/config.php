@@ -10,7 +10,7 @@
 class ideagen_CONFIG
 {
     /** array */
-    public $menus = ['text'];
+    public $menus = ['metadata'];
     /** int */
     public $authorize = 1;
     /** float */

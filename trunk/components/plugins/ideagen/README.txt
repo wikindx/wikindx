@@ -23,6 +23,8 @@ Thus, components/plugins/ideagen/index.php etc.
 
 CHANGELOG:
 
+2021-04-16 : CHG : re-enable the insertion of plug-ins into the metadata menu.
+                   Where the plugin config.php file inserted into 'text', this should now be 'metadata'.
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
 2020-12-21 : CHG : converted all instances of trim() for form input to UTF8::mb_trim().
 2020-12-21 : CHG : handle multiple tabs.

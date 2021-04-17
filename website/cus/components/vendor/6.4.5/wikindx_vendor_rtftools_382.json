@@ -1,0 +1,42 @@
+{
+    "component_version": "382",
+    "component_licence": "LGPL 2.1",
+    "component_name": "RtfTools",
+    "component_description": "The RtfTools class provides several classes to handle RTF data.",
+    "component_sha256": "b781b06c2bf8324821a1c489ea8fcd96fc9d6b9431653d776605d0747cdecdca",
+    "component_website": "https://github.com/christian-vigh-phpclasses/RtfTools",
+    "component_id": "rtftools",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_type": "vendor",
+    "component_authors": [
+        {
+            "author_name": "Christian Vigh",
+            "author_role": "Developer",
+            "author_copyright": "2016-2017",
+            "author_email": "christian.vigh@wuthering-bytes.com",
+            "author_website": "https://github.com/christian-vigh"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Packager",
+            "author_copyright": "2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/6.4.5/wikindx_vendor_rtftools_382.zip",
+            "package_sha256": "96b8f423b58017a47cf5f0207833ddcab6eea2e33a015f69452bd73233f9848d",
+            "package_size": 65344
+        }
+    ]
+}

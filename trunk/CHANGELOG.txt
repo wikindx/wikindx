@@ -4,9 +4,6 @@ RELEASES:
 v6.4.6
 Focus: bug fixes, maintenance
 
-BUG FIXES:
-1. Re-enable the insertion of plug-ins into the metadata menu. Where the plugin config.php file inserted into 'text', this should now be 'metadata'.
-
 IMPORTANT INFORMATION:
 
 The next version of WIKINDX will remove the prefix from tables.
@@ -49,6 +46,7 @@ BUG FIXES:
 1. Remove dead code about Etag HTTP headers and fix a wrong image mimetype in images dialog [333].
 2. Localize dates with the current locale.
 3. Fix a syntaxic error in upgrade step 34.
+4. Re-enable the insertion of plug-ins into the metadata menu. Where the plugin config.php file inserted into 'text', this should now be 'metadata'.
 
 FEATURE ENHANCEMENT:
 1. Localize the dates in the images dialog.
@@ -59,13 +57,13 @@ FEATURE ENHANCEMENT:
 6. Disable uploads if PHP file_uploads option is Off [#345].
 7. Display the limit of the number of files to upload from PHP (max_file_uploads) [#344].
 
-
 MAINTENANCE:
 1. Rename configImagesMaxSize option to configImgUploadMaxSize for consistency.
 2. Rename configImagesAllow option to configImgAllow for consistency.
 3. Rename configFileAttach option to configFileAttachAllow for consistency.
 4. Hardcode the db prefix in SQL files [346].
 5. Throw a fatal error if the database contains non WIKINDX tables [346].
+
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

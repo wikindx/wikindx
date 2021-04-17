@@ -1,6 +1,6 @@
 {
-    "component_sha256": "08ff12c79b3927dc3d68f407488e1a36e1d005619754138756ab8326f326d62d",
-    "component_version": "426",
+    "component_version": "461",
+    "component_sha256": "7372ecfcac33356b8caf82faa77cca689d331a4a17a053adbc8d24c5c5306308",
     "component_licence": "ISC License",
     "component_name": "Idea Generator",
     "component_description": "Idea Generator randomly selects and displays two items of metadata (quotes, paraphrases, musings, or ideas) in the hope that the new juxtaposition might lead to serendipity.",
@@ -26,9 +26,9 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_ideagen_426.zip",
-            "package_sha256": "ce3c25119795f7b9936802583e25c7e61824371157513422be174ebdfc65862e",
-            "package_size": 18581
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/9/wikindx_plugin_ideagen_461.zip",
+            "package_sha256": "33bcb7eb73e488caa5288b8cddf9376bce0adf3b6810fa62c458d465e80b3cbc",
+            "package_size": 18658
         }
     ]
 }

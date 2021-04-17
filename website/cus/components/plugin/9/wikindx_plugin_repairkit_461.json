@@ -1,9 +1,9 @@
 {
-    "component_version": "426",
+    "component_version": "461",
+    "component_sha256": "87810e140f692619157a11489f2dc2a72e0060fede2dc0a194bd36d45e3b35b5",
     "component_description": "Attempt to fix to a number of errors that can occur over time in the database. For developers, testers, or difficult situations when a db schema is corrupted.",
     "component_licence": "ISC License",
     "component_name": "Repair Kit",
-    "component_sha256": "a51f40d98f4d579d053e1d21e15836414571f5886241d3ebfe490989c6860839",
     "component_builtin": "false",
     "component_type": "plugin",
     "component_id": "repairkit",
@@ -26,9 +26,9 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_repairkit_426.zip",
-            "package_sha256": "02dca647b2387257fa40b3fdcb8480166887fd1bd03b40e9e82526566c7f6015",
-            "package_size": 45497
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/9/wikindx_plugin_repairkit_461.zip",
+            "package_sha256": "9c3f8d20ff24043e7691f8fc2e97106b636c6b3dfbe327e8d1cb08c2d0bd50db",
+            "package_size": 45468
         }
     ]
 }

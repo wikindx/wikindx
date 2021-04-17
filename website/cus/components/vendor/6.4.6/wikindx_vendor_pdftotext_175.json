@@ -1,0 +1,42 @@
+{
+    "component_version": "175",
+    "component_sha256": "5e1ac8f70e270c05437830b2ffca89382df35cdf2db94dc213878479b14c1a1b",
+    "component_licence": "LGPL 2.1",
+    "component_name": "PdfToText",
+    "component_description": "The PdfToText class has been designed to extract textual contents from a PDF file.",
+    "component_website": "https://github.com/christian-vigh-phpclasses/PdfToText",
+    "component_id": "pdftotext",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_type": "vendor",
+    "component_authors": [
+        {
+            "author_name": "Christian Vigh",
+            "author_role": "Developer",
+            "author_copyright": "2016-2017",
+            "author_email": "christian.vigh@wuthering-bytes.com",
+            "author_website": "https://github.com/christian-vigh"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Packager",
+            "author_copyright": "2016-2017, 2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2016-2017, 2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/6.4.6/wikindx_vendor_pdftotext_175.zip",
+            "package_sha256": "327d9c94b52e07d61156b25228ef7377daa0fd73f4b33cfd31066feb47e9ee9e",
+            "package_size": 158659
+        }
+    ]
+}

@@ -137,8 +137,6 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
      */
     public function parse($text)
     {
-        ///		include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "cite", "CITE.php"]));
-        ///		$cite = new CITE($this->db, $this->vars);
         $text = $this->formatText($text);
 
         // handle <font>...</font> MAY NOT BE NEEDED
@@ -207,7 +205,9 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             }
         }
         // Deal with citations
-        $text = $this->cite->parseCitations($text, 'rtf', FALSE, FALSE, TRUE);
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "CITE.php"]));
+		$cite = new CITE('rtf');
+        $text = $cite->parseCitations($text, 'rtf', FALSE, FALSE, TRUE);
         // handles section breaks
         $text = preg_replace(
             "/(__WIKINDX__NEWLINEPAR__)*__WIKINDX__SECTION__(__WIKINDX__NEWLINEPAR__)*/u",

@@ -176,7 +176,7 @@ class CITESTYLE
                 return $pString;
             }
         }
-        if (($this->output == 'htmlNoBib') || ($this->output = 'ooxml'))
+        if (($this->output == 'htmlNoBib') || ($this->output == 'ooxml'))
         {
             return $pString;
         }

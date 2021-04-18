@@ -37,7 +37,6 @@ class MySQL_Backup
 
     private $db;
     private $vars;
-    private $prefix;
 
 
     public function __construct()
@@ -48,7 +47,6 @@ class MySQL_Backup
         $this->username = WIKINDX_DB_USER;
         $this->password = WIKINDX_DB_PASSWORD;
         $this->database = WIKINDX_DB;
-        $this->prefix = "wkx_";
     }
 
 
@@ -100,30 +98,15 @@ class MySQL_Backup
 
     public function _GetTables()
     {
-        $value = [];
         $tables = $this->db->listTables(TRUE);
 
-        foreach ($tables as $table)
-        {
-            if (empty($this->tables) || in_array($table, $this->tables))
-            {
-                // Process only tables of WIKINDX
-                if (substr($table, 0, strlen($this->prefix)) == $this->prefix)
-                {
-                    $value[] = $table;
-                }
-            }
-        }
-
-        if (!count($value))
+        if (count($tables) == 0)
         {
             $this->error = 'No tables found in database.';
             $this->errno = $this->db->errno;
-
-            return FALSE;
         }
 
-        return $value;
+        return $tables;
     }
 
 
@@ -179,13 +162,12 @@ class MySQL_Backup
     public function _GetInserts($table, $nulls)
     {
         $value = '';
-        $prefix = $this->prefix;
 
         // Lock the table
         $this->_Query("LOCK TABLES `$table` WRITE;");
 
         // Select all rows of the table
-        $sql = $this->db->selectNoExecute(preg_replace("/$prefix/ui", '', $table), '*') . ";\n";
+        $sql = $this->db->selectNoExecute($table, '*') . ";\n";
 
         if (($result = $this->db->query($sql)))
         {
@@ -257,7 +239,8 @@ class MySQL_Backup
             $value .= '#' . "\n\n\n";
         }
 
-        if (!($tables = $this->_GetTables()))
+        $tables = $this->_GetTables();
+        if (count($tables) == 0)
         {
             return FALSE;
         }

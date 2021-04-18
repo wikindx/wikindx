@@ -629,7 +629,7 @@ class ENDNOTEIMPORT
         return $this->common->writeResourceTable($fields, $values);
     }
     /**
-     * writeCollectionTable - write WKX_collection table
+     * writeCollectionTable - write collection table
      */
     private function writeCollectionTable()
     {
@@ -654,7 +654,7 @@ class ENDNOTEIMPORT
         $this->deleteCacheCollections = TRUE;
     }
     /**
-     * writePublisherTable - write WKX_publisher table
+     * writePublisherTable - write publisher table
      */
     private function writePublisherTable()
     {
@@ -679,7 +679,7 @@ class ENDNOTEIMPORT
         $this->deleteCachePublishers = TRUE;
     }
     /**
-     * writeResourceMiscTable - write WKX_resource_misc table
+     * writeResourceMiscTable - write resource_misc table
      */
     private function writeResourceMiscTable()
     {
@@ -720,7 +720,7 @@ class ENDNOTEIMPORT
         $this->common->writeResourcemiscTable($fields, $values);
     }
     /**
-     * writeResourceYearTable - write WKX_resource_year table
+     * writeResourceYearTable - write resource_year table
      */
     private function writeResourceYearTable()
     {
@@ -739,7 +739,7 @@ class ENDNOTEIMPORT
         $this->common->writeYearTable($fields, $values);
     }
     /**
-     * writeResourcePageTable - write WKX_resource_page table
+     * writeResourcePageTable - write resource_page table
      */
     private function writeResourcePageTable()
     {
@@ -761,7 +761,7 @@ class ENDNOTEIMPORT
         $this->common->writePageTable($fields, $values);
     }
     /**
-     * writeResourceTextTable - write WKX_resource_text table
+     * writeResourceTextTable - write resource_text table
      */
     private function writeResourceTextTable()
     {
@@ -781,7 +781,7 @@ class ENDNOTEIMPORT
         $this->common->writeResourcetextTable($notes, $abstract, $url);
     }
     /**
-     * writeResourceKeywordTable - write WKX_resource_keyword table
+     * writeResourceKeywordTable - write resource_keyword table
      */
     private function writeResourceKeywordTable()
     {
@@ -792,7 +792,7 @@ class ENDNOTEIMPORT
         }
     }
     /**
-     * writeResourceCustomTable - write WKX_resource_custom table
+     * writeResourceCustomTable - write resource_custom table
      *
      * @param mixed $custom assoc array of one entry for import
      */

@@ -924,7 +924,7 @@ class SQLSTATEMENTS
      *
      * result is a tidied SQL condition such as:
      * (`matchField` NOT IN (
-     *  SELECT `userbibliographyresourceResourceId` FROM `WKX_user_bibliography_resource`
+     *  SELECT `userbibliographyresourceResourceId` FROM `user_bibliography_resource`
      *  WHERE (`userbibliographyresourceBibliographyId` = 1)
      *  )
      *

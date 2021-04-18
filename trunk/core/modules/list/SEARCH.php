@@ -2593,7 +2593,7 @@ class SEARCH
     and with user ID 1):
     SELECT COUNT(*) AS `count`, `resourcemetadataId`
     FROM `resource_metadata`
-    LEFT JOIN `WKX_user_bibliography_resource` ON `userbibliographyresourceResourceId` = `resourcemetadataResourceId`
+    LEFT JOIN `user_bibliography_resource` ON `userbibliographyresourceResourceId` = `resourcemetadataResourceId`
     WHERE
     (
         `resourcemetadataId` IN

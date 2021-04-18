@@ -25,6 +25,7 @@ You will need to download and install the appropriate binaries from the bibutils
 ************************************************************************
 CHANGELOG:
 
+2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2020-04-08 : CHG : Shift resource URLs from the resource_text table to a new resource_url table [#284].
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
 2020-12-21 : CHG : convert UTF8 class to a namespace.

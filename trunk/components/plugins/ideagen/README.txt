@@ -23,6 +23,7 @@ Thus, components/plugins/ideagen/index.php etc.
 
 CHANGELOG:
 
+2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2021-04-16 : CHG : re-enable the insertion of plug-ins into the metadata menu.
                    Where the plugin config.php file inserted into 'text', this should now be 'metadata'.
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).

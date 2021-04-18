@@ -14,5 +14,5 @@ class chooselanguage_CONFIG
     /** int */
     public $authorize = 0;
     /** float */
-    public $wikindxVersion = 9;
+    public $wikindxVersion = 10;
 }

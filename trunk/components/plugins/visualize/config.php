@@ -14,7 +14,7 @@ class visualize_CONFIG
     /** int */
     public $authorize = 2;
     /** float */
-    public $wikindxVersion = 9;
+    public $wikindxVersion = 10;
     /**
      * image width (pixels)
      */

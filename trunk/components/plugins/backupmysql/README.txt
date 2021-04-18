@@ -41,6 +41,7 @@ http://www.phpclasses.org/package/2779-PHP-Backup-MySQL-databases-to-files-with-
 
 CHANGELOG:
 
+2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
 2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
 2020-12-21 : FIX : Send HTTP Error Code 404 for a missing download.

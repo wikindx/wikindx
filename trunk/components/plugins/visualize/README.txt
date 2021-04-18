@@ -20,6 +20,7 @@ Thus, plugins/visualize/index.php etc.
 
 CHANGELOG:
 
+2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
 2020-12-21 : FIX : display error.
 2020-12-21 : CHG : handle multiple tabs.

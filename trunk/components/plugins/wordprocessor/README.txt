@@ -24,6 +24,7 @@ Papers can be imported from earlier versions by using the 'Import paper' functio
 
 CHANGELOG:
 
+2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2021-04-18 : CHG : remove the db table prefix [#346].
 2021-02-10 : CHG : move the help on the website [#294].
 2020-12-21 : CHG : remove the unused tinymce compressor loader.

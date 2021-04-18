@@ -44,6 +44,7 @@ BUGS AND LIMITATIONS
 
 CHANGELOG:
 
+2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2021-03-02 : FIX : allow the two syntax of current_timestamp() for MySQL and MariaDB.
 2021-03-02 : FIX : workaround a limitation of MySQL (no self update of a table)
 2021-01-28 : ADD : user account deduplication (#287).

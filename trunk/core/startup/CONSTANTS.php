@@ -67,10 +67,10 @@ define('WIKINDX_INTERNAL_VERSION_UPGRADE_MIN', 5.1);
  * @name WIKINDX_COMPONENTS_COMPATIBLE_VERSION
  */
 define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
-    'plugin'    => 9, // Must be an integer
-    'style'     => 5, // Must be an integer
-    'template'  => 1, // Must be an integer
-    'vendor'    => WIKINDX_PUBLIC_VERSION, // Identical to the public version because this type of component is very closely linked to a version of the core
+    'plugin'    => 10, // Must be an integer
+    'style'     =>  5, // Must be an integer
+    'template'  =>  1, // Must be an integer
+    'vendor'    =>  WIKINDX_PUBLIC_VERSION, // Identical to the public version because this type of component is very closely linked to a version of the core
 ]);
 /**
  * Integer. For office add-ins. In each add-in (Word, Google Docs, LibreOffice etc.) the compatibility variable must equal this.

@@ -17,6 +17,7 @@ Thus, plugins/adminstyle/index.php etc.
 
 CHANGELOG:
 
+2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2021-04-08 : CHG : Shift resource URLs from the resource_text table to a new resource_url table [#284].
 2021-02-10 : CHG : move the help on the website [#294].
 2021-01-08 : FIX : restore temporarily the old languages list for style components [#305].

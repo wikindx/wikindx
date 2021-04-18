@@ -19,6 +19,7 @@ Adminer website: https://www.adminer.org/
 
 CHANGELOG:
 
+2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2021-02-10 : CHG : Update adminer to 4.8.0 (https://github.com/vrana/adminer/releases/tag/v4.8.0).
 2021-02-07 : CHG : Update adminer to 4.7.9 (https://github.com/vrana/adminer/releases/tag/v4.7.9).
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).

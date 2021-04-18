@@ -40,7 +40,7 @@ class USER
         $this->session = FACTORY_SESSION::getInstance();
     }
     /**
-     * Write user details to WKX_users
+     * Write user details to users
      *
      * If $admin = 0, this is a standard user.
      * If $admin = 1, this is the initial configuration/reconfiguration and we need to insert superadmin details into the database.
@@ -1481,7 +1481,7 @@ class USER
     /**
      * Delete user(s) from user table and handle users' metadata
      *
-     * @param array $input Array of ids in WKX_users.
+     * @param array $input Array of ids in users.
      *
      * @return bool
      */
@@ -1632,7 +1632,7 @@ class USER
     }
     
     /**
-     * Write ldap user details to WKX_users
+     * Write ldap user details to users
      *
      * We don't store the LDAP password just 'LDAP' to indicate a LDAP user
      *

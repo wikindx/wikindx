@@ -858,7 +858,7 @@ class RTFEXPORT
     private function prepareFontBlocks()
     {
         //		$sqlSelectReplace = "SELECT ";
-        //		$sqlJoinReplace = "FROM " . $this->db->formatTable('WKX_resource');
+        //		$sqlJoinReplace = "FROM " . $this->db->formatTable('resource');
 
         if (array_key_exists("divider", $this->input))
         {

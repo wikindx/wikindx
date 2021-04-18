@@ -340,7 +340,7 @@ class IMPORTBIBTEX
         return $wkType;
     }
     /**
-     * writeResourceMiscTable - write WKX_resource_misc table
+     * writeResourceMiscTable - write resource_misc table
      *
      * @param array $entry Assoc array of one entry for import.
      * @param string $wkType The WIKINDX resource type for this bibtex entry
@@ -421,7 +421,7 @@ class IMPORTBIBTEX
         $this->import->writeResourcemiscTable($fields, $values);
     }
     /**
-     * writeResourceCustomTable - write WKX_resource_custom table
+     * writeResourceCustomTable - write resource_custom table
      *
      * @param mixed $custom
      */
@@ -788,7 +788,7 @@ class IMPORTBIBTEX
             $this->resourceId = $this->writeResourceTable($noSort, $title, $subtitle, $entry, $wkType);
             $this->rIds[] = $this->resourceId;
             // add any import tag and get tag auto ID.  We write it here after the resource table in case we forbid duplicates and all
-            // bibtex entries are duplicates - we don't want an empty tag in the WKX_tag table.  tag auto ID is written to resource_misc
+            // bibtex entries are duplicates - we don't want an empty tag in the tag table.  tag auto ID is written to resource_misc
             if (!$continue)
             {
                 if (!$tagWritten)
@@ -890,7 +890,7 @@ class IMPORTBIBTEX
         return $this->import->writeResourceTable($fields, $values);
     }
     /**
-     * writeResourceTable - write WKX_resource table and get lastAutoId
+     * writeResourceTable - write resource table and get lastAutoId
      *
      * @param mixed $noSort
      * @param string $title
@@ -909,7 +909,7 @@ class IMPORTBIBTEX
      * @param mixed $editors
      * @param string $wkType
      *
-     * @return comma-separated list of creator IDs ready for insertion into WKX_resource_creator table.
+     * @return comma-separated list of creator IDs ready for insertion into resource_creator table.
      */
     private function writeCreatorTable($authors, $editors, $wkType)
     {
@@ -946,7 +946,7 @@ class IMPORTBIBTEX
         $this->import->writeCreatorTables($creatorArray);
     }
     /**
-     * writeCollectionTable - write WKX_collection table
+     * writeCollectionTable - write collection table
      *
      * The only input from bibtex that can be a wikindx 'collection' is the 'journal' field or, for @inbook,
      * the 'booktitle' field.
@@ -996,7 +996,7 @@ class IMPORTBIBTEX
         $this->deleteCacheCollections = TRUE;
     }
     /**
-     * writePublisherTable - write WKX_publisher table
+     * writePublisherTable - write publisher table
      *
      * @param array $entry Assoc array of one entry for import.
      * @param string $wkType The WIKINDX resource type for this bibtex entry
@@ -1059,7 +1059,7 @@ class IMPORTBIBTEX
         $this->deleteCachePublishers = TRUE;
     }
     /**
-     * writeResourceYearTable - write WKX_resource_year table
+     * writeResourceYearTable - write resource_year table
      *
      * @param array $entry Assoc array of one entry for import.
      * @param string $wkType The WIKINDX resource type for this bibtex entry
@@ -1081,7 +1081,7 @@ class IMPORTBIBTEX
         $this->import->writeYearTable($fields, $values);
     }
     /**
-     * writeResourcePageTable - write WKX_resource_page table
+     * writeResourcePageTable - write resource_page table
      *
      * @param array $entry Assoc array of one entry for import.
      * @param string $wkType
@@ -1114,7 +1114,7 @@ class IMPORTBIBTEX
         $this->import->writePageTable($fields, $values);
     }
     /**
-     * writeResourceNoteTable - write WKX_resource_note table
+     * writeResourceNoteTable - write resource_note table
      *
      * @param array $entry Assoc array of one entry for import.
      */
@@ -1140,7 +1140,7 @@ class IMPORTBIBTEX
         $this->import->writeResourcetextTable($notes, $abstract, $this->url);
     }
     /**
-     * writeResourceKeywordTable - write WKX_resource_keyword table
+     * writeResourceKeywordTable - write resource_keyword table
      *
      * @param array $entry Assoc array of one entry for import.
      */

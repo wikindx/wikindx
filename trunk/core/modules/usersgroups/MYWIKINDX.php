@@ -371,7 +371,7 @@ class MYWIKINDX
     public function appearanceConfigEdit()
     {
         $this->checkAppearanceInput();
-        // If this is a logged on user, write preferences to WKX_user_preferences
+        // If this is a logged on user, write preferences to user_preferences
         if ($this->session->getVar("setup_UserId"))
         {
             $user = FACTORY_USER::getInstance();

@@ -426,7 +426,7 @@ class ENDNOTEIMPORT
             }
             $this->resourceId = $this->writeResourceTable($noSort, $title, $subtitle);
             // add any import tag and get tag auto ID.  We write it here after the resource table in case we forbid duplicates and all
-            // endnote entries are duplicates - we don't want an empty tag in the WKX_tag table.
+            // endnote entries are duplicates - we don't want an empty tag in the tag table.
             if (!$continue)
             {
                 if (!$tagWritten)
@@ -579,7 +579,7 @@ class ENDNOTEIMPORT
         return $tmp[0] + $tmp[1];
     }
     /**
-     * writeResourceTable - write WKX_resource table and get lastAutoId
+     * writeResourceTable - write resource table and get lastAutoId
      *
      * @param mixed $noSort
      * @param mixed $title

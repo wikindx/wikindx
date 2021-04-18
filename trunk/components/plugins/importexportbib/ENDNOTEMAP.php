@@ -36,7 +36,7 @@ class ENDNOTEMAP
     /**
      * Create arrays based on database table and resource type.
      * The arrays are named for WIKINDX resource types.
-     * The key of the resource_xxx arrays is the database resourceField within the WKX_resource_xxx database table. For exporting
+     * The key of the resource_xxx arrays is the database resourceField within the resource_xxx database table. For exporting
      * Endnote tabbed files this is not needed but will prove useful should there be an eventual Endnote import.
      * The key of the resource_xxx array is the WIKINDX resourceField in that table while the value is the Endnote
      * equivalent resourceField (Generic).  For an export, these keys can be found as the resourceFields in the SQL $row assoc. array.

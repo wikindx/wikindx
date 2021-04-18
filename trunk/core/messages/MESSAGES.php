@@ -1364,7 +1364,7 @@ class MESSAGES
 				"department" => dgettext($domain, "Department"),
 				"institution" => dgettext($domain, "Institution"),
 			),
-/// resourceType_ Mapping WKX_resource.type to description.
+/// resourceType_ Mapping resource.type to description.
 		    "resourceType" => array(
 				"book" => dgettext($domain, "Book"),
 /// resourceType_book_article Titled chapter in book (i.e. chapter has title not number)

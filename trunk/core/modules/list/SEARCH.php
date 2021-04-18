@@ -2592,21 +2592,21 @@ class SEARCH
     for searches within a bibliography, the SQL should be something like (here, pulling paraphrase comments against resources in bibliography ID 86
     and with user ID 1):
     SELECT COUNT(*) AS `count`, `resourcemetadataId`
-    FROM `WKX_resource_metadata`
+    FROM `resource_metadata`
     LEFT JOIN `WKX_user_bibliography_resource` ON `userbibliographyresourceResourceId` = `resourcemetadataResourceId`
     WHERE
     (
         `resourcemetadataId` IN
         (
             SELECT `resourcemetadataMetadataId`
-            FROM `WKX_resource_metadata`
+            FROM `resource_metadata`
             WHERE
                 (CASE
                     WHEN (`resourcemetadataPrivate` != 'N' AND `resourcemetadataPrivate` != 'Y' )
                     THEN
                     (
                         SELECT `usergroupsusersId`
-                        FROM `WKX_user_groups_users`
+                        FROM `user_groups_users`
                         WHERE (`usergroupsusersUserId` = '1')
                         AND (`usergroupsusersGroupId` = `resourcemetadataPrivate`)
                     )

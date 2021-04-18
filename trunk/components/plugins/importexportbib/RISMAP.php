@@ -25,7 +25,7 @@ class RISMAP
      * Create arrays based on database table and resource type
      *
      * The arrays are named for WIKINDX resource types.
-     * The key of the resource_xxx arrays is the database field within the WKX_resource_xxx database table. For exporting
+     * The key of the resource_xxx arrays is the database field within the resource_xxx database table. For exporting
      * RIS files this is not needed but will prove useful should there be an eventual RIS import.
      * The key of the resource_xxx array is the WIKINDX field in that table while the value is the RIS
      * equivalent field.  For an export, these keys can be found as the fields in the SQL $row assoc. array.

@@ -228,7 +228,7 @@ class RESOURCEMAP
     /**
      * Create arrays based on database table and resource type.
      *
-     * The key of the resource_xxx arrays is the database field within the WKX_resource_xxx database table.
+     * The key of the resource_xxx arrays is the database field within the resource_xxx database table.
      * The value of the resource_xxx arrays is the key input to the MESSAGES class for language localizations.
      */
     private function loadMap()

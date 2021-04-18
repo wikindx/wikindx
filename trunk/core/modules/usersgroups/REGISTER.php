@@ -124,7 +124,7 @@ class REGISTER
             $this->badInput->close($error, $this, 'initRegister');
         }
         // END email
-        // Now write details to WKX_user_register database
+        // Now write details to user_register database
         $fields[] = 'userregisterHashKey';
         $values[] = $hashKey;
         $fields[] = 'userregisterEmail';
@@ -296,7 +296,7 @@ class REGISTER
         {
             $this->badInput->close($error, $this, 'initRegister');
         }
-        // Now write details to WKX_user_register database
+        // Now write details to user_register database
         $fields[] = 'userregisterHashKey';
         $values[] = md5(time());
         $fields[] = 'userregisterEmail';

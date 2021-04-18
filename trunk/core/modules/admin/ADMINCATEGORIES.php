@@ -461,7 +461,7 @@ class ADMINCATEGORIES
      *
      * 'General' category always has id 1.
      *
-     * @param array $input Array of ids in WKX_category
+     * @param array $input Array of ids in category
      *
      * @return true
      */
@@ -502,9 +502,9 @@ class ADMINCATEGORIES
         return TRUE;
     }
     /**
-     * Delete subcategory(s) from subcategory table and from subcategories field in WKX_resource_category.
+     * Delete subcategory(s) from subcategory table and from subcategories field in resource_category.
      *
-     * @param array $input Array of ids in WKX_subcategory
+     * @param array $input Array of ids in subcategory
      *
      * @return true
      */

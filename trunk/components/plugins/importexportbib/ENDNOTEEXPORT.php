@@ -734,7 +734,7 @@ class ENDNOTEEXPORT
         }
     }
     /**
-     * grab any stored data for this resource from WKX_import_raw
+     * grab any stored data for this resource from import_raw
      *
      * @param mixed $row
      *

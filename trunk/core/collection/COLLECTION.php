@@ -36,7 +36,7 @@ class COLLECTION
         $this->messages = FACTORY_MESSAGES::getInstance();
     }
     /**
-     * Get collection from WKX_collection.  Return associative array of id => collection
+     * Get collection from collection.  Return associative array of id => collection
      *
      * @param string $type Default is FALSE
      * @param bool $userBib Default is FALSE

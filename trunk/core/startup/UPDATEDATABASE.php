@@ -2005,7 +2005,7 @@ END;
     /**
      * Upgrade database to version 54 (6.4.5)
      *
-     * Store session in wkx_session table
+     * Store session in session table
      */
     private function upgradeTo54()
     {

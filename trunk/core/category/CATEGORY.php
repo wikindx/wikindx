@@ -33,7 +33,7 @@ class CATEGORY
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
     }
     /**
-     * Get category names from WKX_category.  Return associative array of id => category.
+     * Get category names from category.  Return associative array of id => category.
      *
      * @param bool $userBib FALSE (default) or TRUE (return only resource types within current user bibliography)
      * @param bool $extant FALSE (default) or TRUE (return only categories for which resources exist)
@@ -95,7 +95,7 @@ class CATEGORY
         return FALSE;
     }
     /**
-     * Get subcategory names from WKX_subcategory.  Return associative array of id => subcategory.
+     * Get subcategory names from subcategory.  Return associative array of id => subcategory.
      *
      * @param bool $withCategory FALSE (default) or TRUE (return list of subcategories repended by their relevant category name)
      * @param bool $userBib FALSE (default) or TRUE (return only resource types within current user bibliography)

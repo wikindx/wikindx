@@ -29,7 +29,7 @@ class KEYWORD
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
     }
     /**
-     * Get keyword names from WKX_keyword.
+     * Get keyword names from keyword.
      *
      * @param bool $userBib FALSE (default) or TRUE (return only resource types within current user bibliography)
      * @param mixed $kType FALSE (default) or metadata type or metadata array ('quote', 'paraphrase' etc). Gather only keywords attached to metadata

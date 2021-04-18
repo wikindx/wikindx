@@ -400,7 +400,7 @@ class EXPORTCOMMON
         return preg_replace("/[{|}]/u", "", $string);
     }
     /**
-     * grabNote - grab note from WKX_resource_note and strip (optionally) multiple whitespace
+     * grabNote - grab note from resource_note and strip (optionally) multiple whitespace
      *
      * @param assocArray $row
      * @param bool $exportType
@@ -436,7 +436,7 @@ class EXPORTCOMMON
         return '';
     }
     /**
-     * grabAbstract - abstract from WKX_resource_abstract and strip (optionally) multiple whitespace
+     * grabAbstract - abstract from resource_abstract and strip (optionally) multiple whitespace
      *
      * @param assocArray $row
      * @param bool $exportType

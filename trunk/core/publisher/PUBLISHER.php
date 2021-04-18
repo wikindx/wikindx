@@ -41,7 +41,7 @@ class PUBLISHER
         $this->messages = FACTORY_MESSAGES::getInstance();
     }
     /**
-     * Get publishers from WKX_publisher.  Return associative array of id => type
+     * Get publishers from publisher.  Return associative array of id => type
      *
      * @param string $type Default is FALSE
      * @param int $userBib Default is FALSE

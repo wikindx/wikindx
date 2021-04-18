@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `wkx_session` (
+CREATE TABLE IF NOT EXISTS `session` (
     -- Max length of a session id is 256 characters
     -- cf. https://www.php.net/manual/en/session.configuration.php#ini.session.sid-length
     `sessionId` VARCHAR(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,

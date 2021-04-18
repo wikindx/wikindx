@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `wkx_version` (
+CREATE TABLE IF NOT EXISTS `version` (
   `versionComponentType` varchar(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `versionComponentId` varchar(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `versionInternalVersion` int(11) NOT NULL DEFAULT 0,

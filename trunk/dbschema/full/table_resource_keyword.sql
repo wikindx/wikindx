@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `wkx_resource_keyword` (
+CREATE TABLE IF NOT EXISTS `resource_keyword` (
   `resourcekeywordId` int(11) NOT NULL AUTO_INCREMENT,
   `resourcekeywordResourceId` int(11) DEFAULT NULL,
   `resourcekeywordMetadataId` int(11) DEFAULT NULL,

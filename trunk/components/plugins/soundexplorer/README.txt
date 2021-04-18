@@ -23,6 +23,7 @@ Thus, plugins/soundexplorer/index.php etc.
 
 CHANGELOG:
 
+2021-04-18 : CHG : remove the db table prefix [#346].
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
 2020-12-21 : CHG : convert UTF8 class to a namespace.
 2020-12-21 : CHG : handle multiple tabs.

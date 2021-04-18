@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `wkx_news` (
+CREATE TABLE IF NOT EXISTS `news` (
   `newsId` int(11) NOT NULL AUTO_INCREMENT,
   `newsTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `newsNews` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,

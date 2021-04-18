@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `wkx_tag` (
+CREATE TABLE IF NOT EXISTS `tag` (
   `tagId` int(11) NOT NULL AUTO_INCREMENT,
   `tagTag` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`tagId`)

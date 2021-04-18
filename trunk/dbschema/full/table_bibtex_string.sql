@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `wkx_bibtex_string` (
+CREATE TABLE IF NOT EXISTS `bibtex_string` (
   `bibtexstringId` int(11) NOT NULL AUTO_INCREMENT,
   `bibtexstringText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
   PRIMARY KEY (`bibtexstringId`)

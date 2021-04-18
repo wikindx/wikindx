@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `wkx_user_bibliography` (
+CREATE TABLE IF NOT EXISTS `user_bibliography` (
   `userbibliographyId` int(11) NOT NULL AUTO_INCREMENT,
   `userbibliographyUserId` int(11) DEFAULT NULL,
   `userbibliographyUserGroupId` int(11) DEFAULT NULL,

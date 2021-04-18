@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `wkx_cache` (
+CREATE TABLE IF NOT EXISTS `cache` (
   `cacheResourceCreators` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `cacheMetadataCreators` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `cacheKeywords` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,

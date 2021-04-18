@@ -203,7 +203,7 @@ class soundexplorer_MODULE
             if (array_search('plugin_soundexplorer', $tables) === FALSE)
             {
                 $this->db->queryNoError("
-                    CREATE TABLE `" . $db->formatTables("plugin_soundexplorer") . "` (
+                    CREATE TABLE `plugin_soundexplorer` (
                         `pluginsoundexplorerId` int(11) NOT NULL AUTO_INCREMENT,
                         `pluginsoundexplorerUserId` int(11) NOT NULL,
                         `pluginsoundexplorerLabel` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,

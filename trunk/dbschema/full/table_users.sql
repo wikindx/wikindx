@@ -7,7 +7,7 @@
 -- SQL script of the WIKINDX db schema for MySQL
 -- 
 
-CREATE TABLE IF NOT EXISTS `wkx_users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `usersId` int(11) NOT NULL AUTO_INCREMENT,
   `usersUsername` varchar(188) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usersPassword` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',

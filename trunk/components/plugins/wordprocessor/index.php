@@ -552,7 +552,7 @@ class wordprocessor_MODULE
         if (array_search('plugin_wordprocessor', $tables) === FALSE)
         {
             $this->db->queryNoError("
-                CREATE TABLE `" . $db->formatTables("plugin_wordprocessor") . "` (
+                CREATE TABLE `plugin_wordprocessor` (
                 	`pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
                 	`pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
                 	`pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,

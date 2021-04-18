@@ -948,8 +948,12 @@ namespace UTILS
     function verifyUserPassword($dbo, $usersId, $usersPassword)
     {
         $dbo->formatConditions(["usersId" => $usersId]);
-        $recordset = $dbo->select("users", "usersPassword");
-        
+        $recordset = $dbo->queryNoError($dbo->selectNoExecute("users", "usersPassword"));
+        if ($recordset === FALSE)
+        {
+            $dbo->formatConditions(["usersId" => $usersId]);
+            $recordset = $dbo->queryNoError($dbo->selectNoExecute("wxk_users", "usersPassword"));
+        }
         if ($recordset !== FALSE)
         {
             $row = $dbo->fetchRow($recordset);

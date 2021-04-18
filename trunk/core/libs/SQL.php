@@ -539,7 +539,7 @@ class SQL
 				WHERE
 					TABLE_TYPE = 'BASE TABLE'
 					AND TABLE_SCHEMA = '" . WIKINDX_DB . "'
-					AND LOWER(TABLE_NAME) = LOWER('" . "wkx_" . $table . "')
+					AND LOWER(TABLE_NAME) = LOWER('" . $table . "')
 			);
 		");
     }

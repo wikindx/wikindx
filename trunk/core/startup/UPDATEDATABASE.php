@@ -1016,7 +1016,7 @@ END;
 
         $this->updateDbSchema('5.4-begin');
 
-        if (!$this->db->tableExists('configtemp'))
+        if (!$this->db->tableExists('wkx_configtemp'))
         {
             // Update db summary no. in case we have attempted to upgrade a database less than 5.3 (we've been through the previous stages successfully)
             $this->updateCoreInternalVersion();
@@ -1030,7 +1030,7 @@ END;
             // In all cases, if a config parameter has an empty value we only keep its name
             if (!$value)
             {
-                $this->db->insert('configtemp', ['configName'], [$key]);
+                $this->db->insert('wkx_configtemp', ['configName'], [$key]);
 
                 continue; // Jump to the next parameter
             }
@@ -1111,7 +1111,7 @@ END;
             // Deal with datetime type
             elseif ($key == 'configStatisticsCompiled')
             {
-                $this->db->insert('configtemp', ['configName', 'configDatetime'], [$key, $value]);
+                $this->db->insert('wkx_configtemp', ['configName', 'configDatetime'], [$key, $value]);
             }
         }
         
@@ -1185,7 +1185,7 @@ END;
                 }
             }
             
-            $this->db->insert('configtemp', ['configName', $cnfField["fv"]], [$cnfField["fn"], $value]);
+            $this->db->insert('wkx_configtemp', ['configName', $cnfField["fv"]], [$cnfField["fn"], $value]);
         }
 
         $this->updateDbSchema('5.4-end');
@@ -1975,9 +1975,9 @@ END;
         // Remove 
 		$this->session->clearArray("sql");
 		$this->session->clearArray("bookmark");
-    	if ($this->db->tableExists('plugin_soundexplorer')) {
+    	if ($this->db->tableExists('wkx_plugin_soundexplorer')) {
     		$this->db->formatConditions(['pluginsoundexplorerUserId' => WIKINDX_SUPERADMIN_ID]);
-    		$this->db->delete('plugin_soundexplorer');
+    		$this->db->delete('wkx_plugin_soundexplorer');
     	}
         $this->updateCoreInternalVersion();
     }

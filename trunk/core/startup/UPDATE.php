@@ -49,7 +49,9 @@ namespace UPDATE
     }
     
     /**
-     * Check if 'database_summary' table that stores the version number of the db schema exists
+     * Check if 'version' table that stores the version number of the db schema exists
+     *
+     * Check also the old names of the version table.
      *
      * This function is used only during the upgrade process.
      *
@@ -59,7 +61,7 @@ namespace UPDATE
      */
     function existsTableVersion($dbo)
     {
-        return $dbo->tableExists('version') || $dbo->tableExists('database_summary');
+        return $dbo->tableExists('version') ||  $dbo->tableExists('wkx_version') || $dbo->tableExists('wkx_database_summary');
     }
     
     /**
@@ -81,30 +83,42 @@ namespace UPDATE
         $dbo->formatConditions(["versionComponentType" => $ComponentType]);
         $dbo->formatConditions(['versionComponentId' => $ComponentId]);
         $recordset = $dbo->queryNoError($dbo->selectNoExecute('version', 'versionInternalVersion'));
-        // From version 34 (6.4.0)
+        // From version 57 (6.4.7)
         if ($recordset !== FALSE)
         {
             $row = $dbo->fetchRow($recordset);
             $version = (float) $row['versionInternalVersion'];
         }
-        // Up to version 33 (6.4.0)
+        // Up to version 34 (6.4.0)
         else
         {
-            $recordset = $dbo->queryNoError($dbo->selectNoExecute('database_summary', '*'));
+            $dbo->formatConditions(["versionComponentType" => $ComponentType]);
+            $dbo->formatConditions(['versionComponentId' => $ComponentId]);
+            $recordset = $dbo->queryNoError($dbo->selectNoExecute('wkx_version', 'versionInternalVersion'));
             if ($recordset !== FALSE)
             {
                 $row = $dbo->fetchRow($recordset);
-                // Up to version 33 (6.4.0)
-                if (array_key_exists('databasesummarySoftwareVersion', $row))
+                $version = (float) $row['versionInternalVersion'];
+            }
+            // Up to version 33 (6.4.0)
+            else
+            {
+                $recordset = $dbo->queryNoError($dbo->selectNoExecute('wkx_database_summary', '*'));
+                if ($recordset !== FALSE)
                 {
-                    $field = "databasesummarySoftwareVersion";
+                    $row = $dbo->fetchRow($recordset);
+                    // Up to version 33 (6.4.0)
+                    if (array_key_exists('databasesummarySoftwareVersion', $row))
+                    {
+                        $field = "databasesummarySoftwareVersion";
+                    }
+                    // Up to version 5.9 (5.9.1)
+                    if (array_key_exists('databasesummaryDbVersion', $row))
+                    {
+                        $field = "databasesummaryDbVersion";
+                    }
+                    $version = floatval($row[$field]);
                 }
-                // Up to version 5.9 (5.9.1)
-                if (array_key_exists('databasesummaryDbVersion', $row))
-                {
-                    $field = "databasesummaryDbVersion";
-                }
-                $version = floatval($row[$field]);
             }
         }
         
@@ -137,15 +151,28 @@ namespace UPDATE
         // Up to version 5.9 (5.9.1)
         if ($version <= 5.9 && $ComponentId == "core")
         {
-            $dbo->update("database_summary", ["databasesummaryDbVersion" => $version]);
+            $dbo->update("wkx_database_summary", ["databasesummaryDbVersion" => $version]);
         }
         // Up to version 33 (6.4.0)
         if ($version <= 33.0 && $ComponentId == "core")
         {
-            $dbo->update("database_summary", ["databasesummarySoftwareVersion" => $version]);
+            $dbo->update("wkx_database_summary", ["databasesummarySoftwareVersion" => $version]);
         }
-        // From version 34 (6.4.0)
-        if ($version >= 34.0)
+        // From version 34 (6.4.0) to 56 (6.4.6)
+        if ($version <= 56.0)
+        {
+            $dbo->formatConditions(["versionComponentType" => $ComponentType]);
+            $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+            if ($dbo->selectCountOnly("wkx_version", "versionComponentId") == 0)
+            {
+                $dbo->insert("wkx_version", ["versionComponentType", "versionComponentId"], [$ComponentType, $ComponentId]);
+            }
+            $dbo->formatConditions(["versionComponentType" => $ComponentType]);
+            $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+            $dbo->update("wkx_version", ["versionInternalVersion" => $version]);
+        }
+        // From version 57 (6.4.7)
+        if ($version >= 57.0)
         {
             $dbo->formatConditions(["versionComponentType" => $ComponentType]);
             $dbo->formatConditions(["versionComponentId" => $ComponentId]);
@@ -234,6 +261,11 @@ namespace UPDATE
     {
         $dbo->formatConditionsOneField(WIKINDX_SUPERADMIN_ID, 'usersId');
         $recordset = $dbo->queryNoError($dbo->selectNoExecute('users', 'usersId'));
+        if ($recordset === FALSE)
+        {
+            $dbo->formatConditionsOneField(WIKINDX_SUPERADMIN_ID, 'usersId');
+            $recordset = $dbo->queryNoError($dbo->selectNoExecute('wkx_users', 'usersId'));
+        }
 
         return ($recordset !== FALSE);
     }
@@ -252,6 +284,10 @@ namespace UPDATE
     {
         $email = WIKINDX_CONTACT_EMAIL_DEFAULT;
         $recordset = $dbo->queryNoError($dbo->selectNoExecute("config", "*"));
+        if ($recordset === FALSE)
+        {
+            $recordset = $dbo->queryNoError($dbo->selectNoExecute("wkx_config", "*"));
+        }
         if ($recordset !== FALSE)
         {
             $field = "";
@@ -295,7 +331,12 @@ namespace UPDATE
     {
         // superAdmin is id '1'
         $dbo->formatConditions(['usersUsername' => $username, 'usersId' => WIKINDX_SUPERADMIN_ID]);
-        $recordset = $dbo->select('users', ['usersId']);
+        $recordset = $dbo->queryNoError($dbo->selectNoExecute('users', ['usersId']));
+        if ($recordset === FALSE)
+        {
+            $dbo->formatConditions(['usersUsername' => $username, 'usersId' => WIKINDX_SUPERADMIN_ID]);
+            $recordset = $dbo->queryNoError($dbo->selectNoExecute('wkx_users', ['usersId']));
+        }
         if ($dbo->numRows($recordset) == 1)
         {
             // verify the password

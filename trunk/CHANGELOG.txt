@@ -6,7 +6,7 @@ Focus: bug fixes, maintenance
 
 IMPORTANT INFORMATION:
 
-This version remove the database prefix 'wkx_' from tables.
+This version remove the database prefix 'wkx_' from tables (official and unofficial).
 
 This functionality is only useful for several programs sharing the same database with the same table names or several WIKINDX installations in the same database. These two practices are to be avoided because they are a good way to lose your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. We believe that very few installs use this feature.
 

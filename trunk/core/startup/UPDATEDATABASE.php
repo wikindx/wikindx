@@ -2152,6 +2152,38 @@ END;
     }
     
     /**
+     * Upgrade database to version 57 (6.4.7)
+     *
+     * Check there are no non wikindx table in the db and block the upgrade if we find one.
+     */
+    private function upgradeTo57()
+    {
+        // Extract the list of tables
+        $tables = [];
+        foreach ($this->db->listTables() as $k => $table)
+        {
+            if ($this->db->basicTable($table) != $table)
+            {
+                $tables[] = $table;
+            }
+        }
+        
+        if (count($tables) > 0)
+        {
+            foreach ($tables as $k => $table)
+            {
+                $tablesrc = $table;
+                $tabledst = $this->db->basicTable($table);
+                //echo $tablesrc . "<br>\n";
+                //echo $tabledst . "<br>\n";
+                $this->renameTable($tablesrc, $tabledst);
+            }
+        }
+        
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()
@@ -3186,5 +3218,20 @@ END;
             $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
             $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
         }
+    }
+    
+    /*
+     * Rename a table
+     *
+     * @param string $tablesrc Fullname of a source table
+     * @param string $tabledst Fullname of a destination table
+     */
+    private function renameTable($tablesrc, $tabledst)
+    {
+        $tmpTable = uniqid("wkx_");
+        
+        // Change the name of all tables to lower case (workaround for mySQL engine on case sensitive files systems)
+        $this->db->queryNoError("ALTER TABLE `" . $tablesrc . "` RENAME AS `" . $tmpTable . "`;");
+        $this->db->queryNoError("ALTER TABLE `" . $tmpTable . "` RENAME AS `" . $tabledst . "`;");
     }
 }

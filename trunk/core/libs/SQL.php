@@ -312,9 +312,7 @@ class SQL
         $tables = $this->listTables();
         foreach ($tables as $k => $table)
         {
-            $basicTable = $this->basicTable($table);
-            
-            if (strpos($basicTable, 'plugin_') === 0)
+            if (strpos($table, 'plugin_') === 0)
             {
                 // ignore plugin tables
                 unset($tables[$k]);

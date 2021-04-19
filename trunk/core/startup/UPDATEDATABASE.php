@@ -879,6 +879,8 @@ END;
     {
         if ($version == WIKINDX_INTERNAL_VERSION)
             return WIKINDX_PUBLIC_VERSION;
+        elseif ($version >= 57)
+            return "6.4.7";
         elseif ($version >= 55)
             return "6.4.6";
         elseif ($version >= 54)
@@ -945,10 +947,17 @@ END;
             $version = (string) $version;
             
         \UPDATE\setCoreInternalVersion($this->db, $version);
-        // From v51, update super admin's usersLastInternalVersion
-        if ($version >= 51) {
+        // From v57, update super admin's usersLastInternalVersion (db prefix dropped)
+        if ($version >= 57)
+        {
 	        $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
 	        $this->db->update('users', ['usersLastInternalVersion' => $version]);
+	    }
+        // From v51, update super admin's usersLastInternalVersion
+        elseif ($version >= 51)
+        {
+	        $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
+	        $this->db->update('wkx_users', ['usersLastInternalVersion' => $version]);
 	    }
     }
     
@@ -1024,7 +1033,7 @@ END;
             $this->endDisplay();
         }
         // Read old config and transfer values to temp table
-        $row = $this->db->queryFetchFirstRow($this->db->selectNoExecute('config', '*'));
+        $row = $this->db->queryFetchFirstRow($this->db->selectNoExecute('wkx_config', '*'));
         foreach ($row as $key => $value)
         {
             // In all cases, if a config parameter has an empty value we only keep its name
@@ -1051,7 +1060,7 @@ END;
                 ($key == 'configTemplate') ||
                 ($key == 'configEmailNewRegistrations'))
             {
-                $this->db->insert('configtemp', ['configName', 'configVarchar'], [$key, $value]);
+                $this->db->insert('wkx_configtemp', ['configName', 'configVarchar'], [$key, $value]);
             }
             // Deal with text type
             elseif (
@@ -1059,7 +1068,7 @@ END;
                 ($key == 'configNoSort') ||
                 ($key == 'configSearchFilter')
             ) {
-                $this->db->insert('configtemp', ['configName', 'configText'], [$key, $value]);
+                $this->db->insert('wkx_configtemp', ['configName', 'configText'], [$key, $value]);
             }
             // Deal with varChar(1) type. These are not converted to boolean
             elseif (
@@ -1067,7 +1076,7 @@ END;
             ) {
                 // Can be 'D' for 'last days' or 'N' for set number of resources Рconvert to varChar row
                 $tValue = ($value == 'D') ? 'days' : 'number';
-                $this->db->insert('configtemp', ['configName', 'configVarchar'], [$key, $tValue]);
+                $this->db->insert('wkx_configtemp', ['configName', 'configVarchar'], [$key, $tValue]);
             }
             // Deal with varChar(1) type. These are converted to boolean
             elseif (
@@ -1091,7 +1100,7 @@ END;
             ) {
                 // 'N' or 'Y' Рconvert to 0 and 1 respectively
                 $bValue = ($value == 'N') ? 0 : 1;
-                $this->db->insert('configtemp', ['configName', 'configBoolean'], [$key, $bValue]);
+                $this->db->insert('wkx_configtemp', ['configName', 'configBoolean'], [$key, $bValue]);
             }
             // Deal with int(11) type
             elseif (
@@ -1106,7 +1115,7 @@ END;
                 ($key == 'configLastChangesDayLimit') ||
                 ($key == 'configPagingTagCloud')
             ) {
-                $this->db->insert('configtemp', ['configName', 'configInt'], [$key, $value]);
+                $this->db->insert('wkx_configtemp', ['configName', 'configInt'], [$key, $value]);
             }
             // Deal with datetime type
             elseif ($key == 'configStatisticsCompiled')
@@ -1191,8 +1200,7 @@ END;
         $this->updateDbSchema('5.4-end');
 
         $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
-        $user = FACTORY_USER::getInstance();
-        $user->writeSessionPreferences(FALSE);
+        $this->session->setVar("setup_Bibliographies", FALSE);
         
         $this->updateCoreInternalVersion();
     }
@@ -1441,11 +1449,11 @@ END;
         
         // For a period mid-2018 to mid-2019, resourceattachmentsTimestamp was not written – set these NULL values to current timestamp
         $this->db->formatConditions(['resourceattachmentsTimestamp' => 'IS NULL']);
-        $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId']);
+        $resultSet = $this->db->select('wkx_resource_attachments', ['resourceattachmentsId']);
         while ($row = $this->db->fetchRow($resultSet))
         {
             $this->db->formatConditions(['resourceattachmentsId' => $row['resourceattachmentsId']]);
-            $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->updateTimestamp('wkx_resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         
         $this->updateCoreInternalVersion();
@@ -1568,7 +1576,7 @@ END;
         // Strip HTML from bibliography descriptions
         $updateArray = [];
         $this->db->formatConditions(['userbibliographyDescription' => 'IS NOT NULL']);
-        $resultSet = $this->db->select('user_bibliography', ['userbibliographyId', 'userbibliographyDescription']);
+        $resultSet = $this->db->select('wkx_user_bibliography', ['userbibliographyId', 'userbibliographyDescription']);
         while ($row = $this->db->fetchRow($resultSet))
         {
             $desc = trim(\HTML\stripHtml($row['userbibliographyDescription']));
@@ -1580,13 +1588,13 @@ END;
         
         if (count($updateArray) > 0)
         {
-            $this->db->multiUpdate('user_bibliography', 'userbibliographyDescription', 'userbibliographyId', $updateArray);
+            $this->db->multiUpdate('wkx_user_bibliography', 'userbibliographyDescription', 'userbibliographyId', $updateArray);
         }
         
         // Strip HTML from attachment descriptions
         $updateArray = [];
         $this->db->formatConditions(['resourceattachmentsDescription' => 'IS NOT NULL']);
-        $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsDescription']);
+        $resultSet = $this->db->select('wkx_resource_attachments', ['resourceattachmentsId', 'resourceattachmentsDescription']);
         while ($row = $this->db->fetchRow($resultSet))
         {
             $desc = trim(\HTML\stripHtml($row['resourceattachmentsDescription']));
@@ -1598,7 +1606,7 @@ END;
         
         if (count($updateArray) > 0)
         {
-            $this->db->multiUpdate('resource_attachments', 'resourceattachmentsDescription', 'resourceattachmentsId', $updateArray);
+            $this->db->multiUpdate('wkx_resource_attachments', 'resourceattachmentsDescription', 'resourceattachmentsId', $updateArray);
         }
         
         $this->updateCoreInternalVersion();
@@ -1933,13 +1941,13 @@ END;
         $ids = [];
         $this->db->formatConditions(['resourcemetadataResourceId' => ' IS NOT NULL']);
         $this->db->formatConditionsOneField(['q', 'p'], 'resourcemetadataType');
-        $resultSet = $this->db->select('resource_metadata', 'resourcemetadataResourceId', TRUE);
+        $resultSet = $this->db->select('wkx_resource_metadata', 'resourcemetadataResourceId', TRUE);
         while ($row = $this->db->fetchRow($resultSet)) {
         	$ids[] = $row['resourcemetadataResourceId'];
         }
         if (!empty($ids)) {
         	$this->db->formatConditionsOneField($ids, 'resourcemiscId');
-        	$this->db->update('resource_misc', ['resourcemiscMetadata' => 1]);
+        	$this->db->update('wkx_resource_misc', ['resourcemiscMetadata' => 1]);
         }
         
         $this->updateCoreInternalVersion();
@@ -1955,7 +1963,7 @@ END;
     {
         $this->updateDbSchema('50');
         
-        $this->db->updateNull('cache', ['cacheResourceCreators', 'cacheMetadataCreators', 'cacheResourceKeywords', 
+        $this->db->updateNull('wkx_cache', ['cacheResourceCreators', 'cacheMetadataCreators', 'cacheResourceKeywords', 
         	'cacheMetadataKeywords', 'cacheQuoteKeywords', 'cacheParaphraseKeywords', 'cacheMusingKeywords', 'cacheResourcePublishers', 
         	'cacheMetadataPublishers', 'cacheConferenceOrganisers', 'cacheResourceCollections', 'cacheMetadataCollections', 
         	'cacheResourceCollectionTitles', 'cacheResourceCollectionShorts', 'cacheKeywords']);
@@ -2033,7 +2041,7 @@ END;
     {
         $tables_errors = [];
         // Extract the list of tables
-        $tables = $this->listAllTables();
+        $tables = $this->db->listTables();
         foreach ($tables as $k => $table)
         {
             if ($table == $this->db->basicTable($table))
@@ -2148,8 +2156,8 @@ END;
      */
     private function flushTempStorage()
     {
-    	if ($this->db->tableExists('temp_storage')) {
-    		$this->db->delete('temp_storage');
+    	if ($this->db->tableExists('wkx_temp_storage')) {
+    		$this->db->delete('wkx_temp_storage');
     	}
     }
     
@@ -2208,7 +2216,7 @@ END;
         $deleteUrls = [];
         
         $this->db->formatConditions(['resourcetextUrls' => ' IS NOT NULL']);
-        $resultSet = $this->db->select('resource_text', ['resourcetextId', 'resourcetextUrls', 'resourcetextUrlText']);
+        $resultSet = $this->db->select('wkx_resource_text', ['resourcetextId', 'resourcetextUrls', 'resourcetextUrlText']);
         
         while ($row = $this->db->fetchRow($resultSet))
         {
@@ -2256,7 +2264,7 @@ END;
                 if (count($insertUrlsValues) > 0)
                 {
                     $this->db->multiInsert(
-                        'resource_url',
+                        'wkx_resource_url',
                         [
                             'resourceurlResourceId',
                             'resourceurlUrl',
@@ -2268,7 +2276,7 @@ END;
                 }
                 
                 $this->db->formatConditionsOneField($deleteUrls, 'resourcetextId');
-                $this->db->updateNull('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
+                $this->db->updateNull('wkx_resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
                 
                 $countTransfered += count($deleteUrls);
                 
@@ -2290,7 +2298,7 @@ END;
             if (count($insertUrlsValues) > 0)
             {
                 $this->db->multiInsert(
-                    'resource_url',
+                    'wkx_resource_url',
                     [
                         'resourceurlResourceId',
                         'resourceurlUrl',
@@ -2302,13 +2310,13 @@ END;
             }
             
             $this->db->formatConditionsOneField($deleteUrls, 'resourcetextId');
-            $this->db->updateNull('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
+            $this->db->updateNull('wkx_resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
         }
         
         // Remove empty row of resource_text
         $this->db->formatConditions(['resourcetextNote' => 'IS NULL']);
         $this->db->formatConditions(['resourcetextAbstract' => 'IS NULL']);
-        $this->db->delete('resource_text');
+        $this->db->delete('wkx_resource_text');
     }
 
     /**
@@ -2328,7 +2336,7 @@ END;
         $deleteStatisticsResource = [];
         
         // 1. Past statistics from statistics table
-        $resultSet = $this->db->select('statistics', ['statisticsId', 'statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
+        $resultSet = $this->db->select('wkx_statistics', ['statisticsId', 'statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
         while ($row = $this->db->fetchRow($resultSet))
         {
             $id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
@@ -2385,12 +2393,12 @@ END;
                     
                     if (count($insertAttachmentValues) % 1000 == 0)
                     {
-                        $this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
+                        $this->db->multiInsert('wkx_statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
                         $countTransfered += count($insertAttachmentValues);
                         $insertAttachmentValues = [];
                         
                         $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
-                        $this->db->delete('statistics');
+                        $this->db->delete('wkx_statistics');
                         $deleteStatisticsAttachment = [];
                     }
                 }
@@ -2401,12 +2409,12 @@ END;
                     
                     if (count($insertResourceValues) % 1000 == 0)
                     {
-                        $this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
+                        $this->db->multiInsert('wkx_statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
                         $countTransfered += count($insertResourceValues);
                         $insertResourceValues = [];
                         
                         $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
-                        $this->db->delete('statistics');
+                        $this->db->delete('wkx_statistics');
                         $deleteStatisticsResource = [];
                     }
                 }
@@ -2423,21 +2431,21 @@ END;
         // Remaining past statistics
         if (count($insertAttachmentValues) > 0)
         {
-            $this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
+            $this->db->multiInsert('wkx_statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
         }
         if (count($insertResourceValues) > 0)
         {
-            $this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
+            $this->db->multiInsert('wkx_statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
         }
         if (count($deleteStatisticsAttachment) > 0)
         {
             $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
-            $this->db->delete('statistics');
+            $this->db->delete('wkx_statistics');
         }
         if (count($deleteStatisticsResource) > 0)
         {
             $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
-            $this->db->delete('statistics');
+            $this->db->delete('wkx_statistics');
         }
         
         // Check we have more than 6 seconds buffer before max_execution_time times out.
@@ -2451,7 +2459,7 @@ END;
         // 2. Current statistics for views
         $month = date('Ym');
         $insertResourceValues = [];
-        $resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
+        $resultSet = $this->db->select('wkx_resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
         while ($row = $this->db->fetchRow($resultSet))
         {
             if (!$row['resourcemiscAccessesPeriod'])
@@ -2467,10 +2475,12 @@ END;
             if (count($insertResourceValues) % 5000 == 0)
             {
                 $this->db->multiInsert(
-                    'statistics_resource_views',
-                    ['statisticsresourceviewsResourceId',
+                    'wkx_statistics_resource_views',
+                    [
+                        'statisticsresourceviewsResourceId',
                         'statisticsresourceviewsMonth',
-                        'statisticsresourceviewsCount', ],
+                        'statisticsresourceviewsCount',
+                    ],
                     implode(', ', $insertResourceValues)
                 );
                 $insertResourceValues = [];
@@ -2479,17 +2489,19 @@ END;
         if (count($insertResourceValues) > 0)
         {
             $this->db->multiInsert(
-                'statistics_resource_views',
-                ['statisticsresourceviewsResourceId',
+                'wkx_statistics_resource_views',
+                [
+                    'statisticsresourceviewsResourceId',
                     'statisticsresourceviewsMonth',
-                    'statisticsresourceviewsCount', ],
+                    'statisticsresourceviewsCount',
+                ],
                 implode(', ', $insertResourceValues)
             );
         }
     
         // 3. Current statistics for downloads
         $insertAttachmentValues = [];
-        $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
+        $resultSet = $this->db->select('wkx_resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
         while ($row = $this->db->fetchRow($resultSet))
         {
             if (!$row['resourceattachmentsDownloadsPeriod'])
@@ -2505,11 +2517,13 @@ END;
             if (count($insertAttachmentValues) % 5000 == 0)
             {
                 $this->db->multiInsert(
-                    'statistics_attachment_downloads',
-                    ['statisticsattachmentdownloadsResourceId',
+                    'wkx_statistics_attachment_downloads',
+                    [
+                        'statisticsattachmentdownloadsResourceId',
                         'statisticsattachmentdownloadsAttachmentId',
                         'statisticsattachmentdownloadsMonth',
-                        'statisticsattachmentdownloadsCount', ],
+                        'statisticsattachmentdownloadsCount',
+                    ],
                     implode(', ', $insertAttachmentValues)
                 );
                 $insertAttachmentValues = [];
@@ -2518,11 +2532,13 @@ END;
         if (count($insertAttachmentValues) > 0)
         {
             $this->db->multiInsert(
-                'statistics_attachment_downloads',
-                ['statisticsattachmentdownloadsResourceId',
+                'wkx_statistics_attachment_downloads',
+                [
+                    'statisticsattachmentdownloadsResourceId',
                     'statisticsattachmentdownloadsAttachmentId',
                     'statisticsattachmentdownloadsMonth',
-                    'statisticsattachmentdownloadsCount', ],
+                    'statisticsattachmentdownloadsCount',
+                ],
                 implode(', ', $insertAttachmentValues)
             );
         }
@@ -2629,26 +2645,26 @@ END;
     {
         $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . ' IS NOT NULL');
         $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $this->db->like('%', '<img src="images/', '%'));
-        $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataText']);
+        $resultset = $this->db->select('wkx_resource_metadata', ['resourcemetadataId', 'resourcemetadataText']);
         while ($row = $this->db->fetchRow($resultset))
         {
             $text = $row['resourcemetadataText'];
             $text = str_replace('<img src="images/', '<img src="' . WIKINDX_URL_DATA_IMAGES . '/', $text);
             $this->db->formatConditions(['resourcemetadataId' => $row['resourcemetadataId']]);
-            $this->db->update('resource_metadata', ['resourcemetadataText' => $text]);
+            $this->db->update('wkx_resource_metadata', ['resourcemetadataText' => $text]);
         }
         
         // Fix in 6.0.6 a previous error during the migration of images links in resources introduced in 5.9
         // The folder separator must be / and not \ otherwise the image display is broken
         $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . ' IS NOT NULL');
         $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $this->db->like('%', '<img src="' . WIKINDX_DIR_DATA . '\\', '%'));
-        $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataText']);
+        $resultset = $this->db->select('wkx_resource_metadata', ['resourcemetadataId', 'resourcemetadataText']);
         while ($row = $this->db->fetchRow($resultset))
         {
             $text = $row['resourcemetadataText'];
             $text = str_replace('<img src="' . WIKINDX_DIR_DATA . '\\', '<img src="' . WIKINDX_DIR_DATA . '/', $text);
             $this->db->formatConditions(['resourcemetadataId' => $row['resourcemetadataId']]);
-            $this->db->update('resource_metadata', ['resourcemetadataText' => $text]);
+            $this->db->update('wkx_resource_metadata', ['resourcemetadataText' => $text]);
         }
     }
     
@@ -2708,8 +2724,8 @@ END;
         $count = 0;
         $this->db->formatConditions(['resourcecreatorCreatorMain' => 'IS NOT NULL']);
         $this->db->orderBy('resourcecreatorId');
-        $resultSet1 = $this->db->select('resource_creator', ['resourcecreatorId', 'resourcecreatorCreatorMain', 'resourcecreatorCreatorSurname']);
-        $resultSet2 = $this->db->select('creator', ['creatorId', 'creatorSurname']);
+        $resultSet1 = $this->db->select('wkx_resource_creator', ['resourcecreatorId', 'resourcecreatorCreatorMain', 'resourcecreatorCreatorSurname']);
+        $resultSet2 = $this->db->select('wkx_creator', ['creatorId', 'creatorSurname']);
         while ($row = $this->db->fetchRow($resultSet2))
         {
             $creatorIds[$row['creatorId']] = mb_strtolower(preg_replace("/[^[:alnum:][:space:]]/u", '', $row['creatorSurname']));
@@ -2732,7 +2748,7 @@ END;
             if (!array_key_exists($row['resourcecreatorCreatorMain'], $creatorIds) || $row['resourcecreatorCreatorMain'] == NULL)
             {
                 $this->db->formatConditions(['resourcecreatorCreatorMain' => $row['resourcecreatorCreatorMain']]);
-                $this->db->update('resource_creator', ['resourcecreatorCreatorSurname' => "NULL", "resourcecreatorCreatorMain" => "NULL"]);
+                $this->db->update('wkx_resource_creator', ['resourcecreatorCreatorSurname' => "NULL", "resourcecreatorCreatorMain" => "NULL"]);
             }
             else
             {
@@ -2742,7 +2758,7 @@ END;
         
         if (count($updateArray) > 0)
         {
-            $this->db->multiUpdate('resource_creator', 'resourcecreatorCreatorSurname', 'resourcecreatorCreatorMain', $updateArray);
+            $this->db->multiUpdate('wkx_resource_creator', 'resourcecreatorCreatorSurname', 'resourcecreatorCreatorMain', $updateArray);
         }
     }
     
@@ -2754,10 +2770,9 @@ END;
     private function correctIndices()
     {
         $db = WIKINDX_DB;
-        foreach (['category', 'collection', 'config', 'creator', 'keyword', 'publisher', 'resource', 'resource_creator',
-            'resource_metadata', 'resource_year', 'user_bibliography', ] as $table)
+        foreach (['wkx_category', 'wkx_collection', 'wkx_config', 'wkx_creator', 'wkx_keyword', 'wkx_publisher', 'wkx_resource', 'wkx_resource_creator',
+            'wkx_resource_metadata', 'wkx_resource_year', 'wkx_user_bibliography', ] as $table)
         {
-            $table = "wkx_" . $table;
             $resultSet = $this->db->query("SHOW INDEX FROM `$table` FROM `$db`");
             while ($row = $this->db->fetchRow($resultSet))
             {
@@ -2825,120 +2840,120 @@ END;
     {
         // user_register
         $this->db->formatConditions($this->db->formatFields('userregisterTimestamp'));
-        $minArray = $this->db->selectMin('user_register', 'userregisterTimestamp');
+        $minArray = $this->db->selectMin('wkx_user_register', 'userregisterTimestamp');
         $min = $minArray[0]['userregisterTimestamp'];
         $this->db->formatConditions(['userregisterTimestamp' => '0000-00-00 00:00:00']);
         if ($min)
         {
-            $this->db->updateTimestamp('user_register', ['userregisterTimestamp' => $this->db->tidyInput($min)]);
+            $this->db->updateTimestamp('wkx_user_register', ['userregisterTimestamp' => $this->db->tidyInput($min)]);
         }
         else
         {
-            $this->db->updateTimestamp('user_register', ['userregisterTimestamp' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->updateTimestamp('wkx_user_register', ['userregisterTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // users
         $this->db->formatConditions($this->db->formatFields('usersTimestamp'));
-        $minArray = $this->db->selectMin('users', 'usersTimestamp');
+        $minArray = $this->db->selectMin('wkx_users', 'usersTimestamp');
         $min = $minArray[0]['usersTimestamp'];
         $this->db->formatConditions(['usersTimestamp' => '0000-00-00 00:00:00']);
         if ($min)
         {
-            $this->db->updateTimestamp('users', ['usersTimestamp' => $this->db->tidyInput($min)]);
+            $this->db->updateTimestamp('wkx_users', ['usersTimestamp' => $this->db->tidyInput($min)]);
         }
         else
         {
-            $this->db->updateTimestamp('users', ['usersTimestamp' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->updateTimestamp('wkx_users', ['usersTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         $this->db->formatConditions($this->db->formatFields('usersNotifyTimestamp'));
-        $minArray = $this->db->selectMin('users', 'usersNotifyTimestamp');
+        $minArray = $this->db->selectMin('wkx_users', 'usersNotifyTimestamp');
         $min = $minArray[0]['usersNotifyTimestamp'];
         $this->db->formatConditions(['usersNotifyTimestamp' => '0000-00-00 00:00:00']);
         if ($min)
         {
-            $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => $this->db->tidyInput($min)]);
+            $this->db->updateTimestamp('wkx_users', ['usersNotifyTimestamp' => $this->db->tidyInput($min)]);
         }
         else
         {
-            $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->updateTimestamp('wkx_users', ['usersNotifyTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // resource_timestamp
         $this->db->formatConditions($this->db->formatFields('resourcetimestampTimestampAdd'));
-        $minArray = $this->db->selectMin('resource_timestamp', 'resourcetimestampTimestampAdd');
+        $minArray = $this->db->selectMin('wkx_resource_timestamp', 'resourcetimestampTimestampAdd');
         $min = $minArray[0]['resourcetimestampTimestampAdd'];
         $this->db->formatConditions(['resourcetimestampTimestampAdd' => '0000-00-00 00:00:00']);
         if ($min)
         {
-            $this->db->updateTimestamp('resource_timestamp', ['resourcetimestampTimestampAdd' => $this->db->tidyInput($min)]);
+            $this->db->updateTimestamp('wkx_resource_timestamp', ['resourcetimestampTimestampAdd' => $this->db->tidyInput($min)]);
         }
         else
         {
-            $this->db->updateTimestamp('resource_timestamp', ['resourcetimestampTimestampAdd' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->updateTimestamp('wkx_resource_timestamp', ['resourcetimestampTimestampAdd' => '']); // default is CURRENT_TIMESTAMP
         }
         $this->db->formatConditions($this->db->formatFields('resourcetimestampTimestamp'));
-        $minArray = $this->db->selectMin('resource_timestamp', 'resourcetimestampTimestamp');
+        $minArray = $this->db->selectMin('wkx_resource_timestamp', 'resourcetimestampTimestamp');
         $min = $minArray[0]['resourcetimestampTimestamp'];
         $this->db->formatConditions(['resourcetimestampTimestamp' => '0000-00-00 00:00:00']);
         if ($min)
         {
-            $this->db->updateTimestamp('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->tidyInput($min)]);
+            $this->db->updateTimestamp('wkx_resource_timestamp', ['resourcetimestampTimestamp' => $this->db->tidyInput($min)]);
         }
         else
         {
-            $this->db->updateTimestamp('resource_timestamp', ['resourcetimestampTimestamp' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->updateTimestamp('wkx_resource_timestamp', ['resourcetimestampTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // resource_attachments
         $this->db->formatConditions($this->db->formatFields('resourceattachmentsEmbargoUntil'));
-        $minArray = $this->db->selectMin('resource_attachments', 'resourceattachmentsEmbargoUntil');
+        $minArray = $this->db->selectMin('wkx_resource_attachments', 'resourceattachmentsEmbargoUntil');
         $min = $minArray[0]['resourceattachmentsEmbargoUntil'];
         $this->db->formatConditions(['resourceattachmentsEmbargoUntil' => '0000-00-00 00:00:00']);
         if ($min)
         {
-            $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsEmbargoUntil' => $this->db->tidyInput($min)]);
+            $this->db->updateTimestamp('wkx_resource_attachments', ['resourceattachmentsEmbargoUntil' => $this->db->tidyInput($min)]);
         }
         else
         {
-            $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsEmbargoUntil' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->updateTimestamp('wkx_resource_attachments', ['resourceattachmentsEmbargoUntil' => '']); // default is CURRENT_TIMESTAMP
         }
         $this->db->formatConditions($this->db->formatFields('resourceattachmentsTimestamp'));
-        $minArray = $this->db->selectMin('resource_attachments', 'resourceattachmentsTimestamp');
+        $minArray = $this->db->selectMin('wkx_resource_attachments', 'resourceattachmentsTimestamp');
         $min = $minArray[0]['resourceattachmentsTimestamp'];
         $this->db->formatConditions(['resourceattachmentsTimestamp' => '0000-00-00 00:00:00']);
         if ($min)
         {
-            $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => $this->db->tidyInput($min)]);
+            $this->db->updateTimestamp('wkx_resource_attachments', ['resourceattachmentsTimestamp' => $this->db->tidyInput($min)]);
         }
         else
         {
-            $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->updateTimestamp('wkx_resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // news
         $this->db->formatConditions($this->db->formatFields('newsTimestamp'));
-        $minArray = $this->db->selectMin('news', 'newsTimestamp');
+        $minArray = $this->db->selectMin('wkx_news', 'newsTimestamp');
         $min = $minArray[0]['newsTimestamp'];
         $this->db->formatConditions(['newsTimestamp' => '0000-00-00 00:00:00']);
         if ($min)
         {
-            $this->db->updateTimestamp('news', ['newsTimestamp' => $this->db->tidyInput($min)]);
+            $this->db->updateTimestamp('wkx_news', ['newsTimestamp' => $this->db->tidyInput($min)]);
         }
         else
         {
-            $this->db->updateTimestamp('news', ['newsTimestamp' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->updateTimestamp('wkx_news', ['newsTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // resource_metadata
         $this->db->formatConditions($this->db->formatFields('resourcemetadataTimestamp'));
-        $minArray = $this->db->selectMin('resource_metadata', 'resourcemetadataTimestamp');
+        $minArray = $this->db->selectMin('wkx_resource_metadata', 'resourcemetadataTimestamp');
         $min = $minArray[0]['resourcemetadataTimestamp'];
         $this->db->formatConditions(['resourcemetadataTimestamp' => '0000-00-00 00:00:00']);
         if ($min)
         {
-            $this->db->updateTimestamp('resource_metadata', ['resourcemetadataTimestamp' => $this->db->tidyInput($min)]);
+            $this->db->updateTimestamp('wkx_resource_metadata', ['resourcemetadataTimestamp' => $this->db->tidyInput($min)]);
         }
         else
         {
-            $this->db->updateTimestamp('resource_metadata', ['resourcemetadataTimestamp' => '']);
+            $this->db->updateTimestamp('wkx_resource_metadata', ['resourcemetadataTimestamp' => '']);
         }
         $this->db->formatConditions(['resourcemetadataTimestampEdited' => '0000-00-00 00:00:00']);
-        $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
+        $this->db->updateNull('wkx_resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
     }
     
     /**
@@ -3122,7 +3137,7 @@ END;
             $tables[$k] = mb_strtolower($v);
         }
         // If there is an existing papers table, copy fields across and drop table
-        if (array_search('papers', $tables) !== FALSE)
+        if (array_search('wkx_papers', $tables) !== FALSE)
         {
             if (array_search('wkx_plugin_wordprocessor', $tables) === FALSE)
             {
@@ -3171,37 +3186,5 @@ END;
             $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
             $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
         }
-    }
-    /**
-     * show all tables in db
-     *
-     * @return array
-     */
-    private function listAllTables()
-    {
-        $tables = [];
-
-        // For ANSI behavior (MySQL, PG at least)
-        // We must always use TABLE_SCHEMA in the WHERE clause
-        // and the raw value of TABLE_SCHEMA otherwise MySQL scans
-        // the disk for db names and slow down the server
-        // https://dev.mysql.com/doc/refman/5.7/en/information-schema-optimization.html
-        $recordset = $this->db->query("
-		    SELECT TABLE_NAME
-		    FROM INFORMATION_SCHEMA.TABLES
-		    WHERE
-		        TABLE_TYPE = 'BASE TABLE'
-		        AND TABLE_SCHEMA = '" . WIKINDX_DB . "';
-		");
-
-        if ($recordset !== FALSE)
-        {
-            while ($table = $this->db->fetchRow($recordset))
-            {
-                $tables[] = $table['TABLE_NAME'];
-            }
-        }
-
-        return $tables;
     }
 }

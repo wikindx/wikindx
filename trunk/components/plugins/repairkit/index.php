@@ -383,7 +383,7 @@ class repairkit_MODULE
         // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
         // or /plugins/<PluginDirectory>/dbschema/full
         $dbSchemaPath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DB_SCHEMA, "full"]);
-        $sqlfile = "table_" . $this->db->basicTable($table) . ".sql";
+        $sqlfile = "table_" . $table . ".sql";
         $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
         $this->db->queryNoResult($sql);
     }

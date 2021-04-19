@@ -233,41 +233,49 @@ class UPDATEDATABASE
      */
     public function createDbSchema($pluginPath = DIRECTORY_SEPARATOR)
     {
-        // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
-        // or /plugins/<PluginDirectory>/dbschema/full
-        $dbSchemaPath =
-            WIKINDX_DIR_BASE
-            . $pluginPath . WIKINDX_DIR_DB_SCHEMA
-            . DIRECTORY_SEPARATOR . 'full';
-        if (is_readable($dbSchemaPath) && is_dir($dbSchemaPath))
+        if ($this->db->listTables() == 0)
         {
-            // Check if all files are redeable before executing them,
-            // because you have to do them all together, or none
-            foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+            // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
+            // or /plugins/<PluginDirectory>/dbschema/full
+            $dbSchemaPath =
+                WIKINDX_DIR_BASE
+                . $pluginPath . WIKINDX_DIR_DB_SCHEMA
+                . DIRECTORY_SEPARATOR . 'full';
+            if (is_readable($dbSchemaPath) && is_dir($dbSchemaPath))
             {
-                $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
-                if (\UTILS\matchSuffix($fsql, ".sql"))
+                // Check if all files are redeable before executing them,
+                // because you have to do them all together, or none
+                foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
                 {
-                    if (!is_readable($fsql))
+                    $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
+                    if (\UTILS\matchSuffix($fsql, ".sql"))
                     {
-                        GLOBALS::addTplVar('content', "Fatal error: schema creation not possible. " . $fsql . " doesn't exist or is not readable.");
-                        $this->endDisplay();
+                        if (!is_readable($fsql))
+                        {
+                            GLOBALS::addTplVar('content', "Fatal error: schema creation not possible. " . $fsql . " doesn't exist or is not readable.");
+                            $this->endDisplay();
+                        }
+                    }
+                }
+                foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+                {
+                    $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
+                    if (is_readable($fsql) && \UTILS\matchSuffix($fsql, ".sql"))
+                    {
+                        $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
+                        $this->db->queryNoError($sql);
                     }
                 }
             }
-            foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+            else
             {
-                $fsql = $dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile;
-                if (is_readable($fsql) && \UTILS\matchSuffix($fsql, ".sql"))
-                {
-                    $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-                    $this->db->queryNoError($sql);
-                }
+                GLOBALS::addTplVar('content', "Fatal error: creation not possible. " . $dbSchemaPath . " is not a directory, doesn't exist, or is not readable.");
+                $this->endDisplay();
             }
         }
         else
         {
-            GLOBALS::addTplVar('content', "Fatal error: upgrade not possible. " . $dbSchemaPath . " is not a directory, doesn't exist, or is not readable.");
+            GLOBALS::addTplVar('content', "Fatal error: creation not possible. There are already tables in the database. WIKINDX must be installed in its own database.");
             $this->endDisplay();
         }
     }

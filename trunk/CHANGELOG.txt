@@ -9,7 +9,7 @@ BUG FIXES:
 
 MAINTENANCE:
 1. Remove the db table prefix [#346].
-2. Block the install if non Wikindx tables are found [#346].
+2. Block the install if non Wikindx tables are found [#348].
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

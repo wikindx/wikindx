@@ -1674,14 +1674,10 @@ END;
      * Upgrade database schema to version 32 (6.4.0)
      *
      * Remove option WIKINDX_DB_TABLEPREFIX that is now hardcoded
-     * Clear missing attachments
+     * Clear missing attachments (moved to step 58)
      */
     private function upgradeTo32()
-    {        
-        // Clear attachments
-        $attachment = FACTORY_ATTACHMENT::getInstance();
-        $attachment->checkAttachmentRows();
-        
+    {
         $this->updateCoreInternalVersion();
     }
     
@@ -2179,6 +2175,20 @@ END;
                 $this->renameTable($tablesrc, $tabledst);
             }
         }
+        
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 58 (6.4.7)
+     *
+     * Clear missing attachments (replace step 32)
+     */
+    private function upgradeTo58()
+    {
+        // Clear attachments
+        $attachment = FACTORY_ATTACHMENT::getInstance();
+        $attachment->checkAttachmentRows();
         
         $this->updateCoreInternalVersion();
     }

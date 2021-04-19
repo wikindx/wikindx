@@ -195,7 +195,7 @@ class repairkit_MODULE
                     {
                         // NOK
                         // If the table is empty it's easier to recreate it. 
-                        if ($this->db->tableIsEmpty($this->db->basicTable($e["Table"])))
+                        if ($this->db->tableIsEmpty($e["Table"]))
                         {
                             $this->dropTable($e["Table"]);
                             $this->createTable($e["Table"]);
@@ -219,7 +219,7 @@ class repairkit_MODULE
                     elseif ($e["Code"] == 3)
                     {
                         // Supernumerary (provided it is empty)
-                        if ($this->db->tableIsEmpty($this->db->basicTable($e["Table"])))
+                        if ($this->db->tableIsEmpty($e["Table"]))
                         {
                             $this->dropTable($e["Table"]);
                         }
@@ -285,7 +285,7 @@ class repairkit_MODULE
                     elseif ($e["Code"] == 3)
                     {
                         // Supernumerary (provided it is empty)
-                        if ($this->db->tableIsEmpty($this->db->basicTable($e["Table"])))
+                        if ($this->db->tableIsEmpty($e["Table"]))
                         {
                             $this->dropField($fieldCurrent);
                         }
@@ -1335,7 +1335,7 @@ class repairkit_MODULE
             if ($match > 0)
             {
                 // Provided the table is empty
-                if ($this->db->tableIsEmpty($this->db->basicTable($tableCurrent["Table"])))
+                if ($this->db->tableIsEmpty($tableCurrent["Table"]))
                 {
                     $dbError["tables"][] = [
                         "Table" => $tableCurrent["Table"],
@@ -1421,7 +1421,7 @@ class repairkit_MODULE
             if ($match > 0)
             {
                 // Provided the table is empty
-                if ($this->db->tableIsEmpty($this->db->basicTable($fieldCurrent["Table"])))
+                if ($this->db->tableIsEmpty($fieldCurrent["Table"]))
                 {
                     $dbError["fields"][] = [
                         "Table" => $fieldCurrent["Table"],

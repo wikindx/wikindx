@@ -907,8 +907,16 @@ namespace UTILS
         $hash = \password_hash($usersPassword, PASSWORD_DEFAULT);
         $updateArray["usersPassword"] = $hash;
         
-        $dbo->formatConditions(["usersId" => $usersId]);
-        $dbo->update("users", $updateArray);
+        if ($dbo->tableExists('users'))
+        {
+            $dbo->formatConditions(["usersId" => $usersId]);
+            $dbo->update("users", $updateArray);
+        }
+        else
+        {
+            $dbo->formatConditions(["usersId" => $usersId]);
+            $dbo->update("wkx_users", $updateArray);
+        }
     }
     
     /*

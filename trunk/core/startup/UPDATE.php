@@ -154,12 +154,12 @@ namespace UPDATE
             $dbo->update("wkx_database_summary", ["databasesummaryDbVersion" => $version]);
         }
         // Up to version 33 (6.4.0)
-        if ($version <= 33.0 && $ComponentId == "core")
+        elseif ($version <= 33.0 && $ComponentId == "core")
         {
             $dbo->update("wkx_database_summary", ["databasesummarySoftwareVersion" => $version]);
         }
         // From version 34 (6.4.0) to 56 (6.4.6)
-        if ($version <= 56.0)
+        elseif ($version <= 56.0)
         {
             $dbo->formatConditions(["versionComponentType" => $ComponentType]);
             $dbo->formatConditions(["versionComponentId" => $ComponentId]);
@@ -172,7 +172,7 @@ namespace UPDATE
             $dbo->update("wkx_version", ["versionInternalVersion" => $version]);
         }
         // From version 57 (6.4.7)
-        if ($version >= 57.0)
+        elseif ($version >= 57.0)
         {
             $dbo->formatConditions(["versionComponentType" => $ComponentType]);
             $dbo->formatConditions(["versionComponentId" => $ComponentId]);

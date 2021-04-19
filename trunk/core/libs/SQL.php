@@ -556,6 +556,26 @@ class SQL
         return $this->queryFetchFirstField('SELECT NOT EXISTS(SELECT 1 FROM ' . $this->formatTables($table) . ') AS IsEmpty;'); // ANSI SQL
     }
     /**
+     * Create a table
+     *
+     * @param string $newTable
+     * @param array $fieldsArray
+     * @param bool $tempTable
+     */
+    public function createTable(string $newTable, array $fieldsArray, bool $tempTable = FALSE)
+    {
+        $sql = '(' . implode(', ', $fieldsArray) . ')';
+        $sql .= 'ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci';
+        if ($tempTable)
+        {
+            $this->queryNoResult("CREATE TEMPORARY TABLE `$newTable` $sql");
+        }
+        else
+        {
+            $this->queryNoResult("CREATE TABLE `$newTable` $sql");
+        }
+    }
+    /**
      * Create a temporary table from a SELECT statement
      *
      * @param string $newTable
@@ -563,7 +583,6 @@ class SQL
      */
     public function createTempTableFromSelect(string $newTable, string $selectStmt)
     {
-        $newTable = "wkx_" . $newTable;
         $sql = ' AS (' . $selectStmt . ')';
         $this->queryNoResult("CREATE TEMPORARY TABLE `$newTable` $sql");
     }

@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "dbadminer",
-    "component_version": "426",
+    "component_version": "463",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "DB Adminer",
@@ -24,5 +24,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "29c3a264bdb4c4bf59e8cd6ec6d5d4d705b8a3228c141123177ee7e89f547c6f"
+    "component_sha256": "93174733368049937ef706b67932da54e4134b5a65d06e5dabecb7752bdbb92a"
 }

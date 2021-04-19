@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "wordprocessor",
-    "component_version": "461",
+    "component_version": "463",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Word Processor",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "1997c70e08f75e2ffff12c4490f2a8bed0acf4a77cd05aa34a6854663d2b8392"
+    "component_sha256": "911901aebd7db29775c062c55cdbc67ccdb4d472c50e6cace316eaf0b916112c"
 }

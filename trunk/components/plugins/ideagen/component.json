@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "ideagen",
-    "component_version": "461",
+    "component_version": "463",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Idea Generator",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "7372ecfcac33356b8caf82faa77cca689d331a4a17a053adbc8d24c5c5306308"
+    "component_sha256": "9d855a156354ca2bfd306bcd6ddf2e3605cede90c6c8c38603ef77a80b8fb405"
 }

@@ -1629,12 +1629,14 @@ class SQL
     /**
      * Return a table name without prefix
      *
+     *
      * @param string $table A prefixed table name
      *
      * @return string
      */
     public function basicTable($table)
     {
+        // TODO(LkpPo): remove this function when the upgrade code of step 57 (6.4.7) is retired.
         return preg_replace("/^" . preg_quote("wkx_", "/") . "/ui", "", $table);
     }
     /**

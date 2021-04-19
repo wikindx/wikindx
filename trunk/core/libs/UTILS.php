@@ -914,6 +914,7 @@ namespace UTILS
         }
         else
         {
+            // TODO(LkpPo): remove this function when the upgrade code of step 57 (6.4.7) is retired.
             $dbo->formatConditions(["usersId" => $usersId]);
             $dbo->update("wkx_users", $updateArray);
         }
@@ -959,6 +960,7 @@ namespace UTILS
         $recordset = $dbo->queryNoError($dbo->selectNoExecute("users", "usersPassword"));
         if ($recordset === FALSE)
         {
+            // TODO(LkpPo): remove this function when the upgrade code of step 57 (6.4.7) is retired.
             $dbo->formatConditions(["usersId" => $usersId]);
             $recordset = $dbo->queryNoError($dbo->selectNoExecute("wkx_users", "usersPassword"));
         }

@@ -50,6 +50,9 @@ define('WIKINDX_SEARCH_FILTER_DEFAULT', serialize(['an', 'a', 'the', 'and', 'to'
 
 
 // Images
+// Bug(LkpPo), 2021-04-19, The hard upper limit is 1G due to a bug on Windows
+// cf. https://bugs.php.net/bug.php?id=79423
+// Fixed in PHP 7.3.24 and 7.4.12
 define('WIKINDX_IMG_SIZE_UPPER_LIMIT', 200); // 200M, max file size of an 8K 24 bits colors bmp image
 define('WIKINDX_IMG_ALLOW_DEFAULT', FALSE);
 define('WIKINDX_IMG_HEIGHT_LIMIT_DEFAULT', 400);
@@ -140,6 +143,9 @@ define('WIKINDX_NOTIFY_DEFAULT', FALSE);
 
 
 // Files
+// Bug(LkpPo), 2021-04-19, The hard upper limit is 1G due to a bug on Windows
+// cf. https://bugs.php.net/bug.php?id=79423
+// Fixed in PHP 7.3.24 and 7.4.12
 define('WIKINDX_FILE_ATTACH_SIZE_UPPER_LIMIT', 1024); // 1G = 1024M
 define('WIKINDX_FILE_ATTACH_UPLOAD_MAX_SIZE_DEFAULT', 5);
 define('WIKINDX_FILE_DELETE_SECONDS_DEFAULT', 3600);

@@ -129,6 +129,9 @@ namespace FILE
      */
     function fileUploadMaxSize()
     {
+        // Bug(LkpPo), 2021-04-19, The hard upper limit is 1G due to a bug on Windows
+        // cf. https://bugs.php.net/bug.php?id=79423
+        // Fixed in PHP 7.3.24 and 7.4.12
         $maxsize = return_bytes("1G");
         $memory_limit = return_bytes(ini_get('memory_limit'));
         $postMax = return_bytes(ini_get('post_max_size'));

@@ -4,31 +4,28 @@ weight = 4
 disableToc = false
 +++
 
-***Focus**: bug fixes, features, maintenance*
+***Focus**: bug fixes, maintenance*
 
 ## Important information
 
-The next version of WIKINDX will remove the prefix from tables.
+This version remove the database prefix 'wkx_' from tables (official and unofficial).
 
 This functionality is only useful for several programs sharing the same database with the same table names or several WIKINDX installations in the same database. These two practices are to be avoided because they are a good way to lose your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. We believe that very few installs use this feature.
 
-6.4.0 harcoded the 'wkx_' prefix but still offered the possibility of cheating with the constant __WIKINDX_DB_TABLEPREFIX__.
+6.4.0 harcoded the 'wkx_' prefix but still offered the possibility of cheating with the constant `WIKINDX_DB_TABLEPREFIX`.
 
-This version (6.4.6) removes the _cheat mode_ and checks that you don't have a mix of tables with another app because the next version will rename all tables without the prefix. Otherwise, collisions could occur. If you are affected by this change please contact us for help with the transition.
+6.4.6 removed the 'cheat mode' and checks that you don't have a mix of tables with another. Otherwise, collisions could occur. If you are affected by this change please contact us for help with the transition.
 
 IT WOULD BE A GOOD IDEA TO BACK UP YOUR DATABASE FIRST BEFORE PROCEEDING WITH THE UPGRADE.
 
 You must apply one or more of these corrections before you can continue.
 
-If you have written your own plugin with your own tables they should use the default prefix 'wkx_' to be portable.
+- If you have written your own plugin with your own tables they should use the default prefix 'wkx_' to be portable.
+- If you customized the prefix, use the `cli-migrate-db-prefix.php` script to replace it with the default prefix 'wkx_'.
+- If you have installed another application in the same database, move the tables from WIKINDX, or the database objects from the other application, to its own database.
+- If you have other tables in the database for various reasons, please drop them or move them to another database.
 
-If you customized the prefix, use the cli-migrate-db-prefix.php script to replace it with the default prefix 'wkx_'.
-
-If you have installed another application in the same database, move the tables from WIKINDX, or the database objects from the other application, to its own database.
-
-If you have other tables in the database for various reasons, please drop them or move them to another database.
-
-The official tables for version 6.4.6 are:
+The official tables for version 6.4.6 were:
 
 wkx_bibtex_string, wkx_cache, wkx_category, wkx_collection, wkx_config,
 wkx_creator, wkx_custom, wkx_import_raw, wkx_keyword, wkx_language, wkx_news,
@@ -46,25 +43,9 @@ wkx_user_kg_usergroups, wkx_user_register, wkx_user_tags, wkx_users, wkx_version
 
 ## Bug fixes
 
-- Remove dead code about Etag HTTP headers and fix a wrong image mimetype in images dialog [#333].
-- Localize dates with the current locale.
-- Fix a syntaxic error in upgrade step 34.
-- Re-enable the insertion of plug-ins into the metadata menu. Where the plugin config.php file inserted into 'text', this should now be 'metadata'.
-
-## Feature enhancement
-
-- Localize the dates in the images dialog.
-- Accept the webp image format because since September 2020 all browsers support it (TinyMCE included).
-- Distinct image, attachment and file upload max file size [#278].
-- Display max file sizes on upload forms [#278].
-- Restrict the uploadable file type when possible.
-- Disable uploads if PHP file_uploads option is Off [#345].
-- Display the limit of the number of files to upload from PHP (max_file_uploads) [#344].
+- Fix appending of bibliographies to RTF exports in the word processor [#349].
 
 ## Maintenance
 
-- Rename configImagesMaxSize option to configImgUploadMaxSize for consistency.
-- Rename configImagesAllow option to configImgAllow for consistency.
-- Rename configFileAttach option to configFileAttachAllow for consistency.
-- Hardcode the db prefix in SQL files [#346].
-- Throw a fatal error if the database contains non WIKINDX tables [#346].
+- Remove the db table prefix [#346].
+- Block the install if non WIKINDX tables are found [#348].

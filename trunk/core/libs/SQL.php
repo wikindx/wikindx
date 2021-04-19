@@ -464,7 +464,7 @@ class SQL
 		    FROM INFORMATION_SCHEMA.COLUMNS
 		    WHERE
 		        TABLE_SCHEMA = '" . WIKINDX_DB . "'
-		        AND LOWER(TABLE_NAME) = LOWER('" . "wkx_" . $table . "');
+		        AND LOWER(TABLE_NAME) = LOWER('" . $table . "');
 		");
 
         if ($recordset !== FALSE)

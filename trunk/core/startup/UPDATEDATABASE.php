@@ -3116,7 +3116,7 @@ END;
     {
         // NB: Windows MySQL lowercases any table name
         // To be sure, it is necessary to lowercase all table elements
-        $tables = $this->db->listTables(FALSE);
+        $tables = $this->db->listTables();
         foreach ($tables as $k => $v)
         {
             $tables[$k] = mb_strtolower($v);
@@ -3124,7 +3124,7 @@ END;
         // If there is an existing papers table, copy fields across and drop table
         if (array_search('papers', $tables) !== FALSE)
         {
-            if (array_search('plugin_wordprocessor', $tables) === FALSE)
+            if (array_search('wkx_plugin_wordprocessor', $tables) === FALSE)
             {
                 $this->db->queryNoError("
                     CREATE TABLE `wkx_plugin_wordprocessor` (
@@ -3137,7 +3137,7 @@ END;
                     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
                 ");
             }
-            $resultset = $this->db->select('papers', ['papersId', 'papersHashFilename', 'papersUserId', 'papersFilename', 'papersTimestamp']);
+            $resultset = $this->db->select('wkx_papers', ['papersId', 'papersHashFilename', 'papersUserId', 'papersFilename', 'papersTimestamp']);
             while ($row = $this->db->fetchRow($resultset))
             {
                 $fields = $values = [];
@@ -3151,18 +3151,18 @@ END;
                 $values[] = $row['papersFilename'];
                 $fields[] = 'pluginwordprocessorTimestamp';
                 $values[] = $row['papersTimestamp'];
-                $this->db->insert('plugin_wordprocessor', $fields, $values);
+                $this->db->insert('wkx_plugin_wordprocessor', $fields, $values);
             }
             $this->db->queryNoError("DROP TABLE IF EXISTS wkx_papers;");
         }
-        elseif (array_search('plugin_wordprocessor', $tables) !== FALSE)
+        elseif (array_search('wkx_plugin_wordprocessor', $tables) !== FALSE)
         {
             $this->db->queryNoError("ALTER TABLE wkx_plugin_wordprocessor ENGINE=InnoDB;");
             $this->db->queryNoError("ALTER TABLE wkx_plugin_wordprocessor CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
             $this->db->queryNoError("ALTER TABLE wkx_plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorHashFilename` varchar(1020) DEFAULT NULL;");
             $this->db->queryNoError("ALTER TABLE wkx_plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorFilename` varchar(1020) DEFAULT NULL;");
         }
-        if (array_search('plugin_soundexplorer', $tables) !== FALSE)
+        if (array_search('wkx_plugin_soundexplorer', $tables) !== FALSE)
         {
             $this->db->queryNoError("ALTER TABLE wkx_plugin_soundexplorer RENAME `wkx_4fc387ba1ae34ac28e6dee712679d7b5`");
             $this->db->queryNoError("ALTER TABLE wkx_4fc387ba1ae34ac28e6dee712679d7b5 RENAME `wkx_plugin_soundexplorer`");

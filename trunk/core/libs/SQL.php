@@ -481,11 +481,9 @@ class SQL
     /**
      * show all tables in db
      *
-     * @param bool $withPrefix Keep the prefix of tables. Default is TRUE.
-     *
      * @return array
      */
-    public function listTables(bool $withPrefix = TRUE)
+    public function listTables()
     {
         $tables = [];
 
@@ -499,21 +497,14 @@ class SQL
 		    FROM INFORMATION_SCHEMA.TABLES
 		    WHERE
 		        TABLE_TYPE = 'BASE TABLE'
-		        AND TABLE_SCHEMA = '" . WIKINDX_DB . "'
-		        AND LOWER(TABLE_NAME) LIKE CONCAT(LOWER('" . "wkx_" . "'), '%');
+		        AND TABLE_SCHEMA = '" . WIKINDX_DB . "';
 		");
 
         if ($recordset !== FALSE)
         {
             while ($table = $this->fetchRow($recordset))
             {
-                $t = $table['TABLE_NAME'];
-                if (!$withPrefix)
-                {
-                    $t = preg_replace("/^" . preg_quote("wkx_", "/") . "/ui", '', $t);
-                }
-                $tables[] = $t;
-                unset($table);
+                $tables[] = $table['TABLE_NAME'];
             }
         }
 
@@ -1612,7 +1603,7 @@ class SQL
         {
             if (!is_array($tables))
             {
-                $tableListe = "wkx_" . $tables;
+                $tableListe = $tables;
             }
             else
             {
@@ -1624,7 +1615,7 @@ class SQL
                     }
                     else
                     {
-                        $array[] = "wkx_" . $table;
+                        $array[] = $table;
                     }
                 }
 
@@ -3287,11 +3278,11 @@ class SQL
         {
             if ($tidyLeft)
             {
-                return '`' . "wkx_" . "$key` AS " . "wkx_" . $value;
+                return '`' . $key . "` AS " . $value;
             }
             else
             {
-                return       "wkx_" . "$key AS " . "wkx_" . $value;
+                return       $key .  " AS " . $value;
             }
         }
         if (count($split = \UTF8\mb_explode('.', $key)) > 1)

@@ -98,7 +98,7 @@ class MySQL_Backup
 
     public function _GetTables()
     {
-        $tables = $this->db->listTables(TRUE);
+        $tables = $this->db->listTables();
 
         if (count($tables) == 0)
         {

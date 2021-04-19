@@ -140,7 +140,7 @@ class localedescription_MODULE
         if ($version == 0) {
             // NB: Windows MySQL lowercases any table name
             // To be sure, it is necessary to lowercase all table elements
-            $tables = $this->db->listTables(FALSE);
+            $tables = $this->db->listTables();
             foreach ($tables as $k => $v) {
                 $tables[$k] = mb_strtolower($v);
             }

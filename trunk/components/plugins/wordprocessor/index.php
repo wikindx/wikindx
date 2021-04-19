@@ -81,7 +81,7 @@ class wordprocessor_MODULE
         {
             // NB: Windows MySQL lowercases any table name
             // To be sure, it is necessary to lowercase all table elements
-            $tables = $this->db->listTables(FALSE);
+            $tables = $this->db->listTables();
             foreach ($tables as $k => $v)
             {
                 $tables[$k] = mb_strtolower($v);
@@ -90,7 +90,7 @@ class wordprocessor_MODULE
             if (array_search('plugin_wordprocessor', $tables) === FALSE)
             {
                 $this->db->queryNoError("
-                    CREATE TABLE `" . $db->formatTables("plugin_wordprocessor") . "` (
+                    CREATE TABLE `plugin_wordprocessor` (
                         `pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
                         `pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
                         `pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -542,7 +542,7 @@ class wordprocessor_MODULE
     {
         // NB: Windows MySQL lowercases any table name
         // To be sure, it is necessary to lowercase all table elements
-        $tables = $this->db->listTables(FALSE);
+        $tables = $this->db->listTables();
 
         foreach ($tables as $k => $v)
         {

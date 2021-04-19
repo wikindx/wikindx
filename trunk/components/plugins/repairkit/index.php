@@ -1112,7 +1112,7 @@ class repairkit_MODULE
         $this->db->formatConditionsOneField($oldusersId, 'usertagsUserId');
         $this->db->update('user_tags', $updateArray);
     	// Check and merge for any plugin tables with user rows
-    	$tables = $this->db->listTables(FALSE);
+    	$tables = $this->db->listTables();
     	foreach ($tables as $table) {
     		if (strpos($table, 'plugin_') === 0) {
     			$userField = str_replace('_', '', $table) . 'UserId';

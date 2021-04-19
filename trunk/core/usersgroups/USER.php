@@ -1544,7 +1544,7 @@ class USER
         	$this->db->delete('user_tags');
         }
     	// Check for any plugin tables with user rows
-    	$tables = $this->db->listTables(FALSE);
+    	$tables = $this->db->listTables();
     	foreach ($tables as $table) {
     		if (strpos($table, 'plugin_') === 0) {
     			$userField = str_replace('_', '', $table) . 'UserId';

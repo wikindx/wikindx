@@ -178,7 +178,7 @@ function wkx_session_write(string $sessionId, string $sessionData) : bool
         }
         
         $sql = "
-            INSERT INTO " . $db->formatTables("session") . " (sessionId, sessionUserId, sessionData)
+            INSERT INTO session (sessionId, sessionUserId, sessionData)
             VALUES (" . $db->tidyInput($sessionId) . ", " . $db->tidyInput($sessionUserId) . ", " . $db->tidyInput($sessionData) . ")
             ON DUPLICATE KEY UPDATE
                 sessionId = " . $db->tidyInput($sessionId) . ",
@@ -227,7 +227,7 @@ function wkx_session_gc(int $maxSessionLifetime) : bool
     $db = FACTORY_DB::getInstance();
     
     $sql = "
-        DELETE FROM " . $db->formatTables("session") . "
+        DELETE FROM session
         WHERE DATE_ADD(sessionLastAccessTimestamp, INTERVAL " . $maxSessionLifetime . " SECOND) < CURRENT_TIMESTAMP();
     ";
     

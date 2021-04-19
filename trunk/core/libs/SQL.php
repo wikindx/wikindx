@@ -544,7 +544,7 @@ class SQL
      */
     public function tableIsEmpty(string $table)
     {
-        return $this->queryFetchFirstField('SELECT NOT EXISTS(SELECT 1 FROM ' . $this->formatTables($table) . ') AS IsEmpty;'); // ANSI SQL
+        return $this->queryFetchFirstField('SELECT NOT EXISTS(SELECT 1 FROM ' . $table . ') AS IsEmpty;'); // ANSI SQL
     }
     /**
      * Create a table

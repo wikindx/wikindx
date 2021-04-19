@@ -742,10 +742,10 @@ class repairkit_MODULE
                 usersFullname,
                 usersEmail,
                 usersTimestamp
-            FROM " . $this->db->formatTables("users") . "
+            FROM users
             WHERE LOWER(usersUsername) IN (
                 SELECT LOWER(usersUsername)
-                FROM " . $this->db->formatTables("users") . "
+                FROM users
                 GROUP BY LOWER(usersUsername)
                 HAVING COUNT(*) > 1
             )
@@ -824,7 +824,7 @@ class repairkit_MODULE
         
         $rs = $this->db->query("
             SELECT *
-            FROM " . $this->db->formatTables("users") . "
+            FROM users
             WHERE usersId IN ($usersId1, $usersId2)
             ORDER BY usersId
         ");
@@ -1058,10 +1058,10 @@ class repairkit_MODULE
         // Merge user account fields
         if (count($selection) > 0)
         {
-            $sql = "UPDATE " . $this->db->formatTables("users") . " SET ";
+            $sql = "UPDATE users SET ";
             foreach ($selection as $k => $v)
             {
-                $sql .= " " . $k . " = " . $this->db->formatValues($this->db->queryFetchFirstField("SELECT " . $k . " FROM " . $this->db->formatTables("users") . " WHERE usersId = " . $oldusersId)) . ", ";
+                $sql .= " " . $k . " = " . $this->db->formatValues($this->db->queryFetchFirstField("SELECT " . $k . " FROM users WHERE usersId = " . $oldusersId)) . ", ";
             }
             $sql = rtrim($sql);
             $sql = rtrim($sql, ",");
@@ -1071,7 +1071,7 @@ class repairkit_MODULE
         }
         
         // Remove the old user account
-        $sql = "DELETE FROM " . $this->db->formatTables("users") . " WHERE usersId = $oldusersId;";
+        $sql = "DELETE FROM users WHERE usersId = $oldusersId;";
         $this->db->queryNoResult($sql);
         
         // Merge oldusersId data from other tables

@@ -72,7 +72,7 @@ class SITEMAP
         // List of resources of the website
         $rsResource = $db->query("
         	SELECT resourcetimestampId, resourcetimestampTimestamp
-        	FROM " . $db->formatTables("resource_timestamp") . "
+        	FROM resource_timestamp
         	ORDER BY resourcetimestampTimestamp DESC, resourcetimestampTimestampAdd DESC, resourcetimestampId DESC
         ");
 
@@ -81,7 +81,7 @@ class SITEMAP
         // List of news of the website
         $rsNews = $db->query("
         	SELECT newsId, newsTimestamp
-        	FROM " . $db->formatTables("news") . "
+        	FROM news
         	ORDER BY newsTimestamp DESC, newsId DESC
         ");
 

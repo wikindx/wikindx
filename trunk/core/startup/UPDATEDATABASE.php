@@ -1208,6 +1208,8 @@ END;
         $this->updateDbSchema('5.4-end');
 
         $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
+        // LkpPo, 2021-04-19, was $user->writeSessionPreferences(FALSE) before 6.4.7.
+        // Inlining it by hand allowed to avaoid rewriting many access to user's tables.
         $this->session->setVar("setup_Bibliographies", FALSE);
         
         $this->updateCoreInternalVersion();

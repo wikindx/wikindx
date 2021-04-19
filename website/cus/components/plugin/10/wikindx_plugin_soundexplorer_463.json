@@ -1,18 +1,18 @@
 {
-    "component_sha256": "38a0c36d342f43a6172e8c27da092045fb507cab22a7041c99c52e6471aebdd0",
-    "component_version": "426",
-    "component_name": "Categories Administration for Users",
+    "component_version": "463",
+    "component_description": "Experimental plugin that plays sounds at certain WIKINDX events.",
     "component_licence": "ISC License",
-    "component_description": "User administration of categories.",
+    "component_name": "Sound Explorer",
+    "component_sha256": "bcf4b6da52a3eab2eeaa7c277f44bcb66d414e491db909f6069ec1b7248df706",
     "component_builtin": "false",
     "component_type": "plugin",
+    "component_id": "soundexplorer",
     "component_updatable": "true",
-    "component_id": "userwritecategory",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2012-2016, 2019-2021",
+            "author_copyright": "2013-2012, 2017, 2019-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
@@ -26,9 +26,9 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_userwritecategory_426.zip",
-            "package_sha256": "4a2a4ae3cc990b4101ea70d4957cbe86ced50cee5c2325d4bb7ceede60b4b0b3",
-            "package_size": 11932
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/10/wikindx_plugin_soundexplorer_463.zip",
+            "package_sha256": "82c1af8681f5bbb3eb19ca802ed0d9a7cab03160c778d485500bba9af8ee3a25",
+            "package_size": 27736
         }
     ]
 }

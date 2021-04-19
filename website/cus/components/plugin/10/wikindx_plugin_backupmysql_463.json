@@ -1,10 +1,10 @@
 {
-    "component_sha256": "2396540bbeeb816d7137a91b8623602a89466ab50d0e06f3aa360abc9d8608c5",
-    "component_version": "461",
+    "component_version": "463",
     "component_licence": "ISC License",
     "component_name": "MySQL Backup",
     "component_description": "MySQL backup database tools. This tool is limited by the maximum execution time of a web page of your hosting service. It can not replace an appropriate backup tool for large databases like mysqldump. This plugin can be a security vulnerability for a public site. Use with caution.",
     "component_id": "backupmysql",
+    "component_sha256": "c4c62f58adeb072670cf4e230cae02ae6b70855217c7935168036a88b2d684f7",
     "component_builtin": "false",
     "component_type": "plugin",
     "component_updatable": "true",
@@ -26,9 +26,9 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_backupmysql_461.zip",
-            "package_sha256": "babc550e94c5e902c3827a4b3dbd01facf5ea8aa28cbd1c3ba1575bba78d9ddd",
-            "package_size": 20384
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/10/wikindx_plugin_backupmysql_463.zip",
+            "package_sha256": "fa17e9091b88be985de458d09330bcd841104a0c9a37a5dca632c8927440c9ab",
+            "package_size": 20308
         }
     ]
 }

@@ -1,0 +1,63 @@
+{
+    "component_sha256": "2080891a9a6d70c09eb28ffab745b84fc9fbf6b1624403f2aeec8905e2c9374d",
+    "component_version": "452",
+    "component_description": "A full-featured email creation and transfer class for PHP.",
+    "component_licence": "LGPL 2.1",
+    "component_name": "PHPMailer",
+    "component_website": "https://github.com/PHPMailer/PHPMailer",
+    "component_id": "phpmailer",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_type": "vendor",
+    "component_authors": [
+        {
+            "author_name": "Marcus Bointon",
+            "author_role": "Maintainer, developer",
+            "author_copyright": "2012-2021",
+            "author_email": "marcus@synchromedia.co.uk",
+            "author_website": "https://marcus.bointon.com"
+        },
+        {
+            "author_name": "Jim Jagielski",
+            "author_role": "Ex-maintainer",
+            "author_copyright": "2010-2012",
+            "author_email": "jim@jaguNET.com",
+            "author_website": "http://jimjag.com/"
+        },
+        {
+            "author_name": "Andy Prevost",
+            "author_role": "Ex-maintainer",
+            "author_copyright": "2004-2009",
+            "author_email": "codeworxtech@users.sourceforge.net",
+            "author_website": "https://sourceforge.net/u/codeworxtech/profile/"
+        },
+        {
+            "author_name": "Brent R. Matzelle",
+            "author_role": "Founder",
+            "author_copyright": "2001-2003",
+            "author_email": "bmatzelle@users.sourceforge.net",
+            "author_website": "https://github.com/bmatzelle"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Packager",
+            "author_copyright": "2019-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2019-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/6.4.7/wikindx_vendor_phpmailer_452.zip",
+            "package_sha256": "28bd4cc2835174e0de3406e5f44da7a00427ce31d93a1ca3a294a3b576160790",
+            "package_size": 56199
+        }
+    ]
+}

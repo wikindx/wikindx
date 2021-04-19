@@ -1319,14 +1319,14 @@ class repairkit_MODULE
         
         foreach ($tableArrayCurrent as $tableCurrent)
         {
-            // Field supernumerary (by default)
+            // Table supernumerary (by default)
             $match = 3;
             
             foreach ($tableArrayCorrect as $tableCorrect)
             {
                 if (mb_strtolower($tableCurrent["Table"]) == mb_strtolower($tableCorrect["Table"]))
                 {
-                    // Field present
+                    // Table present
                     $match = 0;
                     break;
                 }

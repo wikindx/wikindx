@@ -9,7 +9,7 @@
  */
 
 /**
- * Set a db handler for session storage in wkx_session table
+ * Set a db handler for session storage in session table
  *
  * The creation of the identifiers is left to PHP.
  *

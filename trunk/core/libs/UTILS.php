@@ -952,7 +952,7 @@ namespace UTILS
         if ($recordset === FALSE)
         {
             $dbo->formatConditions(["usersId" => $usersId]);
-            $recordset = $dbo->queryNoError($dbo->selectNoExecute("wxk_users", "usersPassword"));
+            $recordset = $dbo->queryNoError($dbo->selectNoExecute("wkx_users", "usersPassword"));
         }
         if ($recordset !== FALSE)
         {

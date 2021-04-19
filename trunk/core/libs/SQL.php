@@ -444,7 +444,7 @@ class SQL
      *
      * @see SQL::listFields()
      *
-     * @param string $table Name of a table (without prefix)
+     * @param string $table Name of a table
      *
      * @return array
      */
@@ -654,7 +654,7 @@ class SQL
     /**
      * Fetch fields properties of a recordset
      *
-     * @param string $table Name of a table (without prefix)
+     * @param string $table Name of a table
      *
      * @return array
      */
@@ -1627,8 +1627,7 @@ class SQL
     }
     
     /**
-     * Return a table name without prefix
-     *
+     * Return a table name without the old prefix wkx_
      *
      * @param string $table A prefixed table name
      *

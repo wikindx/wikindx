@@ -18,7 +18,7 @@ If you are a registered user you can:
 
 If an element such as a keyword or category is hyperlinked, clicking on the link will display other resources belonging to that keyword or category. Any quotations, paraphrases and available musings can optionally have hyperlinked keywords linking them to other metadata.
 
-Depending on your user permissions, you will see various statistics on the page:
+Depending on permissions set by the administrator and user settings, you will see various statistics on the page:
 
 * **Views**: Number of views this month / total number of views.
 * **Views Index**: An indication of the number of times this resource has been viewed compared to other resources weighted according to the amount of time the resource has been available. The higher the percentage, the greater the number of weighted views.

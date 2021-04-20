@@ -2204,6 +2204,16 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 59 (6.4.8)
+     *
+     * Add usersDisplayResourceStatistics column to users table
+     */
+    private function upgradeTo59()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

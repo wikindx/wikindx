@@ -34,7 +34,7 @@ define('TAB', "\t");
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.4.7');
+define('WIKINDX_PUBLIC_VERSION', '6.4.8');
 /**
  * WIKINDX internal version information
  *
@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.7');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 58.0);
+define('WIKINDX_INTERNAL_VERSION', 59.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -284,6 +284,7 @@ define('WIKINDX_TEMPLATE_MENU_DEFAULT', 0);
 define('WIKINDX_UNIX_PERMS_DEFAULT', 0777);
 define('WIKINDX_USE_BIBTEX_KEY_DEFAULT', FALSE);
 define('WIKINDX_USE_WIKINDX_KEY_DEFAULT', FALSE);
+define('WIKINDX_DISPLAY_RESOURCE_STATISTICS_DEFAULT', FALSE);
 
 
 // Divers for users config only

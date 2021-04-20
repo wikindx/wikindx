@@ -80,6 +80,7 @@ class LOADCONFIG
             "TemplateMenu",
             "UseBibtexKey",
             "UseWikindxKey",
+            "DisplayResourceStatistics",
         ];
         if ($session->getVar("setup_UserId", 0) > 0)
         { // logged on user so setup from users table
@@ -136,6 +137,10 @@ class LOADCONFIG
                 elseif ($key == "UseWikindxKey")
                 {
                     $row[$rowKey] = WIKINDX_USE_WIKINDX_KEY_DEFAULT;
+                }
+                elseif ($key == "DisplayResourceStatistics")
+                {
+                    $row[$rowKey] = WIKINDX_DISPLAY_RESOURCE_STATISTICS_DEFAULT;
                 }
                 elseif ($key == "BrowseBibliography")
                 {

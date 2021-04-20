@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `usersHomeBib` tinyint(1) NOT NULL DEFAULT 0,
   `usersBrowseBibliography` int(11) NOT NULL DEFAULT 0,
   `usersLastInternalVersion` int(11) NOT NULL DEFAULT 0,
+  `usersDisplayResourceStatistics` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`usersId`),
   UNIQUE KEY `usersUsernameUnique` (`usersUsername`),
   KEY `usersBlock` (`usersBlock`)

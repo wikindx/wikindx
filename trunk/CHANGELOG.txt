@@ -1,6 +1,18 @@
 RELEASES:
 
 
+
+v6.4.8
+Focus: feature enhancements
+FEATURE ENHANCEMENTS:
+1. Add a switch in MyWikindx|Resources to toggle the display of certain statistics when viewing a single resource. The display of views index and popularity index greatly slows down the display of the resource so these can be turned off (the default on upgrade) and only number of views, number of downloads, and maturity index will be viewed. Popularity and view indices will appear in a later version in the Statistics menu.
+
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
+
 v6.4.7
 Focus: bug fixes, maintenance
 

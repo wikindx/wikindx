@@ -1353,6 +1353,14 @@ class USER
         {
             $preferences["UseBibtexKey"] = 0;
         }
+        if (WIKINDX_DISPLAY_RESOURCE_STATISTICS_DEFAULT)
+        {
+            $preferences["DisplayResourceStatistics"] = 1;
+        }
+        else
+        {
+            $preferences["DisplayResourceStatistics"] = 0;
+        }
         if (WIKINDX_USE_WIKINDX_KEY_DEFAULT)
         {
             $preferences["UseWikindxKey"] = 1;

@@ -210,7 +210,7 @@ class MYWIKINDX
                 $updateArray['users' . $key] = $this->formData[$key];
                 GLOBALS::setUserVar($key, $this->formData[$key]);
             }
-            foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
+            foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayResourceStatistics', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
             {
                 $value = 0;
                 if (array_key_exists($key, $this->formData))
@@ -262,7 +262,8 @@ class MYWIKINDX
                 $this->formData[$key] = -1;
             }
         }
-        foreach (['PagingStyle', 'UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
+        foreach (['PagingStyle', 'UseWikindxKey', 'UseBibtexKey', 'DisplayResourceStatistics', 
+        	'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
         {
             if (array_key_exists($key, $this->vars))
             {
@@ -2252,7 +2253,20 @@ class MYWIKINDX
             "UseBibtexKey",
             $field
         ));
-        $pString .= \HTML\td('&nbsp;');
+        $field = FALSE;
+        if (array_key_exists('DisplayResourceStatistics', $this->formData))
+        {
+            $field = 'CHECKED';
+        }
+        elseif (GLOBALS::getUserVar("DisplayResourceStatistics"))
+        {
+            $field = 'CHECKED';
+        }
+        $pString .= \HTML\td(\FORM\checkbox(
+            $this->messages->text("config", "displayResourceStatistics"),
+            "DisplayResourceStatistics",
+            $field
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');

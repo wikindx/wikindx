@@ -341,6 +341,7 @@ class MESSAGES
 /// config_useWikindxKey When displaying single resources or exporting a list to bibTeX,  (probably not necessary to translate 'ID' -- the database resource ID)
 				"useWikindxKey" => dgettext($domain, "Use the WIKINDX-generated bibTeX key (author.ID) in preference to the default authorYear bibTeX key"),
 				"useBibtexKey" => dgettext($domain, "Display the bibTeX key from the original bibliographic import (if available) in preference to either the WIKINDX-generated bibTeX key or the authorYear bibTeX key"),
+				"displayResourceStatistics" => dgettext($domain, "Display statistics when viewing a resource"),
 				"emailNews" => dgettext($domain, "Email news items to registered users"),
 				"emailNewRegistrations" => dgettext($domain, "When a new user registers, notify the administrator at this email address"),
 				"metadataAllow" => dgettext($domain, "Enable the metadata subsystem (quotes, paraphrases, comments etc.) for all users"),

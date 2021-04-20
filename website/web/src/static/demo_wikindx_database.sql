@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 01, 2021 at 08:53 PM
+-- Generation Time: Apr 20, 2021 at 01:02 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -18,16 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `wikindx`
+-- Database: `wikindxTest`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_bibtex_string`
+-- Table structure for table `bibtex_string`
 --
 
-CREATE TABLE `wkx_bibtex_string` (
+CREATE TABLE `bibtex_string` (
   `bibtexstringId` int(11) NOT NULL,
   `bibtexstringText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -35,10 +35,10 @@ CREATE TABLE `wkx_bibtex_string` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_cache`
+-- Table structure for table `cache`
 --
 
-CREATE TABLE `wkx_cache` (
+CREATE TABLE `cache` (
   `cacheResourceCreators` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `cacheMetadataCreators` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `cacheResourceKeywords` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -57,28 +57,28 @@ CREATE TABLE `wkx_cache` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_cache`
+-- Dumping data for table `cache`
 --
 
-INSERT INTO `wkx_cache` (`cacheResourceCreators`, `cacheMetadataCreators`, `cacheResourceKeywords`, `cacheMetadataKeywords`, `cacheQuoteKeywords`, `cacheParaphraseKeywords`, `cacheMusingKeywords`, `cacheResourcePublishers`, `cacheMetadataPublishers`, `cacheConferenceOrganisers`, `cacheResourceCollections`, `cacheMetadataCollections`, `cacheResourceCollectionTitles`, `cacheResourceCollectionShorts`, `cacheKeywords`) VALUES
-('YTo0Mzp7aToyOTtzOjIzOiJ2b24gQXJ0aXN0ZSwgRmlyc3RuYW1lICI7aTozMDtzOjIwOiJBcnRpc3RlMiwgRmlyc3RuYW1lICI7aTo0NTtzOjI1OiJkZSBBdHRvcm5leSAxLCBGaXJzdG5hbWUgIjtpOjUxO3M6MjI6IkF0dHJpYnV0ZWUsIEZpcnN0bmFtZSAiO2k6MTtzOjM1OiJkZSBBdXRob3JMYXN0MSwgRmlyc3RuYW1lICBJLk4uSS5ULiI7aToyO3M6MjY6IkRlIEF1dGhvckxhc3QyLCBGaXJzdG5hbWUgIjtpOjExO3M6MjQ6IkF1dGhvckxhc3QzLCBGaXJzdC1OYW1lICI7aToxMjtzOjIzOiJBdXRob3JMYXN0NCwgRmlyc3RuYW1lICI7aTo1MjtzOjI0OiJDYXJ0b2dyYXBoZXIsIEZpcnN0bmFtZSAiO2k6MjY7czoyNToiZGEgQ29tcG9zZXIgMSwgRmlyc3RuYW1lICI7aToyODtzOjIyOiJDb21wb3NlciAyLCBGaXJzdG5hbWUgIjtpOjI3O3M6MjM6IkNvbmR1Y3RvciAxLCBGaXJzdG5hbWUgIjtpOjQxO3M6MjQ6IkNvdW5zZWwgMSwgRmlyc3RuYW1lICBILiI7aTo0MjtzOjI0OiJkZSBDb3Vuc2VsIDIsIEZpcnN0bmFtZSAiO2k6NTM7czoyMToiQ3JlYXRvciAxLCBGaXJzdG5hbWUgIjtpOjU0O3M6MjQ6ImRlIENyZWF0b3IgMiwgRmlyc3RuYW1lICI7aToxNTtzOjIyOiJEaXJlY3RvciAxLCBGaXJzdG5hbWUgIjtpOjE3O3M6MjI6IkRpcmVjdG9yIDIsIEZpcnN0bmFtZSAiO2k6MjE7czoyMzoiRGlyZWN0b3IgMiwgRmlyc3QtTmFtZSAiO2k6MztzOjIzOiJFZGl0b3JMYXN0MSwgRmlyc3RuYW1lICI7aTo0O3M6MjU6InZvbiBFZGl0b3JMYXN0MiwgSS5OLkkuVC4iO2k6MTQ7czoyMzoiRWRpdG9yTGFzdDMsIEZpcnN0bmFtZSAiO2k6NDY7czoyMzoiSW50QXV0aG9yIDEsIEZpcnN0bmFtZSAiO2k6NDg7czoyMzoiSW50QXV0aG9yIDIsIEZpcnN0bmFtZSAiO2k6NDM7czoyMjoiSW52ZW50b3IgMSwgRmlyc3RuYW1lICI7aTo0NztzOjIyOiJJbnZlbnRvciAyLCBGaXJzdG5hbWUgIjtpOjQ0O3M6MjE6Iklzc3VpbmdPcmdhbml6YXRpb24gMSI7aToxMztzOjIxOiJMYXN0TmFtZSwgRmlyc3QtTmFtZSAiO2k6MjM7czoyMToidm9uIFBlcmZvcm1lciAxLCBJLk0uIjtpOjI0O3M6MjM6IlBlcmZvcm1lciAyLCBGaXJzdG5hbWUgIjtpOjI1O3M6MjM6IlBlcmZvcm1lciAzLCBGaXJzdG5hbWUgIjtpOjE2O3M6MjE6IlByb2R1Y2VyIDEsIEZpcnNuYW1lICI7aToyMjtzOjI1OiJEZSBQcm9kdWNlciAxLCBGaXJzdG5hbWUgIjtpOjE4O3M6MjE6IlByb2R1Y2VyIDIsIEZpcnNuYW1lICI7aToyMDtzOjM0OiJkZSBQcm9kdWNlciAyLCBGaXJzdG5hbWUgIEkuTi5JLlQuIjtpOjQ5O3M6MjA6IlJlY2lwaWVudCwgRmlyc25hbWUgIjtpOjUwO3M6MjU6InZhbiBSZWNpcGllbnQsIEZpcnN0bmFtZSAiO2k6NztzOjI0OiJSZXZpc2VyTGFzdDEsIEZpcnN0bmFtZSAiO2k6ODtzOjMzOiJSZXZpc2VyTGFzdDIsIEZpcnN0bmFtZSAgSS5OLkkuVC4iO2k6OTtzOjM4OiJTZXJpZXNFZGl0b3JMYXN0MSwgRmlyc3RuYW1lICBJLk4uSS5ULiI7aToxMDtzOjI5OiJTZXJpZXNFZGl0b3JMYXN0MiwgRmlyc3RuYW1lICI7aTo1O3M6MzY6IlRyYW5zbGF0b3JMYXN0MSwgRmlyc3RuYW1lICBJLk4uSS5ULiI7aTo2O3M6MTU6IlRyYW5zbGF0b3JMYXN0MSI7fQ==', 'YToxMjp7aToxO3M6MzU6ImRlIEF1dGhvckxhc3QxLCBGaXJzdG5hbWUgIEkuTi5JLlQuIjtpOjI7czoyNjoiRGUgQXV0aG9yTGFzdDIsIEZpcnN0bmFtZSAiO2k6MTE7czoyNDoiQXV0aG9yTGFzdDMsIEZpcnN0LU5hbWUgIjtpOjEyO3M6MjM6IkF1dGhvckxhc3Q0LCBGaXJzdG5hbWUgIjtpOjM7czoyMzoiRWRpdG9yTGFzdDEsIEZpcnN0bmFtZSAiO2k6NDtzOjI1OiJ2b24gRWRpdG9yTGFzdDIsIEkuTi5JLlQuIjtpOjc7czoyNDoiUmV2aXNlckxhc3QxLCBGaXJzdG5hbWUgIjtpOjg7czozMzoiUmV2aXNlckxhc3QyLCBGaXJzdG5hbWUgIEkuTi5JLlQuIjtpOjk7czozODoiU2VyaWVzRWRpdG9yTGFzdDEsIEZpcnN0bmFtZSAgSS5OLkkuVC4iO2k6MTA7czoyOToiU2VyaWVzRWRpdG9yTGFzdDIsIEZpcnN0bmFtZSAiO2k6NTtzOjM2OiJUcmFuc2xhdG9yTGFzdDEsIEZpcnN0bmFtZSAgSS5OLkkuVC4iO2k6NjtzOjE1OiJUcmFuc2xhdG9yTGFzdDEiO30=', 'YTo1OntpOjE7czozOiJrdzEiO2k6MjtzOjM6Imt3MiI7aTozO3M6Mzoia3czIjtpOjQ7czozOiJrdzQiO2k6NTtzOjM6Imt3NSI7fQ==', NULL, 'YTo0OntpOjI7czozOiJrdzIiO2k6MztzOjM6Imt3MyI7aTo0O3M6Mzoia3c0IjtpOjU7czozOiJrdzUiO30=', 'YTo0OntpOjE7czozOiJrdzEiO2k6MjtzOjM6Imt3MiI7aTozO3M6Mzoia3czIjtpOjQ7czozOiJrdzQiO30=', 'YToyOntpOjE7czozOiJrdzEiO2k6MztzOjM6Imt3MyI7fQ==', 'YTozMDp7aToyODtzOjI3OiJBc3NpZ25lZTogQXNzaWduZWUgTG9jYXRpb24iO2k6Mjk7czozMToiQXNzaWduZWUgMjogQXNzaWduZWUgTG9jYXRpb24gMiI7aToxODtzOjU0OiJCcm9hZGNhc3QgQ2hhbm5lbCBOYW1lIDE6IEJyb2FkY2FzdCBDaGFubmVsIExvY2F0aW9uIDEiO2k6MTk7czo1NDoiQnJvYWRjYXN0IENoYW5uZWwgTmFtZSAyOiBCcm9hZGNhc3QgQ2hhbm5lbCBMb2NhdGlvbiAyIjtpOjU7czo0MToiQ29uZmVyZW5jZSBPcmdhbml6ZXI6IENvbmZlcmVuY2UgTG9jYXRpb24iO2k6NztzOjQ1OiJDb25mZXJlbmNlIE9yZ2FuaXplciAyOiBDb25mZXJlbmNlIExvY2F0aW9uIDIiO2k6OTtzOjQ1OiJDb25mZXJlbmNlIE9yZ2FuaXplciAzOiBDb25mZXJlbmNlIExvY2F0aW9uIDMiO2k6MTA7czo1NToiQ29uZmVyZW5jZSBQdWJsaXNoZXIgMzogQ29uZmVyZW5jZSBQdWJsaXNoZXIgTG9jYXRpb24gMyI7aTo2O3M6NTY6IkNvbmZlcmVuY2UgUHVibGlzaGVyIE5hbWU6IENvbmZlcmVuY2UgUHVibGlzaGVyIExvY2F0aW9uIjtpOjg7czo2MDoiQ29uZmVyZW5jZSBQdWJsaXNoZXIgTmFtZSAyOiBDb25mZXJlbmNlIFB1Ymxpc2hlciBMb2NhdGlvbiAyIjtpOjI0O3M6NzoiQ291cnQgMSI7aToyNTtzOjc6IkNvdXJ0IDIiO2k6MTY7czoxMzoiRGlzdHJpYnV0b3IgMSI7aToxNztzOjEzOiJEaXN0cmlidXRvciAyIjtpOjIyO3M6MjU6IkhlYXJpbmc6IEhlYXJpbmcgTG9jYXRpb24iO2k6MjM7czoyNzoiSGVhcmluZzogSGVhcmluZyBMb2NhdGlvbiAyIjtpOjExO3M6MzI6Ikluc3RpdHV0aW9uOiBJbnN0aXR1dGlvbkxvY2F0aW9uIjtpOjEyO3M6MzQ6Ikluc3RpdHV0aW9uMjogSW5zdGl0dXRpb25Mb2NhdGlvbjIiO2k6MjY7czozODoiTGVnaXNsYXRpdmUgQm9keSAzOiBMZWdCb2R5IExvY2F0aW9uIDMiO2k6Mjc7czozODoiTGVnaXNsYXRpdmUgQm9keSA0OiBMZWdCb2R5IExvY2F0aW9uIDQiO2k6MTM7czozMzoiUHVibGlzaGVyIDY6IFB1Ymxpc2hlciBMb2NhdGlvbiA2IjtpOjMwO3M6MzE6IlB1Ymxpc2hlciA5OiBQdWJsaXNoZXJMb2NhdGlvbjkiO2k6MTtzOjM0OiJQdWJsaXNoZXJOYW1lMTogUHVibGlzaGVyTG9jYXRpb24xIjtpOjM7czozNDoiUHVibGlzaGVyTmFtZTI6IFB1Ymxpc2hlckxvY2F0aW9uMiI7aToxNDtzOjM0OiJQdWJsaXNoZXJOYW1lNzogUHVibGlzaGVyTG9jYXRpb243IjtpOjE1O3M6MzQ6IlB1Ymxpc2hlck5hbWU4OiBQdWJsaXNoZXJMb2NhdGlvbjgiO2k6MjA7czoxNzoiUmVjb3JkIExhYmVsIE5hbWUiO2k6MjE7czoxOToiUmVjb3JkIExhYmVsIE5hbWUgMiI7aToyO3M6NDQ6IlRyYW5zUHVibGlzaGVyTmFtZTE6IFRyYW5zUHVibGlzaGVyTG9jYXRpb24xIjtpOjQ7czo0NDoiVHJhbnNQdWJsaXNoZXJOYW1lMjogVHJhbnNQdWJsaXNoZXJMb2NhdGlvbjIiO30=', 'YTozOntpOjU7czo0MToiQ29uZmVyZW5jZSBPcmdhbml6ZXI6IENvbmZlcmVuY2UgTG9jYXRpb24iO2k6MTtzOjM0OiJQdWJsaXNoZXJOYW1lMTogUHVibGlzaGVyTG9jYXRpb24xIjtpOjE1O3M6MzQ6IlB1Ymxpc2hlck5hbWU4OiBQdWJsaXNoZXJMb2NhdGlvbjgiO30=', NULL, 'YToxNjp7aToxNjtzOjI1OiJBbGJ1bSBUaXRsZSAxIFtBbGJTaGl0bGVdIjtpOjE3O3M6MTM6IkFsYnVtIFRpdGxlIDIiO2k6MjA7czoxNjoiQ29sbGVjdGlvbiBUaXRsZSI7aToyMTtzOjM2OiJDb2xsZWN0aW9uIFRpdGx0ZSAyIFtDb2xsU2hvcnRUaXRsZV0iO2k6MTA7czozMzoiQ29uZmVyZW5jZSBUaXRsZSBbQ29uZlNob3J0VGl0bGVdIjtpOjExO3M6MTg6IkNvbmZlcmVuY2UgVGl0bGUgMiI7aToxMjtzOjM3OiJDb25mZXJlbmNlIFRpdGxlIDMgW0NvbmZTaG9ydFRpdGxlIDNdIjtpOjE0O3M6MzU6IkVuY3ljbG9wYWVkaWEgdGl0bGUgW0VuY1Nob3J0VGl0bGVdIjtpOjE1O3M6MTk6IkVuY3ljbG9wYWVkaWEgdGl0bGUiO2k6NDtzOjE1OiJKb3VybmFsIFRpdGxlIDEiO2k6NTtzOjI0OiJKb3VybmFsIFRpdGxlIDIgW0pTSE9SVF0iO2k6ODtzOjE0OiJNYWdhemluZSBUaXRsZSI7aTo5O3M6MTY6Ik1hZ2F6aW5lIFRpdGxlIDIiO2k6NjtzOjE1OiJOZXdzcGFwZXIgVGl0bGUiO2k6NztzOjE3OiJOZXdzcGFwZXIgVGl0bGUgMiI7aToxMztzOjI2OiJUaGVzaXNBYnN0cmFjdEpvdXJuYWxUaXRsZSI7fQ==', 'YToyOntpOjIwO3M6MTY6IkNvbGxlY3Rpb24gVGl0bGUiO2k6MTA7czozMzoiQ29uZmVyZW5jZSBUaXRsZSBbQ29uZlNob3J0VGl0bGVdIjt9', NULL, NULL, 'YTo1OntpOjE7czozOiJrdzEiO2k6MjtzOjM6Imt3MiI7aTozO3M6Mzoia3czIjtpOjQ7czozOiJrdzQiO2k6NTtzOjM6Imt3NSI7fQ==');
+INSERT INTO `cache` (`cacheResourceCreators`, `cacheMetadataCreators`, `cacheResourceKeywords`, `cacheMetadataKeywords`, `cacheQuoteKeywords`, `cacheParaphraseKeywords`, `cacheMusingKeywords`, `cacheResourcePublishers`, `cacheMetadataPublishers`, `cacheConferenceOrganisers`, `cacheResourceCollections`, `cacheMetadataCollections`, `cacheResourceCollectionTitles`, `cacheResourceCollectionShorts`, `cacheKeywords`) VALUES
+(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_category`
+-- Table structure for table `category`
 --
 
-CREATE TABLE `wkx_category` (
+CREATE TABLE `category` (
   `categoryId` int(11) NOT NULL,
   `categoryCategory` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_category`
+-- Dumping data for table `category`
 --
 
-INSERT INTO `wkx_category` (`categoryId`, `categoryCategory`) VALUES
+INSERT INTO `category` (`categoryId`, `categoryCategory`) VALUES
 (1, 'General'),
 (2, 'Cat1'),
 (3, 'Cat2'),
@@ -87,10 +87,10 @@ INSERT INTO `wkx_category` (`categoryId`, `categoryCategory`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_collection`
+-- Table structure for table `collection`
 --
 
-CREATE TABLE `wkx_collection` (
+CREATE TABLE `collection` (
   `collectionId` int(11) NOT NULL,
   `collectionTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `collectionTitleShort` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -99,34 +99,34 @@ CREATE TABLE `wkx_collection` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_collection`
+-- Dumping data for table `collection`
 --
 
-INSERT INTO `wkx_collection` (`collectionId`, `collectionTitle`, `collectionTitleShort`, `collectionType`, `collectionDefault`) VALUES
-(4, 'Journal Title 1', NULL, 'journal', 'YToxOntzOjI0OiJyZXNvdXJjZW1pc2NQZWVyUmV2aWV3ZWQiO3M6MToiWSI7fQ=='),
-(5, 'Journal Title 2', 'JSHORT', 'journal', 'YToxOntzOjI0OiJyZXNvdXJjZW1pc2NQZWVyUmV2aWV3ZWQiO3M6MToiTiI7fQ=='),
-(6, 'Newspaper Title', NULL, 'newspaper', 'YToxOntzOjE0OiJyZXNvdXJjZUZpZWxkMiI7czo0OiJDaXR5Ijt9'),
-(7, 'Newspaper Title 2', NULL, 'newspaper', 'YToyOntzOjE0OiJyZXNvdXJjZUZpZWxkMiI7czo0OiJDaXR5IjtzOjEyOiJyZXNvdXJjZUlzYm4iO3M6MzoiSUQxIjt9'),
+INSERT INTO `collection` (`collectionId`, `collectionTitle`, `collectionTitleShort`, `collectionType`, `collectionDefault`) VALUES
+(4, 'Journal Title 1', NULL, 'journal', 'a:1:{s:24:\"resourcemiscPeerReviewed\";s:1:\"Y\";}'),
+(5, 'Journal Title 2', 'JSHORT', 'journal', 'a:1:{s:24:\"resourcemiscPeerReviewed\";s:1:\"N\";}'),
+(6, 'Newspaper Title', NULL, 'newspaper', 'a:1:{s:14:\"resourceField2\";s:4:\"City\";}'),
+(7, 'Newspaper Title 2', NULL, 'newspaper', 'a:2:{s:14:\"resourceField2\";s:4:\"City\";s:12:\"resourceIsbn\";s:3:\"ID1\";}'),
 (8, 'Magazine Title', NULL, 'magazine', NULL),
 (9, 'Magazine Title 2', NULL, 'magazine', NULL),
-(10, 'Conference Title', 'ConfShortTitle', 'proceedings', 'YToxMTp7czoxMjoicmVzb3VyY2VJc2JuIjtzOjM6IklEMSI7czoxODoicmVzb3VyY2VtaXNjRmllbGQyIjtzOjE6IjEiO3M6MTg6InJlc291cmNlbWlzY0ZpZWxkNSI7czoxOiIyIjtzOjE4OiJyZXNvdXJjZW1pc2NGaWVsZDMiO3M6MToiMiI7czoxODoicmVzb3VyY2VtaXNjRmllbGQ2IjtzOjE6IjIiO3M6MjQ6InJlc291cmNlbWlzY1BlZXJSZXZpZXdlZCI7czoxOiJZIjtzOjIxOiJyZXNvdXJjZW1pc2NQdWJsaXNoZXIiO3M6MToiNSI7czoxNzoicmVzb3VyY2V5ZWFyWWVhcjIiO3M6OToiQ29uZlllYXIxIjtzOjE3OiJyZXNvdXJjZXllYXJZZWFyMyI7czo5OiJDb25mWWVhcjEiO3M6MTg6InJlc291cmNlbWlzY0ZpZWxkMSI7czoxOiI2IjtzOjE3OiJyZXNvdXJjZXllYXJZZWFyMSI7czo4OiJQdWJZZWFyMyI7fQ=='),
-(11, 'Conference Title 2', NULL, 'proceedings', 'YTo4OntzOjE4OiJyZXNvdXJjZW1pc2NGaWVsZDIiO3M6MToiMiI7czoxODoicmVzb3VyY2VtaXNjRmllbGQzIjtzOjE6IjIiO3M6MjQ6InJlc291cmNlbWlzY1BlZXJSZXZpZXdlZCI7czoxOiJZIjtzOjIxOiJyZXNvdXJjZW1pc2NQdWJsaXNoZXIiO3M6MToiOSI7czoxNzoicmVzb3VyY2V5ZWFyWWVhcjIiO3M6OToiQ29uZlllYXIxIjtzOjE4OiJyZXNvdXJjZW1pc2NGaWVsZDUiO3M6MToiNiI7czoxODoicmVzb3VyY2VtaXNjRmllbGQ2IjtzOjE6IjMiO3M6MTc6InJlc291cmNleWVhclllYXIzIjtzOjQ6IjIwMDAiO30='),
-(12, 'Conference Title 3', 'ConfShortTitle 3', 'proceedings', 'YToxNTp7czoxNDoicmVzb3VyY2VGaWVsZDEiO3M6MTU6IkNvbmZTZXJpZXNUaXRsZSI7czoxNDoicmVzb3VyY2VGaWVsZDMiO3M6MTM6IkNvbmZTZXJpZXNOdW0iO3M6MTQ6InJlc291cmNlRmllbGQ0IjtzOjEwOiJQcm9jVm9sTnVtIjtzOjEyOiJyZXNvdXJjZUlzYm4iO3M6MzoiaWQ0IjtzOjE4OiJyZXNvdXJjZW1pc2NGaWVsZDIiO3M6MToiMSI7czoxODoicmVzb3VyY2VtaXNjRmllbGQ1IjtzOjE6IjUiO3M6MTg6InJlc291cmNlbWlzY0ZpZWxkMyI7czoxOiIxIjtzOjE4OiJyZXNvdXJjZW1pc2NGaWVsZDYiO3M6MToiMSI7czoyNDoicmVzb3VyY2VtaXNjUGVlclJldmlld2VkIjtzOjE6IlkiO3M6MjE6InJlc291cmNlbWlzY1B1Ymxpc2hlciI7czoxOiI5IjtzOjE4OiJyZXNvdXJjZW1pc2NGaWVsZDEiO3M6MjoiMTAiO3M6MTc6InJlc291cmNleWVhclllYXIxIjtzOjg6IlB1YlllYXI0IjtzOjE3OiJyZXNvdXJjZXllYXJZZWFyMiI7czo5OiJDb25mWWVhcjQiO3M6MTc6InJlc291cmNleWVhclllYXIzIjtzOjk6IkNvbmZZZWFyNCI7czo4OiJjcmVhdG9ycyI7YToyOntzOjE3OiJDcmVhdG9yMl8wX3NlbGVjdCI7czoxOiIzIjtzOjE3OiJDcmVhdG9yMl8xX3NlbGVjdCI7czoyOiIxNCI7fX0='),
-(13, 'ThesisAbstractJournalTitle', NULL, 'thesis', 'YToxOntzOjEyOiJyZXNvdXJjZUlzYm4iO3M6MzoiaWQyIjt9'),
-(14, 'Encyclopaedia title', 'EncShortTitle', 'web', 'YTo0OntzOjEyOiJyZXNvdXJjZUlzYm4iO3M6MzoiaWQ0IjtzOjIxOiJyZXNvdXJjZW1pc2NQdWJsaXNoZXIiO3M6MToiMyI7czoyNDoicmVzb3VyY2VtaXNjUGVlclJldmlld2VkIjtzOjE6Ik4iO3M6ODoiY3JlYXRvcnMiO2E6MTp7czoxNzoiQ3JlYXRvcjJfMF9zZWxlY3QiO3M6MToiMyI7fX0='),
-(15, 'Encyclopaedia title', NULL, 'web', 'YToyOntzOjIxOiJyZXNvdXJjZW1pc2NQdWJsaXNoZXIiO3M6MjoiMTMiO3M6MjQ6InJlc291cmNlbWlzY1BlZXJSZXZpZXdlZCI7czoxOiJZIjt9'),
-(16, 'Album Title 1', 'AlbShitle', 'music', 'YTozOntzOjE0OiJyZXNvdXJjZUZpZWxkMiI7czo2OiJNZWRpdW0iO3M6MjE6InJlc291cmNlbWlzY1B1Ymxpc2hlciI7czoyOiIyMSI7czoxNzoicmVzb3VyY2V5ZWFyWWVhcjEiO3M6ODoiUHViWWVhcjIiO30='),
-(17, 'Album Title 2', NULL, 'music', 'YTozOntzOjE0OiJyZXNvdXJjZUZpZWxkMiI7czo4OiJNZWRpdW0gMiI7czoyMToicmVzb3VyY2VtaXNjUHVibGlzaGVyIjtzOjI6IjIwIjtzOjE3OiJyZXNvdXJjZXllYXJZZWFyMSI7czo4OiJQdWJZZWFyMSI7fQ=='),
-(20, 'Collection Title', NULL, 'manuscript', 'YToxOntzOjEyOiJyZXNvdXJjZUlzYm4iO3M6MzoiaWQ1Ijt9'),
+(10, 'Conference Title', 'ConfShortTitle', 'proceedings', 'a:11:{s:12:\"resourceIsbn\";s:3:\"ID1\";s:18:\"resourcemiscField2\";s:1:\"1\";s:18:\"resourcemiscField5\";s:1:\"2\";s:18:\"resourcemiscField3\";s:1:\"2\";s:18:\"resourcemiscField6\";s:1:\"2\";s:24:\"resourcemiscPeerReviewed\";s:1:\"Y\";s:21:\"resourcemiscPublisher\";s:1:\"5\";s:17:\"resourceyearYear2\";s:9:\"ConfYear1\";s:17:\"resourceyearYear3\";s:9:\"ConfYear1\";s:18:\"resourcemiscField1\";s:1:\"6\";s:17:\"resourceyearYear1\";s:8:\"PubYear3\";}'),
+(11, 'Conference Title 2', NULL, 'proceedings', 'a:8:{s:18:\"resourcemiscField2\";s:1:\"2\";s:18:\"resourcemiscField3\";s:1:\"2\";s:24:\"resourcemiscPeerReviewed\";s:1:\"Y\";s:21:\"resourcemiscPublisher\";s:1:\"9\";s:17:\"resourceyearYear2\";s:9:\"ConfYear1\";s:18:\"resourcemiscField5\";s:1:\"6\";s:18:\"resourcemiscField6\";s:1:\"3\";s:17:\"resourceyearYear3\";s:4:\"2000\";}'),
+(12, 'Conference Title 3', 'ConfShortTitle 3', 'proceedings', 'a:15:{s:14:\"resourceField1\";s:15:\"ConfSeriesTitle\";s:14:\"resourceField3\";s:13:\"ConfSeriesNum\";s:14:\"resourceField4\";s:10:\"ProcVolNum\";s:12:\"resourceIsbn\";s:3:\"id4\";s:18:\"resourcemiscField2\";s:1:\"1\";s:18:\"resourcemiscField5\";s:1:\"5\";s:18:\"resourcemiscField3\";s:1:\"1\";s:18:\"resourcemiscField6\";s:1:\"1\";s:24:\"resourcemiscPeerReviewed\";s:1:\"Y\";s:21:\"resourcemiscPublisher\";s:1:\"9\";s:18:\"resourcemiscField1\";s:2:\"10\";s:17:\"resourceyearYear1\";s:8:\"PubYear4\";s:17:\"resourceyearYear2\";s:9:\"ConfYear4\";s:17:\"resourceyearYear3\";s:9:\"ConfYear4\";s:8:\"creators\";a:2:{s:17:\"Creator2_0_select\";s:1:\"3\";s:17:\"Creator2_1_select\";s:2:\"14\";}}'),
+(13, 'ThesisAbstractJournalTitle', NULL, 'thesis', 'a:1:{s:12:\"resourceIsbn\";s:3:\"id2\";}'),
+(14, 'Encyclopaedia title', 'EncShortTitle', 'web', 'a:4:{s:12:\"resourceIsbn\";s:3:\"id4\";s:21:\"resourcemiscPublisher\";s:1:\"3\";s:24:\"resourcemiscPeerReviewed\";s:1:\"N\";s:8:\"creators\";a:1:{s:17:\"Creator2_0_select\";s:1:\"3\";}}'),
+(15, 'Encyclopaedia title', NULL, 'web', 'a:2:{s:21:\"resourcemiscPublisher\";s:2:\"13\";s:24:\"resourcemiscPeerReviewed\";s:1:\"Y\";}'),
+(16, 'Album Title 1', 'AlbShitle', 'music', 'a:3:{s:14:\"resourceField2\";s:6:\"Medium\";s:21:\"resourcemiscPublisher\";s:2:\"21\";s:17:\"resourceyearYear1\";s:8:\"PubYear2\";}'),
+(17, 'Album Title 2', NULL, 'music', 'a:3:{s:14:\"resourceField2\";s:8:\"Medium 2\";s:21:\"resourcemiscPublisher\";s:2:\"20\";s:17:\"resourceyearYear1\";s:8:\"PubYear1\";}'),
+(20, 'Collection Title', NULL, 'manuscript', 'a:1:{s:12:\"resourceIsbn\";s:3:\"id5\";}'),
 (21, 'Collection Titlte 2', 'CollShortTitle', 'manuscript', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_config`
+-- Table structure for table `config`
 --
 
-CREATE TABLE `wkx_config` (
+CREATE TABLE `config` (
   `configId` int(11) NOT NULL,
   `configName` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `configInt` int(11) DEFAULT NULL,
@@ -137,10 +137,10 @@ CREATE TABLE `wkx_config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_config`
+-- Dumping data for table `config`
 --
 
-INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`, `configText`, `configBoolean`, `configDatetime`) VALUES
+INSERT INTO `config` (`configId`, `configName`, `configInt`, `configVarchar`, `configText`, `configBoolean`, `configDatetime`) VALUES
 (1, 'configTitle', NULL, 'WIKINDX', NULL, NULL, NULL),
 (2, 'configContactEmail', NULL, NULL, NULL, NULL, NULL),
 (3, 'configDescription', NULL, NULL, NULL, NULL, NULL),
@@ -157,7 +157,7 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (14, 'configNotify', NULL, NULL, NULL, 1, NULL),
 (15, 'configImgWidthLimit', 400, NULL, NULL, NULL, NULL),
 (16, 'configImgHeightLimit', 400, NULL, NULL, NULL, NULL),
-(17, 'configFileAttach', NULL, NULL, NULL, 1, NULL),
+(17, 'configFileAttachAllow', NULL, NULL, NULL, 1, NULL),
 (18, 'configFileViewLoggedOnOnly', NULL, NULL, NULL, NULL, NULL),
 (19, 'configMaxPaste', 10, NULL, NULL, NULL, NULL),
 (20, 'configLastChanges', 10, NULL, NULL, NULL, NULL),
@@ -168,8 +168,8 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (25, 'configEmailNews', NULL, NULL, NULL, NULL, NULL),
 (26, 'configEmailNewRegistrations', NULL, NULL, NULL, NULL, NULL),
 (27, 'configQuarantine', NULL, NULL, NULL, NULL, NULL),
-(28, 'configNoSort', NULL, NULL, 'YTozMDp7aTowO3M6MjoiYW4iO2k6MTtzOjE6ImEiO2k6MjtzOjM6InRoZSI7aTozO3M6MzoiZGVyIjtpOjQ7czozOiJkaWUiO2k6NTtzOjM6ImRhcyI7aTo2O3M6MzoiZWluIjtpOjc7czo0OiJlaW5lIjtpOjg7czo1OiJlaW5lciI7aTo5O3M6NToiZWluZXMiO2k6MTA7czoyOiJsZSI7aToxMTtzOjI6ImxhIjtpOjEyO3M6MzoibGFzIjtpOjEzO3M6MjoiaWwiO2k6MTQ7czozOiJsZXMiO2k6MTU7czozOiJ1bmUiO2k6MTY7czoyOiJ1biI7aToxNztzOjM6InVuYSI7aToxODtzOjM6InVubyI7aToxOTtzOjI6ImxvIjtpOjIwO3M6MzoibG9zIjtpOjIxO3M6MToiaSI7aToyMjtzOjM6ImdsaSI7aToyMztzOjI6ImRlIjtpOjI0O3M6MzoiaGV0IjtpOjI1O3M6MjoidW0iO2k6MjY7czozOiJ1bWEiO2k6Mjc7czoxOiJvIjtpOjI4O3M6Mjoib3MiO2k6Mjk7czoyOiJhcyI7fQ==', NULL, NULL),
-(29, 'configSearchFilter', NULL, NULL, 'YTo1OntpOjA7czoyOiJhbiI7aToxO3M6MToiYSI7aToyO3M6MzoidGhlIjtpOjM7czozOiJhbmQiO2k6NDtzOjI6InRvIjt9', NULL, NULL),
+(28, 'configNoSort', NULL, NULL, 'a:30:{i:0;s:2:\"an\";i:1;s:1:\"a\";i:2;s:3:\"the\";i:3;s:3:\"der\";i:4;s:3:\"die\";i:5;s:3:\"das\";i:6;s:3:\"ein\";i:7;s:4:\"eine\";i:8;s:5:\"einer\";i:9;s:5:\"eines\";i:10;s:2:\"le\";i:11;s:2:\"la\";i:12;s:3:\"las\";i:13;s:2:\"il\";i:14;s:3:\"les\";i:15;s:3:\"une\";i:16;s:2:\"un\";i:17;s:3:\"una\";i:18;s:3:\"uno\";i:19;s:2:\"lo\";i:20;s:3:\"los\";i:21;s:1:\"i\";i:22;s:3:\"gli\";i:23;s:2:\"de\";i:24;s:3:\"het\";i:25;s:2:\"um\";i:26;s:3:\"uma\";i:27;s:1:\"o\";i:28;s:2:\"os\";i:29;s:2:\"as\";}', NULL, NULL),
+(29, 'configSearchFilter', NULL, NULL, 'a:5:{i:0;s:2:\"an\";i:1;s:1:\"a\";i:2;s:3:\"the\";i:3;s:3:\"and\";i:4;s:2:\"to\";}', NULL, NULL),
 (30, 'configListlink', NULL, NULL, NULL, NULL, NULL),
 (31, 'configEmailStatistics', NULL, NULL, NULL, NULL, NULL),
 (32, 'configStatisticsCompiled', NULL, NULL, NULL, NULL, '2021-03-01 00:00:00'),
@@ -181,7 +181,7 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (38, 'configGlobalEdit', NULL, NULL, NULL, NULL, NULL),
 (39, 'configTimezone', NULL, 'UTC', NULL, NULL, NULL),
 (40, 'configRestrictUserId', NULL, NULL, NULL, NULL, NULL),
-(41, 'configDeactivateResourceTypes', NULL, NULL, 'YTowOnt9', NULL, NULL),
+(41, 'configDeactivateResourceTypes', NULL, NULL, 'a:0:{}', NULL, NULL),
 (42, 'configRssAllow', NULL, NULL, NULL, NULL, NULL),
 (43, 'configRssBibstyle', NULL, 'apa', NULL, NULL, NULL),
 (44, 'configRssLimit', 10, NULL, NULL, NULL, NULL),
@@ -212,8 +212,8 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (71, 'configTagHighColour', NULL, 'ff0000', NULL, NULL, NULL),
 (72, 'configTagLowFactor', 100, NULL, NULL, NULL, NULL),
 (73, 'configTagHighFactor', 200, NULL, NULL, NULL, NULL),
-(74, 'configImagesAllow', NULL, NULL, NULL, NULL, NULL),
-(75, 'configImagesMaxSize', 5, NULL, NULL, NULL, NULL),
+(74, 'configImgAllow', NULL, NULL, NULL, NULL, NULL),
+(75, 'configImgUploadMaxSize', 5, NULL, NULL, NULL, NULL),
 (76, 'configErrorReport', NULL, NULL, NULL, NULL, NULL),
 (77, 'configSqlEmail', NULL, NULL, NULL, NULL, NULL),
 (78, 'configPrintSql', NULL, NULL, NULL, NULL, NULL),
@@ -247,15 +247,16 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (108, 'configLdapUserCreate', NULL, NULL, NULL, 1, NULL),
 (109, 'configLdapUserOu', NULL, NULL, NULL, NULL, NULL),
 (110, 'configResourceUrlPrefix', NULL, '', NULL, NULL, NULL),
-(111, 'configImpressum', NULL, NULL, '', NULL, NULL);
+(111, 'configImpressum', NULL, NULL, '', NULL, NULL),
+(112, 'configFileAttachUploadMaxSize', 5, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_creator`
+-- Table structure for table `creator`
 --
 
-CREATE TABLE `wkx_creator` (
+CREATE TABLE `creator` (
   `creatorId` int(11) NOT NULL,
   `creatorSurname` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `creatorFirstname` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -265,10 +266,10 @@ CREATE TABLE `wkx_creator` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_creator`
+-- Dumping data for table `creator`
 --
 
-INSERT INTO `wkx_creator` (`creatorId`, `creatorSurname`, `creatorFirstname`, `creatorInitials`, `creatorPrefix`, `creatorSameAs`) VALUES
+INSERT INTO `creator` (`creatorId`, `creatorSurname`, `creatorFirstname`, `creatorInitials`, `creatorPrefix`, `creatorSameAs`) VALUES
 (1, 'AuthorLast1', 'Firstname', 'I N I T', 'de', NULL),
 (2, 'AuthorLast2', 'Firstname', NULL, 'De', NULL),
 (3, 'EditorLast1', 'Firstname', NULL, NULL, NULL),
@@ -316,10 +317,10 @@ INSERT INTO `wkx_creator` (`creatorId`, `creatorSurname`, `creatorFirstname`, `c
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_custom`
+-- Table structure for table `custom`
 --
 
-CREATE TABLE `wkx_custom` (
+CREATE TABLE `custom` (
   `customId` int(11) NOT NULL,
   `customLabel` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `customSize` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'S'
@@ -328,10 +329,10 @@ CREATE TABLE `wkx_custom` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_import_raw`
+-- Table structure for table `import_raw`
 --
 
-CREATE TABLE `wkx_import_raw` (
+CREATE TABLE `import_raw` (
   `importrawId` int(11) NOT NULL,
   `importrawStringId` int(11) DEFAULT NULL,
   `importrawText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -341,20 +342,20 @@ CREATE TABLE `wkx_import_raw` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_keyword`
+-- Table structure for table `keyword`
 --
 
-CREATE TABLE `wkx_keyword` (
+CREATE TABLE `keyword` (
   `keywordId` int(11) NOT NULL,
   `keywordKeyword` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `keywordGlossary` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_keyword`
+-- Dumping data for table `keyword`
 --
 
-INSERT INTO `wkx_keyword` (`keywordId`, `keywordKeyword`, `keywordGlossary`) VALUES
+INSERT INTO `keyword` (`keywordId`, `keywordKeyword`, `keywordGlossary`) VALUES
 (1, 'kw1', NULL),
 (2, 'kw2', NULL),
 (3, 'kw3', NULL),
@@ -364,10 +365,10 @@ INSERT INTO `wkx_keyword` (`keywordId`, `keywordKeyword`, `keywordGlossary`) VAL
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_language`
+-- Table structure for table `language`
 --
 
-CREATE TABLE `wkx_language` (
+CREATE TABLE `language` (
   `languageId` int(11) NOT NULL,
   `languageLanguage` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -375,10 +376,10 @@ CREATE TABLE `wkx_language` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_news`
+-- Table structure for table `news`
 --
 
-CREATE TABLE `wkx_news` (
+CREATE TABLE `news` (
   `newsId` int(11) NOT NULL,
   `newsTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `newsNews` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -389,10 +390,10 @@ CREATE TABLE `wkx_news` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_plugin_localedescription`
+-- Table structure for table `plugin_localedescription`
 --
 
-CREATE TABLE `wkx_plugin_localedescription` (
+CREATE TABLE `plugin_localedescription` (
   `pluginlocaledescriptionLocale` varchar(16) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `pluginlocaledescriptionText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -400,10 +401,10 @@ CREATE TABLE `wkx_plugin_localedescription` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_plugin_soundexplorer`
+-- Table structure for table `plugin_soundexplorer`
 --
 
-CREATE TABLE `wkx_plugin_soundexplorer` (
+CREATE TABLE `plugin_soundexplorer` (
   `pluginsoundexplorerId` int(11) NOT NULL,
   `pluginsoundexplorerUserId` int(11) NOT NULL,
   `pluginsoundexplorerLabel` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -413,10 +414,10 @@ CREATE TABLE `wkx_plugin_soundexplorer` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_plugin_wordprocessor`
+-- Table structure for table `plugin_wordprocessor`
 --
 
-CREATE TABLE `wkx_plugin_wordprocessor` (
+CREATE TABLE `plugin_wordprocessor` (
   `pluginwordprocessorId` int(11) NOT NULL,
   `pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -427,10 +428,10 @@ CREATE TABLE `wkx_plugin_wordprocessor` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_publisher`
+-- Table structure for table `publisher`
 --
 
-CREATE TABLE `wkx_publisher` (
+CREATE TABLE `publisher` (
   `publisherId` int(11) NOT NULL,
   `publisherName` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `publisherLocation` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -438,10 +439,10 @@ CREATE TABLE `wkx_publisher` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_publisher`
+-- Dumping data for table `publisher`
 --
 
-INSERT INTO `wkx_publisher` (`publisherId`, `publisherName`, `publisherLocation`, `publisherType`) VALUES
+INSERT INTO `publisher` (`publisherId`, `publisherName`, `publisherLocation`, `publisherType`) VALUES
 (1, 'PublisherName1', 'PublisherLocation1', NULL),
 (2, 'TransPublisherName1', 'TransPublisherLocation1', 'book'),
 (3, 'PublisherName2', 'PublisherLocation2', NULL),
@@ -476,10 +477,10 @@ INSERT INTO `wkx_publisher` (`publisherId`, `publisherName`, `publisherLocation`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource`
+-- Table structure for table `resource`
 --
 
-CREATE TABLE `wkx_resource` (
+CREATE TABLE `resource` (
   `resourceId` int(11) NOT NULL,
   `resourceType` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceTitle` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -506,10 +507,10 @@ CREATE TABLE `wkx_resource` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource`
+-- Dumping data for table `resource`
 --
 
-INSERT INTO `wkx_resource` (`resourceId`, `resourceType`, `resourceTitle`, `resourceSubtitle`, `resourceShortTitle`, `resourceTransTitle`, `resourceTransSubtitle`, `resourceTransShortTitle`, `resourceField1`, `resourceField2`, `resourceField3`, `resourceField4`, `resourceField5`, `resourceField6`, `resourceField7`, `resourceField8`, `resourceField9`, `resourceNoSort`, `resourceTransNoSort`, `resourceIsbn`, `resourceBibtexKey`, `resourceDoi`, `resourceTitleSort`) VALUES
+INSERT INTO `resource` (`resourceId`, `resourceType`, `resourceTitle`, `resourceSubtitle`, `resourceShortTitle`, `resourceTransTitle`, `resourceTransSubtitle`, `resourceTransShortTitle`, `resourceField1`, `resourceField2`, `resourceField3`, `resourceField4`, `resourceField5`, `resourceField6`, `resourceField7`, `resourceField8`, `resourceField9`, `resourceNoSort`, `resourceTransNoSort`, `resourceIsbn`, `resourceBibtexKey`, `resourceDoi`, `resourceTitleSort`) VALUES
 (1, 'book', 'Book Title 1', 'Subtitle', 'Short title', 'TransTitle1', 'TransSubTitle', NULL, 'Series Title 1', 'Ed1', 'SeriesNum', '2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ID1', 'deAuthorLast1PubYear1', 'doi1', 'Book Title 1 Subtitle'),
 (2, 'book', 'Book Title 2', 'Subtitle', 'Short title', NULL, NULL, NULL, 'Series Title 2', 'Ed2', 'SeriesNum', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AuthorLast3PubYear2', NULL, 'Book Title 2 Subtitle'),
 (3, 'book_article', 'Book Article Title 1', 'Subtitle', 'Short title', 'TransTitle2', 'TransSubTitle2', NULL, 'Series Title 2', 'Ed1', 'SeriesNum', '2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'id2', 'AuthorLast3PubYear1', 'doi2', 'Book Article Title 1 Subtitle'),
@@ -597,10 +598,10 @@ INSERT INTO `wkx_resource` (`resourceId`, `resourceType`, `resourceTitle`, `reso
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_attachments`
+-- Table structure for table `resource_attachments`
 --
 
-CREATE TABLE `wkx_resource_attachments` (
+CREATE TABLE `resource_attachments` (
   `resourceattachmentsId` int(11) NOT NULL,
   `resourceattachmentsHashFilename` varchar(40) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceattachmentsResourceId` int(11) DEFAULT NULL,
@@ -617,10 +618,10 @@ CREATE TABLE `wkx_resource_attachments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_category`
+-- Table structure for table `resource_category`
 --
 
-CREATE TABLE `wkx_resource_category` (
+CREATE TABLE `resource_category` (
   `resourcecategoryId` int(11) NOT NULL,
   `resourcecategoryResourceId` int(11) DEFAULT NULL,
   `resourcecategoryCategoryId` int(11) DEFAULT NULL,
@@ -628,10 +629,10 @@ CREATE TABLE `wkx_resource_category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource_category`
+-- Dumping data for table `resource_category`
 --
 
-INSERT INTO `wkx_resource_category` (`resourcecategoryId`, `resourcecategoryResourceId`, `resourcecategoryCategoryId`, `resourcecategorySubcategoryId`) VALUES
+INSERT INTO `resource_category` (`resourcecategoryId`, `resourcecategoryResourceId`, `resourcecategoryCategoryId`, `resourcecategorySubcategoryId`) VALUES
 (1, 1, 1, NULL),
 (2, 2, 2, NULL),
 (3, 3, 1, NULL),
@@ -732,10 +733,10 @@ INSERT INTO `wkx_resource_category` (`resourcecategoryId`, `resourcecategoryReso
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_creator`
+-- Table structure for table `resource_creator`
 --
 
-CREATE TABLE `wkx_resource_creator` (
+CREATE TABLE `resource_creator` (
   `resourcecreatorId` int(11) NOT NULL,
   `resourcecreatorResourceId` int(11) NOT NULL,
   `resourcecreatorCreatorId` int(11) DEFAULT NULL,
@@ -746,10 +747,10 @@ CREATE TABLE `wkx_resource_creator` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource_creator`
+-- Dumping data for table `resource_creator`
 --
 
-INSERT INTO `wkx_resource_creator` (`resourcecreatorId`, `resourcecreatorResourceId`, `resourcecreatorCreatorId`, `resourcecreatorOrder`, `resourcecreatorRole`, `resourcecreatorCreatorMain`, `resourcecreatorCreatorSurname`) VALUES
+INSERT INTO `resource_creator` (`resourcecreatorId`, `resourcecreatorResourceId`, `resourcecreatorCreatorId`, `resourcecreatorOrder`, `resourcecreatorRole`, `resourcecreatorCreatorMain`, `resourcecreatorCreatorSurname`) VALUES
 (1, 1, 1, 1, 1, 1, 'AuthorLast1'),
 (2, 1, 2, 2, 1, 1, 'AuthorLast1'),
 (3, 1, 3, 1, 2, 1, 'AuthorLast1'),
@@ -909,10 +910,10 @@ INSERT INTO `wkx_resource_creator` (`resourcecreatorId`, `resourcecreatorResourc
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_custom`
+-- Table structure for table `resource_custom`
 --
 
-CREATE TABLE `wkx_resource_custom` (
+CREATE TABLE `resource_custom` (
   `resourcecustomId` int(11) NOT NULL,
   `resourcecustomCustomId` int(11) NOT NULL,
   `resourcecustomResourceId` int(11) NOT NULL,
@@ -925,10 +926,10 @@ CREATE TABLE `wkx_resource_custom` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_keyword`
+-- Table structure for table `resource_keyword`
 --
 
-CREATE TABLE `wkx_resource_keyword` (
+CREATE TABLE `resource_keyword` (
   `resourcekeywordId` int(11) NOT NULL,
   `resourcekeywordResourceId` int(11) DEFAULT NULL,
   `resourcekeywordKeywordId` int(11) DEFAULT NULL,
@@ -936,10 +937,10 @@ CREATE TABLE `wkx_resource_keyword` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource_keyword`
+-- Dumping data for table `resource_keyword`
 --
 
-INSERT INTO `wkx_resource_keyword` (`resourcekeywordId`, `resourcekeywordResourceId`, `resourcekeywordKeywordId`, `resourcekeywordMetadataId`) VALUES
+INSERT INTO `resource_keyword` (`resourcekeywordId`, `resourcekeywordResourceId`, `resourcekeywordKeywordId`, `resourcekeywordMetadataId`) VALUES
 (1, 1, 1, NULL),
 (2, 2, 2, NULL),
 (3, 2, 1, NULL),
@@ -1021,10 +1022,10 @@ INSERT INTO `wkx_resource_keyword` (`resourcekeywordId`, `resourcekeywordResourc
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_language`
+-- Table structure for table `resource_language`
 --
 
-CREATE TABLE `wkx_resource_language` (
+CREATE TABLE `resource_language` (
   `resourcelanguageId` int(11) NOT NULL,
   `resourcelanguageResourceId` int(11) DEFAULT NULL,
   `resourcelanguageLanguageId` int(11) DEFAULT NULL
@@ -1033,10 +1034,10 @@ CREATE TABLE `wkx_resource_language` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_metadata`
+-- Table structure for table `resource_metadata`
 --
 
-CREATE TABLE `wkx_resource_metadata` (
+CREATE TABLE `resource_metadata` (
   `resourcemetadataId` int(11) NOT NULL,
   `resourcemetadataResourceId` int(11) DEFAULT NULL,
   `resourcemetadataMetadataId` int(11) DEFAULT NULL,
@@ -1054,10 +1055,10 @@ CREATE TABLE `wkx_resource_metadata` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource_metadata`
+-- Dumping data for table `resource_metadata`
 --
 
-INSERT INTO `wkx_resource_metadata` (`resourcemetadataId`, `resourcemetadataResourceId`, `resourcemetadataMetadataId`, `resourcemetadataAddUserId`, `resourcemetadataPageStart`, `resourcemetadataPageEnd`, `resourcemetadataParagraph`, `resourcemetadataSection`, `resourcemetadataChapter`, `resourcemetadataType`, `resourcemetadataPrivate`, `resourcemetadataText`, `resourcemetadataTimestamp`, `resourcemetadataTimestampEdited`) VALUES
+INSERT INTO `resource_metadata` (`resourcemetadataId`, `resourcemetadataResourceId`, `resourcemetadataMetadataId`, `resourcemetadataAddUserId`, `resourcemetadataPageStart`, `resourcemetadataPageEnd`, `resourcemetadataParagraph`, `resourcemetadataSection`, `resourcemetadataChapter`, `resourcemetadataType`, `resourcemetadataPrivate`, `resourcemetadataText`, `resourcemetadataTimestamp`, `resourcemetadataTimestampEdited`) VALUES
 (1, 98, NULL, 2, '4', NULL, NULL, NULL, NULL, 'q', 'N', '\"The OSBib package has two sections which share some common PHP files. Files in the directory format/ will format the bibliography output as described above. Files in the directory create/ will create or edit the XML style files. As supplied in the OSBib package, the create interface is stand-alone and runs via index.php. Users wishing to integrate the creation/editing interface within their bibliographic management system will need to modify or extract various portions of index.php for use in their own PHP code.\"', '2010-12-27 08:15:37', NULL),
 (2, 15, NULL, 2, '10', '11', NULL, NULL, NULL, 'q', 'N', 'Return a portion of a UTF-8 string. Where PHP has been compiled with mb_string, mb_substr() will be used.', '2010-12-27 08:15:37', NULL),
 (3, 15, NULL, 2, '34', NULL, NULL, NULL, NULL, 'q', 'N', '\"loadStyle() and getStyle() need be called only once so can be outside your process loop.\"', '2010-12-27 08:15:37', NULL),
@@ -1085,10 +1086,10 @@ INSERT INTO `wkx_resource_metadata` (`resourcemetadataId`, `resourcemetadataReso
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_misc`
+-- Table structure for table `resource_misc`
 --
 
-CREATE TABLE `wkx_resource_misc` (
+CREATE TABLE `resource_misc` (
   `resourcemiscId` int(11) NOT NULL,
   `resourcemiscCollection` int(11) DEFAULT NULL,
   `resourcemiscPublisher` int(11) DEFAULT NULL,
@@ -1103,115 +1104,116 @@ CREATE TABLE `wkx_resource_misc` (
   `resourcemiscEditUserIdResource` int(11) DEFAULT NULL,
   `resourcemiscMaturityIndex` double DEFAULT 0,
   `resourcemiscPeerReviewed` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `resourcemiscQuarantine` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N'
+  `resourcemiscQuarantine` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
+  `resourcemiscMetadata` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource_misc`
+-- Dumping data for table `resource_misc`
 --
 
-INSERT INTO `wkx_resource_misc` (`resourcemiscId`, `resourcemiscCollection`, `resourcemiscPublisher`, `resourcemiscField1`, `resourcemiscField2`, `resourcemiscField3`, `resourcemiscField4`, `resourcemiscField5`, `resourcemiscField6`, `resourcemiscTag`, `resourcemiscAddUserIdResource`, `resourcemiscEditUserIdResource`, `resourcemiscMaturityIndex`, `resourcemiscPeerReviewed`, `resourcemiscQuarantine`) VALUES
-(1, NULL, 1, 2, NULL, NULL, 1, NULL, 100, NULL, 1, NULL, 4.5, 'N', 'N'),
-(2, NULL, 3, NULL, NULL, NULL, 2, NULL, 100, NULL, 1, NULL, NULL, 'N', 'N'),
-(3, 2, 1, 4, NULL, NULL, 1, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(4, 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(5, 2, 3, 4, NULL, NULL, 2, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(6, 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(7, 4, NULL, NULL, NULL, 1, NULL, NULL, 3, NULL, 1, NULL, NULL, 'Y', 'N'),
-(8, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(9, 6, NULL, NULL, 4, 3, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(10, 7, NULL, NULL, 6, 6, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(11, 8, NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(12, 9, NULL, NULL, 1, 1, NULL, 8, 1, NULL, 1, 1, NULL, 'N', 'N'),
-(13, NULL, 5, 6, 1, 1, NULL, 2, 1, NULL, 1, NULL, NULL, 'Y', 'N'),
-(14, NULL, 7, 8, 1, 1, NULL, 2, 1, NULL, 1, NULL, NULL, 'N', 'N'),
-(15, 10, 5, NULL, 1, 2, NULL, 2, 2, NULL, 1, NULL, NULL, 'Y', 'N'),
-(16, 11, 9, NULL, 2, 2, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N'),
-(17, 12, 9, 10, 1, 1, NULL, 5, 1, NULL, 1, NULL, NULL, 'Y', 'N'),
-(18, 10, 5, 6, 10, 3, NULL, 13, 3, NULL, 1, NULL, NULL, 'N', 'N'),
-(19, 13, 11, NULL, NULL, NULL, NULL, NULL, 400, NULL, 1, NULL, NULL, 'N', 'N'),
-(20, NULL, 12, NULL, NULL, NULL, NULL, NULL, 200, NULL, 1, NULL, NULL, 'N', 'N'),
-(21, NULL, NULL, NULL, 22, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(22, NULL, NULL, NULL, 5, 2, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N'),
-(23, NULL, 1, NULL, 22, 10, NULL, 1, 2, NULL, 1, NULL, NULL, 'Y', 'N'),
-(24, NULL, NULL, NULL, 22, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(25, NULL, 3, NULL, 22, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(26, NULL, 13, NULL, 22, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N'),
-(27, 14, 3, NULL, 3, 11, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(28, 15, 13, NULL, 3, 4, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N'),
-(29, NULL, 14, NULL, 3, 11, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(30, NULL, 15, NULL, 3, 11, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(31, NULL, 16, NULL, NULL, NULL, 1, NULL, NULL, NULL, 1, 1, NULL, 'N', 'N'),
-(32, NULL, 17, NULL, NULL, NULL, 2, NULL, NULL, NULL, 1, 1, NULL, 'N', 'N'),
-(33, NULL, 18, NULL, 3, 6, 1, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(34, NULL, 19, NULL, 11, 12, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(35, NULL, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(36, NULL, 21, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(37, 16, 21, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(38, 17, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(39, NULL, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(40, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(41, NULL, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(42, NULL, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, 'N', 'N'),
-(43, NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(44, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(45, NULL, 1, NULL, NULL, NULL, 2, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(46, NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(62, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(63, NULL, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(64, NULL, 12, NULL, 1, 2, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N'),
-(65, NULL, 11, NULL, 7, 9, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(66, NULL, 22, NULL, 2, 6, 3, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(67, NULL, 23, NULL, 15, 12, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(68, NULL, NULL, NULL, 1, 4, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(69, NULL, NULL, NULL, 9, 1, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(70, NULL, 13, NULL, 3, 7, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(71, NULL, 15, NULL, 6, 2, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(72, NULL, 24, NULL, 17, 11, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(73, NULL, 25, NULL, 2, 3, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(74, NULL, 26, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(75, NULL, 27, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(76, NULL, 28, NULL, 2, 4, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(77, NULL, 29, NULL, 8, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(78, NULL, NULL, NULL, 3, 6, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(79, NULL, NULL, NULL, 5, 8, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(80, NULL, 11, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N'),
-(81, NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(82, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(83, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(84, 20, NULL, NULL, NULL, 11, NULL, NULL, NULL, NULL, 1, NULL, 6, 'N', 'N'),
-(85, 21, NULL, NULL, 4, 8, NULL, NULL, NULL, NULL, 1, NULL, 7, 'N', 'N'),
-(86, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(87, NULL, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(88, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 3.2, 'N', 'N'),
-(89, NULL, 30, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(90, NULL, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 9, 'N', 'N'),
-(91, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 9, 'Y', 'N'),
-(92, 20, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N'),
-(93, 20, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N'),
-(94, NULL, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'N', 'N'),
-(95, 11, 7, NULL, 3, 3, NULL, 6, 3, NULL, 2, NULL, 6.9, 'Y', 'N'),
-(96, NULL, NULL, NULL, 27, 12, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'N', 'N'),
-(97, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'N', 'N'),
-(98, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'N', 'N');
+INSERT INTO `resource_misc` (`resourcemiscId`, `resourcemiscCollection`, `resourcemiscPublisher`, `resourcemiscField1`, `resourcemiscField2`, `resourcemiscField3`, `resourcemiscField4`, `resourcemiscField5`, `resourcemiscField6`, `resourcemiscTag`, `resourcemiscAddUserIdResource`, `resourcemiscEditUserIdResource`, `resourcemiscMaturityIndex`, `resourcemiscPeerReviewed`, `resourcemiscQuarantine`, `resourcemiscMetadata`) VALUES
+(1, NULL, 1, 2, NULL, NULL, 1, NULL, 100, NULL, 1, NULL, 4.5, 'N', 'N', 1),
+(2, NULL, 3, NULL, NULL, NULL, 2, NULL, 100, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(3, 2, 1, 4, NULL, NULL, 1, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 1),
+(4, 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 1),
+(5, 2, 3, 4, NULL, NULL, 2, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(6, 2, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(7, 4, NULL, NULL, NULL, 1, NULL, NULL, 3, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(8, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(9, 6, NULL, NULL, 4, 3, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(10, 7, NULL, NULL, 6, 6, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(11, 8, NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(12, 9, NULL, NULL, 1, 1, NULL, 8, 1, NULL, 1, 1, NULL, 'N', 'N', 0),
+(13, NULL, 5, 6, 1, 1, NULL, 2, 1, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(14, NULL, 7, 8, 1, 1, NULL, 2, 1, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(15, 10, 5, NULL, 1, 2, NULL, 2, 2, NULL, 1, NULL, NULL, 'Y', 'N', 1),
+(16, 11, 9, NULL, 2, 2, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(17, 12, 9, 10, 1, 1, NULL, 5, 1, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(18, 10, 5, 6, 10, 3, NULL, 13, 3, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(19, 13, 11, NULL, NULL, NULL, NULL, NULL, 400, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(20, NULL, 12, NULL, NULL, NULL, NULL, NULL, 200, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(21, NULL, NULL, NULL, 22, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(22, NULL, NULL, NULL, 5, 2, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(23, NULL, 1, NULL, 22, 10, NULL, 1, 2, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(24, NULL, NULL, NULL, 22, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(25, NULL, 3, NULL, 22, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(26, NULL, 13, NULL, 22, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(27, 14, 3, NULL, 3, 11, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(28, 15, 13, NULL, 3, 4, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(29, NULL, 14, NULL, 3, 11, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(30, NULL, 15, NULL, 3, 11, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(31, NULL, 16, NULL, NULL, NULL, 1, NULL, NULL, NULL, 1, 1, NULL, 'N', 'N', 0),
+(32, NULL, 17, NULL, NULL, NULL, 2, NULL, NULL, NULL, 1, 1, NULL, 'N', 'N', 0),
+(33, NULL, 18, NULL, 3, 6, 1, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(34, NULL, 19, NULL, 11, 12, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(35, NULL, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(36, NULL, 21, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(37, 16, 21, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(38, 17, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(39, NULL, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(40, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(41, NULL, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(42, NULL, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, 'N', 'N', 0),
+(43, NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(44, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(45, NULL, 1, NULL, NULL, NULL, 2, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(46, NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(62, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(63, NULL, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(64, NULL, 12, NULL, 1, 2, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(65, NULL, 11, NULL, 7, 9, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(66, NULL, 22, NULL, 2, 6, 3, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(67, NULL, 23, NULL, 15, 12, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(68, NULL, NULL, NULL, 1, 4, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 1),
+(69, NULL, NULL, NULL, 9, 1, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(70, NULL, 13, NULL, 3, 7, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(71, NULL, 15, NULL, 6, 2, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(72, NULL, 24, NULL, 17, 11, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(73, NULL, 25, NULL, 2, 3, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(74, NULL, 26, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(75, NULL, 27, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(76, NULL, 28, NULL, 2, 4, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(77, NULL, 29, NULL, 8, 10, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(78, NULL, NULL, NULL, 3, 6, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(79, NULL, NULL, NULL, 5, 8, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(80, NULL, 11, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N', 0),
+(81, NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(82, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(83, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(84, 20, NULL, NULL, NULL, 11, NULL, NULL, NULL, NULL, 1, NULL, 6, 'N', 'N', 1),
+(85, 21, NULL, NULL, 4, 8, NULL, NULL, NULL, NULL, 1, NULL, 7, 'N', 'N', 0),
+(86, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(87, NULL, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(88, NULL, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 3.2, 'N', 'N', 0),
+(89, NULL, 30, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(90, NULL, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 9, 'N', 'N', 0),
+(91, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 9, 'Y', 'N', 0),
+(92, 20, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'Y', 'N', 1),
+(93, 20, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 'N', 'N', 0),
+(94, NULL, 15, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'N', 'N', 0),
+(95, 11, 7, NULL, 3, 3, NULL, 6, 3, NULL, 2, NULL, 6.9, 'Y', 'N', 0),
+(96, NULL, NULL, NULL, 27, 12, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'N', 'N', 0),
+(97, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'N', 'N', 0),
+(98, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 'N', 'N', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_page`
+-- Table structure for table `resource_page`
 --
 
-CREATE TABLE `wkx_resource_page` (
+CREATE TABLE `resource_page` (
   `resourcepageId` int(11) NOT NULL,
   `resourcepagePageStart` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourcepagePageEnd` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource_page`
+-- Dumping data for table `resource_page`
 --
 
-INSERT INTO `wkx_resource_page` (`resourcepageId`, `resourcepagePageStart`, `resourcepagePageEnd`) VALUES
+INSERT INTO `resource_page` (`resourcepageId`, `resourcepagePageStart`, `resourcepagePageEnd`) VALUES
 (4, 'sPage', 'ePage'),
 (7, 'sPage', 'ePage'),
 (9, 'sPage', 'ePage'),
@@ -1233,103 +1235,48 @@ INSERT INTO `wkx_resource_page` (`resourcepageId`, `resourcepagePageStart`, `res
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_summary`
+-- Table structure for table `resource_text`
 --
 
-CREATE TABLE `wkx_resource_summary` (
-  `resourcesummaryId` int(11) NOT NULL,
-  `resourcesummaryQuotes` int(11) DEFAULT NULL,
-  `resourcesummaryParaphrases` int(11) DEFAULT NULL,
-  `resourcesummaryMusings` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `wkx_resource_summary`
---
-
-INSERT INTO `wkx_resource_summary` (`resourcesummaryId`, `resourcesummaryQuotes`, `resourcesummaryParaphrases`, `resourcesummaryMusings`) VALUES
-(1, 1, NULL, NULL),
-(3, NULL, 2, 1),
-(4, 2, NULL, NULL),
-(15, 2, NULL, 1),
-(68, 1, NULL, NULL),
-(84, 1, NULL, NULL),
-(92, NULL, 1, NULL),
-(98, 1, 1, 2);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `wkx_resource_text`
---
-
-CREATE TABLE `wkx_resource_text` (
+CREATE TABLE `resource_text` (
   `resourcetextId` int(11) NOT NULL,
-  `resourcetextNote` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourcetextAbstract` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourcetextUrls` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourcetextUrlText` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourcetextEditUserIdNote` int(11) DEFAULT NULL,
   `resourcetextAddUserIdNote` int(11) DEFAULT NULL,
+  `resourcetextEditUserIdNote` int(11) DEFAULT NULL,
+  `resourcetextAddUserIdAbstract` int(11) DEFAULT NULL,
   `resourcetextEditUserIdAbstract` int(11) DEFAULT NULL,
-  `resourcetextAddUserIdAbstract` int(11) DEFAULT NULL
+  `resourcetextNote` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourcetextAbstract` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource_text`
+-- Dumping data for table `resource_text`
 --
 
-INSERT INTO `wkx_resource_text` (`resourcetextId`, `resourcetextNote`, `resourcetextAbstract`, `resourcetextUrls`, `resourcetextUrlText`, `resourcetextEditUserIdNote`, `resourcetextAddUserIdNote`, `resourcetextEditUserIdAbstract`, `resourcetextAddUserIdAbstract`) VALUES
-(1, 'STRING sameIdOrderBib If the value is \'on\' and the same id numbers are being used (as above), the ordering of the id numbers in the text will follow the ordering of the appended bibliography rather than incrementing from 1. Otherwise, if the array element does not exist, id numbers will increment and the appended bibliography will follow the order of the id numbers in the text. NB. When using this option, endnotes for RTF exporting are faked (they will simply be plain text) because RTF cannot handle endnotes that do not increment in numerical order. In all other cases, RTF endnotes will be real endnotes as recognised by Word and OpenOffice.org.', NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDEiO30=', NULL, NULL, 1, NULL, NULL),
-(3, 'OSBib-Format v3.0<br>XML structure ~ Citation (In-text and Footnote style)<br><br>A collection of PHP classes to manage bibliographic formatting for OS bibliography software using the OSBib standard. Taken from and originally developed in WIKINDX (https://wikindx.sourceforge.io).<br><br>Released through http://bibliophile.sourceforge.net under the GPL licence.<br><br>If you make improvements, please consider contacting the administrators at bibliophile.sourceforge.net so that your improvements can be added to the release package.<br><br>October 2005<br>Mark Grimshaw-Aagaard (WIKINDX)<br>Andrea Rossato (Uniwakka)<br>Guillaume Gardey (BibOrb)<br>Christian Boulanger (Bibliograph)', 'Caution: In this restricted \"SfR Fresh\" environment the current HTML page may not be correctly presentated and may have some non-functional links. Alternatively you can here view or download the uninterpreted source code. That can be also achieved for any archive member file by clicking within an archive contents listing on the first character of the file(path) respectively on the according byte size field.', 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDIiO30=', NULL, NULL, 3, NULL, 3),
-(4, NULL, 'Since pointing out that WIKINDX can be run on a Windows desktop using WAMP, I\'ve been asked many times for instructions on how to set up WAMP to use WIKINDX. So, here they are (the details may be slightly different depending on the version of phpMyAdmin that comes with the WAMP version you have but the principles are the same).', 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDMiO30=', NULL, NULL, NULL, NULL, 3),
-(6, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDMiO30=', NULL, NULL, NULL, NULL, NULL),
-(7, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDMiO30=', NULL, NULL, NULL, NULL, NULL),
-(10, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDIiO30=', NULL, NULL, NULL, NULL, NULL),
-(15, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDMiO30=', NULL, NULL, NULL, NULL, NULL),
-(17, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDQiO30=', NULL, NULL, NULL, NULL, NULL),
-(21, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDUiO30=', NULL, NULL, NULL, NULL, NULL),
-(22, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDEiO30=', NULL, NULL, NULL, NULL, NULL),
-(23, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDUiO30=', NULL, NULL, NULL, NULL, NULL),
-(24, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDEiO30=', NULL, NULL, NULL, NULL, NULL),
-(25, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDUiO30=', NULL, NULL, NULL, NULL, NULL),
-(26, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDYiO30=', NULL, NULL, NULL, NULL, NULL),
-(27, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDUiO30=', NULL, NULL, NULL, NULL, NULL),
-(28, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDEiO30=', NULL, NULL, NULL, NULL, NULL),
-(29, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDciO30=', NULL, NULL, NULL, NULL, NULL),
-(30, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDYiO30=', NULL, NULL, NULL, NULL, NULL),
-(32, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDEiO30=', NULL, NULL, NULL, NULL, NULL),
-(35, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDEiO30=', NULL, NULL, NULL, NULL, NULL),
-(43, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDUiO30=', NULL, NULL, NULL, NULL, NULL),
-(45, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDciO30=', NULL, NULL, NULL, NULL, NULL),
-(65, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDEiO30=', NULL, NULL, NULL, NULL, NULL),
-(67, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDUiO30=', NULL, NULL, NULL, NULL, NULL),
-(68, 'Windows users wanting to run WIKINDX as a single user on their desktop may be interested in the very handy WAMP5 Server for Windows. Installing and configuring Apache/PHP/MySQL on Windows can be a bit of a chore - WAMP5 is an all-in-one install for those wishing to run WIKINDX from their Windows desktop. WIKINDX uses PHP\'s mysql_connect() rather than mysqli_connect() so make sure you grab the appropriate download if indicated on the download site.', 'WIKINDX is a free bibliographic and quotations/notes management and article authoring system designed either for single use (on a variety of operating sytems) or multi-user collaborative use across the internet.<br><br>Current version is 3.8.2<br><br>Developed under the GNU GPL license, the project homepage can be found at sourceforge and the required files/updates are available for download there. A FreeBSD port by Babak Farrokhi may be downloaded from http://www.freshports.org/www/wikindx.<br><br>The sourceforge site has all the appropriate contact details, forums for you to report bugs, request features etc.<br><br>Since v3.7, WIKINDX provides the possibility to interface and integrate with Content Management Systems which use \'replacement tags\' or similar. There are known to be a Moodle filter, a MediaWiki filter, a dokuwiki plug-in (a dokuwiki site using the WIKINDX plug-in is here), a WordPress plug-in and a phpWCMS filter and similar filters for other CMSs are easily written.  Tips on using jsMath with WIKINDX can be found here.', NULL, NULL, NULL, 2, NULL, 2),
-(71, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDYiO30=', NULL, NULL, NULL, NULL, NULL),
-(74, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDYiO30=', NULL, NULL, NULL, NULL, NULL),
-(77, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDgiO30=', NULL, NULL, NULL, NULL, NULL),
-(87, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDgiO30=', NULL, NULL, NULL, NULL, NULL),
-(91, NULL, 'Caution: In this restricted \"SfR Fresh\" environment the current HTML page may not be correctly presentated and may have some non-functional links. Alternatively you can here view or download the uninterpreted source code. That can be also achieved for any archive member file by clicking within an archive contents listing on the first character of the file(path) respectively on the according byte size field.', NULL, NULL, NULL, NULL, NULL, 1),
-(96, NULL, NULL, 'YToxOntpOjA7czoxMToiaHR0cDovL3VybDciO30=', NULL, NULL, NULL, NULL, NULL),
-(98, 'OSBib is an Open Source bibliographic formatting engine written in PHP that uses XML style files to store formatting data for in-text or endnote-style (including footnote) citations and bibliographic lists. Released through Bibliophile, OSBib is designed to work with bibliographic data stored in any format via mapping arrays as defined in the class STYLEMAP. For those bibliographic systems whose data are stored in or that can be accessed as bibtex-type arrays, STYLEMAPBIBTEX is a set of pre-defined mapping arrays designed to get you up and running within a matter of minutes. Data stored in other formats require that STYLEMAP be edited.', 'Wikindx is a free bibliographic and quotations/notes management and article authoring system (Virtual Research Environment) designed either for single use (on a variety of operating systems) or multi-user collaborative use across the internet. Wikindx falls within the category of reference management software, but also provides functionality to write notes and entire papers. Developed under the GNU GPL license, the project homepage can be found at sourceforge.net and the required files/updates are available for download there.', NULL, NULL, NULL, 2, NULL, 2);
+INSERT INTO `resource_text` (`resourcetextId`, `resourcetextAddUserIdNote`, `resourcetextEditUserIdNote`, `resourcetextAddUserIdAbstract`, `resourcetextEditUserIdAbstract`, `resourcetextNote`, `resourcetextAbstract`) VALUES
+(1, 1, NULL, NULL, NULL, 'STRING sameIdOrderBib If the value is \'on\' and the same id numbers are being used (as above), the ordering of the id numbers in the text will follow the ordering of the appended bibliography rather than incrementing from 1. Otherwise, if the array element does not exist, id numbers will increment and the appended bibliography will follow the order of the id numbers in the text. NB. When using this option, endnotes for RTF exporting are faked (they will simply be plain text) because RTF cannot handle endnotes that do not increment in numerical order. In all other cases, RTF endnotes will be real endnotes as recognised by Word and OpenOffice.org.', NULL),
+(3, 3, NULL, 3, NULL, 'OSBib-Format v3.0<br>XML structure ~ Citation (In-text and Footnote style)<br><br>A collection of PHP classes to manage bibliographic formatting for OS bibliography software using the OSBib standard. Taken from and originally developed in WIKINDX (https://wikindx.sourceforge.io).<br><br>Released through http://bibliophile.sourceforge.net under the GPL licence.<br><br>If you make improvements, please consider contacting the administrators at bibliophile.sourceforge.net so that your improvements can be added to the release package.<br><br>October 2005<br>Mark Grimshaw-Aagaard (WIKINDX)<br>Andrea Rossato (Uniwakka)<br>Guillaume Gardey (BibOrb)<br>Christian Boulanger (Bibliograph)', 'Caution: In this restricted \"SfR Fresh\" environment the current HTML page may not be correctly presentated and may have some non-functional links. Alternatively you can here view or download the uninterpreted source code. That can be also achieved for any archive member file by clicking within an archive contents listing on the first character of the file(path) respectively on the according byte size field.'),
+(4, NULL, NULL, 3, NULL, NULL, 'Since pointing out that WIKINDX can be run on a Windows desktop using WAMP, I\'ve been asked many times for instructions on how to set up WAMP to use WIKINDX. So, here they are (the details may be slightly different depending on the version of phpMyAdmin that comes with the WAMP version you have but the principles are the same).'),
+(68, 2, NULL, 2, NULL, 'Windows users wanting to run WIKINDX as a single user on their desktop may be interested in the very handy WAMP5 Server for Windows. Installing and configuring Apache/PHP/MySQL on Windows can be a bit of a chore - WAMP5 is an all-in-one install for those wishing to run WIKINDX from their Windows desktop. WIKINDX uses PHP\'s mysql_connect() rather than mysqli_connect() so make sure you grab the appropriate download if indicated on the download site.', 'WIKINDX is a free bibliographic and quotations/notes management and article authoring system designed either for single use (on a variety of operating sytems) or multi-user collaborative use across the internet.<br><br>Current version is 3.8.2<br><br>Developed under the GNU GPL license, the project homepage can be found at sourceforge and the required files/updates are available for download there. A FreeBSD port by Babak Farrokhi may be downloaded from http://www.freshports.org/www/wikindx.<br><br>The sourceforge site has all the appropriate contact details, forums for you to report bugs, request features etc.<br><br>Since v3.7, WIKINDX provides the possibility to interface and integrate with Content Management Systems which use \'replacement tags\' or similar. There are known to be a Moodle filter, a MediaWiki filter, a dokuwiki plug-in (a dokuwiki site using the WIKINDX plug-in is here), a WordPress plug-in and a phpWCMS filter and similar filters for other CMSs are easily written.  Tips on using jsMath with WIKINDX can be found here.'),
+(91, NULL, NULL, 1, NULL, NULL, 'Caution: In this restricted \"SfR Fresh\" environment the current HTML page may not be correctly presentated and may have some non-functional links. Alternatively you can here view or download the uninterpreted source code. That can be also achieved for any archive member file by clicking within an archive contents listing on the first character of the file(path) respectively on the according byte size field.'),
+(98, 2, NULL, 2, NULL, 'OSBib is an Open Source bibliographic formatting engine written in PHP that uses XML style files to store formatting data for in-text or endnote-style (including footnote) citations and bibliographic lists. Released through Bibliophile, OSBib is designed to work with bibliographic data stored in any format via mapping arrays as defined in the class STYLEMAP. For those bibliographic systems whose data are stored in or that can be accessed as bibtex-type arrays, STYLEMAPBIBTEX is a set of pre-defined mapping arrays designed to get you up and running within a matter of minutes. Data stored in other formats require that STYLEMAP be edited.', 'Wikindx is a free bibliographic and quotations/notes management and article authoring system (Virtual Research Environment) designed either for single use (on a variety of operating systems) or multi-user collaborative use across the internet. Wikindx falls within the category of reference management software, but also provides functionality to write notes and entire papers. Developed under the GNU GPL license, the project homepage can be found at sourceforge.net and the required files/updates are available for download there.');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_timestamp`
+-- Table structure for table `resource_timestamp`
 --
 
-CREATE TABLE `wkx_resource_timestamp` (
+CREATE TABLE `resource_timestamp` (
   `resourcetimestampId` int(11) NOT NULL,
   `resourcetimestampTimestamp` datetime DEFAULT current_timestamp(),
   `resourcetimestampTimestampAdd` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource_timestamp`
+-- Dumping data for table `resource_timestamp`
 --
 
-INSERT INTO `wkx_resource_timestamp` (`resourcetimestampId`, `resourcetimestampTimestamp`, `resourcetimestampTimestampAdd`) VALUES
+INSERT INTO `resource_timestamp` (`resourcetimestampId`, `resourcetimestampTimestamp`, `resourcetimestampTimestampAdd`) VALUES
 (1, '2010-12-27 08:39:50', '2010-10-10 09:39:45'),
 (2, '2010-10-10 09:42:47', '2010-10-10 09:42:47'),
 (3, '2010-12-27 08:29:38', '2010-10-10 09:44:48'),
@@ -1417,10 +1364,59 @@ INSERT INTO `wkx_resource_timestamp` (`resourcetimestampId`, `resourcetimestampT
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_user_tags`
+-- Table structure for table `resource_url`
 --
 
-CREATE TABLE `wkx_resource_user_tags` (
+CREATE TABLE `resource_url` (
+  `resourceurlId` int(11) NOT NULL,
+  `resourceurlResourceId` int(11) NOT NULL,
+  `resourceurlUrl` varchar(10000) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `resourceurlName` varchar(768) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `resourceurlPrimary` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+--
+-- Dumping data for table `resource_url`
+--
+
+INSERT INTO `resource_url` (`resourceurlId`, `resourceurlResourceId`, `resourceurlUrl`, `resourceurlName`, `resourceurlPrimary`) VALUES
+(1, 1, 'http://url1', '', 1),
+(2, 3, 'http://url2', '', 1),
+(3, 4, 'http://url3', '', 1),
+(4, 6, 'http://url3', '', 1),
+(5, 7, 'http://url3', '', 1),
+(6, 10, 'http://url2', '', 1),
+(7, 15, 'http://url3', '', 1),
+(8, 17, 'http://url4', '', 1),
+(9, 21, 'http://url5', '', 1),
+(10, 22, 'http://url1', '', 1),
+(11, 23, 'http://url5', '', 1),
+(12, 24, 'http://url1', '', 1),
+(13, 25, 'http://url5', '', 1),
+(14, 26, 'http://url6', '', 1),
+(15, 27, 'http://url5', '', 1),
+(16, 28, 'http://url1', '', 1),
+(17, 29, 'http://url7', '', 1),
+(18, 30, 'http://url6', '', 1),
+(19, 32, 'http://url1', '', 1),
+(20, 35, 'http://url1', '', 1),
+(21, 43, 'http://url5', '', 1),
+(22, 45, 'http://url7', '', 1),
+(23, 65, 'http://url1', '', 1),
+(24, 67, 'http://url5', '', 1),
+(25, 71, 'http://url6', '', 1),
+(26, 74, 'http://url6', '', 1),
+(27, 77, 'http://url8', '', 1),
+(28, 87, 'http://url8', '', 1),
+(29, 96, 'http://url7', '', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resource_user_tags`
+--
+
+CREATE TABLE `resource_user_tags` (
   `resourceusertagsId` int(11) NOT NULL,
   `resourceusertagsTagId` int(11) DEFAULT NULL,
   `resourceusertagsResourceId` int(11) DEFAULT NULL
@@ -1429,10 +1425,10 @@ CREATE TABLE `wkx_resource_user_tags` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_resource_year`
+-- Table structure for table `resource_year`
 --
 
-CREATE TABLE `wkx_resource_year` (
+CREATE TABLE `resource_year` (
   `resourceyearId` int(11) NOT NULL,
   `resourceyearYear1` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceyearYear2` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -1441,10 +1437,10 @@ CREATE TABLE `wkx_resource_year` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_resource_year`
+-- Dumping data for table `resource_year`
 --
 
-INSERT INTO `wkx_resource_year` (`resourceyearId`, `resourceyearYear1`, `resourceyearYear2`, `resourceyearYear3`, `resourceyearYear4`) VALUES
+INSERT INTO `resource_year` (`resourceyearId`, `resourceyearYear1`, `resourceyearYear2`, `resourceyearYear3`, `resourceyearYear4`) VALUES
 (1, 'PubYear1', 'ReprintYear1', 'VolumeYear1', 'TransPubYear'),
 (2, 'PubYear2', 'ReprintYear2', 'VolumeYear2', NULL),
 (3, 'PubYear1', 'ReprintYear1', 'VolumeYear2', 'TransPubYear2'),
@@ -1532,10 +1528,30 @@ INSERT INTO `wkx_resource_year` (`resourceyearId`, `resourceyearYear1`, `resourc
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_statistics_attachment_downloads`
+-- Table structure for table `session`
 --
 
-CREATE TABLE `wkx_statistics_attachment_downloads` (
+CREATE TABLE `session` (
+  `sessionId` varchar(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `sessionUserId` int(11) NOT NULL DEFAULT 0,
+  `sessionLastAccessTimestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `sessionData` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+--
+-- Dumping data for table `session`
+--
+
+INSERT INTO `session` (`sessionId`, `sessionUserId`, `sessionLastAccessTimestamp`, `sessionData`) VALUES
+('1380827d22d0f81e38ed2686e1e7153c', 0, '2021-04-20 11:02:07', 'a:11:{s:14:\"setup_ReadOnly\";b:1;s:20:\"setup_Bibliographies\";b:0;s:19:\"bookmark_DisplayAdd\";b:0;s:13:\"list_SubQuery\";s:181:\"SELECT  `resourcetimestampId` AS  rId FROM resource_timestamp   GROUP BY `resourcetimestampId`, `resourcetimestampTimestamp` ORDER BY `resourcetimestampTimestamp`  DESC  LIMIT 0, 10\";s:10:\"list_Front\";i:10;s:13:\"bookmark_View\";s:5:\"multi\";s:20:\"list_NextPreviousIds\";a:10:{i:0;s:2:\"84\";i:1;s:1:\"1\";i:2;s:2:\"91\";i:3;s:2:\"92\";i:4;s:1:\"3\";i:5;s:1:\"4\";i:6;s:2:\"68\";i:7;s:2:\"15\";i:8;s:2:\"98\";i:9;s:2:\"97\";}s:14:\"QueryStrings_0\";s:75:\"/wikindx6/trunk/index.php?browserTabID=5f8aaa4d-bcae-4750-bfcc-7cc7f4c90b37\";s:21:\"setup_ReduceMenuLevel\";s:1:\"0\";s:10:\"menu_state\";s:140:\"YToxMTp7aTowO2I6MDtpOjE7czo1OiJtdWx0aSI7aToyO2I6MTtpOjM7YjowO2k6NDtiOjA7aTo1O2I6MDtpOjY7YjowO2k6NztiOjA7aTo4O2I6MDtpOjk7YjowO2k6MTA7YjowO30=\";s:9:\"menu_menu\";a:4:{i:0;a:3:{s:4:\"text\";s:7:\"Wikindx\";s:4:\"link\";s:38:\"index.php?action=noMenu&method=wikindx\";s:7:\"submenu\";a:4:{i:0;a:2:{s:4:\"text\";s:4:\"Home\";s:4:\"link\";s:23:\"index.php?browserTabID=\";}i:1;a:2:{s:4:\"text\";s:11:\"Preferences\";s:4:\"link\";s:45:\"index.php?action=usersgroups_PREFERENCES_CORE\";}i:2;a:2:{s:4:\"text\";s:10:\"User Logon\";s:4:\"link\";s:26:\"index.php?action=initLogon\";}i:3;a:2:{s:4:\"text\";s:13:\"About Wikindx\";s:4:\"link\";s:32:\"index.php?action=help_ABOUT_CORE\";}}}i:1;a:3:{s:4:\"text\";s:9:\"Resources\";s:4:\"link\";s:34:\"index.php?action=noMenu&method=res\";s:7:\"submenu\";a:1:{i:0;a:2:{s:4:\"text\";s:15:\"Random Resource\";s:4:\"link\";s:71:\"index.php?action=resource_RESOURCEVIEW_CORE&method=random&browserTabID=\";}}}i:2;a:3:{s:4:\"text\";s:6:\"Search\";s:4:\"link\";s:37:\"index.php?action=noMenu&method=search\";s:7:\"submenu\";a:5:{i:0;a:2:{s:4:\"text\";s:12:\"Quick Search\";s:4:\"link\";s:52:\"index.php?action=list_QUICKSEARCH_CORE&browserTabID=\";}i:1;a:2:{s:4:\"text\";s:15:\"Advanced Search\";s:4:\"link\";s:47:\"index.php?action=list_SEARCH_CORE&browserTabID=\";}i:2;a:2:{s:4:\"text\";s:13:\"Category Tree\";s:4:\"link\";s:41:\"index.php?action=browse_CATEGORYTREE_CORE\";}i:3;a:3:{s:4:\"text\";s:17:\"Quick List All...\";s:4:\"link\";b:0;s:7:\"submenu\";a:6:{i:0;a:2:{s:4:\"text\";s:12:\"Creator asc.\";s:4:\"link\";s:95:\"index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=creator&browserTabID=\";}i:1;a:2:{s:4:\"text\";s:10:\"Title asc.\";s:4:\"link\";s:93:\"index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=title&browserTabID=\";}i:2;a:2:{s:4:\"text\";s:14:\"Publisher asc.\";s:4:\"link\";s:97:\"index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=publisher&browserTabID=\";}i:3;a:2:{s:4:\"text\";s:10:\"Year desc.\";s:4:\"link\";s:92:\"index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=year&browserTabID=\";}i:4;a:2:{s:4:\"text\";s:15:\"Timestamp desc.\";s:4:\"link\";s:97:\"index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=timestamp&browserTabID=\";}i:5;a:2:{s:4:\"text\";s:14:\"Maturity desc.\";s:4:\"link\";s:101:\"index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex&browserTabID=\";}}}i:4;a:3:{s:4:\"text\";s:9:\"Browse...\";s:4:\"link\";b:0;s:7:\"submenu\";a:14:{i:0;a:2:{s:4:\"text\";s:5:\"Types\";s:4:\"link\";s:39:\"index.php?action=browse_BROWSETYPE_CORE\";}i:1;a:2:{s:4:\"text\";s:8:\"Creators\";s:4:\"link\";s:42:\"index.php?action=browse_BROWSECREATOR_CORE\";}i:2;a:2:{s:4:\"text\";s:5:\"Cited\";s:4:\"link\";s:40:\"index.php?action=browse_BROWSECITED_CORE\";}i:3;a:2:{s:4:\"text\";s:5:\"Years\";s:4:\"link\";s:39:\"index.php?action=browse_BROWSEYEAR_CORE\";}i:4;a:2:{s:4:\"text\";s:8:\"Keywords\";s:4:\"link\";s:42:\"index.php?action=browse_BROWSEKEYWORD_CORE\";}i:5;a:2:{s:4:\"text\";s:14:\"Keyword Groups\";s:4:\"link\";s:47:\"index.php?action=browse_BROWSEKEYWORDGROUP_CORE\";}i:6;a:2:{s:4:\"text\";s:10:\"Categories\";s:4:\"link\";s:43:\"index.php?action=browse_BROWSECATEGORY_CORE\";}i:7;a:2:{s:4:\"text\";s:13:\"Subcategories\";s:4:\"link\";s:46:\"index.php?action=browse_BROWSESUBCATEGORY_CORE\";}i:8;a:2:{s:4:\"text\";s:9:\"Languages\";s:4:\"link\";s:43:\"index.php?action=browse_BROWSELANGUAGE_CORE\";}i:9;a:2:{s:4:\"text\";s:12:\"System Users\";s:4:\"link\";s:51:\"index.php?action=browse_BROWSEUSER_CORE&method=user\";}i:10;a:2:{s:4:\"text\";s:11:\"Departments\";s:4:\"link\";s:57:\"index.php?action=browse_BROWSEUSER_CORE&method=department\";}i:11;a:2:{s:4:\"text\";s:12:\"Institutions\";s:4:\"link\";s:58:\"index.php?action=browse_BROWSEUSER_CORE&method=institution\";}i:12;a:3:{s:4:\"text\";s:14:\"Collections...\";s:4:\"link\";b:0;s:7:\"submenu\";a:9:{i:0;a:2:{s:4:\"text\";s:3:\"ALL\";s:4:\"link\";s:77:\"index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=0\";}i:1;a:2:{s:4:\"text\";s:7:\"Journal\";s:4:\"link\";s:83:\"index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=journal\";}i:2;a:2:{s:4:\"text\";s:8:\"Magazine\";s:4:\"link\";s:84:\"index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=magazine\";}i:3;a:2:{s:4:\"text\";s:10:\"Manuscript\";s:4:\"link\";s:86:\"index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=manuscript\";}i:4;a:2:{s:4:\"text\";s:5:\"Music\";s:4:\"link\";s:81:\"index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=music\";}i:5;a:2:{s:4:\"text\";s:9:\"Newspaper\";s:4:\"link\";s:85:\"index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=newspaper\";}i:6;a:2:{s:4:\"text\";s:11:\"Proceedings\";s:4:\"link\";s:87:\"index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=proceedings\";}i:7;a:2:{s:4:\"text\";s:16:\"Thesis Abstracts\";s:4:\"link\";s:82:\"index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=thesis\";}i:8;a:2:{s:4:\"text\";s:8:\"Web Site\";s:4:\"link\";s:79:\"index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=web\";}}}i:13;a:3:{s:4:\"text\";s:13:\"Publishers...\";s:4:\"link\";b:0;s:7:\"submenu\";a:7:{i:0;a:2:{s:4:\"text\";s:3:\"ALL\";s:4:\"link\";s:72:\"index.php?action=browse_BROWSEPUBLISHER_CORE&method=init&PublisherType=0\";}i:1;a:2:{s:4:\"text\";s:4:\"Book\";s:4:\"link\";s:75:\"index.php?action=browse_BROWSEPUBLISHER_CORE&method=init&PublisherType=book\";}i:2;a:2:{s:4:\"text\";s:5:\"Chart\";s:4:\"link\";s:76:\"index.php?action=browse_BROWSEPUBLISHER_CORE&method=init&PublisherType=chart\";}i:3;a:2:{s:4:\"text\";s:10:\"Conference\";s:4:\"link\";s:81:\"index.php?action=browse_BROWSEPUBLISHER_CORE&method=init&PublisherType=conference\";}i:4;a:2:{s:4:\"text\";s:11:\"Distributor\";s:4:\"link\";s:82:\"index.php?action=browse_BROWSEPUBLISHER_CORE&method=init&PublisherType=distributor\";}i:5;a:2:{s:4:\"text\";s:5:\"Legal\";s:4:\"link\";s:76:\"index.php?action=browse_BROWSEPUBLISHER_CORE&method=init&PublisherType=legal\";}i:6;a:2:{s:4:\"text\";s:5:\"Music\";s:4:\"link\";s:76:\"index.php?action=browse_BROWSEPUBLISHER_CORE&method=init&PublisherType=music\";}}}}}}}i:3;a:3:{s:4:\"text\";s:8:\"Metadata\";s:4:\"link\";s:35:\"index.php?action=noMenu&method=text\";s:7:\"submenu\";a:3:{i:0;a:3:{s:4:\"text\";s:9:\"Random...\";s:4:\"link\";b:0;s:7:\"submenu\";a:2:{i:0;a:2:{s:4:\"text\";s:5:\"Quote\";s:4:\"link\";s:64:\"index.php?action=metadata_RANDOMMETADATA_CORE&method=randomQuote\";}i:1;a:2:{s:4:\"text\";s:10:\"Paraphrase\";s:4:\"link\";s:69:\"index.php?action=metadata_RANDOMMETADATA_CORE&method=randomParaphrase\";}}}i:1;a:3:{s:4:\"text\";s:11:\"Keywords...\";s:4:\"link\";b:0;s:7:\"submenu\";a:4:{i:0;a:2:{s:4:\"text\";s:3:\"All\";s:4:\"link\";s:63:\"index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=all\";}i:1;a:2:{s:4:\"text\";s:6:\"Quotes\";s:4:\"link\";s:66:\"index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=quotes\";}i:2;a:2:{s:4:\"text\";s:11:\"Paraphrases\";s:4:\"link\";s:71:\"index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=paraphrases\";}i:3;a:2:{s:4:\"text\";s:7:\"Musings\";s:4:\"link\";s:67:\"index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=musings\";}}}i:2;a:3:{s:4:\"text\";s:17:\"Keyword Groups...\";s:4:\"link\";b:0;s:7:\"submenu\";a:4:{i:0;a:2:{s:4:\"text\";s:3:\"All\";s:4:\"link\";s:68:\"index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=all\";}i:1;a:2:{s:4:\"text\";s:6:\"Quotes\";s:4:\"link\";s:71:\"index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=quotes\";}i:2;a:2:{s:4:\"text\";s:11:\"Paraphrases\";s:4:\"link\";s:76:\"index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=paraphrases\";}i:3;a:2:{s:4:\"text\";s:7:\"Musings\";s:4:\"link\";s:72:\"index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=musings\";}}}}}}}');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `statistics_attachment_downloads`
+--
+
+CREATE TABLE `statistics_attachment_downloads` (
   `statisticsattachmentdownloadsId` int(11) NOT NULL,
   `statisticsattachmentdownloadsResourceId` int(11) NOT NULL,
   `statisticsattachmentdownloadsAttachmentId` int(11) NOT NULL,
@@ -1546,10 +1562,10 @@ CREATE TABLE `wkx_statistics_attachment_downloads` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_statistics_resource_views`
+-- Table structure for table `statistics_resource_views`
 --
 
-CREATE TABLE `wkx_statistics_resource_views` (
+CREATE TABLE `statistics_resource_views` (
   `statisticsresourceviewsId` int(11) NOT NULL,
   `statisticsresourceviewsResourceId` int(11) NOT NULL,
   `statisticsresourceviewsCount` int(11) DEFAULT 0,
@@ -1557,10 +1573,10 @@ CREATE TABLE `wkx_statistics_resource_views` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_statistics_resource_views`
+-- Dumping data for table `statistics_resource_views`
 --
 
-INSERT INTO `wkx_statistics_resource_views` (`statisticsresourceviewsId`, `statisticsresourceviewsResourceId`, `statisticsresourceviewsCount`, `statisticsresourceviewsMonth`) VALUES
+INSERT INTO `statistics_resource_views` (`statisticsresourceviewsId`, `statisticsresourceviewsResourceId`, `statisticsresourceviewsCount`, `statisticsresourceviewsMonth`) VALUES
 (1, 1, 1, 201009),
 (2, 1, 1, 201010),
 (3, 1, 1, 201011),
@@ -4017,7 +4033,7 @@ INSERT INTO `wkx_statistics_resource_views` (`statisticsresourceviewsId`, `stati
 (2454, 34, 1, 201204),
 (2455, 34, 1, 201205),
 (2456, 34, 1, 201206);
-INSERT INTO `wkx_statistics_resource_views` (`statisticsresourceviewsId`, `statisticsresourceviewsResourceId`, `statisticsresourceviewsCount`, `statisticsresourceviewsMonth`) VALUES
+INSERT INTO `statistics_resource_views` (`statisticsresourceviewsId`, `statisticsresourceviewsResourceId`, `statisticsresourceviewsCount`, `statisticsresourceviewsMonth`) VALUES
 (2457, 34, 1, 201207),
 (2458, 34, 1, 201208),
 (2459, 34, 1, 201209),
@@ -6390,7 +6406,7 @@ INSERT INTO `wkx_statistics_resource_views` (`statisticsresourceviewsId`, `stati
 (4826, 81, 1, 201804),
 (4827, 81, 0, 201912),
 (4828, 81, 0, 202001);
-INSERT INTO `wkx_statistics_resource_views` (`statisticsresourceviewsId`, `statisticsresourceviewsResourceId`, `statisticsresourceviewsCount`, `statisticsresourceviewsMonth`) VALUES
+INSERT INTO `statistics_resource_views` (`statisticsresourceviewsId`, `statisticsresourceviewsResourceId`, `statisticsresourceviewsCount`, `statisticsresourceviewsMonth`) VALUES
 (4829, 82, 1, 201011),
 (4830, 82, 1, 201012),
 (4831, 82, 1, 201101),
@@ -7704,10 +7720,10 @@ INSERT INTO `wkx_statistics_resource_views` (`statisticsresourceviewsId`, `stati
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_subcategory`
+-- Table structure for table `subcategory`
 --
 
-CREATE TABLE `wkx_subcategory` (
+CREATE TABLE `subcategory` (
   `subcategoryId` int(11) NOT NULL,
   `subcategoryCategoryId` int(11) DEFAULT NULL,
   `subcategorySubcategory` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
@@ -7716,10 +7732,10 @@ CREATE TABLE `wkx_subcategory` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_tag`
+-- Table structure for table `tag`
 --
 
-CREATE TABLE `wkx_tag` (
+CREATE TABLE `tag` (
   `tagId` int(11) NOT NULL,
   `tagTag` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -7727,10 +7743,10 @@ CREATE TABLE `wkx_tag` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_temp_storage`
+-- Table structure for table `temp_storage`
 --
 
-CREATE TABLE `wkx_temp_storage` (
+CREATE TABLE `temp_storage` (
   `tempstorageId` char(36) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `tempstorageData` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `tempstorageTimestamp` datetime NOT NULL DEFAULT current_timestamp()
@@ -7739,10 +7755,10 @@ CREATE TABLE `wkx_temp_storage` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_users`
+-- Table structure for table `users`
 --
 
-CREATE TABLE `wkx_users` (
+CREATE TABLE `users` (
   `usersId` int(11) NOT NULL,
   `usersUsername` varchar(188) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usersPassword` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
@@ -7783,25 +7799,27 @@ CREATE TABLE `wkx_users` (
   `usersGDPR` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
   `usersBlock` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
   `usersHomeBib` tinyint(1) NOT NULL DEFAULT 0,
-  `usersBrowseBibliography` int(11) NOT NULL DEFAULT 0
+  `usersBrowseBibliography` int(11) NOT NULL DEFAULT 0,
+  `usersLastInternalVersion` int(11) NOT NULL DEFAULT 0,
+  `usersDisplayResourceStatistics` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_users`
+-- Dumping data for table `users`
 --
 
-INSERT INTO `wkx_users` (`usersId`, `usersUsername`, `usersPassword`, `usersFullname`, `usersEmail`, `usersTimestamp`, `usersAdmin`, `usersCookie`, `usersPaging`, `usersPagingMaxLinks`, `usersPagingStyle`, `usersStringLimit`, `usersLanguage`, `usersStyle`, `usersTemplate`, `usersNotify`, `usersNotifyAddEdit`, `usersNotifyThreshold`, `usersNotifyTimestamp`, `usersPagingTagCloud`, `usersPasswordQuestion1`, `usersPasswordAnswer1`, `usersPasswordQuestion2`, `usersPasswordAnswer2`, `usersPasswordQuestion3`, `usersPasswordAnswer3`, `usersUseBibtexKey`, `usersUseWikindxKey`, `usersDisplayBibtexLink`, `usersDisplayCmsLink`, `usersCmsTag`, `usersIsCreator`, `usersListlink`, `usersDepartment`, `usersTemplateMenu`, `usersInstitution`, `usersNotifyDigestThreshold`, `usersGDPR`, `usersBlock`, `usersHomeBib`, `usersBrowseBibliography`) VALUES
-(1, 'super', '$2y$10$P8onVyobz06VOGLnrQWQKuR7NTqjZhojdbhRXSX/pOzA6VJq2Tscy', '', 'blah@blah.com', '2021-03-01 19:58:49', 1, 'Y', 15, 11, 'N', 40, 'en_GB', 'apa', 'bryophyta', 'N', 'A', 0, '2010-10-10 11:32:52', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
-(2, 'user1', '$2y$10$8/5gSJkbDLr88YdPk5/q.eN/tTbzzGuq2.pX7/mYQJCoG0MjRNV7C', '', 'blah@blah.com', '2021-03-01 20:51:59', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:07', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
-(3, 'user2', '$2y$10$/a5ZJwNngqS2S2jiVsCCju6SsJ4BuPcInCz8vnPVtuLThgCDKicZu', '', 'blah@blah.com', '2021-03-01 20:53:09', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:32', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0);
+INSERT INTO `users` (`usersId`, `usersUsername`, `usersPassword`, `usersFullname`, `usersEmail`, `usersTimestamp`, `usersAdmin`, `usersCookie`, `usersPaging`, `usersPagingMaxLinks`, `usersPagingStyle`, `usersStringLimit`, `usersLanguage`, `usersStyle`, `usersTemplate`, `usersNotify`, `usersNotifyAddEdit`, `usersNotifyThreshold`, `usersNotifyTimestamp`, `usersPagingTagCloud`, `usersPasswordQuestion1`, `usersPasswordAnswer1`, `usersPasswordQuestion2`, `usersPasswordAnswer2`, `usersPasswordQuestion3`, `usersPasswordAnswer3`, `usersUseBibtexKey`, `usersUseWikindxKey`, `usersDisplayBibtexLink`, `usersDisplayCmsLink`, `usersCmsTag`, `usersIsCreator`, `usersListlink`, `usersDepartment`, `usersTemplateMenu`, `usersInstitution`, `usersNotifyDigestThreshold`, `usersGDPR`, `usersBlock`, `usersHomeBib`, `usersBrowseBibliography`, `usersLastInternalVersion`, `usersDisplayResourceStatistics`) VALUES
+(1, 'super', '$2y$10$P8onVyobz06VOGLnrQWQKuR7NTqjZhojdbhRXSX/pOzA6VJq2Tscy', '', 'blah@blah.com', '2021-04-20 13:02:05', 1, 'Y', 15, 11, 'N', 40, 'en_GB', 'apa', 'bryophyta', 'N', 'A', 0, '2010-10-10 11:32:52', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0, 59, 0),
+(2, 'user1', '$2y$10$8/5gSJkbDLr88YdPk5/q.eN/tTbzzGuq2.pX7/mYQJCoG0MjRNV7C', '', 'blah@blah.com', '2021-03-01 20:51:59', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:07', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0, 0, 0),
+(3, 'user2', '$2y$10$/a5ZJwNngqS2S2jiVsCCju6SsJ4BuPcInCz8vnPVtuLThgCDKicZu', '', 'blah@blah.com', '2021-03-01 20:53:09', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:32', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_user_bibliography`
+-- Table structure for table `user_bibliography`
 --
 
-CREATE TABLE `wkx_user_bibliography` (
+CREATE TABLE `user_bibliography` (
   `userbibliographyId` int(11) NOT NULL,
   `userbibliographyUserId` int(11) DEFAULT NULL,
   `userbibliographyUserGroupId` int(11) DEFAULT NULL,
@@ -7810,10 +7828,10 @@ CREATE TABLE `wkx_user_bibliography` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_user_bibliography`
+-- Dumping data for table `user_bibliography`
 --
 
-INSERT INTO `wkx_user_bibliography` (`userbibliographyId`, `userbibliographyUserId`, `userbibliographyUserGroupId`, `userbibliographyTitle`, `userbibliographyDescription`) VALUES
+INSERT INTO `user_bibliography` (`userbibliographyId`, `userbibliographyUserId`, `userbibliographyUserGroupId`, `userbibliographyTitle`, `userbibliographyDescription`) VALUES
 (1, 3, NULL, 'User2Bibliography', 'This is the private bibliography for User2'),
 (2, 1, 1, 'superBibliography', 'Private bibliography for super\'s user group which includes user1.'),
 (3, 1, NULL, 'User Bib', NULL);
@@ -7821,20 +7839,20 @@ INSERT INTO `wkx_user_bibliography` (`userbibliographyId`, `userbibliographyUser
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_user_bibliography_resource`
+-- Table structure for table `user_bibliography_resource`
 --
 
-CREATE TABLE `wkx_user_bibliography_resource` (
+CREATE TABLE `user_bibliography_resource` (
   `userbibliographyresourceId` int(11) NOT NULL,
   `userbibliographyresourceBibliographyId` int(11) DEFAULT NULL,
   `userbibliographyresourceResourceId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_user_bibliography_resource`
+-- Dumping data for table `user_bibliography_resource`
 --
 
-INSERT INTO `wkx_user_bibliography_resource` (`userbibliographyresourceId`, `userbibliographyresourceBibliographyId`, `userbibliographyresourceResourceId`) VALUES
+INSERT INTO `user_bibliography_resource` (`userbibliographyresourceId`, `userbibliographyresourceBibliographyId`, `userbibliographyresourceResourceId`) VALUES
 (1, 1, 42),
 (2, 1, 78),
 (3, 1, 15),
@@ -7867,10 +7885,10 @@ INSERT INTO `wkx_user_bibliography_resource` (`userbibliographyresourceId`, `use
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_user_groups`
+-- Table structure for table `user_groups`
 --
 
-CREATE TABLE `wkx_user_groups` (
+CREATE TABLE `user_groups` (
   `usergroupsId` int(11) NOT NULL,
   `usergroupsTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usergroupsDescription` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -7878,39 +7896,39 @@ CREATE TABLE `wkx_user_groups` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_user_groups`
+-- Dumping data for table `user_groups`
 --
 
-INSERT INTO `wkx_user_groups` (`usergroupsId`, `usergroupsTitle`, `usergroupsDescription`, `usergroupsAdminId`) VALUES
+INSERT INTO `user_groups` (`usergroupsId`, `usergroupsTitle`, `usergroupsDescription`, `usergroupsAdminId`) VALUES
 (1, 'Super UserGroup', 'This is super\'s user group and includes user1.  It is user for the superBibliography.', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_user_groups_users`
+-- Table structure for table `user_groups_users`
 --
 
-CREATE TABLE `wkx_user_groups_users` (
+CREATE TABLE `user_groups_users` (
   `usergroupsusersId` int(11) NOT NULL,
   `usergroupsusersGroupId` int(11) DEFAULT NULL,
   `usergroupsusersUserId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_user_groups_users`
+-- Dumping data for table `user_groups_users`
 --
 
-INSERT INTO `wkx_user_groups_users` (`usergroupsusersId`, `usergroupsusersGroupId`, `usergroupsusersUserId`) VALUES
+INSERT INTO `user_groups_users` (`usergroupsusersId`, `usergroupsusersGroupId`, `usergroupsusersUserId`) VALUES
 (1, 1, 1),
 (2, 1, 2);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_user_keywordgroups`
+-- Table structure for table `user_keywordgroups`
 --
 
-CREATE TABLE `wkx_user_keywordgroups` (
+CREATE TABLE `user_keywordgroups` (
   `userkeywordgroupsId` int(11) NOT NULL,
   `userkeywordgroupsUserId` int(11) NOT NULL,
   `userkeywordgroupsName` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
@@ -7920,10 +7938,10 @@ CREATE TABLE `wkx_user_keywordgroups` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_user_kg_keywords`
+-- Table structure for table `user_kg_keywords`
 --
 
-CREATE TABLE `wkx_user_kg_keywords` (
+CREATE TABLE `user_kg_keywords` (
   `userkgkeywordsId` int(11) NOT NULL,
   `userkgkeywordsKeywordGroupId` int(11) NOT NULL,
   `userkgkeywordsKeywordId` int(11) NOT NULL
@@ -7932,10 +7950,10 @@ CREATE TABLE `wkx_user_kg_keywords` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_user_kg_usergroups`
+-- Table structure for table `user_kg_usergroups`
 --
 
-CREATE TABLE `wkx_user_kg_usergroups` (
+CREATE TABLE `user_kg_usergroups` (
   `userkgusergroupsId` int(11) NOT NULL,
   `userkgusergroupsKeywordGroupId` int(11) NOT NULL,
   `userkgusergroupsUserGroupId` int(11) DEFAULT NULL
@@ -7944,10 +7962,10 @@ CREATE TABLE `wkx_user_kg_usergroups` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_user_register`
+-- Table structure for table `user_register`
 --
 
-CREATE TABLE `wkx_user_register` (
+CREATE TABLE `user_register` (
   `userregisterId` int(11) NOT NULL,
   `userregisterHashKey` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `userregisterEmail` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -7959,10 +7977,10 @@ CREATE TABLE `wkx_user_register` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_user_tags`
+-- Table structure for table `user_tags`
 --
 
-CREATE TABLE `wkx_user_tags` (
+CREATE TABLE `user_tags` (
   `usertagsId` int(11) NOT NULL,
   `usertagsUserId` int(11) DEFAULT NULL,
   `usertagsTag` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
@@ -7971,21 +7989,21 @@ CREATE TABLE `wkx_user_tags` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_version`
+-- Table structure for table `version`
 --
 
-CREATE TABLE `wkx_version` (
+CREATE TABLE `version` (
   `versionComponentType` varchar(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `versionComponentId` varchar(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `versionInternalVersion` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
--- Dumping data for table `wkx_version`
+-- Dumping data for table `version`
 --
 
-INSERT INTO `wkx_version` (`versionComponentType`, `versionComponentId`, `versionInternalVersion`) VALUES
-('core', 'core', 43),
+INSERT INTO `version` (`versionComponentType`, `versionComponentId`, `versionInternalVersion`) VALUES
+('core', 'core', 59),
 ('plugin', 'localedescription', 1),
 ('plugin', 'soundexplorer', 1);
 
@@ -7994,322 +8012,364 @@ INSERT INTO `wkx_version` (`versionComponentType`, `versionComponentId`, `versio
 --
 
 --
--- Indexes for table `wkx_bibtex_string`
+-- Indexes for table `bibtex_string`
 --
-ALTER TABLE `wkx_bibtex_string`
+ALTER TABLE `bibtex_string`
   ADD PRIMARY KEY (`bibtexstringId`);
 
 --
--- Indexes for table `wkx_category`
+-- Indexes for table `category`
 --
-ALTER TABLE `wkx_category`
+ALTER TABLE `category`
   ADD PRIMARY KEY (`categoryId`),
   ADD KEY `categoryCategory` (`categoryCategory`(768));
 
 --
--- Indexes for table `wkx_collection`
+-- Indexes for table `collection`
 --
-ALTER TABLE `wkx_collection`
+ALTER TABLE `collection`
   ADD PRIMARY KEY (`collectionId`),
   ADD KEY `collectionTitle` (`collectionTitle`(100)),
   ADD KEY `collectionType` (`collectionType`);
 
 --
--- Indexes for table `wkx_config`
+-- Indexes for table `config`
 --
-ALTER TABLE `wkx_config`
+ALTER TABLE `config`
   ADD PRIMARY KEY (`configId`),
   ADD KEY `configName` (`configName`(100));
 
 --
--- Indexes for table `wkx_creator`
+-- Indexes for table `creator`
 --
-ALTER TABLE `wkx_creator`
+ALTER TABLE `creator`
   ADD PRIMARY KEY (`creatorId`),
   ADD KEY `creatorSameAs` (`creatorSameAs`),
   ADD KEY `creatorSurname` (`creatorSurname`(100));
 
 --
--- Indexes for table `wkx_custom`
+-- Indexes for table `custom`
 --
-ALTER TABLE `wkx_custom`
+ALTER TABLE `custom`
   ADD PRIMARY KEY (`customId`);
 
 --
--- Indexes for table `wkx_import_raw`
+-- Indexes for table `import_raw`
 --
-ALTER TABLE `wkx_import_raw`
+ALTER TABLE `import_raw`
   ADD PRIMARY KEY (`importrawId`);
 
 --
--- Indexes for table `wkx_keyword`
+-- Indexes for table `keyword`
 --
-ALTER TABLE `wkx_keyword`
+ALTER TABLE `keyword`
   ADD PRIMARY KEY (`keywordId`),
   ADD KEY `keywordKeyword` (`keywordKeyword`(768));
 
 --
--- Indexes for table `wkx_language`
+-- Indexes for table `language`
 --
-ALTER TABLE `wkx_language`
+ALTER TABLE `language`
   ADD PRIMARY KEY (`languageId`);
 
 --
--- Indexes for table `wkx_news`
+-- Indexes for table `news`
 --
-ALTER TABLE `wkx_news`
+ALTER TABLE `news`
   ADD PRIMARY KEY (`newsId`);
 
 --
--- Indexes for table `wkx_plugin_localedescription`
+-- Indexes for table `plugin_localedescription`
 --
-ALTER TABLE `wkx_plugin_localedescription`
+ALTER TABLE `plugin_localedescription`
   ADD PRIMARY KEY (`pluginlocaledescriptionLocale`);
 
 --
--- Indexes for table `wkx_plugin_soundexplorer`
+-- Indexes for table `plugin_soundexplorer`
 --
-ALTER TABLE `wkx_plugin_soundexplorer`
+ALTER TABLE `plugin_soundexplorer`
   ADD PRIMARY KEY (`pluginsoundexplorerId`);
 
 --
--- Indexes for table `wkx_plugin_wordprocessor`
+-- Indexes for table `plugin_wordprocessor`
 --
-ALTER TABLE `wkx_plugin_wordprocessor`
+ALTER TABLE `plugin_wordprocessor`
   ADD PRIMARY KEY (`pluginwordprocessorId`);
 
 --
--- Indexes for table `wkx_publisher`
+-- Indexes for table `publisher`
 --
-ALTER TABLE `wkx_publisher`
+ALTER TABLE `publisher`
   ADD PRIMARY KEY (`publisherId`),
   ADD KEY `publisherName` (`publisherName`(100)),
   ADD KEY `publisherType` (`publisherType`);
 
 --
--- Indexes for table `wkx_resource`
+-- Indexes for table `resource`
 --
-ALTER TABLE `wkx_resource`
+ALTER TABLE `resource`
   ADD PRIMARY KEY (`resourceId`),
   ADD KEY `resourceType` (`resourceType`),
   ADD KEY `resourceTitle` (`resourceTitle`(768));
 
 --
--- Indexes for table `wkx_resource_attachments`
+-- Indexes for table `resource_attachments`
 --
-ALTER TABLE `wkx_resource_attachments`
+ALTER TABLE `resource_attachments`
   ADD PRIMARY KEY (`resourceattachmentsId`),
   ADD KEY `resourceattachmentsResourceId` (`resourceattachmentsResourceId`),
   ADD KEY `resourceattachmentsEmbargo` (`resourceattachmentsEmbargo`),
   ADD KEY `resourceattachmentsEmbargoUntil` (`resourceattachmentsEmbargoUntil`),
   ADD KEY `resourceattachmentsHashFilename` (`resourceattachmentsHashFilename`),
-  ADD KEY `resourceattachmentsPrimary` (`resourceattachmentsPrimary`);
+  ADD KEY `resourceattachmentsPrimary` (`resourceattachmentsPrimary`),
+  ADD KEY `resourceattachmentsTimestamp` (`resourceattachmentsTimestamp`);
 
 --
--- Indexes for table `wkx_resource_category`
+-- Indexes for table `resource_category`
 --
-ALTER TABLE `wkx_resource_category`
+ALTER TABLE `resource_category`
   ADD PRIMARY KEY (`resourcecategoryId`),
   ADD KEY `resourcecategoryCategoryId` (`resourcecategoryCategoryId`),
-  ADD KEY `resourcecategoryResourceId` (`resourcecategoryResourceId`);
+  ADD KEY `resourcecategoryResourceId` (`resourcecategoryResourceId`),
+  ADD KEY `resourcecategorySubcategoryId` (`resourcecategorySubcategoryId`);
 
 --
--- Indexes for table `wkx_resource_creator`
+-- Indexes for table `resource_creator`
 --
-ALTER TABLE `wkx_resource_creator`
+ALTER TABLE `resource_creator`
   ADD PRIMARY KEY (`resourcecreatorId`),
   ADD KEY `resourcecreatorResourceId` (`resourcecreatorResourceId`),
   ADD KEY `resourcecreatorCreatorId` (`resourcecreatorCreatorId`),
-  ADD KEY `resourcecreatorCreatorSurname` (`resourcecreatorCreatorSurname`(100));
+  ADD KEY `resourcecreatorCreatorSurname` (`resourcecreatorCreatorSurname`(100)),
+  ADD KEY `resourcecreatorRole` (`resourcecreatorRole`);
 
 --
--- Indexes for table `wkx_resource_custom`
+-- Indexes for table `resource_custom`
 --
-ALTER TABLE `wkx_resource_custom`
+ALTER TABLE `resource_custom`
   ADD PRIMARY KEY (`resourcecustomId`),
   ADD KEY `resourcecustomCustomId` (`resourcecustomCustomId`),
   ADD KEY `resourcecustomResourceId` (`resourcecustomResourceId`);
-ALTER TABLE `wkx_resource_custom` ADD FULLTEXT KEY `resourcecustomLong` (`resourcecustomLong`);
+ALTER TABLE `resource_custom` ADD FULLTEXT KEY `resourcecustomLong` (`resourcecustomLong`);
 
 --
--- Indexes for table `wkx_resource_keyword`
+-- Indexes for table `resource_keyword`
 --
-ALTER TABLE `wkx_resource_keyword`
+ALTER TABLE `resource_keyword`
   ADD PRIMARY KEY (`resourcekeywordId`),
   ADD KEY `resourcekeywordKeywordId` (`resourcekeywordKeywordId`),
-  ADD KEY `resourcekeywordResourceId` (`resourcekeywordResourceId`);
+  ADD KEY `resourcekeywordResourceId` (`resourcekeywordResourceId`),
+  ADD KEY `resourcekeywordMetadataId` (`resourcekeywordMetadataId`);
 
 --
--- Indexes for table `wkx_resource_language`
+-- Indexes for table `resource_language`
 --
-ALTER TABLE `wkx_resource_language`
+ALTER TABLE `resource_language`
   ADD PRIMARY KEY (`resourcelanguageId`),
   ADD KEY `resourcelanguageResourceId` (`resourcelanguageResourceId`),
   ADD KEY `resourcelanguageLanguageId` (`resourcelanguageLanguageId`);
 
 --
--- Indexes for table `wkx_resource_metadata`
+-- Indexes for table `resource_metadata`
 --
-ALTER TABLE `wkx_resource_metadata`
+ALTER TABLE `resource_metadata`
   ADD PRIMARY KEY (`resourcemetadataId`),
   ADD KEY `resourcemetadataResourceId` (`resourcemetadataResourceId`),
   ADD KEY `resourcemetadataMetadataId` (`resourcemetadataMetadataId`),
-  ADD KEY `resourcemetadataAddUserId` (`resourcemetadataAddUserId`);
-ALTER TABLE `wkx_resource_metadata` ADD FULLTEXT KEY `resourcemetadataText` (`resourcemetadataText`);
+  ADD KEY `resourcemetadataAddUserId` (`resourcemetadataAddUserId`),
+  ADD KEY `resourcemetadataPrivate` (`resourcemetadataPrivate`),
+  ADD KEY `resourcemetadataType` (`resourcemetadataType`);
+ALTER TABLE `resource_metadata` ADD FULLTEXT KEY `resourcemetadataText` (`resourcemetadataText`);
 
 --
--- Indexes for table `wkx_resource_misc`
+-- Indexes for table `resource_misc`
 --
-ALTER TABLE `wkx_resource_misc`
+ALTER TABLE `resource_misc`
   ADD PRIMARY KEY (`resourcemiscId`),
   ADD KEY `resourcemiscCollection` (`resourcemiscCollection`),
-  ADD KEY `resourcemiscPublisher` (`resourcemiscPublisher`);
+  ADD KEY `resourcemiscPublisher` (`resourcemiscPublisher`),
+  ADD KEY `resourcemiscAddUserIdResource` (`resourcemiscAddUserIdResource`),
+  ADD KEY `resourcemiscEditUserIdResource` (`resourcemiscEditUserIdResource`),
+  ADD KEY `resourcemiscPeerReviewed` (`resourcemiscPeerReviewed`),
+  ADD KEY `resourcemiscQuarantine` (`resourcemiscQuarantine`);
 
 --
--- Indexes for table `wkx_resource_page`
+-- Indexes for table `resource_page`
 --
-ALTER TABLE `wkx_resource_page`
+ALTER TABLE `resource_page`
   ADD PRIMARY KEY (`resourcepageId`);
 
 --
--- Indexes for table `wkx_resource_summary`
+-- Indexes for table `resource_text`
 --
-ALTER TABLE `wkx_resource_summary`
-  ADD PRIMARY KEY (`resourcesummaryId`);
+ALTER TABLE `resource_text`
+  ADD PRIMARY KEY (`resourcetextId`),
+  ADD KEY `resourcetextAddUserIdNote` (`resourcetextAddUserIdNote`),
+  ADD KEY `resourcetextEditUserIdNote` (`resourcetextEditUserIdNote`),
+  ADD KEY `resourcetextAddUserIdAbstract` (`resourcetextAddUserIdAbstract`),
+  ADD KEY `resourcetextEditUserIdAbstract` (`resourcetextEditUserIdAbstract`);
+ALTER TABLE `resource_text` ADD FULLTEXT KEY `resourcetextAbstract` (`resourcetextAbstract`);
+ALTER TABLE `resource_text` ADD FULLTEXT KEY `resourcetextNote` (`resourcetextNote`);
 
 --
--- Indexes for table `wkx_resource_text`
+-- Indexes for table `resource_timestamp`
 --
-ALTER TABLE `wkx_resource_text`
-  ADD PRIMARY KEY (`resourcetextId`);
-ALTER TABLE `wkx_resource_text` ADD FULLTEXT KEY `resourcetextAbstract` (`resourcetextAbstract`);
-ALTER TABLE `wkx_resource_text` ADD FULLTEXT KEY `resourcetextNote` (`resourcetextNote`);
-
---
--- Indexes for table `wkx_resource_timestamp`
---
-ALTER TABLE `wkx_resource_timestamp`
+ALTER TABLE `resource_timestamp`
   ADD PRIMARY KEY (`resourcetimestampId`),
   ADD KEY `resourcetimestampTimestampAdd` (`resourcetimestampTimestampAdd`),
   ADD KEY `resourcetimestampTimestamp` (`resourcetimestampTimestamp`);
 
 --
--- Indexes for table `wkx_resource_user_tags`
+-- Indexes for table `resource_url`
 --
-ALTER TABLE `wkx_resource_user_tags`
+ALTER TABLE `resource_url`
+  ADD PRIMARY KEY (`resourceurlId`),
+  ADD KEY `resourceurlResourceId` (`resourceurlResourceId`),
+  ADD KEY `resourceurlPrimary` (`resourceurlPrimary`);
+
+--
+-- Indexes for table `resource_user_tags`
+--
+ALTER TABLE `resource_user_tags`
   ADD PRIMARY KEY (`resourceusertagsId`),
-  ADD KEY `resourceusertagsResourceId` (`resourceusertagsResourceId`);
+  ADD KEY `resourceusertagsResourceId` (`resourceusertagsResourceId`),
+  ADD KEY `resourceusertagsTagId` (`resourceusertagsTagId`);
 
 --
--- Indexes for table `wkx_resource_year`
+-- Indexes for table `resource_year`
 --
-ALTER TABLE `wkx_resource_year`
+ALTER TABLE `resource_year`
   ADD PRIMARY KEY (`resourceyearId`),
-  ADD KEY `resourceyearYear1` (`resourceyearYear1`(100));
+  ADD KEY `resourceyearYear1` (`resourceyearYear1`(100)),
+  ADD KEY `resourceyearYear2` (`resourceyearYear2`(100)),
+  ADD KEY `resourceyearYear3` (`resourceyearYear3`(100)),
+  ADD KEY `resourceyearYear4` (`resourceyearYear4`(100));
 
 --
--- Indexes for table `wkx_statistics_attachment_downloads`
+-- Indexes for table `session`
 --
-ALTER TABLE `wkx_statistics_attachment_downloads`
+ALTER TABLE `session`
+  ADD PRIMARY KEY (`sessionId`),
+  ADD KEY `sessionUserId` (`sessionUserId`),
+  ADD KEY `sessionLastAccessTimestamp` (`sessionLastAccessTimestamp`);
+
+--
+-- Indexes for table `statistics_attachment_downloads`
+--
+ALTER TABLE `statistics_attachment_downloads`
   ADD PRIMARY KEY (`statisticsattachmentdownloadsId`),
   ADD KEY `statisticsattachmentdownloadsAttachmentId` (`statisticsattachmentdownloadsAttachmentId`),
   ADD KEY `statisticsattachmentdownloadsResourceId` (`statisticsattachmentdownloadsResourceId`);
 
 --
--- Indexes for table `wkx_statistics_resource_views`
+-- Indexes for table `statistics_resource_views`
 --
-ALTER TABLE `wkx_statistics_resource_views`
+ALTER TABLE `statistics_resource_views`
   ADD PRIMARY KEY (`statisticsresourceviewsId`),
   ADD KEY `statisticsresourceviewsResourceId` (`statisticsresourceviewsResourceId`);
 
 --
--- Indexes for table `wkx_subcategory`
+-- Indexes for table `subcategory`
 --
-ALTER TABLE `wkx_subcategory`
-  ADD PRIMARY KEY (`subcategoryId`);
+ALTER TABLE `subcategory`
+  ADD PRIMARY KEY (`subcategoryId`),
+  ADD KEY `subcategoryCategoryId` (`subcategoryCategoryId`);
 
 --
--- Indexes for table `wkx_tag`
+-- Indexes for table `tag`
 --
-ALTER TABLE `wkx_tag`
+ALTER TABLE `tag`
   ADD PRIMARY KEY (`tagId`);
 
 --
--- Indexes for table `wkx_temp_storage`
+-- Indexes for table `temp_storage`
 --
-ALTER TABLE `wkx_temp_storage`
-  ADD PRIMARY KEY (`tempstorageId`);
+ALTER TABLE `temp_storage`
+  ADD PRIMARY KEY (`tempstorageId`),
+  ADD KEY `tempstorageTimestamp` (`tempstorageTimestamp`);
 
 --
--- Indexes for table `wkx_users`
+-- Indexes for table `users`
 --
-ALTER TABLE `wkx_users`
+ALTER TABLE `users`
   ADD PRIMARY KEY (`usersId`),
-  ADD UNIQUE KEY `usersUsernameUnique` (`usersUsername`);
+  ADD UNIQUE KEY `usersUsernameUnique` (`usersUsername`),
+  ADD KEY `usersBlock` (`usersBlock`);
 
 --
--- Indexes for table `wkx_user_bibliography`
+-- Indexes for table `user_bibliography`
 --
-ALTER TABLE `wkx_user_bibliography`
+ALTER TABLE `user_bibliography`
   ADD PRIMARY KEY (`userbibliographyId`),
-  ADD KEY `userbibliographyTitle` (`userbibliographyTitle`(100));
+  ADD KEY `userbibliographyTitle` (`userbibliographyTitle`(100)),
+  ADD KEY `userbibliographyUserGroupId` (`userbibliographyUserGroupId`),
+  ADD KEY `userbibliographyUserId` (`userbibliographyUserId`);
 
 --
--- Indexes for table `wkx_user_bibliography_resource`
+-- Indexes for table `user_bibliography_resource`
 --
-ALTER TABLE `wkx_user_bibliography_resource`
+ALTER TABLE `user_bibliography_resource`
   ADD PRIMARY KEY (`userbibliographyresourceId`),
-  ADD KEY `userbibliographyresourceResourceId` (`userbibliographyresourceResourceId`);
+  ADD KEY `userbibliographyresourceResourceId` (`userbibliographyresourceResourceId`),
+  ADD KEY `userbibliographyresourceBibliographyId` (`userbibliographyresourceBibliographyId`);
 
 --
--- Indexes for table `wkx_user_groups`
+-- Indexes for table `user_groups`
 --
-ALTER TABLE `wkx_user_groups`
-  ADD PRIMARY KEY (`usergroupsId`);
+ALTER TABLE `user_groups`
+  ADD PRIMARY KEY (`usergroupsId`),
+  ADD KEY `usergroupsAdminId` (`usergroupsAdminId`);
 
 --
--- Indexes for table `wkx_user_groups_users`
+-- Indexes for table `user_groups_users`
 --
-ALTER TABLE `wkx_user_groups_users`
-  ADD PRIMARY KEY (`usergroupsusersId`);
+ALTER TABLE `user_groups_users`
+  ADD PRIMARY KEY (`usergroupsusersId`),
+  ADD KEY `usergroupsusersGroupId` (`usergroupsusersGroupId`),
+  ADD KEY `usergroupsusersUserId` (`usergroupsusersUserId`);
 
 --
--- Indexes for table `wkx_user_keywordgroups`
+-- Indexes for table `user_keywordgroups`
 --
-ALTER TABLE `wkx_user_keywordgroups`
-  ADD PRIMARY KEY (`userkeywordgroupsId`);
+ALTER TABLE `user_keywordgroups`
+  ADD PRIMARY KEY (`userkeywordgroupsId`),
+  ADD KEY `userkeywordgroupsUserId` (`userkeywordgroupsUserId`);
 
 --
--- Indexes for table `wkx_user_kg_keywords`
+-- Indexes for table `user_kg_keywords`
 --
-ALTER TABLE `wkx_user_kg_keywords`
+ALTER TABLE `user_kg_keywords`
   ADD PRIMARY KEY (`userkgkeywordsId`),
-  ADD KEY `userkgkeywordsKeywordId` (`userkgkeywordsKeywordId`);
+  ADD KEY `userkgkeywordsKeywordId` (`userkgkeywordsKeywordId`),
+  ADD KEY `userkgkeywordsKeywordGroupId` (`userkgkeywordsKeywordGroupId`);
 
 --
--- Indexes for table `wkx_user_kg_usergroups`
+-- Indexes for table `user_kg_usergroups`
 --
-ALTER TABLE `wkx_user_kg_usergroups`
+ALTER TABLE `user_kg_usergroups`
   ADD PRIMARY KEY (`userkgusergroupsId`),
   ADD KEY `userkgusergroupsUserGroupId` (`userkgusergroupsUserGroupId`),
   ADD KEY `userkgusergroupsKeywordGroupId` (`userkgusergroupsKeywordGroupId`);
 
 --
--- Indexes for table `wkx_user_register`
+-- Indexes for table `user_register`
 --
-ALTER TABLE `wkx_user_register`
-  ADD PRIMARY KEY (`userregisterId`);
+ALTER TABLE `user_register`
+  ADD PRIMARY KEY (`userregisterId`),
+  ADD KEY `userregisterConfirmed` (`userregisterConfirmed`),
+  ADD KEY `userregisterTimestamp` (`userregisterTimestamp`);
 
 --
--- Indexes for table `wkx_user_tags`
+-- Indexes for table `user_tags`
 --
-ALTER TABLE `wkx_user_tags`
-  ADD PRIMARY KEY (`usertagsId`);
+ALTER TABLE `user_tags`
+  ADD PRIMARY KEY (`usertagsId`),
+  ADD KEY `usertagsUserId` (`usertagsUserId`);
 
 --
--- Indexes for table `wkx_version`
+-- Indexes for table `version`
 --
-ALTER TABLE `wkx_version`
+ALTER TABLE `version`
   ADD PRIMARY KEY (`versionComponentType`,`versionComponentId`);
 
 --
@@ -8317,213 +8377,219 @@ ALTER TABLE `wkx_version`
 --
 
 --
--- AUTO_INCREMENT for table `wkx_bibtex_string`
+-- AUTO_INCREMENT for table `bibtex_string`
 --
-ALTER TABLE `wkx_bibtex_string`
+ALTER TABLE `bibtex_string`
   MODIFY `bibtexstringId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_category`
+-- AUTO_INCREMENT for table `category`
 --
-ALTER TABLE `wkx_category`
+ALTER TABLE `category`
   MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `wkx_collection`
+-- AUTO_INCREMENT for table `collection`
 --
-ALTER TABLE `wkx_collection`
+ALTER TABLE `collection`
   MODIFY `collectionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT for table `wkx_config`
+-- AUTO_INCREMENT for table `config`
 --
-ALTER TABLE `wkx_config`
-  MODIFY `configId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+ALTER TABLE `config`
+  MODIFY `configId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
--- AUTO_INCREMENT for table `wkx_creator`
+-- AUTO_INCREMENT for table `creator`
 --
-ALTER TABLE `wkx_creator`
+ALTER TABLE `creator`
   MODIFY `creatorId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
--- AUTO_INCREMENT for table `wkx_custom`
+-- AUTO_INCREMENT for table `custom`
 --
-ALTER TABLE `wkx_custom`
+ALTER TABLE `custom`
   MODIFY `customId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_keyword`
+-- AUTO_INCREMENT for table `keyword`
 --
-ALTER TABLE `wkx_keyword`
+ALTER TABLE `keyword`
   MODIFY `keywordId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `wkx_language`
+-- AUTO_INCREMENT for table `language`
 --
-ALTER TABLE `wkx_language`
+ALTER TABLE `language`
   MODIFY `languageId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_news`
+-- AUTO_INCREMENT for table `news`
 --
-ALTER TABLE `wkx_news`
+ALTER TABLE `news`
   MODIFY `newsId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_plugin_soundexplorer`
+-- AUTO_INCREMENT for table `plugin_soundexplorer`
 --
-ALTER TABLE `wkx_plugin_soundexplorer`
+ALTER TABLE `plugin_soundexplorer`
   MODIFY `pluginsoundexplorerId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_plugin_wordprocessor`
+-- AUTO_INCREMENT for table `plugin_wordprocessor`
 --
-ALTER TABLE `wkx_plugin_wordprocessor`
+ALTER TABLE `plugin_wordprocessor`
   MODIFY `pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_publisher`
+-- AUTO_INCREMENT for table `publisher`
 --
-ALTER TABLE `wkx_publisher`
+ALTER TABLE `publisher`
   MODIFY `publisherId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
--- AUTO_INCREMENT for table `wkx_resource`
+-- AUTO_INCREMENT for table `resource`
 --
-ALTER TABLE `wkx_resource`
+ALTER TABLE `resource`
   MODIFY `resourceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
 
 --
--- AUTO_INCREMENT for table `wkx_resource_attachments`
+-- AUTO_INCREMENT for table `resource_attachments`
 --
-ALTER TABLE `wkx_resource_attachments`
+ALTER TABLE `resource_attachments`
   MODIFY `resourceattachmentsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `wkx_resource_category`
+-- AUTO_INCREMENT for table `resource_category`
 --
-ALTER TABLE `wkx_resource_category`
+ALTER TABLE `resource_category`
   MODIFY `resourcecategoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
--- AUTO_INCREMENT for table `wkx_resource_creator`
+-- AUTO_INCREMENT for table `resource_creator`
 --
-ALTER TABLE `wkx_resource_creator`
+ALTER TABLE `resource_creator`
   MODIFY `resourcecreatorId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
--- AUTO_INCREMENT for table `wkx_resource_custom`
+-- AUTO_INCREMENT for table `resource_custom`
 --
-ALTER TABLE `wkx_resource_custom`
+ALTER TABLE `resource_custom`
   MODIFY `resourcecustomId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_resource_keyword`
+-- AUTO_INCREMENT for table `resource_keyword`
 --
-ALTER TABLE `wkx_resource_keyword`
+ALTER TABLE `resource_keyword`
   MODIFY `resourcekeywordId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
--- AUTO_INCREMENT for table `wkx_resource_language`
+-- AUTO_INCREMENT for table `resource_language`
 --
-ALTER TABLE `wkx_resource_language`
+ALTER TABLE `resource_language`
   MODIFY `resourcelanguageId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_resource_metadata`
+-- AUTO_INCREMENT for table `resource_metadata`
 --
-ALTER TABLE `wkx_resource_metadata`
+ALTER TABLE `resource_metadata`
   MODIFY `resourcemetadataId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT for table `wkx_resource_user_tags`
+-- AUTO_INCREMENT for table `resource_url`
 --
-ALTER TABLE `wkx_resource_user_tags`
+ALTER TABLE `resource_url`
+  MODIFY `resourceurlId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT for table `resource_user_tags`
+--
+ALTER TABLE `resource_user_tags`
   MODIFY `resourceusertagsId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_statistics_attachment_downloads`
+-- AUTO_INCREMENT for table `statistics_attachment_downloads`
 --
-ALTER TABLE `wkx_statistics_attachment_downloads`
+ALTER TABLE `statistics_attachment_downloads`
   MODIFY `statisticsattachmentdownloadsId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_statistics_resource_views`
+-- AUTO_INCREMENT for table `statistics_resource_views`
 --
-ALTER TABLE `wkx_statistics_resource_views`
+ALTER TABLE `statistics_resource_views`
   MODIFY `statisticsresourceviewsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6138;
 
 --
--- AUTO_INCREMENT for table `wkx_subcategory`
+-- AUTO_INCREMENT for table `subcategory`
 --
-ALTER TABLE `wkx_subcategory`
+ALTER TABLE `subcategory`
   MODIFY `subcategoryId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_tag`
+-- AUTO_INCREMENT for table `tag`
 --
-ALTER TABLE `wkx_tag`
+ALTER TABLE `tag`
   MODIFY `tagId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `wkx_users`
+-- AUTO_INCREMENT for table `users`
 --
-ALTER TABLE `wkx_users`
+ALTER TABLE `users`
   MODIFY `usersId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `wkx_user_bibliography`
+-- AUTO_INCREMENT for table `user_bibliography`
 --
-ALTER TABLE `wkx_user_bibliography`
+ALTER TABLE `user_bibliography`
   MODIFY `userbibliographyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `wkx_user_bibliography_resource`
+-- AUTO_INCREMENT for table `user_bibliography_resource`
 --
-ALTER TABLE `wkx_user_bibliography_resource`
+ALTER TABLE `user_bibliography_resource`
   MODIFY `userbibliographyresourceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
--- AUTO_INCREMENT for table `wkx_user_groups`
+-- AUTO_INCREMENT for table `user_groups`
 --
-ALTER TABLE `wkx_user_groups`
+ALTER TABLE `user_groups`
   MODIFY `usergroupsId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `wkx_user_groups_users`
+-- AUTO_INCREMENT for table `user_groups_users`
 --
-ALTER TABLE `wkx_user_groups_users`
+ALTER TABLE `user_groups_users`
   MODIFY `usergroupsusersId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `wkx_user_keywordgroups`
+-- AUTO_INCREMENT for table `user_keywordgroups`
 --
-ALTER TABLE `wkx_user_keywordgroups`
+ALTER TABLE `user_keywordgroups`
   MODIFY `userkeywordgroupsId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_user_kg_keywords`
+-- AUTO_INCREMENT for table `user_kg_keywords`
 --
-ALTER TABLE `wkx_user_kg_keywords`
+ALTER TABLE `user_kg_keywords`
   MODIFY `userkgkeywordsId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_user_kg_usergroups`
+-- AUTO_INCREMENT for table `user_kg_usergroups`
 --
-ALTER TABLE `wkx_user_kg_usergroups`
+ALTER TABLE `user_kg_usergroups`
   MODIFY `userkgusergroupsId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_user_register`
+-- AUTO_INCREMENT for table `user_register`
 --
-ALTER TABLE `wkx_user_register`
+ALTER TABLE `user_register`
   MODIFY `userregisterId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `wkx_user_tags`
+-- AUTO_INCREMENT for table `user_tags`
 --
-ALTER TABLE `wkx_user_tags`
+ALTER TABLE `user_tags`
   MODIFY `usertagsId` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 

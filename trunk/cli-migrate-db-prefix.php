@@ -42,13 +42,13 @@ if (mysqli_connect_errno() == 0)
     $AvailablePrefix[] = DEFAULT_PREFIX;
     foreach ($tables as $k => $table)
     {
-        if (strstr($table, "-", TRUE) !== FALSE)
+        if (mb_strstr($table, "-", TRUE) !== FALSE)
         {
-            $AvailablePrefix[] = strstr($table, "-", TRUE) . "-";
+            $AvailablePrefix[] = mb_strstr($table, "-", TRUE) . "-";
         }
-        if (strstr($table, "_", TRUE) !== FALSE)
+        if (mb_strstr($table, "_", TRUE) !== FALSE)
         {
-            $AvailablePrefix[] = strstr($table, "_", TRUE) . "_";
+            $AvailablePrefix[] = mb_strstr($table, "_", TRUE) . "_";
         }
     }
     $AvailablePrefix = array_unique($AvailablePrefix);

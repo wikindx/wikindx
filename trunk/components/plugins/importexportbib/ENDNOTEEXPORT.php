@@ -68,7 +68,7 @@ class ENDNOTEEXPORT
         $error = FALSE;
         foreach ($this->vars as $key => $value)
         {
-            if (strstr($key, 'MapInternal_'))
+            if (mb_strstr($key, 'MapInternal_'))
             {
                 $index = str_replace('MapInternal_', '', $key);
                 if ($value && (array_search($value, $this->customMap) !== FALSE))

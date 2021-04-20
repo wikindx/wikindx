@@ -170,7 +170,7 @@ class UPDATEDATABASE
         $EngineVersionRaw = $EngineVersionRaw ?? "";
         $EngineVersion = strtolower($EngineVersionRaw);
         
-        if (strstr($EngineVersion, "mariadb"))
+        if (mb_strstr($EngineVersion, "mariadb"))
         {
             $EngineName = "MariaDB";
             $VersionMin = WIKINDX_MARIADB_VERSION_MIN; // Check MariaDB version

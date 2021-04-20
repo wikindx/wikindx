@@ -842,23 +842,23 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     protected function callbackOrderedList($matchArray)
     {
         // NB quick fix that might produce problems if list text itself includes the list type
-        if (strstr($matchArray[0], 'lower-greek') !== FALSE)
+        if (mb_strstr($matchArray[0], 'lower-greek') !== FALSE)
         {
             $levelnfc = 60;
         }
-        elseif (strstr($matchArray[0], 'lower-alpha') !== FALSE)
+        elseif (mb_strstr($matchArray[0], 'lower-alpha') !== FALSE)
         {
             $levelnfc = 4;
         }
-        elseif (strstr($matchArray[0], 'upper-alpha') !== FALSE)
+        elseif (mb_strstr($matchArray[0], 'upper-alpha') !== FALSE)
         {
             $levelnfc = 3;
         }
-        elseif (strstr($matchArray[0], 'lower-roman') !== FALSE)
+        elseif (mb_strstr($matchArray[0], 'lower-roman') !== FALSE)
         {
             $levelnfc = 2;
         }
-        elseif (strstr($matchArray[0], 'upper-roman') !== FALSE)
+        elseif (mb_strstr($matchArray[0], 'upper-roman') !== FALSE)
         {
             $levelnfc = 1;
         }

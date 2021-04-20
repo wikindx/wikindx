@@ -155,7 +155,7 @@ function wkx_session_write(string $sessionId, string $sessionData) : bool
         "ia_archiver"
     ] as $botua)
     {
-        if (strstr($ua, $botua))
+        if (mb_strstr($ua, $botua))
         {
             $isbot = TRUE;
             break;

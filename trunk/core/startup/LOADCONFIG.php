@@ -327,7 +327,14 @@ class LOADCONFIG
             }
         }
         
+        // Set the timezone of the webserver
         date_default_timezone_set(WIKINDX_TIMEZONE);
+        
+        // Set the timezone of the db engine using the offset syntax
+        // cf. https://dev.mysql.com/doc/refman/8.0/en/time-zone-support.html
+        $tz_offset = (new DateTime('now', new DateTimeZone(WIKINDX_TIMEZONE)))->format("P");
+        $db->queryNoResult("SET time_zone = '" . $tz_offset . "';");
+        
         ini_set('display_errors', WIKINDX_DEBUG_ERRORS);
     }
     

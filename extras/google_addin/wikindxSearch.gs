@@ -1,7 +1,3 @@
-var initialId = false;
-var bibEntry = '';
-var citation = '';
-
 function searchReferences(url, params, style, searchText) {
   var response = getSearchInputReferences(url, params, style, searchText);
   if (response.xmlResponse === false) {
@@ -10,7 +6,9 @@ function searchReferences(url, params, style, searchText) {
       message: errorNoResultsReferences
     };
   }
-  var refSelectBox = printSearchResultsReferences(response.xmlArray);
+  response = printSearchResultsReferences(response.xmlArray);
+  var refSelectBox = response.refSelectBox;
+  var initialId = response.initialId;
   response = displayReference(url, style, initialId);
   if (response.xmlResponse === false) {
       return {
@@ -27,16 +25,20 @@ function searchReferences(url, params, style, searchText) {
 
 function printSearchResultsReferences(xmlArray) {
   var refSelectBox = '';
+  var initialId = false;
 
   for (var i = 0; i < xmlArray.length; i++) {
-    bibEntry = xmlArray[i].bibEntry;
+    let bibEntry = xmlArray[i].bibEntry;
     id = xmlArray[i].id;
     refSelectBox += '<option value="' + id + '">' + bibEntry + '</option>';
     if (i == 0) {
       initialId = id;
     }
   }
-  return refSelectBox;
+  return {
+    refSelectBox: refSelectBox,
+    initialId: initialId
+  }
 }
 
 function displayReference(url, style, id) {
@@ -61,7 +63,9 @@ function searchCitations(url, params, style, searchText) {
       message: errorNoResultsReferences
     };
   }
-  var citeSelectBox = printSearchResultsCitations(response.xmlArray);
+  response = printSearchResultsCitations(response.xmlArray);
+  var citeSelectBox = response.citeSelectBox;
+  var initialId = response.initialId;
   response = displayCitation(url, style, initialId);
   var cursor = DocumentApp.getActiveDocument().getCursor();
 //  cursor.insertText('here: ' + response.citation);
@@ -81,16 +85,20 @@ function searchCitations(url, params, style, searchText) {
 
 function printSearchResultsCitations(xmlArray) {
   var citeSelectBox = '';
+  var initialId = false;
 
   for (var i = 0; i < xmlArray.length; i++) {
-    citation = xmlArray[i].citation;
+    let citation = xmlArray[i].citation;
     id = xmlArray[i].id;
     citeSelectBox += '<option value="' + id + '">' + citation + '</option>';
     if (i == 0) {
       initialId = id;
     }
   }
-  return citeSelectBox;
+  return {
+    citeSelectBox: citeSelectBox,
+    initialId: initialId
+  }
 }
 
 function displayCitation(url, style, id) {
@@ -107,3 +115,4 @@ function displayCitation(url, style, id) {
     bibEntry: response.xmlArray['bibEntry']
   };
 }
+

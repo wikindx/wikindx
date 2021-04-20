@@ -1,22 +1,9 @@
-var order, ascDesc, id;
-var foundBibliography;
-var bibliography;
-var finalizeReferences = [];
-var multipleOrder = [];
-var wikindices = [];
-var multipleWikindices;
-var cleanIDs = new Object();
-var citeIDs = new Object();
-var xmlError = false;
-var errorNoInserts = "You have not inserted any references or citations yet so there is nothing to finalize.";
-var misc = false;
-
 function finalizeDisplay() {
 // Before displaying the pane, check we have references and remove any empty wikindx-based namedranges
   var found = false;
   var url, tag, text, split, i, j;
   var rangeElements = [];
-  wikindices = [];
+  finalizeWikindices = [];
 
   var document = DocumentApp.getActiveDocument();
   var ranges = document.getNamedRanges();
@@ -38,13 +25,13 @@ function finalizeDisplay() {
   if (!found) { // Nothing stored yet for this document
     return {
       xmlResponse: false,
-      message: errorNoInserts
+      message: "You have not inserted any references or citations yet so there is nothing to finalize."
     };
   }
   // If we get here, there is something to finalize. Check there are styles
   var styles = finalizeGetStyles();
   if (!styles) {
-    if (xmlError) {
+    if (finalizeXmlError) {
       return {
         xmlResponse: false,
         message: errorXMLHTTP
@@ -64,27 +51,26 @@ function finalizeRun(params, style) {
   var split, urls, response, i, j, k;
   var ranges = [];
 
-  foundBibliography = false;
-  bibliography = '';
+  finalizeFoundBibliography = false;
+  finalizeBibliography = '';
   finalizeReferences = [];
-  allItemObjects = [];
-  multipleOrder = [];
-  cleanIDs = new Object();
-  citeIDs = new Object();
+  finalizeMultipleOrder = [];
+  finalizeCleanIDs = new Object();
+  finalizeCiteIDs = new Object();
   var document = DocumentApp.getActiveDocument();
   var ranges = document.getNamedRanges();
   getCleanIDs(ranges);
   // get references from WIKINDX
-  urls = Object.keys(cleanIDs);
-  multipleWikindices = false;
+  urls = Object.keys(finalizeCleanIDs);
+  finalizeMultipleWikindices = false;
   if (urls.length > 1) {
-    multipleWikindices = true;
+    finalizeMultipleWikindices = true;
     split = params.split('_');
-    order = split[0];
-    ascDesc = split[1];
+    finalizeOrder = split[0];
+    finalizeAscDesc = split[1];
   }
   for (i = 0; i < urls.length; i++) {
-    response = finalizeGetReferencesXML(urls[i], params, style, JSON.stringify(cleanIDs[urls[i]]), document);
+    response = finalizeGetReferencesXML(urls[i], params, style, JSON.stringify(finalizeCleanIDs[urls[i]]), document);
     if (response.xmlResponse === false) {
       return {
         xmlResponse: false,
@@ -93,7 +79,7 @@ function finalizeRun(params, style) {
     }
   }
   for (i = 0; i < urls.length; i++) {
-    response = finalizeGetCitationsXML(urls[i], style, JSON.stringify(citeIDs[urls[i]]), document);
+    response = finalizeGetCitationsXML(urls[i], style, JSON.stringify(finalizeCiteIDs[urls[i]]), document);
     if (response.xmlResponse === false) {
       return {
         xmlResponse: false,
@@ -102,7 +88,7 @@ function finalizeRun(params, style) {
     }
   }
   finalizeGetBibliography();
-  if (foundBibliography) {
+  if (finalizeFoundBibliography) {
     var document = DocumentApp.getActiveDocument();
     var ranges = document.getNamedRanges('wikindx-bibliography');
     ranges[0].remove();
@@ -113,20 +99,20 @@ function finalizeRun(params, style) {
       rangeElements[0].getElement().asText().setText('');
     }
   }
-  appendBibliography('\n\n\n\n' + bibliography);
+  appendBibliography('\n\n\n\n' + finalizeBibliography);
   return {
     xmlResponse: true
   }
 }
 function getCleanIDs(ranges) {
-  var i, item, metaId;
+  var i, item, metaId, id;
   var split = [];
 
   for (i = 0; i < ranges.length; i++) {
     rangeElements = ranges[i].getRange().getRangeElements();
     tag = ranges[i].getName();
     if (tag == 'wikindx-bibliography') {
-      foundBibliography = true;
+      finalizeFoundBibliography = true;
       continue;
     }
     split = tag.split('W!K!NDX');
@@ -141,47 +127,47 @@ function getCleanIDs(ranges) {
     id = item[1];
     if (item.length == 3) { // citation
       metaId = item[2];
-      if (!(item[0] in citeIDs)) {
-        citeIDs[item[0]] = [metaId];
-      } else if (!citeIDs[item[0]].includes(metaId)) {
-        citeIDs[item[0]].push(metaId);
+      if (!(item[0] in finalizeCiteIDs)) {
+        finalizeCiteIDs[item[0]] = [metaId];
+      } else if (!finalizeCiteIDs[item[0]].includes(metaId)) {
+        finalizeCiteIDs[item[0]].push(metaId);
       }
     }
-    if (!(item[0] in cleanIDs)) {
-      cleanIDs[item[0]] = [id];
-    } else if (!cleanIDs[item[0]].includes(id)) {
-      cleanIDs[item[0]].push(id);
+    if (!(item[0] in finalizeCleanIDs)) {
+      finalizeCleanIDs[item[0]] = [id];
+    } else if (!finalizeCleanIDs[item[0]].includes(id)) {
+      finalizeCleanIDs[item[0]].push(id);
     }
   }
 }
 function finalizeGetBibliography() {
   var i, key;
-  if (!multipleWikindices) {
+  if (!finalizeMultipleWikindices) {
     for (i = 0; i < finalizeReferences.length; i++) {
       let text = finalizeReferences[i];
-      bibliography += text + '\n';
+      finalizeBibliography += text + '\n';
     }
   } else {
-    if (order == 'creator') {
-      multipleOrder.sort(function (a, b) {
+    if (finalizeOrder == 'creator') {
+      finalizeMultipleOrder.sort(function (a, b) {
         return a.creator.localeCompare(b.creator) || a.year - b.year || a.title.localeCompare(b.title);
       });
     }
-    else if (order == 'title') {
-      multipleOrder.sort(function (a, b) {
+    else if (finalizeOrder == 'title') {
+      finalizeMultipleOrder.sort(function (a, b) {
         return a.title.localeCompare(b.title) || a.creator.localeCompare(b.creator) || a.year - b.year;
       });
     } else { // year
-      multipleOrder.sort(function (a, b) {
+      finalizeMultipleOrder.sort(function (a, b) {
         return a.year - b.year || a.creator.localeCompare(b.creator) || a.title.localeCompare(b.title);
       });
     }
-    if (ascDesc == 'DESC') {
-      multipleOrder.reverse();
+    if (finalizeAscDesc == 'DESC') {
+      finalizeMultipleOrder.reverse();
     }
-    for (i = 0; i < multipleOrder.length; i++) {
-      key = multipleOrder[i].index;
-      bibliography += finalizeReferences[key] + '\n';
+    for (i = 0; i < finalizeMultipleOrder.length; i++) {
+      key = finalizeMultipleOrder[i].index;
+      finalizeBibliography += finalizeReferences[key] + '\n';
     }
   }
 }
@@ -240,9 +226,9 @@ function finalizeReference(bibEntry, creatorOrder, titleOrder, yearOrder) {
 
   if (!finalizeReferences.includes(bibEntry)) {
     finalizeReferences.push(bibEntry);
-    if (multipleWikindices) {
+    if (finalizeMultipleWikindices) {
       key = finalizeReferences.indexOf(bibEntry);
-      multipleOrder.push({
+      finalizeMultipleOrder.push({
         "index": key,
         "creator": creatorOrder,
         "title": titleOrder,
@@ -259,12 +245,12 @@ function finalizeGetStyles() {
   var text = '';
   var stylesFound = false;
 
-  for (i = 0; i < wikindices.length; i++) {
+  for (i = 0; i < finalizeWikindices.length; i++) {
     var tempArray = [];
-    url = wikindices[i][0];
+    url = finalizeWikindices[i][0];
     var response = getStyles(url);
     if (response.xmlResponse == null) {
-      xmlError = true;
+      finalizeXmlError = true;
       return false;
     }
     stylesFound = true;
@@ -288,8 +274,8 @@ function finalizeGetStyles() {
   }
   if (!finalArray.length) {
   // Get styles from wikindx with most intext references
-    wikindices.sort(function (a, b) { return b[1] - a[1]; });
-    url = wikindices[0][0];
+    finalizeWikindices.sort(function (a, b) { return b[1] - a[1]; });
+    url = finalizeWikindices[0][0];
     var response = getStyles(url);
     finalArray = [];
     tempLongNames = [];
@@ -308,12 +294,13 @@ function finalizeGetStyles() {
 }
 
 function wikindicesPush(url) {
-  var len = wikindices.length;
+  var len = finalizeWikindices.length;
   for (var i = 0; i < len; i++) {
-    if (url == wikindices[i][0]) {
-        wikindices[i][1]++;
+    if (url == finalizeWikindices[i][0]) {
+        finalizeWikindices[i][1]++;
         return;
     }
   }
-  wikindices.push([url, 1]);
+  finalizeWikindices.push([url, 1]);
 }
+

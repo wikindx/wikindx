@@ -11,3 +11,4 @@ function setLocalStorage(jsonArray) {
   var userProperties = PropertiesService.getUserProperties();
   userProperties.setProperty('wikindx-localStorage', JSON.stringify(jsonArray));
 }
+

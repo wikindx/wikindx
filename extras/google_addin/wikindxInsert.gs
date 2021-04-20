@@ -1,15 +1,3 @@
-var regexpItalics = RegExp(/(<em>)(.*?)(<\/em>)/, 'g');
-var regexpBold = RegExp(/(<strong>)(.*?)(<\/strong>)/, 'g');
-var regexpUnderline = RegExp(/(<span style="text-decoration: underline;">)(.*?)(<\/span>)/, 'g');
-var regexpSub = RegExp(/(<sub>)(.*?)(<\/sub>)/, 'g');
-var regexpSup = RegExp(/(<sup>)(.*?)(<\/sup>)/, 'g');
-var regexpHref = RegExp(/(<a class="rLink" href=".*>)(.*?)(<\/a>)/, 'g');
-var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
-var deleteArray = [];
-var transformArray = [];
-var blob = null;
-var insertError = "ERROR: Invalid cursor position. A reference cannot replace a selection so position the cursor where you wish to insert the reference.";
-
 function getBlob() {
   var response = getBlankBlob();
   if (!response.xmlResponse) {
@@ -18,13 +6,26 @@ function getBlob() {
       message: response.message
     };
   }
-  blob = response.blob;
+  return {
+    blob: response.blob,
+    xmlResponse: true,
+    message: response.message
+  }
 }
 function insertReference(url, style, id) {
   var i;
+  var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
+  var insertError = "ERROR: Invalid cursor position. A reference cannot replace a selection so position the cursor where you wish to insert the reference.";
 
-  getBlob();
-  var response = getReference(url, style, id);
+  var response = getBlob();
+  if (!response.xmlResponse) {
+    return {
+      xmlResponse: false,
+      message: response.message
+    };
+  }
+  var blob = response.blob;
+  response = getReference(url, style, id);
   if (!response.xmlResponse) {
     return {
       xmlResponse: false,
@@ -33,7 +34,7 @@ function insertReference(url, style, id) {
   }
   // All good. Insert in-text reference into a named range at the cursor, format it and return
   var document = DocumentApp.getActiveDocument();
-  var element = newElement(document, response.xmlArray['inTextReference']);
+  var element = newElement(document, response.xmlArray['inTextReference'], blob);
   if (!element) {
     return {
       xmlResponse: false,
@@ -54,9 +55,18 @@ function insertReference(url, style, id) {
 }
 function insertCitation(url, style, id) {
   var i;
+  var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
+  var insertError = "ERROR: Invalid cursor position. A reference cannot replace a selection so position the cursor where you wish to insert the reference.";
 
-  getBlob();
-  var response = getCitation(url, style, id);
+  var response = getBlob();
+  if (!response.xmlResponse) {
+    return {
+      xmlResponse: false,
+      message: response.message
+    };
+  }
+  var blob = response.blob;
+  response = getCitation(url, style, id);
   if (!response.xmlResponse) {
     return {
       xmlResponse: false,
@@ -65,7 +75,7 @@ function insertCitation(url, style, id) {
   }
   // All good. Insert in-text reference into document, format it and return
   var document = DocumentApp.getActiveDocument();
-  var element = newElement(document, response.xmlArray['inTextReference']);
+  var element = newElement(document, response.xmlArray['inTextReference'], blob);
   if (!element) {
     return {
       xmlResponse: false,
@@ -89,6 +99,7 @@ function insertCitation(url, style, id) {
 }
 function updateReference(element, tag, replacementText) {
   var document, rangeBuilder, oldText;
+  var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
   deleteArray = []; // reset
 
   oldText = element.getText();
@@ -111,6 +122,7 @@ function updateReference(element, tag, replacementText) {
   document.addNamedRange(tag, rangeBuilder.build());
 }
 function appendBibliography(text) {
+  var styles = ['italics', 'bold', 'underline', 'super', 'sub', 'href'];
   transformArray = []; // reset
   var document = DocumentApp.getActiveDocument();
   var body = document.getBody();
@@ -123,7 +135,7 @@ function appendBibliography(text) {
   }
   deleteTags(element);
 }
-function newElement(document, ref) {
+function newElement(document, ref, blob) {
 /*
 // First, check if something is selected (i.e. we replace)
   var selection = document.getSelection();
@@ -166,6 +178,12 @@ function doRegExp(text, regexp) {
 }
 function insertHtmlText(element, text, style) {
   var i;
+  var regexpItalics = RegExp(/(<em>)(.*?)(<\/em>)/, 'g');
+  var regexpBold = RegExp(/(<strong>)(.*?)(<\/strong>)/, 'g');
+  var regexpUnderline = RegExp(/(<span style="text-decoration: underline;">)(.*?)(<\/span>)/, 'g');
+  var regexpSub = RegExp(/(<sub>)(.*?)(<\/sub>)/, 'g');
+  var regexpSup = RegExp(/(<sup>)(.*?)(<\/sup>)/, 'g');
+  var regexpHref = RegExp(/(<a class="rLink" href=".*>)(.*?)(<\/a>)/, 'g');
   transformArray = []; // reset
 
   switch (style) {
@@ -224,7 +242,7 @@ function findTags(matches) {
     textStart = openTagEnd + 1;
     textEnd = textStart + match[2].length - 1;
     closeTagStart = textEnd + 1;
-    closeTagEnd = closeTagStart + match[3].length -1;
+    closeTagEnd = closeTagStart + match[3].length - 1;
     transformArray.push({
       openTagStart: openTagStart,
       openTagEnd: openTagEnd,
@@ -247,3 +265,4 @@ function deleteTags(element) {
     element.editAsText().deleteText(deleteArray[i].start, deleteArray[i].end);
   }
 }
+

@@ -1,5 +1,3 @@
-var selectedURL = '';
-
 function urlDeleteDisplay() {
   var prefs = getLocalStorage();
   var jsonArray = JSON.parse(prefs.localStorage);
@@ -39,7 +37,7 @@ function urlDelete(keep) {
       message: successRemoveAllUrls
     };
   }
-  selectedURL = keep[0][0];
+  var selectedURL = keep[0][0];
   response = styleSelectBox(selectedURL);
   if (response.xmlResponse === false) {
     return {
@@ -48,7 +46,7 @@ function urlDelete(keep) {
     };
   }
   setLocalStorage(keep);
-  var urlSelectBox = getUrlSelectBox(keep);
+  var urlSelectBox = getUrlSelectBox(keep, selectedURL);
   return {
     done: true,
     xmlResponse: true, // faking it . . .
@@ -98,7 +96,7 @@ function urlPrefer(name) {
     newArray.push(zeroth);
     jsonArray = newArray;
   }
-  selectedURL = jsonArray[0][0];
+  var selectedURL = jsonArray[0][0];
   response = styleSelectBox(selectedURL);
   if (response.xmlResponse === false) {
     return {
@@ -107,7 +105,7 @@ function urlPrefer(name) {
     };
   }
   setLocalStorage(jsonArray);
-  var urlSelectBox = getUrlSelectBox(jsonArray);
+  var urlSelectBox = getUrlSelectBox(jsonArray, selectedURL);
   return {
     xmlResponse: true,
     message: successPreferredUrl,
@@ -154,8 +152,8 @@ function urlRegister(url, name) {
     };
   }
   setLocalStorage(jsonArray);
-  selectedURL = url;
-  var urlSelectBox = getUrlSelectBox(jsonArray);
+  var selectedURL = url;
+  var urlSelectBox = getUrlSelectBox(jsonArray, selectedURL);
   return {
     xmlResponse: true,
     numStoredURLs: jsonArray.length,
@@ -165,7 +163,7 @@ function urlRegister(url, name) {
     styleSelectBox: response.styleSelectBox
   };
 }
-function getUrlSelectBox(jsonArray) {
+function getUrlSelectBox(jsonArray, selectedURL) {
   var urlSelectBox = '';
 
   if (!selectedURL) {
@@ -239,8 +237,8 @@ function urlEdit(url, name, editURL) {
   jsonArray[selected_i][0] = url;
   jsonArray[selected_i][1] = name;
   setLocalStorage(jsonArray);
-  selectedURL = url;
-  var urlSelectBox = getUrlSelectBox(jsonArray);
+  var selectedURL = url;
+  var urlSelectBox = getUrlSelectBox(jsonArray, selectedURL);
   return {
     xmlResponse: true,
     message: successEditUrl,

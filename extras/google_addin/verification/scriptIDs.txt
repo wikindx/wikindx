@@ -1,0 +1,23 @@
+script ID:
+1orqXw7yp44fH8RIEnVWcJwvD5QTxiukCdRFQAPwd8ju19rN6APvwB-L5
+
+GCP project no.:
+16509052442
+
+App ID: 
+16509052442
+
+Project ID:
+wikindx
+
+deployment ID Version 6:
+AKfycbxeTZinNuocmEl__rQc5fOjD52uBHtsCe9UczTq-_Gu-uHf9T51EAxykHV8jQF3jfZ3
+
+Project key:
+MtBVf1F2jC1tcdC-1KMzNJCNqaLNcuhVS
+
+SDC key:
+456ec92b4638baf6
+
+YouTube:
+https://youtu.be/g5GSZcZ_lOc

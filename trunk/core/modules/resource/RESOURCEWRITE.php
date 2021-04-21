@@ -277,7 +277,7 @@ class RESOURCEWRITE
         	}
         }
         $writeArray = [];
-		if ($this->edit && array_key_exists('resourceurlUrl', $this->formData['resourceurl'])) {
+		if ($this->edit && array_key_exists('resourceurl', $this->formData) && array_key_exists('resourceurlUrl', $this->formData['resourceurl'])) {
 			$writeArray['resourceurlUrl'] = $this->formData['resourceurl']['resourceurlUrl'];
 			if (array_key_exists('resourceurlName', $this->formData['resourceurl'])) {
 				$writeArray['resourceurlName'] = $this->formData['resourceurl']['resourceurlName'];
@@ -302,7 +302,8 @@ class RESOURCEWRITE
 				$this->db->formatConditions(['resourceurlId' => $primaryUrlId]);
 				$this->db->update('resource_url', ['resourceurlPrimary' => 1]);
 			}
-		} elseif (array_key_exists('resourceurlUrl', $this->formData['resourceurl'])) { // Inserting new URL
+		} elseif (array_key_exists('resourceurl', $this->formData) && 
+			array_key_exists('resourceurlUrl', $this->formData['resourceurl'])) { // Inserting new URL
 			$writeArray['resourceurlUrl'] = $this->formData['resourceurl']['resourceurlUrl'];
 			if (array_key_exists('resourceurlName', $this->formData['resourceurl'])) {
 				$writeArray['resourceurlName'] = $this->formData['resourceurl']['resourceurlName'];

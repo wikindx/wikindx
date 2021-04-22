@@ -512,7 +512,7 @@ class SQL
     public function createTable(string $newTable, array $fieldsArray, bool $tempTable = FALSE)
     {
         $sql = '(' . implode(', ', $fieldsArray) . ')';
-        $sql .= 'ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci';
+        $sql .= 'ENGINE=' . WIKINDX_DB_ENGINE . ' CHARACTER SET=' . WIKINDX_DB_CHARSET . ' COLLATE=' . WIKINDX_DB_COLLATION;
         if ($tempTable)
         {
             $this->queryNoResult("CREATE TEMPORARY TABLE `$newTable` $sql");
@@ -2490,7 +2490,7 @@ class SQL
             $field = $this->formatFields($field);
         }
 
-        $this->order[] = $field . ' COLLATE utf8mb4_unicode_520_ci' . $this->ascDesc;
+        $this->order[] = $field . ' COLLATE ' . WIKINDX_DB_COLLATION . $this->ascDesc;
 
         $this->collateSet = FALSE; // reset
     }
@@ -2656,7 +2656,7 @@ class SQL
     {
         $not = $not ? 'NOT' : '';
 
-        return " $not LIKE '" . $first . $this->escapeLikeString($test) . $last . "' COLLATE utf8mb4_unicode_520_ci";
+        return " $not LIKE '" . $first . $this->escapeLikeString($test) . $last . "' COLLATE " . WIKINDX_DB_COLLATION;
     }
     /**
      * Create a FULLTEXT search clause: MATCH($field) AGAINST('$searchTerm' $type)
@@ -2988,18 +2988,21 @@ class SQL
 
         $this->sqlTimerOff();
 
-        // Set for UTF8 client, results, connection
-        $this->queryNoResult("SET NAMES utf8mb4 COLLATE 'utf8mb4_unicode_520_ci';");
+        // Set the charset and the collation
+        // See WIKINDX_DB_CHARSET and WIKINDX_DB_COLLATION for details.
+        $this->queryNoResult("SET NAMES " . WIKINDX_DB_CHARSET . " COLLATE '" . WIKINDX_DB_COLLATION . "';");
 
-        // To avoid CONCAT etc. truncating long fields during search operations. '200000' is a rough figure arrived at after some experimentation
-        $this->queryNoResult("SET SESSION group_concat_max_len = 200000;");
+        // Avoid truncation on search operations
+        // See WIKINDX_DB_GROUP_CONCAT_MAX_LEN for details.
+        $this->queryNoResult("SET SESSION group_concat_max_len = " . WIKINDX_DB_GROUP_CONCAT_MAX_LEN . ";");
 
-        // Should be as large as a LONGTEXT field.
-        // see WIKINDX_DB_MAX_ALLOWED_PACKET for details.
+        // Support the largest fields size used
+        // See WIKINDX_DB_MAX_ALLOWED_PACKET for details.
         $this->queryNoError("SET GLOBAL max_allowed_packet = " . WIKINDX_DB_MAX_ALLOWED_PACKET . ";");
 
-        // Set the strict mode
-        $this->setSqlMode('TRADITIONAL');
+        // Set the strictest SQL mode to avoid errors
+        // See WIKINDX_DB_SQL_MODE for details.
+        $this->setSqlMode(WIKINDX_DB_SQL_MODE);
 
         return TRUE;
     }

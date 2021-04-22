@@ -286,17 +286,80 @@ define('WIKINDX_USE_BIBTEX_KEY_DEFAULT', FALSE);
 define('WIKINDX_USE_WIKINDX_KEY_DEFAULT', FALSE);
 define('WIKINDX_DISPLAY_RESOURCE_STATISTICS_DEFAULT', FALSE);
 
+
 /**
  * MySQL GLOBAL max_allowed_packet option
+ *
+ * Support the largest fields size used (LONGTEXT)
  *
  * According to https://dev.mysql.com/doc/refman/8.0/en/blob.html,
  * max_allowed_packet need to be as large as the largest type of column stored
  * and we use LONGTEXT so we need the maximum value allowed 1G (in the absence of 4G).
+ *
  * cf. https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
  *
  * @name WIKINDX_DB_MAX_ALLOWED_PACKET
  */
-DEFINE('WIKINDX_DB_MAX_ALLOWED_PACKET', 1073741824);
+define('WIKINDX_DB_MAX_ALLOWED_PACKET', 1073741824);
+
+/**
+ * MySQL SESSION group_concat_max_len option
+ *
+ * Avoid truncation on search operations
+ *
+ * According to https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html#function_group-concat,
+ * group_concat_max_len is constrained by the value of max_allowed_packet.
+ *
+ * cf. https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
+ *
+ * @name WIKINDX_DB_GROUP_CONCAT_MAX_LEN
+ */
+define('WIKINDX_DB_GROUP_CONCAT_MAX_LEN', WIKINDX_DB_MAX_ALLOWED_PACKET);
+
+/**
+ * MySQL SESSION sql_mode option
+ *
+ * Set the strictest SQL mode to avoid errors
+ *
+ * cf. https://mariadb.com/kb/en/sql-mode/#traditional
+ *
+ * @name WIKINDX_DB_SQL_MODE
+ */
+define('WIKINDX_DB_SQL_MODE', 'TRADITIONAL');
+
+/**
+ * MySQL engine option
+ *
+ * Default storage engine
+ *
+ * cf. https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
+ *
+ * @name WIKINDX_DB_ENGINE
+ */
+define('WIKINDX_DB_ENGINE', 'InnoDB');
+
+/**
+ * MySQL CHARSET/NAMES option
+ *
+ * Full UTF-8 support (4 bytes)
+ *
+ * cf. https://mariadb.com/kb/en/supported-character-sets-and-collations/
+ *
+ * @name WIKINDX_DB_CHARSET
+ */
+define('WIKINDX_DB_CHARSET', 'utf8mb4');
+
+/**
+ * MySQL COLLATE/COLLATION option
+ *
+ * Set the strictest SQL mode to avoid errors
+ *
+ * cf. https://mariadb.com/kb/en/setting-character-sets-and-collations/
+ *
+ * @name WIKINDX_DB_COLLATION
+ */
+define('WIKINDX_DB_COLLATION', 'utf8mb4_unicode_520_ci');
+
 
 // Divers for users config only
 define('WIKINDX_USER_PAGING_STYLE_DEFAULT', 'N');

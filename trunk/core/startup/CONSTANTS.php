@@ -286,6 +286,17 @@ define('WIKINDX_USE_BIBTEX_KEY_DEFAULT', FALSE);
 define('WIKINDX_USE_WIKINDX_KEY_DEFAULT', FALSE);
 define('WIKINDX_DISPLAY_RESOURCE_STATISTICS_DEFAULT', FALSE);
 
+/**
+ * MySQL GLOBAL max_allowed_packet option
+ *
+ * According to https://dev.mysql.com/doc/refman/8.0/en/blob.html,
+ * max_allowed_packet need to be as large as the largest type of column stored
+ * and we use LONGTEXT so we need the maximum value allowed 1G (in the absence of 4G).
+ * cf. https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
+ *
+ * @name WIKINDX_DB_MAX_ALLOWED_PACKET
+ */
+DEFINE('WIKINDX_DB_MAX_ALLOWED_PACKET', 1073741824);
 
 // Divers for users config only
 define('WIKINDX_USER_PAGING_STYLE_DEFAULT', 'N');

@@ -1378,9 +1378,8 @@ class IMPORTCOMMON
         $defaultMap = new COLLECTIONDEFAULTMAP();
         $typesArray = array_unique(array_values($defaultMap->collectionTypes));
         $collectionArray = [];
-        $maxPacket = $this->db->getMaxPacket();
         // For each 1MB max_allowed_packet (1048576 bytes), 600 updates in one go seems fine as a value for $maxCounts (based on trial and error)
-        $maxCounts = floor(600 * ($maxPacket / 1048576));
+        $maxCounts = floor(600 * (WIKINDX_DB_MAX_ALLOWED_PACKET / 1048576));
         foreach ($typesArray as $type)
         {
             $fieldNames = [];

@@ -160,48 +160,6 @@ class SQL
         $this->queryNoResult("SET sql_mode = '" . $this->escapeString($SqlMode) . "';");
     }
     /**
-     * Fetch MySQL server max_allowed_packet variable
-     *
-     * @return int
-     */
-    public function getMaxPacket()
-    {
-        $value = 0;
-
-        $row = $this->queryFetchFirstRow("SHOW VARIABLES LIKE 'max_allowed_packet';");
-
-        if (is_array($row))
-        {
-            $value = $row['Value'];
-        }
-
-        unset($row);
-
-        return $value;
-    }
-    /**
-     * Set MySQL server max_allowed_packet variable
-     *
-     * Corrects the value according to the constraints described in the MySQL documentation.
-     *
-     * @see https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
-     *
-     * @param int $size Packet size in bytes
-     */
-    public function setMaxPacket(int $size)
-    {
-        // Must be multiples of 1024
-        $mul = $size % 1024;
-        $mul = ($mul * 1024 < $size) ? $mul + 1 : $mul;
-        $size = $mul * 1024;
-        
-        // Correct size within authorized limits
-        $size = $size < 1024 ? 1024 : $size;
-        $size = $size > 1073741824 ? 1073741824 : $size;
-        
-        $this->queryNoError("SET @@global.max_allowed_packet = $size");
-    }
-    /**
      * create the entire querystring but do not execute
      *
      * @param string $querystring
@@ -3029,12 +2987,16 @@ class SQL
         }
 
         $this->sqlTimerOff();
-        
+
         // Set for UTF8 client, results, connection
         $this->queryNoResult("SET NAMES utf8mb4 COLLATE 'utf8mb4_unicode_520_ci';");
-        
+
         // To avoid CONCAT etc. truncating long fields during search operations. '200000' is a rough figure arrived at after some experimentation
-        $this->queryNoResult("SET SESSION group_concat_max_len=200000");
+        $this->queryNoResult("SET SESSION group_concat_max_len = 200000;");
+
+        // Should be as large as a LONGTEXT field.
+        // see WIKINDX_DB_MAX_ALLOWED_PACKET for details.
+        $this->queryNoError("SET GLOBAL max_allowed_packet = " . WIKINDX_DB_MAX_ALLOWED_PACKET . ";");
 
         // Set the strict mode
         $this->setSqlMode('TRADITIONAL');

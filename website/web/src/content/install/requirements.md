@@ -54,7 +54,7 @@ WIKINDX use the following options and sets them on db connection:
 |Charset                 | NAMES                | [utf8mb4](https://mariadb.com/kb/en/supported-character-sets-and-collations/)                | Session | Full UTF-8 encoding support
 |Collation               | COLLATE              | [utf8mb4_unicode_520_ci](https://mariadb.com/kb/en/setting-character-sets-and-collations/) | Session | Most advanced UTF-8 sort algo for multi language support
 |Mode                    | sql_mode             | [TRADITIONAL](https://mariadb.com/kb/en/sql-mode/#traditional)            | Session | This stricter mode allows us to prevent errors
-|GROUP_CONCAT limit      | [group_concat_max_len](https://mariadb.com/kb/en/group_concat/) | 200000                 | Session | Avoid CONCAT to truncate long fields during search operations
+|GROUP_CONCAT limit      | [group_concat_max_len](https://mariadb.com/kb/en/group_concat/) | 1073741824                 | Session | Avoid CONCAT to truncate long fields during search operations
 |Max. size of one packet | [max_allowed_packet](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet)   | 1073741824             | Global  | LONGTEXT types support (should also be set on server side)
 
 __Disclaimer: *WIKINDX is not supposed to share its database with any other software. This widespread practice involves serious security breaches and possible data loss in the event of software bugs. Dedicate a database to WIKINDX!*__

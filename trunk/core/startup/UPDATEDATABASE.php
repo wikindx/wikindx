@@ -418,7 +418,7 @@ class UPDATEDATABASE
             $this->displayUpdatePreambule();
             
             // Disable temporarily all SQL mode to update old databases
-            $this->db->setSqlMode('');
+            $this->db->queryNoError("SET SESSION sql_mode = '';");
             
             // Finally we upgrade!
             $this->$func_upgrade();

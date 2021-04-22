@@ -129,36 +129,7 @@ class SQL
     {
         return mysqli_close($this->handle);
     }
-
-    /**
-     * Add / enable an SQL mode of MySQL engine
-     *
-     * @param string $SqlMode
-     */
-    public function enableSqlMode(string $SqlMode)
-    {
-        $this->queryNoResult("SET @@sql_mode = CONCAT(@@sql_mode, '," . $this->escapeString($SqlMode) . "');");
-    }
-
-    /**
-     * Remove / disable an SQL mode of MySQL engine
-     *
-     * @param string $SqlMode
-     */
-    public function disableSqlMode(string $SqlMode)
-    {
-        $this->queryNoResult("SET sql_mode = (SELECT REPLACE(@@sql_mode, '" . $this->escapeString($SqlMode) . "', ''));");
-    }
-
-    /**
-     * Set an SQL mode of MySQL engine
-     *
-     * @param string $SqlMode
-     */
-    public function setSqlMode(string $SqlMode)
-    {
-        $this->queryNoResult("SET sql_mode = '" . $this->escapeString($SqlMode) . "';");
-    }
+    
     /**
      * create the entire querystring but do not execute
      *
@@ -3002,7 +2973,7 @@ class SQL
 
         // Set the strictest SQL mode to avoid errors
         // See WIKINDX_DB_SQL_MODE for details.
-        $this->setSqlMode(WIKINDX_DB_SQL_MODE);
+        $this->queryNoError("SET SESSION sql_mode = '" . WIKINDX_DB_SQL_MODE . "';");
 
         return TRUE;
     }

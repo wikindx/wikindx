@@ -51,6 +51,7 @@ WIKINDX use the following options and sets them on db connection:
 
 |Option                  | Name                 | Value                  | Scope   | Note
 |------------------------|----------------------|------------------------|---------|----------------------------
+|Engine                  | Engine               | [InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html)                | table | Used by all official tables for ACID transactions
 |Charset                 | NAMES                | [utf8mb4](https://mariadb.com/kb/en/supported-character-sets-and-collations/)                | Session | Full UTF-8 encoding support
 |Collation               | COLLATE              | [utf8mb4_unicode_520_ci](https://mariadb.com/kb/en/setting-character-sets-and-collations/) | Session | Most advanced UTF-8 sort algo for multi language support
 |Mode                    | sql_mode             | [TRADITIONAL](https://mariadb.com/kb/en/sql-mode/#traditional)            | Session | This stricter mode allows us to prevent errors

@@ -1,0 +1,34 @@
+{
+    "component_type": "plugin",
+    "component_id": "xpdftotext",
+    "component_version": "466",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "XpdftoText",
+    "component_description": "XpdftoText is a wrapper plugin for XpdfReader PdftoText tool. Allow to convert attachments to plain text for later search.",
+    "component_licence": "GPL v2",
+    "component_authors": [
+        {
+            "author_name": "Glyph & Cog, LLC",
+            "author_role": "Developer",
+            "author_copyright": "1996-2021",
+            "author_email": "xpdf@xpdfreader.com",
+            "author_website": "http://www.xpdfreader.com/"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2021",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "32f52c94cf1cd27c4aa6a6c11e53310ae61d713157ac06a3046c2bc038095187"
+}

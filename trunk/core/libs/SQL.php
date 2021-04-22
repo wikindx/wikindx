@@ -2939,6 +2939,8 @@ class SQL
      * @param string $dbname Name of the database
      * @param string $dbuser Login
      * @param string $dbpwd Password
+     *
+     * @return bool
      */
     public function open(
         $dbhost = WIKINDX_DB_HOST,

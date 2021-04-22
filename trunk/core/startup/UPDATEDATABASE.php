@@ -2214,6 +2214,73 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 60 (6.4.8)
+     *
+     * Add resourceattachmentsText column to resource_attachments table
+     */
+    private function upgradeTo60()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 61 (6.4.8)
+     *
+     * Copy the content of atttachment cache files in the resourceattachmentsText column to resource_attachments table
+     * keep a copy on the cache attachment folder
+     */
+    private function upgradeTo61()
+    {
+        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
+        
+        $countTransfered = 0;
+        // Try to set an unlimited memmory temporarily
+        ini_set('memory_limit', -1);
+        $memory_limit = ini_get('memory_limit');
+        $memory_limit = $memory_limit == -1 ? -1 : \FILE\return_bytes($memory_limit);
+        
+        $this->db->formatConditions(['resourceattachmentsText' => 'IS NULL']);
+        $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsHashFilename']);
+        
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            $filename = $row["resourceattachmentsHashFilename"];
+            $path = implode(DIRECTORY_SEPARATOR, [$dirCache, $filename]);
+            
+            if (file_exists($path))
+            {
+                $fsize = filesize($path);
+                // Skip the file if there is less than twice the file size in memory before reaching the memory limit
+                // Twice because we need to store it in an array after reading it (not ideal)
+                if ($memory_limit == -1 || (memory_get_usage() + (2 * $fsize) < $memory_limit))
+                {
+                    $text = "";
+                    if ($fsize > 0)
+                    {
+                        $text = file_get_contents($path);
+                    }
+                    if ($text !== FALSE)
+                    {
+                        $this->db->formatConditions(["resourceattachmentsId" => $row["resourceattachmentsId"]]);
+                        $this->db->update("resource_attachments", ["resourceattachmentsText" => $text]);
+                        $countTransfered++;
+                        
+                        // Check we have more than 6 seconds buffer before max_execution_time times out.
+                        if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 100)
+                        {
+                            $this->interruptStepMessage  = "<span style='color:red;font-weight:bold'>Caution : stage 61 could require you increase the memory limit (\$WIKINDX_MEMORY_LIMIT) if you have a lot of attachments files (or large files). This step can also take many pauses (100 files by batch max).</span>";
+                            $this->interruptStepMessage .= "<br>stage47 continuing: $countTransfered attachment records stored this pass.&nbsp;&nbsp;";
+                            $this->pauseUpdateDisplay();
+                        }
+                    }
+                }
+            }
+        }
+        
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

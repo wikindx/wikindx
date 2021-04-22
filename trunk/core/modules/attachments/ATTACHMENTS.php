@@ -534,13 +534,12 @@ class ATTACHMENTS
             die;
         }
         
-        $this->refreshCache($hash);
-        
         $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
         $recordSet = $this->db->select('resource_attachments', 'resourceattachmentsId');
         if ($this->db->numRows($recordSet))
-        { // attachment already part of this resource
+        {
+            // attachment already part of this resource
             return FALSE;
         }
         else
@@ -575,6 +574,8 @@ class ATTACHMENTS
                 $values[] = $this->vars['fileDescription'];
             }
             $this->db->insert('resource_attachments', $fields, $values);
+            
+            $this->refreshCache($hash);
         }
 
         return TRUE;
@@ -638,10 +639,16 @@ class ATTACHMENTS
         $contentCache = $ftt->convertToText($pathData);
         if (file_put_contents($pathCache, $contentCache) === FALSE)
         {
+            $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
+            $this->db->updateNull("resource_attachments", ["resourceattachmentsText"]);
+            
             return FALSE;
         }
         else
         {
+            $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
+            $this->db->update("resource_attachments", ["resourceattachmentsText" => $contentCache]);
+            
             return TRUE;
         }
     }

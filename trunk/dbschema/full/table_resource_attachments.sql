@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `resource_attachments` (
   `resourceattachmentsEmbargo` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourceattachmentsEmbargoUntil` datetime DEFAULT current_timestamp(),
   `resourceattachmentsDescription` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourceattachmentsText` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`resourceattachmentsId`),
   KEY `resourceattachmentsResourceId` (`resourceattachmentsResourceId`),
   KEY `resourceattachmentsHashFilename` (`resourceattachmentsHashFilename`),
@@ -26,4 +27,5 @@ CREATE TABLE IF NOT EXISTS `resource_attachments` (
   KEY `resourceattachmentsEmbargo` (`resourceattachmentsEmbargo`),
   KEY `resourceattachmentsTimestamp` (`resourceattachmentsTimestamp`),
   KEY `resourceattachmentsEmbargoUntil` (`resourceattachmentsEmbargoUntil`)
+  FULLTEXT KEY `resourceattachmentsText` (`resourceattachmentsText`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

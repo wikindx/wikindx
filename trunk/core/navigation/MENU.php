@@ -752,6 +752,7 @@ class MENU
                 {
                     $this->metadata[$messages->text("menu", "lastIdea")] ='index.php?action=ideas_IDEAS_CORE&method=threadView&resourcemetadataId=' . $this->lastThread;
                 }
+                $this->metadata[$messages->text('menu', 'exportIdeas')] = 'index.php?action=ideas_IDEAEXPORT_CORE';
             }
         }
         

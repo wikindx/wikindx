@@ -39,7 +39,7 @@ class importexportbib_MODULE
      * @param bool $menuInit is TRUE if called from MENU.php
      */
     public function __construct($menuInit = FALSE)
-    {
+    {return; // while shifting plugin to core . . .
         $this->session = FACTORY_SESSION::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');

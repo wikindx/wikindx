@@ -948,6 +948,42 @@ class FACTORY_LOADICONS
     }
 }
 /**
+ * FACTORY_EXPORTCOMMON
+ *
+ *	Create objects for commonly used classes.
+ *	Theoretically, this should save time in loading classes using include() statements and, perhaps, memory
+ *	by not having multiple instances of the same object.
+ *	Many WIKINDX classes have busy __construct() methods (initializing arrays etc.).  Using FACTORY ensures that
+ *	this work is only done once each time the web server deals with a script -- subsequent class instantiations
+ *	in the same server call return only the already constructed object.
+ *
+ *	e.g. To call the FACTORY SESSION object:
+ *		$this->session = FACTORY_SESSION::getInstance();
+ *
+ * @package wikindx\core\startup
+ */
+class FACTORY_EXPORTCOMMON
+{
+    /** object */
+    private static $instance;
+
+    /**
+     * Get instance
+     *
+     * @return object (self::$instance)
+     */
+    public static function getInstance()
+    {
+        if (empty(self::$instance))
+        {
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTCOMMON.php"]));
+            self::$instance = new EXPORTCOMMON;
+        }
+
+        return self::$instance;
+    }
+}
+/**
  * FACTORY_EXPORTCOINS
  *
  *	Create objects for commonly used classes.

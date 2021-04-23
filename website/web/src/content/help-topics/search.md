@@ -82,11 +82,14 @@ The administrator can defined a list of words which, if not in an exact phrase, 
 These are typically conjunctions and direct and indirect articles.
 
 
-## Types of attachment
+## Attachment cache support
 
-List of major document formats and their caching support.
+You can attach an arbitrary file type, but a small number can be converted to text
+and cached for search. Following is a list of the major document formats
+and their caching support for searching.
 
-|Extension |Kind of document                    |Cache  |MIME Type
+
+|Extension |Kind of document                    |Search |MIME Type
 |----------|------------------------------------|-------|----------------------------------------------------------------------------
 |ABW, ZABW |AbiWord Document                    |No     |application/x-abiword
 |CWK       |ClarisWorks/AppleWorks Document     |No     |

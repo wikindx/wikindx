@@ -3213,8 +3213,6 @@ class SEARCH
             if (array_key_exists('String', $valueArray) && ($valueArray['OriginalField'] == 'idea'))
             {
                 $this->ideas[$key] = $valueArray;
-
-                continue;
             }
             elseif (array_key_exists('String', $valueArray))
             {

@@ -331,7 +331,7 @@ class MESSAGES
 				"displayStatistics" => dgettext($domain, "Display statistics"),
 				"displayUserStatistics" => dgettext($domain, "Display user statistics"),
 				"kwBibliography" => dgettext($domain, "When browsing a user bibliography, limit the keyword list to keywords found in that bibliography"),
-				"importBib" => dgettext($domain, "Allow registered users to import BibTeX bibliographies"),
+				"importBib" => dgettext($domain, "Allow registered users to import bibliographies"),
 /// config_lastChanges1 lastChanges2 and lastChanges3 are in a select box and syntactically follow on from lastChanges1 - * is a wildcard referring to the number entered by the user
 				"lastChanges1" => dgettext($domain, "Display on the front page"),
 				"lastChanges2" => dgettext($domain, "Up to * recently added or edited resources"),
@@ -878,6 +878,7 @@ class MESSAGES
 /// menu_home Wikindx menu starts here
 				"home" => dgettext($domain, "Home"),
 				"importSub" => dgettext($domain, "Import..."),
+				"exportSub" => dgettext($domain, "Export..."),
 				"news" => dgettext($domain, "News"),
 				"prefs" => dgettext($domain, "Preferences"),
 				"register" => dgettext($domain, "Register"),

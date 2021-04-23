@@ -8,6 +8,7 @@ BUG FIXES:
 1. Fixed a rare error (missing URL array) when adding/editing resources.
 2. Replace some some call to strstr by mb_strstr (UTF-8 support).
 3. Set max_allowed_packet to 1073741824 (allow to store LONGTEXT type in one statement).
+4. Fix an error in paging ideas following Advanced Search when ideas are the only field searched on.
 
 FEATURE ENHANCEMENTS:
 1. Add a switch in MyWikindx|Resources to toggle the display of certain statistics when viewing a single resource. The display of views index and popularity index greatly slows down the display of the resource so these can be turned off (the default on upgrade) and only number of views, number of downloads, and maturity index will be viewed. Popularity and view indices will appear in a later version in the Statistics menu.

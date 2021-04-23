@@ -249,13 +249,18 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_DOC:
                 $text = $this->readWord($filename);
             break;
+            case WIKINDX_MIMETYPE_DOCM:
             case WIKINDX_MIMETYPE_DOCX:
+            case WIKINDX_MIMETYPE_DOTM:
+            case WIKINDX_MIMETYPE_DOTX:
                 $text = $this->readDocx($filename);
             break;
             case WIKINDX_MIMETYPE_ODT:
+            case WIKINDX_MIMETYPE_OTT:
                 $text = $this->readOdt($filename);
             break;
             case WIKINDX_MIMETYPE_PDF:
+            case WIKINDX_MIMETYPE_XPDF:
                 $text = $this->readPdf($filename);
             break;
             case WIKINDX_MIMETYPE_RTF:

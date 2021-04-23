@@ -213,21 +213,51 @@ define('WIKINDX_FILE_REPAIRKIT_DB_SCHEMA', implode(DIRECTORY_SEPARATOR, [WIKINDX
 define('WIKINDX_CHARSET', 'UTF-8');
 
 // List of mime types used in the code base
+define('WIKINDX_MIMETYPE_ABW',     'application/x-abiword');
 define('WIKINDX_MIMETYPE_BIB',     'application/x-bibtex');
 define('WIKINDX_MIMETYPE_DOC',     'application/msword');
+define('WIKINDX_MIMETYPE_DOCM',    'application/vnd.ms-word.document.macroEnabled.12');
 define('WIKINDX_MIMETYPE_DOCX',    'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+define('WIKINDX_MIMETYPE_DOTM',    'application/vnd.ms-word.template.macroEnabled.12');
+define('WIKINDX_MIMETYPE_DOTX',    'application/vnd.openxmlformats-officedocument.wordprocessingml.template');
 define('WIKINDX_MIMETYPE_ENDNOTE', 'application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml');
-define('WIKINDX_MIMETYPE_HTM',     'text/html');
+define('WIKINDX_MIMETYPE_EPUB',    'application/epub+zip');
+define('WIKINDX_MIMETYPE_HTML',    'text/html');
 define('WIKINDX_MIMETYPE_JSON',    'application/json');
+define('WIKINDX_MIMETYPE_KWD',     'application/vnd.kde.kword');
+define('WIKINDX_MIMETYPE_LWP',     'application/vnd.lotus-wordpro');
+define('WIKINDX_MIMETYPE_MD',      'text/markdown');
+define('WIKINDX_MIMETYPE_MHTM',    'multipart/related');
+define('WIKINDX_MIMETYPE_ODP',     'application/vnd.oasis.opendocument.presentation');
 define('WIKINDX_MIMETYPE_ODT',     'application/vnd.oasis.opendocument.text');
+define('WIKINDX_MIMETYPE_OTP',     'application/vnd.oasis.opendocument.presentation-template');
+define('WIKINDX_MIMETYPE_OTT',     'application/vnd.oasis.opendocument.text-template');
+define('WIKINDX_MIMETYPE_OXPS',    'application/oxps');
 define('WIKINDX_MIMETYPE_PDF',     'application/pdf');
+define('WIKINDX_MIMETYPE_POTM',    'application/vnd.ms-powerpoint.template.macroEnabled.12');
+define('WIKINDX_MIMETYPE_POTX',    'application/vnd.openxmlformats-officedocument.presentationml.template');
+define('WIKINDX_MIMETYPE_PPT',     'application/vnd.ms-powerpoint');
+define('WIKINDX_MIMETYPE_PPTM',    'application/vnd.ms-powerpoint.presentation.macroEnabled.12');
+define('WIKINDX_MIMETYPE_PPTX',    'application/vnd.openxmlformats-officedocument.presentationml.presentation');
+define('WIKINDX_MIMETYPE_PS',      'application/postscript');
 define('WIKINDX_MIMETYPE_RIS',     'application/x-research-info-systems');
 define('WIKINDX_MIMETYPE_RSS',     'application/rss+xml');
 define('WIKINDX_MIMETYPE_RTF',     'application/rtf');
 define('WIKINDX_MIMETYPE_RTF2',    'text/rtf'); // finfo() mistakenly identifies RTF documents with this MIME type
+define('WIKINDX_MIMETYPE_SCRIBUS', 'application/vnd.scribus');
+define('WIKINDX_MIMETYPE_TEI',     'application/tei+xml');
+define('WIKINDX_MIMETYPE_TROFF',   'text/troff');
 define('WIKINDX_MIMETYPE_TXT',     'text/plain');
+define('WIKINDX_MIMETYPE_WML',     'text/vnd.wap.wml');
+define('WIKINDX_MIMETYPE_WMLC',    'application/vnd.wap.wmlc');
+define('WIKINDX_MIMETYPE_WPD',     'application/vnd.wordperfect');
+define('WIKINDX_MIMETYPE_WPD51',   'application/wordperfect5.1');
+define('WIKINDX_MIMETYPE_WPS',     'application/vnd.ms-works');
+define('WIKINDX_MIMETYPE_WRI',     'application/mswrite');
 define('WIKINDX_MIMETYPE_XML',     'application/xml');
-define('WIKINDX_HTTP_CONTENT_TYPE_DEFAULT', WIKINDX_MIMETYPE_HTM);
+define('WIKINDX_MIMETYPE_XPDF',    'application/x-pdf');
+define('WIKINDX_MIMETYPE_XPS',     'application/vnd.ms-xpsdocument');
+define('WIKINDX_HTTP_CONTENT_TYPE_DEFAULT', WIKINDX_MIMETYPE_HTML);
 
 
 // Localisation

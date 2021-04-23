@@ -180,7 +180,7 @@ class importexportbib_MODULE
 
                 break;
                 case 'html':
-                    $type = WIKINDX_MIMETYPE_HTM;
+                    $type = WIKINDX_MIMETYPE_HTML;
                     $charset = 'UTF-8';
 
                 break;

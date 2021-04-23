@@ -84,12 +84,12 @@ These are typically conjunctions and direct and indirect articles.
 
 ## Attachment cache support
 
-You can attach an arbitrary file type, but a small number can be converted to text
-and cached for search. Following is a list of the major document formats
-and their caching support for searching.
+You can attach files of any type to resources. For those that are text-type documents,
+a small number can be converted to text and cached for fulltext search from within Advanced Search.
+Following is a list of the major text-type document formats and their caching support for fulltext search.
 
 
-|Extension |Kind of document                    |Search |MIME Type
+|Extension |Kind of document                    |Fulltext search |MIME Type
 |----------|------------------------------------|-------|----------------------------------------------------------------------------
 |ABW, ZABW |AbiWord Document                    |No     |application/x-abiword
 |CWK       |ClarisWorks/AppleWorks Document     |No     |

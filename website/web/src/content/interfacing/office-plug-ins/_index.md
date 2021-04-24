@@ -6,7 +6,9 @@ weight = 5
 
 ## Introduction
 
-__NB__ _While the add-in for Word and the add-on for Google Docs have been completed, it takes time to make them publicly available on the respective download sites. The LibreOffice extension is still under development – any python developers willing to help, please contact the WIKINDX developers. As the plug-ins become available, this page will be updated._
+__NB__ _While the add-in for Word has been completed, it takes time to make it publicly available on the MS download site. The LibreOffice extension is still under development – any python developers willing to help, please contact the WIKINDX developers. As the plug-ins become available, this page will be updated._
+
+__As of 24th April 2021, the Google Docs add-on is now publicly available. Find it in the Add-ons menu in a Google Docs document.__
 
 One of the more demanding tasks of academic publishing is the management of references and citations. While WIKINDX accomplishes this and more with its multiple tools, a scholar still needs to insert references into an academic article and format them to the requirements of the target publication. WIKINDX has long had this functionality, for almost two decades, with a built-in WYSIWYG word processor which eases the workload of the busy academic by providing a one-stop virtual research environment from reference collection and management to academic authoring.
 

@@ -6,7 +6,6 @@
 # Translators:
 # Stéphane Aulery <saulery@legtux.org>, 2021
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
@@ -3515,8 +3514,6 @@ msgstr ""
 "clefs à ceux trouvés dans cette bibliographie"
 
 #: core/messages/messages.php:334
-#, fuzzy
-#| msgid "Allow registered users to import BibTeX bibliographies"
 msgid "Allow registered users to import bibliographies"
 msgstr ""
 "Permettre l'import de bibliographies aux utilisateurs ayant un accès en "
@@ -3563,8 +3560,6 @@ msgstr ""
 "au lieu de la clé bibTeX générée par WIKINDX ou de la clé bibTeX auteurAnnée."
 
 #: core/messages/messages.php:344
-#, fuzzy
-#| msgid "Display statistics to read-only users"
 msgid "Display statistics when viewing a resource"
 msgstr "Afficher les statistiques aux utilisateurs en lecture seule"
 
@@ -5786,8 +5781,6 @@ msgid "Import..."
 msgstr "Importer..."
 
 #: core/messages/messages.php:881
-#, fuzzy
-#| msgid "Export list..."
 msgid "Export..."
 msgstr "Exporter une liste..."
 
@@ -7486,8 +7479,6 @@ msgstr ""
 "dépassé.  WIKINDX importe la bibliographie par morceaux."
 
 #: core/messages/messages.php:1509 core/messages/messages.php:1842
-#, fuzzy
-#| msgid "No. resources added: ###"
 msgid "No. resources added this chunk: ###"
 msgstr "Nb. de références ajoutées : ###"
 
@@ -8498,18 +8489,6 @@ msgid "Successfully converted ###"
 msgstr "Conversion réussie ###"
 
 #: core/messages/messages.php:1819
-#, fuzzy
-#| msgid ""
-#| "You may import EndNote XML bibliographies (.xml files) here. Large files "
-#| "may take some time so if\n"
-#| "\t\t\t\tWIKINDX senses that php.ini's 'max_execution_time' variable is "
-#| "about to be exceeded, it will start importing the bibliography in chunks.\n"
-#| "\t\t\t\tIf there is a date field, the format should be either dd/mm/yyyy "
-#| "or yyyy/mm/dd and yyyy will override any year field in the record.\n"
-#| "\t\t\t\tIf you have custom fields in your import file, create custom "
-#| "fields first in the WIKINDX database (the Admin menu) so that you can then "
-#| "map\n"
-#| "\t\t\t\tthe import custom fields."
 msgid ""
 "You may import EndNote XML bibliographies (.xml files) here. Large files may "
 "take some time so if\n"
@@ -8533,11 +8512,6 @@ msgstr ""
 "personnalisés du fichier."
 
 #: core/messages/messages.php:1824
-#, fuzzy
-#| msgid ""
-#| "You may export to Rich Text Format your most recent bibliography list. "
-#| "Large numbers of resources might\n"
-#| "\t\t\t\ttake some time and memory so you might need to adjust php.ini."
 msgid ""
 "You may export to Rich Text Format your most recent bibliography list. Large "
 "numbers of resources might\n"
@@ -8767,13 +8741,6 @@ msgid "EndNote tabbed"
 msgstr "EndNote tabulé"
 
 #: core/messages/messages.php:1898
-#, fuzzy
-#| msgid ""
-#| "Search PubMed: please enter one or more fields – if the ID field is \n"
-#| "            \tcompleted, only one result will be returned if found. "
-#| "Multiple items within a field\n"
-#| "\t\t\t\tshould be separated by a space. Per NCBI policy, a maximum of 100 "
-#| "search results can be obtained."
 msgid ""
 "Search PubMed: please enter one or more fields – if the ID field is \n"
 "\t\t\t\t\tcompleted, only one result will be returned if found. Multiple "

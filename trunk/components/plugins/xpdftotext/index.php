@@ -76,6 +76,7 @@ class xpdftotext_MODULE
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('heading'));
+        GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('xpdftotext'));
         $this->vars = GLOBALS::getVars();
     }
     

@@ -16,7 +16,6 @@ class PUBMED
     private $vars;
     private $coremessages;
     private $errors;
-    private $pluginmessages;
     private $session;
     private $importCommon;
     private $tag;
@@ -39,8 +38,6 @@ class PUBMED
         $this->vars = GLOBALS::getVars();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_MESSAGES::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->configImport = new importexportbib_IMPORTCONFIG();
         if (!$this->configImport->bibutilsPath)
@@ -69,49 +66,49 @@ class PUBMED
         $pString = $message ? $message : FALSE;
         $pString .= FORM\formHeader("importexportbib_importPubMed");
         $pString .= FORM\hidden('method', 'process');
-        $pString .= HTML\p($this->pluginmessages->text('importPubMedIntro'));
+        $pString .= HTML\p($this->coremessages->text("importexport", 'importPubMedIntro'));
         $input = array_key_exists('importpubMed_ID', $this->formData) ? $this->formData['importpubMed_ID'] : '';
-        $pString .= FORM\textInput($this->pluginmessages->text('importPubMedId'), "importpubMed_ID", $input);
+        $pString .= FORM\textInput($this->coremessages->text("importexport", 'importPubMedId'), "importpubMed_ID", $input);
         $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
         $pString .= \HTML\trStart();
         // see http://www.ncbi.nlm.nih.gov/books/bv.fcgi?rid=helppubmed.section.pubmedhelp.Search_Field_Descrip
         // for all possible terms
         $input = array_key_exists('importpubMed_ALL', $this->formData) ? $this->formData['importpubMed_ALL'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedFields'), "importpubMed_ALL", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedFields'), "importpubMed_ALL", $input));
         $input = array_key_exists('importpubMed_AU', $this->formData) ? $this->formData['importpubMed_AU'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedAuthor'), "importpubMed_AU", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedAuthor'), "importpubMed_AU", $input));
         $input = array_key_exists('importpubMed_1AU', $this->formData) ? $this->formData['importpubMed_1AU'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedFirstAuthor'), "importpubMed_1AU", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedFirstAuthor'), "importpubMed_1AU", $input));
         $input = array_key_exists('importpubMed_LASTAU', $this->formData) ? $this->formData['importpubMed_LASTAU'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedLastAuthor'), "importpubMed_LASTAU", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedLastAuthor'), "importpubMed_LASTAU", $input));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
         $pString .= \HTML\trStart();
         $input = array_key_exists('importpubMed_TI', $this->formData) ? $this->formData['importpubMed_TI'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedTitle'), "importpubMed_TI", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedTitle'), "importpubMed_TI", $input));
         $input = array_key_exists('importpubMed_TIAB', $this->formData) ? $this->formData['importpubMed_TIAB'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedAbstract'), "importpubMed_TIAB", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedAbstract'), "importpubMed_TIAB", $input));
         $input = array_key_exists('importpubMed_DP', $this->formData) ? $this->formData['importpubMed_DP'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedYear'), "importpubMed_DP", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedYear'), "importpubMed_DP", $input));
         $input = array_key_exists('importpubMed_TA', $this->formData) ? $this->formData['importpubMed_TA'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedJournal'), "importpubMed_TA", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedJournal'), "importpubMed_TA", $input));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
         $pString .= \HTML\trStart();
         $input = array_key_exists('importpubMed_VI', $this->formData) ? $this->formData['importpubMed_VI'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedVolume'), "importpubMed_VI", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedVolume'), "importpubMed_VI", $input));
         $input = array_key_exists('importpubMed_IP', $this->formData) ? $this->formData['importpubMed_IP'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedIssue'), "importpubMed_IP", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedIssue'), "importpubMed_IP", $input));
         $input = array_key_exists('importpubMed_LA', $this->formData) ? $this->formData['importpubMed_LA'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedLanguage'), "importpubMed_LA", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedLanguage'), "importpubMed_LA", $input));
         $input = array_key_exists('importpubMed_reldate', $this->formData) ? $this->formData['importpubMed_reldate'] : '';
-        $pString .= HTML\td(FORM\textInput($this->pluginmessages->text('importPubMedLimit'), "importpubMed_reldate", $input));
+        $pString .= HTML\td(FORM\textInput($this->coremessages->text("importexport", 'importPubMedLimit'), "importpubMed_reldate", $input));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $input = array_key_exists('importpubMed_MaxResults', $this->formData) ? $this->formData['importpubMed_MaxResults'] : 100; // default == 100
-        $limit = FORM\textInput($this->pluginmessages->text('importPubMedMaxResults'), "importpubMed_MaxResults", $input, 3, 3);
+        $limit = FORM\textInput($this->coremessages->text("importexport", 'importPubMedMaxResults'), "importpubMed_MaxResults", $input, 3, 3);
         if (file_exists($this->configImport->bibutilsPath . 'xml2bib'))
         {
             $jScript = 'index.php?action=importexportbib_initPubMedImport&method=wikindx';
@@ -122,7 +119,7 @@ class PUBMED
                 'targetDiv' => 'wikindxImport',
             ];
             $js = AJAX\jActionForm('onclick', $jsonArray);
-            $pString .= FORM\checkbox($this->pluginmessages->text('importPubMedWikindx'), "importpubMed_Wikindx", FALSE, '', $js);
+            $pString .= FORM\checkbox($this->coremessages->text("importexport", 'importPubMedWikindx'), "importpubMed_Wikindx", FALSE, '', $js);
             $pString .= HTML\div('wikindxImport', '&nbsp;') . BR;
         }
         $pString .= $limit . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' .
@@ -376,7 +373,7 @@ class PUBMED
         }
         if ($actualCount == 0)
         {
-            $this->badInput(HTML\p($this->pluginmessages->text('importPubMedNoResults'), 'error'));
+            $this->badInput(HTML\p($this->coremessages->text("importexport", 'importPubMedNoResults'), 'error'));
         }
         $fileName = \UTILS\uuid();
         $bibFile = $fileName . '.bib';
@@ -405,8 +402,8 @@ class PUBMED
         @unlink($pubmed_pre_xml_path);
         @unlink($pubmed_xml_path);
         // for downloaded bibtex file
-        $result = $actualCount > 1 ? $this->pluginmessages->text('importPubMedResults') : $this->pluginmessages->text('importPubMedResult');
-        $pString = $this->pluginmessages->text('importPubMedSuccess', $actualCount) . " $result:&nbsp;&nbsp;";
+        $result = $actualCount > 1 ? $this->coremessages->text("importexport", 'importPubMedResults') : $this->coremessages->text("importexport", 'importPubMedResult');
+        $pString = $this->coremessages->text("importexport", 'importPubMedSuccess', $actualCount) . " $result:&nbsp;&nbsp;";
         // for importing into BIBTEXIMPORT.php
         if (array_key_exists('importpubMed_Wikindx', $this->vars))
         {
@@ -420,7 +417,7 @@ class PUBMED
         else
         {
             $pString = HTML\p($pString .
-                HTML\a("link", $this->pluginmessages->text('importPubMedOutputFile'), $this->filesUrl . $bibFile, "_blank"), 'success');
+                HTML\a("link", $this->coremessages->text("importexport", 'importPubMedOutputFile'), $this->filesUrl . $bibFile, "_blank"), 'success');
         }
 
         return $pString;
@@ -441,7 +438,7 @@ class PUBMED
         elseif (exec($cmd, $output, $returnVar) === FALSE)
         {
             @unlink($inputFile);
-            $this->badInput(HTML\p($this->pluginmessages->text('importPubMedFailConvert', $returnVar), 'error'));
+            $this->badInput(HTML\p($this->coremessages->text("importexport", 'importPubMedFailConvert', $returnVar), 'error'));
         }
     }
     /*
@@ -462,7 +459,7 @@ class PUBMED
         if ($oExec = $WshShell->Run($cmdline, 0, TRUE))
         {
             @unlink($inputFile);
-            $this->badInput(HTML\p($this->pluginmessages->text('importPubMedFailConvert', $oExec), 'error'));
+            $this->badInput(HTML\p($this->coremessages->text("importexport", 'importPubMedFailConvert', $oExec), 'error'));
         }
     }
     /*
@@ -661,7 +658,7 @@ class PUBMED
         {
             if (!is_numeric(trim($this->vars['importpubMed_MaxResults'])))
             {
-                $this->badInput(HTML\p($this->pluginmessages->text("importPubMedLimitError"), 'error'));
+                $this->badInput(HTML\p($this->coremessages->text("importexport", "importPubMedLimitError"), 'error'));
             }
             if ((trim($this->vars['importpubMed_MaxResults']) < 1) ||
             (trim($this->vars['importpubMed_MaxResults']) > 100))
@@ -676,7 +673,7 @@ class PUBMED
         }
         if (!$inputFound)
         {
-            $this->badInput(HTML\p($this->pluginmessages->text("importPubMedInputError"), 'error'));
+            $this->badInput(HTML\p($this->coremessages->text("importexport", "importPubMedInputError"), 'error'));
         }
     }
     /*

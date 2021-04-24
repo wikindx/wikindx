@@ -16,7 +16,6 @@ class RIS
     private $db;
     private $vars;
     private $session;
-    private $pluginmessages;
     private $coremessages;
     private $errors;
     private $common;
@@ -33,8 +32,6 @@ class RIS
         $this->parentClass = $parentClass;
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -51,7 +48,7 @@ class RIS
         $sql = $this->common->getSQL();
         if (!$sql)
         {
-            $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
+            $this->failure(HTML\p($this->coremessages->text("importexport", "noList"), 'error'));
         }
         if (!$this->common->openFile('.ris'))
         {
@@ -71,7 +68,7 @@ class RIS
         {
             fclose($this->common->fp);
         }
-        $pString = HTML\p($this->pluginmessages->text('exported') . ": " . $this->common->fileName, 'success');
+        $pString = HTML\p($this->coremessages->text("importexport", 'exported') . ": " . $this->common->fileName, 'success');
         $this->common->writeFilenameToSession($this->common->fileName);
         $this->parentClass->listFiles($pString, 'initRisExport');
     }

@@ -17,7 +17,6 @@ class IDEA
 {
     private $db;
     private $session;
-    private $pluginmessages;
     private $coremessages;
     private $errors;
     private $common;
@@ -32,8 +31,6 @@ class IDEA
     {
         $this->parentClass = $parentClass;
         $this->db = FACTORY_DB::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -49,7 +46,7 @@ class IDEA
     {
         $pString = \FORM\formHeader("importexportbib_exportIdea");
         $pString .= \FORM\hidden('method', 'process');
-        $selectBox = [1 => $this->pluginmessages->text("allIdeas"), 2 => $this->pluginmessages->text("selectedIdeas")];
+        $selectBox = [1 => $this->coremessages->text("importexport", "allIdeas"), 2 => $this->coremessages->text("importexport", "selectedIdeas")];
         $selectBox = \FORM\selectFBoxValue(FALSE, "selectIdea", $selectBox, 2);
         $pString .= \HTML\p($selectBox . '&nbsp;' . \FORM\formSubmit($this->coremessages->text("submit", "Proceed")), FALSE, "right");
         $this->ideaList();
@@ -71,7 +68,7 @@ class IDEA
         $this->db->formatConditions(['resourcemetadataMetadataId' => ' IS NULL']);
         if (!$this->common->setIdeasCondition())
         {
-            $this->failure(HTML\p($this->pluginmessages->text("noIdeas"), 'error'));
+            $this->failure(HTML\p($this->coremessages->text("importexport", "noIdeas"), 'error'));
         }
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
@@ -96,7 +93,7 @@ class IDEA
         }
         if (!$index)
         {
-            $this->failure(HTML\p($this->pluginmessages->text("noIdeas"), 'error'));
+            $this->failure(HTML\p($this->coremessages->text("importexport", "noIdeas"), 'error'));
         }
         $ideaList[--$index]['links'][] .= \FORM\formEnd();
         GLOBALS::addTplVar('ideaTemplate', TRUE);

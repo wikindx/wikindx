@@ -13,7 +13,6 @@ class BIBUTILS
     public $filesDir;
     public $filesUrl;
     private $vars;
-    private $pluginmessages;
     private $coremessages;
     private $session;
     private $config;
@@ -34,8 +33,6 @@ class BIBUTILS
         $this->parentClass = $parentClass;
 
         $this->session = FACTORY_SESSION::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new importexportbib_BIBUTILSCONFIG();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
@@ -50,7 +47,7 @@ class BIBUTILS
         $this->outputTypesArray = $this->outputTypes();
         if (empty($this->outputTypesArray))
         {
-            $pString .= HTML\p($this->pluginmessages->text("bibutilsnoPrograms", $this->config->bibutilsPath), "error", "center");
+            $pString .= HTML\p($this->coremessages->text("importexport", "bibutilsnoPrograms", $this->config->bibutilsPath), "error", "center");
             die($pString);
         }
     }
@@ -63,7 +60,7 @@ class BIBUTILS
      */
     public function init($error = FALSE)
     {
-        $pString = HTML\p($this->pluginmessages->text("bibutilscredit", HTML\a(
+        $pString = HTML\p($this->coremessages->text("importexport", "bibutilscredit", HTML\a(
             "link",
             'Bibutils',
             'https://sourceforge.net/p/bibutils/home/Bibutils/',
@@ -77,7 +74,7 @@ class BIBUTILS
         $inputTypes = $this->inputTypes();
         if (empty($inputTypes))
         {
-            $pString .= HTML\p($this->pluginmessages->text("bibutilsnoPrograms", $this->config->bibutilsPath), "error", "center");
+            $pString .= HTML\p($this->coremessages->text("importexport", "bibutilsnoPrograms", $this->config->bibutilsPath), "error", "center");
 
             return $pString;
         }
@@ -97,16 +94,16 @@ class BIBUTILS
             'targetDiv' => 'outputType',
         ];
         $js = AJAX\jActionForm('onchange', $jsonArray);
-        $pString .= HTML\td(FORM\selectedBoxValue($this->pluginmessages->text("bibutilsinputType"), "inputType", $inputTypes, $selectedInput, 9, FALSE, $js));
+        $pString .= HTML\td(FORM\selectedBoxValue($this->coremessages->text("importexport", "bibutilsinputType"), "inputType", $inputTypes, $selectedInput, 9, FALSE, $js));
         $pString .= HTML\td($this->createOutputTypes());
         if (!$selected = $this->session->getVar("bibUtils_options"))
         {
-            $pString .= HTML\td(FORM\selectFBoxValueMultiple($this->pluginmessages->text("bibutilsxmlOptions"), "options", $options, 6, TRUE) .
+            $pString .= HTML\td(FORM\selectFBoxValueMultiple($this->coremessages->text("importexport", "bibutilsxmlOptions"), "options", $options, 6, TRUE) .
                 BR . HTML\span($this->coremessages->text('hint', 'multiples'), 'hint'));
         }
         else
         {
-            $pString .= HTML\td(FORM\selectedBoxValueMultiple($this->pluginmessages->text("bibutilsxmlOptions"), "options", $options, $selected, 6, TRUE) .
+            $pString .= HTML\td(FORM\selectedBoxValueMultiple($this->coremessages->text("importexport", "bibutilsxmlOptions"), "options", $options, $selected, 6, TRUE) .
                 BR . HTML\span($this->coremessages->text('hint', 'multiples'), 'hint'));
         }
         $pString .= HTML\trEnd();
@@ -114,7 +111,7 @@ class BIBUTILS
         
         if (ini_get("file_uploads"))
         {
-            $pString .= HTML\p(FORM\fileUpload($this->pluginmessages->text("bibutilsinputFile"), "file", 30, ".bib"));
+            $pString .= HTML\p(FORM\fileUpload($this->coremessages->text("importexport", "bibutilsinputFile"), "file", 30, ".bib"));
             $pString .= " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ") ";
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
         }
@@ -137,7 +134,7 @@ class BIBUTILS
         $selectedOutput = $this->changeOutputTypes();
 
         return HTML\div('outputType', FORM\selectedBoxValue(
-            $this->pluginmessages->text("bibutilsoutputType"),
+            $this->coremessages->text("importexport", "bibutilsoutputType"),
             "outputType",
             $this->outputTypesArray,
             $selectedOutput,
@@ -241,11 +238,11 @@ class BIBUTILS
         @unlink($inputFile);
         if (!isset($outputFile))
         {
-            $this->badInput($this->pluginmessages->text('bibutilsfailedToConvert'));
+            $this->badInput($this->coremessages->text("importexport", 'bibutilsfailedToConvert'));
         }
-        $pString .= HTML\p($this->pluginmessages->text('bibutilsSuccess', HTML\a(
+        $pString .= HTML\p($this->coremessages->text("importexport", 'bibutilsSuccess', HTML\a(
             "link",
-            $this->pluginmessages->text('bibutilsoutputFile'),
+            $this->coremessages->text("importexport", 'bibutilsoutputFile'),
             $this->filesUrl . $linkFile,
             "_blank"
         )), 'success');
@@ -314,11 +311,11 @@ class BIBUTILS
     {
         $array = [
             0 => $this->coremessages->text('misc', 'ignore'),
-            1 => $this->pluginmessages->text('bibutilsoption1'),
-            2 => $this->pluginmessages->text('bibutilsoption2'),
-            3 => $this->pluginmessages->text('bibutilsoption3'),
-            4 => $this->pluginmessages->text('bibutilsoption4'),
-            5 => $this->pluginmessages->text('bibutilsoption5'),
+            1 => $this->coremessages->text("importexport", 'bibutilsoption1'),
+            2 => $this->coremessages->text("importexport", 'bibutilsoption2'),
+            3 => $this->coremessages->text("importexport", 'bibutilsoption3'),
+            4 => $this->coremessages->text("importexport", 'bibutilsoption4'),
+            5 => $this->coremessages->text("importexport", 'bibutilsoption5'),
         ];
 
         return $array;
@@ -415,7 +412,7 @@ class BIBUTILS
         elseif (($result = exec($cmd, $output, $returnVar)) === FALSE)
         {
             @unlink($inputFile);
-            $this->badInput($this->pluginmessages->text('bibutilsfailedToConvert', $returnVar));
+            $this->badInput($this->coremessages->text("importexport", 'bibutilsfailedToConvert', $returnVar));
         }
     }
     /**
@@ -435,7 +432,7 @@ class BIBUTILS
         if ($oExec = $WshShell->Run($cmdline, 0, TRUE))
         {
             @unlink($inputFile);
-            $this->badInput($this->pluginmessages->text('bibutilsfailedToConvert', $oExec));
+            $this->badInput($this->coremessages->text("importexport", 'bibutilsfailedToConvert', $oExec));
         }
     }
     /**
@@ -480,12 +477,12 @@ class BIBUTILS
         }
         if (!array_key_exists('inputType', $this->vars) || !$this->vars['inputType'])
         {
-            $this->badInput($this->pluginmessages->text('bibutilsnoInputType'));
+            $this->badInput($this->coremessages->text("importexport", 'bibutilsnoInputType'));
         }
         $this->session->setVar("bibUtils_inputType", $this->vars['inputType']);
         if (!array_key_exists('outputType', $this->vars) || !$this->vars['outputType'])
         {
-            $this->badInput($this->pluginmessages->text('bibutilsnoOutputType'));
+            $this->badInput($this->coremessages->text("importexport", 'bibutilsnoOutputType'));
         }
         $this->session->setVar("bibUtils_outputType", $this->vars['outputType']);
         if (!array_key_exists('file', $_FILES))
@@ -494,12 +491,12 @@ class BIBUTILS
             {
                 return $this->filesDir . $file;
             }
-            $this->badInput($this->pluginmessages->text('bibutilsnoFileInput'));
+            $this->badInput($this->coremessages->text("importexport", 'bibutilsnoFileInput'));
         }
         $fileName = \UTILS\uuid();
         if (!move_uploaded_file($_FILES['file']['tmp_name'], $this->filesDir . $fileName))
         {
-            $this->badInput($this->pluginmessages->text('bibutilsnoFileInput'));
+            $this->badInput($this->coremessages->text("importexport", 'bibutilsnoFileInput'));
         }
         $this->session->setVar("bibUtils_file", $fileName);
 

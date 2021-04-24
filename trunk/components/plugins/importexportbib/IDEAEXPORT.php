@@ -16,7 +16,6 @@ class IDEAEXPORT
     private $db;
     private $vars;
     private $parentClass;
-    private $pluginmessages;
     private $errors;
     private $session;
     private $coremessages;
@@ -48,8 +47,6 @@ class IDEAEXPORT
         $this->parentClass = $parentClass;
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->session = FACTORY_SESSION::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -124,7 +121,7 @@ class IDEAEXPORT
         $this->db->formatConditions(['resourcemetadataMetadataId' => ' IS NULL']); //main ideas only
         if (!$this->common->setIdeasCondition())
         {
-            $this->failure(HTML\p($this->pluginmessages->text("noIdeas"), 'error'));
+            $this->failure(HTML\p($this->coremessages->text("importexport", "noIdeas"), 'error'));
         }
         if (array_key_exists('selectIdea', $this->vars) && ($this->vars['selectIdea'] == 2))
         {
@@ -178,7 +175,7 @@ class IDEAEXPORT
             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
         }
         $this->common->closeFile();
-        $pString = HTML\p($this->pluginmessages->text('exported') . ': ' . $this->common->fileName, 'success');
+        $pString = HTML\p($this->coremessages->text("importexport", 'exported') . ': ' . $this->common->fileName, 'success');
         $this->common->writeFilenameToSession($this->common->fileName);
         $this->parentClass->listFiles($pString, 'initRtfExport');
     }

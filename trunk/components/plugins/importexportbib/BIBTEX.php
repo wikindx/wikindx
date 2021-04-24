@@ -17,7 +17,6 @@ class BIBTEX
 {
     private $db;
     private $session;
-    private $pluginmessages;
     private $coremessages;
     private $errors;
     private $common;
@@ -34,8 +33,6 @@ class BIBTEX
     {
         $this->parentClass = $parentClass;
         $this->db = FACTORY_DB::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -54,7 +51,7 @@ class BIBTEX
     {
         if ($this->browserTabID && !\TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt')) {
         	if (!$this->session->getVar("sql_ListStmt")) {
-            	$this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
+            	$this->failure(HTML\p($this->coremessages->text("importexport", "noList"), 'error'));
             }
         }
         $cString = $this->common->getCustomFields();
@@ -73,7 +70,7 @@ class BIBTEX
         $sql = $this->common->getSQL();
         if (!$sql)
         {
-            $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
+            $this->failure(HTML\p($this->coremessages->text("importexport", "noList"), 'error'));
         }
         if (!$this->common->openFile('.bib'))
         {
@@ -104,7 +101,7 @@ class BIBTEX
             unlink($this->common->fullFileName);
             rename($tmpname, $this->common->fullFileName);
         }
-        $pString = HTML\p($this->pluginmessages->text('exported') . ": " . $this->common->fileName, 'success');
+        $pString = HTML\p($this->coremessages->text("importexport", 'exported') . ": " . $this->common->fileName, 'success');
         $this->common->writeFilenameToSession($this->common->fileName);
         $this->parentClass->listFiles($pString, 'initBibtexExport');
     }

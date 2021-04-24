@@ -74,13 +74,13 @@ class ENDNOTE
         }
         // Disabled due to tabbed file bug above
         /*
-        $types = array(1 => $this->pluginmessages->text("exportEndnoteTabbed"),
-                    2 => $this->pluginmessages->text("exportEndnoteXml"));
+        $types = array(1 => $this->coremessages->text("importexport", "exportEndnoteTabbed"),
+                    2 => $this->coremessages->text("importexport", "exportEndnoteXml"));
         if ($selected = $this->session->getVar("exportEndnoteFileType"))
-            $pString .= HTML\td(FORM\selectedBoxValue($this->pluginmessages->text("exportEndnoteFileType"),
+            $pString .= HTML\td(FORM\selectedBoxValue($this->coremessages->text("importexport", "exportEndnoteFileType"),
                 "endnoteFileType", $types, $selected, 2));
         else
-            $pString .= HTML\td(FORM\selectFBoxValue($this->pluginmessages->text("exportEndnoteFileType"),
+            $pString .= HTML\td(FORM\selectFBoxValue($this->coremessages->text("importexport", "exportEndnoteFileType"),
                 "endnoteFileType", $types, 2));
         */
         $pString .= HTML\trEnd();

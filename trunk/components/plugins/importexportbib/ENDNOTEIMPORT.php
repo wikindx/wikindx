@@ -31,7 +31,6 @@ class ENDNOTEIMPORT
     private $oldTime;
     private $pages;
     private $common;
-    private $pluginmessages;
     private $coremessages;
     private $errors;
     private $fileName;
@@ -69,8 +68,6 @@ class ENDNOTEIMPORT
         $this->session = FACTORY_SESSION::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->tag = FACTORY_TAG::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEMAP.php"]));
@@ -86,7 +83,7 @@ class ENDNOTEIMPORT
         $this->creators = ['creator1', 'creator2', 'creator3', 'creator4', 'creator5'];
         $this->oldTime = time();
         $this->dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerImportEndnote"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerImportEndnote"));
     }
     /**
      * start the process
@@ -99,11 +96,11 @@ class ENDNOTEIMPORT
         $entries = $parse->extractEntries($this->fileName);
         if (!$parse->version8)
         {
-            $this->badInput(HTML\p($this->pluginmessages->text('importEndnoteNotv8'), 'error'));
+            $this->badInput(HTML\p($this->coremessages->text("importexport", 'importEndnoteNotv8'), 'error'));
         }
         if (empty($entries))
         {
-            $this->badInput(HTML\p($this->pluginmessages->text('empty'), 'error'));
+            $this->badInput(HTML\p($this->coremessages->text("importexport", 'empty'), 'error'));
         }
         $this->version8 = $parse->version8;
         $this->endnoteVersion();
@@ -121,7 +118,7 @@ class ENDNOTEIMPORT
         }
         if (empty($this->entries))
         {
-            $this->badInput(HTML\p($this->pluginmessages->text('empty'), 'error'));
+            $this->badInput(HTML\p($this->coremessages->text("importexport", 'empty'), 'error'));
         }
         $this->formData['import_Rejects'] = $this->rejects;
         $this->findInvalidFields($entries);
@@ -255,7 +252,7 @@ class ENDNOTEIMPORT
             else
             {
                 @unlink($this->fileName); // remove garbage - ignore errors
-                \TEMPSTORAGE\store($this->db, $uuid, ['form' => $pString, 'heading' => $this->pluginmessages->text("headerImportEndnote")]);
+                \TEMPSTORAGE\store($this->db, $uuid, ['form' => $pString, 'heading' => $this->coremessages->text("importexport", "headerImportEndnote")]);
                 header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importInvalidFields&uuid=$uuid");
                 die;
             }
@@ -273,7 +270,7 @@ class ENDNOTEIMPORT
         $uuid = \TEMPSTORAGE\getUuid($this->db);
         if ($finalInput)
         {
-            $message = \HTML\p($this->pluginmessages->text("importEndnoteSuccess"), 'success', 'center');
+            $message = \HTML\p($this->coremessages->text("importexport", "importEndnoteSuccess"), 'success', 'center');
             \TEMPSTORAGE\store(
                 $this->db,
                 $uuid,
@@ -343,7 +340,7 @@ class ENDNOTEIMPORT
             $pString .= \FORM\hidden('uuid', $uuid);
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Continue")));
             $pString .= FORM\formEnd();
-            $tsArray['heading'] = $this->pluginmessages->text("headerImportEndnote");
+            $tsArray['heading'] = $this->coremessages->text("importexport", "headerImportEndnote");
             $tsArray['form'] = $pString;
             \TEMPSTORAGE\store($this->db, $uuid, $tsArray);
             header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importContinue&uuid=$uuid");

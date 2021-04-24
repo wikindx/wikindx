@@ -25,7 +25,6 @@ class importexportbib_MODULE
     public $authorize;
     public $menus;
     private $vars;
-    private $pluginmessages;
     private $session;
     private $db;
     private $configImport;
@@ -41,8 +40,7 @@ class importexportbib_MODULE
     public function __construct($menuInit = FALSE)
     {return; // while shifting plugin to core . . .
         $this->session = FACTORY_SESSION::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
+        $this->coremessages = FACTORY_MESSAGES::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->bibutilsImport = new importexportbib_BIBUTILSCONFIG();
         $configExport = new importexportbib_EXPORTCONFIG();
@@ -78,7 +76,7 @@ class importexportbib_MODULE
         {
             if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId')))
             {
-                $this->menus[$this->configImport->menus[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuIdeaExport')] =
+                $this->menus[$this->configImport->menus[0]]['importexportbibpluginSub'][$this->coremessages->text("importexport", 'menuIdeaExport')] =
                     'initIdeaExport';
             }
         }
@@ -118,14 +116,14 @@ class importexportbib_MODULE
         $errors = FACTORY_ERRORS::getInstance();
         // Perform some system admin
         FILE\tidyFiles();
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerListFiles"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerListFiles"));
         list($dirName, $deletePeriod, $fileArray) = FILE\listFiles();
 
         if (!$dirName)
         {
             if (!$fileArray)
             {
-                GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text("noContents"), 'error'));
+                GLOBALS::addTplVar('content', HTML\p($this->coremessages->text("importexport", "noContents"), 'error'));
             }
             elseif (!$errorMethod)
             {
@@ -149,7 +147,7 @@ class importexportbib_MODULE
         }
         $pString = $message;
         $filesDir = TRUE;
-        $pString .= HTML\p($this->pluginmessages->text("contents"));
+        $pString .= HTML\p($this->coremessages->text("importexport", "contents"));
         $minutes = $deletePeriod / 60;
         if (!empty($fileArray))
         {
@@ -161,7 +159,7 @@ class importexportbib_MODULE
             }
         }
         $pString .= HTML\hr();
-        $pString .= HTML\p($this->pluginmessages->text("warning", " $minutes "));
+        $pString .= HTML\p($this->coremessages->text("importexport", "warning", " $minutes "));
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -229,9 +227,9 @@ class importexportbib_MODULE
         }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTE.php"]));
         $endnote = new ENDNOTE($this);
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerImportEndnote"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerImportEndnote"));
         $pString = $message ? $message : FALSE;
-        $pString .= HTML\p($this->pluginmessages->text('introEndnoteImport'));
+        $pString .= HTML\p($this->coremessages->text("importexport", 'introEndnoteImport'));
         $endnote->displayImport($pString);
     }
     /**
@@ -249,10 +247,10 @@ class importexportbib_MODULE
             FACTORY_CLOSE::getInstance();
         }
         if (!\FILE\command_exists($this->configImport->bibutilsPath . 'med2xml')) {
-			GLOBALS::setTplVar('heading', $this->pluginmessages->text("hheaderImportPubMedh"));
-			$pString = \HTML\p($this->pluginmessages->text("bibutilsnoPrograms", $this->configImport->bibutilsPath), "error", "center");
-			$pString .= \HTML\p($this->pluginmessages->text("importPubMedNoBibutils"));
-			$pString .= \HTML\p($this->pluginmessages->text("bibutilscredit", \HTML\a(
+			GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "hheaderImportPubMedh"));
+			$pString = \HTML\p($this->coremessages->text("importexport", "bibutilsnoPrograms", $this->configImport->bibutilsPath), "error", "center");
+			$pString .= \HTML\p($this->coremessages->text("importexport", "importPubMedNoBibutils"));
+			$pString .= \HTML\p($this->coremessages->text("importexport", "bibutilscredit", \HTML\a(
 				"link",
 				'Bibutils',
 				'https://sourceforge.net/p/bibutils/home/Bibutils/',
@@ -270,7 +268,7 @@ class importexportbib_MODULE
 
             return;
         }
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("hheaderImportPubMedh"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "hheaderImportPubMedh"));
         $pString = $message ? $message : FALSE;
         $pString .= $pubmed->displayImport();
         GLOBALS::addTplVar('content', $pString);
@@ -283,9 +281,9 @@ class importexportbib_MODULE
     public function initBibutils($message = FALSE)
     {
     	if (!\FILE\command_exists($this->configImport->bibutilsPath . 'bib2xml')) {
-			GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerBibutils"));
-			$pString = \HTML\p($this->pluginmessages->text("bibutilsnoPrograms", $this->configImport->bibutilsPath), "error", "center");
-			$pString .= \HTML\p($this->pluginmessages->text("bibutilscredit", \HTML\a(
+			GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerBibutils"));
+			$pString = \HTML\p($this->coremessages->text("importexport", "bibutilsnoPrograms", $this->configImport->bibutilsPath), "error", "center");
+			$pString .= \HTML\p($this->coremessages->text("importexport", "bibutilscredit", \HTML\a(
 				"link",
 				'Bibutils',
 				'https://sourceforge.net/p/bibutils/home/Bibutils/',
@@ -302,7 +300,7 @@ class importexportbib_MODULE
             GLOBALS::addTplVar('content', AJAX\encode_jArray(['innerHTML' => $div]));
             FACTORY_CLOSERAW::getInstance();
         }
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerBibutils"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerBibutils"));
         $pString = $message ? $message : FALSE;
         $pString .= $bibutils->init();
         GLOBALS::addTplVar('content', $pString);
@@ -336,7 +334,7 @@ class importexportbib_MODULE
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTE.php"]));
         $endnote = new ENDNOTE($this);
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerEndnoteExport"));
         $pString = $message ? $message : FALSE;
         $pString .= $endnote->displayExport();
         GLOBALS::addTplVar('content', $pString);
@@ -367,7 +365,7 @@ class importexportbib_MODULE
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RTF.php"]));
         $rtf = new RTF($this);
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerRtfExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerRtfExport"));
         $pString = $message ? $message : FALSE;
         $pString .= $rtf->display();
         GLOBALS::addTplVar('content', $pString);
@@ -398,7 +396,7 @@ class importexportbib_MODULE
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBTEX.php"]));
         $bibtex = new BIBTEX();
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerBibtexExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerBibtexExport"));
         $pString = $message ? $message : FALSE;
         $pString .= $bibtex->exportOptions();
         GLOBALS::addTplVar('content', $pString);
@@ -429,7 +427,7 @@ class importexportbib_MODULE
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "HTML.php"]));
         $htmlExport = new HTMLEXPORT();
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerHtmlExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerHtmlExport"));
         $pString = $message ? $message : FALSE;
         $pString .= $htmlExport->exportOptions();
         GLOBALS::addTplVar('content', $pString);
@@ -446,7 +444,7 @@ class importexportbib_MODULE
             $auth->initLogon();
             FACTORY_CLOSE::getInstance();
         }
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerImportEndnote"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerImportEndnote"));
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
         {
             include_once(__DIR__ . DIRECTORY_SEPARATOR . 'ENDNOTEIMPORT.php');
@@ -480,7 +478,7 @@ class importexportbib_MODULE
         }
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
         {
-            GLOBALS::setTplVar('heading', $this->pluginmessages->text("hheaderImportPubMedh"));
+            GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "hheaderImportPubMedh"));
             include_once(__DIR__ . DIRECTORY_SEPARATOR . 'PUBMED.php');
             $pubmed = new PUBMED($this);
             $pubmed->processPubMed();
@@ -497,7 +495,7 @@ class importexportbib_MODULE
         // because the recordset can be really huge
         // Memory is reset automatically at the next script.
         ini_set('memory_limit', '-1');
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerEndnoteExport"));
         $pString = $message ? $message : FALSE;
         include_once(__DIR__ . DIRECTORY_SEPARATOR . 'ENDNOTEEXPORT.php');
         $endnote = new ENDNOTEEXPORT($this);
@@ -516,7 +514,7 @@ class importexportbib_MODULE
         // because the recordset can be really huge
         // Memory is reset automatically at the next script.
         ini_set('memory_limit', '-1');
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerRtfExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerRtfExport"));
         $pString = $message ? $message : FALSE;
         //GLOBALS::addTplVar('content', 'under construction'); return;
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
@@ -539,7 +537,7 @@ class importexportbib_MODULE
         // because the recordset can be really huge
         // Memory is reset automatically at the next script.
         ini_set('memory_limit', '-1');
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerBibtexExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerBibtexExport"));
         $pString = $message ? $message : FALSE;
         //GLOBALS::addTplVar('content', 'under construction'); return;
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
@@ -562,7 +560,7 @@ class importexportbib_MODULE
         // because the recordset can be really huge
         // Memory is reset automatically at the next script.
         ini_set('memory_limit', '-1');
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerHtmlExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerHtmlExport"));
         $pString = $message ? $message : FALSE;
         //GLOBALS::addTplVar('content', 'under construction'); return;
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
@@ -597,7 +595,7 @@ class importexportbib_MODULE
      */
     public function initRisExport($message = FALSE)
     {
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerRisExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerRisExport"));
         $pString = $message ? $message : FALSE;
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RIS.php"]));
         $ris = new RIS($this);
@@ -612,7 +610,7 @@ class importexportbib_MODULE
      */
     public function initIdeaExport($message = FALSE)
     {
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerIdeaExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerIdeaExport"));
         $pString = $message ? $message : FALSE;
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IDEA.php"]));
         $idea = new IDEA($this);
@@ -627,7 +625,7 @@ class importexportbib_MODULE
      */
     public function exportIdea($message = FALSE)
     {
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerIdeaExport"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerIdeaExport"));
         $pString = $message ? $message : FALSE;
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IDEAEXPORT.php"]));
         $idea = new IDEAEXPORT($this);
@@ -640,7 +638,7 @@ class importexportbib_MODULE
      */
     public function processBibutils()
     {
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerBibutils"));
+        GLOBALS::setTplVar('heading', $this->coremessages->text("importexport", "headerBibutils"));
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBUTILS.php"]));
         $bibutils = new BIBUTILS($this);
         $pString = $bibutils->startProcess();
@@ -659,15 +657,15 @@ class importexportbib_MODULE
             $this->menus = [
                 $menuArray[0] => [
                     'importexportbibpluginSub' => [
-                        $this->pluginmessages->text('menu') => FALSE,
+                        $this->coremessages->text("importexport", 'menu') => FALSE,
                         'importexportbibpluginImportSub' => [
-                            $this->pluginmessages->text('menuimport') => FALSE,
+                            $this->coremessages->text("importexport", 'menuimport') => FALSE,
                         ],
                         'importexportbibpluginExportBasketSub' => [
-                            $this->pluginmessages->text('menuexportbasket') => FALSE,
+                            $this->coremessages->text("importexport", 'menuexportbasket') => FALSE,
                         ],
                         'importexportbibpluginExportListSub' => [
-                            $this->pluginmessages->text('menuexportlist') => FALSE,
+                            $this->coremessages->text("importexport", 'menuexportlist') => FALSE,
                         ],
                     ],
                 ],
@@ -681,35 +679,35 @@ class importexportbib_MODULE
 		}
         if ($type == 'bibutils') // Test for existence later as command_exists command slows things down (which we don't want on every page).
         {
-            $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuBibutils')] = "initBibutils";
+            $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->coremessages->text("importexport", 'menuBibutils')] = "initBibutils";
         }
         elseif (($type == 'export') && ($lastMulti || $basket))
         {
             if ($basket)
             {
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportRtf')] = "initRtfExportB";
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportBibtex')] = "initBibtexExportB";
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportHTML')] = 'initHtmlExportB';
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportEndNote')] = 'initEndnoteExportB';
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportRIS')] = 'initRisExportB';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->coremessages->text("importexport", 'menuExportRtf')] = "initRtfExportB";
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->coremessages->text("importexport", 'menuExportBibtex')] = "initBibtexExportB";
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->coremessages->text("importexport", 'menuExportHTML')] = 'initHtmlExportB';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->coremessages->text("importexport", 'menuExportEndNote')] = 'initEndnoteExportB';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->coremessages->text("importexport", 'menuExportRIS')] = 'initRisExportB';
             }
             if ($lastMulti)
             {
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportRtf')] = "initRtfExportL";
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportBibtex')] = "initBibtexExportL";
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportHTML')] = 'initHtmlExportL';
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportEndNote')] = 'initEndnoteExportL';
-                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportRIS')] = 'initRisExportL';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->coremessages->text("importexport", 'menuExportRtf')] = "initRtfExportL";
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->coremessages->text("importexport", 'menuExportBibtex')] = "initBibtexExportL";
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->coremessages->text("importexport", 'menuExportHTML')] = 'initHtmlExportL';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->coremessages->text("importexport", 'menuExportEndNote')] = 'initEndnoteExportL';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->coremessages->text("importexport", 'menuExportRIS')] = 'initRisExportL';
             }
             if ($this->session->getVar("fileExports"))
             {
-                $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuListFiles')] = 'listFiles';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->coremessages->text("importexport", 'menuListFiles')] = 'listFiles';
             }
         }
         elseif ($type == 'import')
         { // import
-            $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginImportSub'][$this->pluginmessages->text('menuImportEndnote')] = "initEndnoteImport";
-			$this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginImportSub'][$this->pluginmessages->text('menuImportPubMed')] = "initPubMedImport";
+            $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginImportSub'][$this->coremessages->text("importexport", 'menuImportEndnote')] = "initEndnoteImport";
+			$this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginImportSub'][$this->coremessages->text("importexport", 'menuImportPubMed')] = "initPubMedImport";
 		}
     }
 }

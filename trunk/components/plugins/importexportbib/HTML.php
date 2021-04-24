@@ -18,7 +18,6 @@ class HTMLEXPORT
     private $db;
     private $vars;
     private $session;
-    private $pluginmessages;
     private $coremessages;
     private $errors;
     private $common;
@@ -35,8 +34,6 @@ class HTMLEXPORT
         $this->parentClass = $parentClass;
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -53,13 +50,13 @@ class HTMLEXPORT
     {
         if ($this->browserTabID && !\TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt')) {
         	if (!$this->session->getVar("sql_ListStmt")) {
-            	$this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
+            	$this->failure(HTML\p($this->coremessages->text("importexport", "noList"), 'error'));
             }
         }
         $pString = FORM\formHeader("importexportbib_exportHtml");
         $pString .= FORM\hidden('method', 'process');
         $checked = $this->session->getVar("exportHyperlink") ? 'CHECKED' : FALSE;
-        $pString .= $this->pluginmessages->text("exportHyperlink") . FORM\checkbox(FALSE, "exportHyperlink", $checked);
+        $pString .= $this->coremessages->text("importexport", "exportHyperlink") . FORM\checkbox(FALSE, "exportHyperlink", $checked);
         $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
         $pString .= FORM\formEnd();
 
@@ -73,7 +70,7 @@ class HTMLEXPORT
         $sql = $this->common->getSQL();
         if (!$sql)
         {
-            $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
+            $this->failure(HTML\p($this->coremessages->text("importexport", "noList"), 'error'));
         }
         if (array_key_exists('exportHyperlink', $this->vars))
         {
@@ -112,7 +109,7 @@ class HTMLEXPORT
         {
             fclose($this->common->fp);
         }
-        $pString = HTML\p($this->pluginmessages->text('exported') . ": " . $this->common->fileName, 'success');
+        $pString = HTML\p($this->coremessages->text("importexport", 'exported') . ": " . $this->common->fileName, 'success');
         $this->common->writeFilenameToSession($this->common->fileName);
         $this->parentClass->listFiles($pString, 'initHtmlExport');
     }

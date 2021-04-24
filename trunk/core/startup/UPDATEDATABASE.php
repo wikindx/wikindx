@@ -2197,8 +2197,8 @@ END;
     private function upgradeTo58()
     {
         // Clear attachments
-        $attachment = FACTORY_ATTACHMENT::getInstance();
-        $attachment->checkAttachmentRows();
+        //$attachment = FACTORY_ATTACHMENT::getInstance();
+        //$attachment->checkAttachmentRows();
         
         $this->updateCoreInternalVersion();
     }

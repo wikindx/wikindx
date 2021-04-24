@@ -1088,7 +1088,7 @@ class SEARCH
             }
             if ($split[0] == 'Field')
             {
-                if (($value == 'attachments'))
+/*                if (($value == 'attachments'))
                 {
                     $field = 'Word_' . $split[1];
                     $this->attachmentSearches[$split[1]]['Word'] = $this->input[$field];
@@ -1107,7 +1107,7 @@ class SEARCH
 
                     continue;
                 }
-                $array1[$split[1]]['Field'] = $this->dbFields[$value][0];
+*/                $array1[$split[1]]['Field'] = $this->dbFields[$value][0];
                 $array1[$split[1]]['OriginalField'] = $value;
                 if (mb_strpos($value, 'Custom_') === 0)
                 {
@@ -1156,6 +1156,8 @@ class SEARCH
                         ($value1['Field'] == 'resourcecustomLong')
                         ||
                         ($value1['Field'] == 'resourcemetadataText')
+                        ||
+                        ($value1['Field'] == 'resourceattachmentsText')
                     ) {
                         if (($word = $this->parsePhrase->parse($value1, FALSE, FALSE, FALSE, TRUE)) && $this->parsePhrase->validSearch)
                         {
@@ -3172,6 +3174,7 @@ class SEARCH
             'publicationYear' => ['resourceyearYear1', 'resource_year', 'resourceyearId'],
             'access' => ['statisticsresourceviewsCount', 'statistics_resource_views', 'statisticsresourceviewsResourceId'],
             'maturityIndex' => ['resourcemiscMaturityIndex', 'resource_misc', 'resourcemiscId'],
+            'attachments' => ['resourceattachmentsText', 'resource_attachments', 'resourceattachmentsResourceId'],
         ];
         // Add any used custom fields
         $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_custom', 'resourcecustomCustomId'), FALSE, FALSE, TRUE);
@@ -3363,6 +3366,7 @@ class SEARCH
             (($valueArray['OriginalField'] == 'note') ||
             ($valueArray['OriginalField'] == 'abstract') ||
             ($valueArray['Field'] == 'resourcecustomLong') ||
+            ($valueArray['Field'] == 'resourceattachmentsText') ||
             ($valueArray['Field'] == 'resourcemetadataText')))
         {
             $matchAgainst = $this->db->fulltextSearch($valueArray['Field'], str_replace("'", "''", $valueArray['String']));

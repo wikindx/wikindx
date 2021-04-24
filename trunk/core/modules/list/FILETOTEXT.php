@@ -301,47 +301,77 @@ class FILETOTEXT
      */
     private function readPdf($filename)
     {
-        // PDF objects can be large – memory is reset at the next script
-        $mem = ini_get('memory_limit');
-        ini_set('memory_limit', '-1');
+        static $plugin_xpdftotext_exists = NULL;
         
-        $errorDisplay = ini_get('display_errors');
-        ini_set('display_errors', FALSE);
-        
-        $importPDF = new PdfToText();
-        
-        // Note:
-        // MaxGlobalExecutionTime property and PDFOPT_ENFORCE_GLOBAL_EXECUTION_TIME option are broken
-        // use only one instance of the class by file parsed
-        
-        // PDFOPT_NO_HYPHENATED_WORDS: tries to join back hyphenated words into a single word
-        // PDFOPT_ENFORCE_EXECUTION_TIME: throw a PdfToTextTimeout exception if the extraction run more than MaxExecutionTime
-        $importPDF->Options = PdfToText::PDFOPT_NO_HYPHENATED_WORDS;
-        //$importPDF->Options = PdfToText::PDFOPT_NO_HYPHENATED_WORDS | PdfToText::PDFOPT_ENFORCE_EXECUTION_TIME;
-        
-        // Will consume all available runtime except 2 seconds (if this point is reached in less than 2 seconds)
-        //$importPDF->MaxExecutionTime = ini_get('max_execution_time') - GLOBALS::getPageElapsedTime() - 3;
-        
-        
-        try
+        // Check xpdftotext plugin availability
+        if ($plugin_xpdftotext_exists === NULL)
         {
-            // Return the text extracted
-            $text = $importPDF->Load($filename);
-        } catch (
-            // or catch all PdfToText exceptions and return an empty string
-            PdfToTextException
-            | PdfToTextCaptureException
-            | PdfToTextDecodingException
-            | PdfToTextDecryptionException
-            | PdfToTextFormException
-            | PdfToTextTimeoutException $e
-        ) {
-            $text = "PdfToTextTimeoutException " . $e->getMessage();
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "startup", "LOADPLUGINS.php"]));
+            $loadmodules = new \LOADPLUGINS();
+            $moduleList = $loadmodules->readPluginsDirectory();
+            $plugin_xpdftotext_exists = in_array("xpdftotext", $moduleList);
         }
         
-        ini_set('display_errors', $errorDisplay);
-        ini_set('memory_limit', $mem);
-        
+        // Use the best parser available
+        if ($plugin_xpdftotext_exists)
+        {
+            // 1. Use XpdfReader tools
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, "xpdftotext", "XPDFREADER.php"]));
+
+            $metadata = \XPDFREADER\pdfinfo($filename);
+
+            $text = \XPDFREADER\pdftotext(
+                $filename, [
+                    "clip"    => "", // Get text hidden by clipping area
+                    "nodiag"  => "", // Ignore text that is not on a right angle (remove watermarks)
+                ]
+            );
+            $text = $metadata[1] . " " . $text[1];
+        }
+        else
+        {
+            // 2. Use Christian Vigh PdfToText class
+            // PDF objects can be large – memory is reset at the next script
+            $mem = ini_get('memory_limit');
+            ini_set('memory_limit', '-1');
+            
+            $errorDisplay = ini_get('display_errors');
+            ini_set('display_errors', FALSE);
+            
+            $importPDF = new PdfToText();
+            
+            // Note:
+            // MaxGlobalExecutionTime property and PDFOPT_ENFORCE_GLOBAL_EXECUTION_TIME option are broken
+            // use only one instance of the class by file parsed
+            
+            // PDFOPT_NO_HYPHENATED_WORDS: tries to join back hyphenated words into a single word
+            // PDFOPT_ENFORCE_EXECUTION_TIME: throw a PdfToTextTimeout exception if the extraction run more than MaxExecutionTime
+            $importPDF->Options = PdfToText::PDFOPT_NO_HYPHENATED_WORDS;
+            //$importPDF->Options = PdfToText::PDFOPT_NO_HYPHENATED_WORDS | PdfToText::PDFOPT_ENFORCE_EXECUTION_TIME;
+            
+            // Will consume all available runtime except 2 seconds (if this point is reached in less than 2 seconds)
+            //$importPDF->MaxExecutionTime = ini_get('max_execution_time') - GLOBALS::getPageElapsedTime() - 3;
+            
+            
+            try
+            {
+                // Return the text extracted
+                $text = $importPDF->Load($filename);
+            } catch (
+                // or catch all PdfToText exceptions and return an empty string
+                PdfToTextException
+                | PdfToTextCaptureException
+                | PdfToTextDecodingException
+                | PdfToTextDecryptionException
+                | PdfToTextFormException
+                | PdfToTextTimeoutException $e
+            ) {
+                $text = "PdfToTextTimeoutException " . $e->getMessage();
+            }
+            
+            ini_set('display_errors', $errorDisplay);
+            ini_set('memory_limit', $mem);
+        }
         return $text;
     }
     

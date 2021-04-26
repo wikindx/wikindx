@@ -93,6 +93,9 @@ The documents are analyzed according to their mime-type and then according to th
 The `plain/text` mime-type is a generic format that covers a multitude of files.
 As the search targets written documents, attachments with the following extension are excluded: CSV, TSV, SILK.
 
+Many old or rare office suite formats will not be directly supported. They are appointed to remove any ambiguity.
+Consider converting them to DOCX or ODF format before attaching them. 
+
 |Extension |Kind of document                    |Fulltext search |MIME Type
 |----------|------------------------------------|-------|----------------------------------------------------------------------------
 |ABW, ZABW |AbiWord Document                    |No     |application/x-abiword

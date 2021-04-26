@@ -81,17 +81,18 @@ class FILETOTEXT
             $curlExists = FALSE;
         }
         // Attempting to avoid timeouts if max execution time cannot be set. This is done on a trial and error basis.
-        if (ini_get('memory_limit') == -1)
-        { // unlimited
+        $memtmp = \FILE\return_bytes(ini_get('memory_limit'));
+        if ($memtmp == -1)
+        {
             $maxCount = FALSE;
-            $maxSize = FALSE;
+            $maxSize = FALSE; // unlimited
         }
-        elseif (ini_get('memory_limit') >= 129)
+        elseif ($memtmp >= \FILE\return_bytes("40M"))
         {
             $maxCount = 30;
             $maxSize = 30000000; // 30MB
         }
-        elseif (ini_get('memory_limit') >= 65)
+        elseif ($memtmp >= \FILE\return_bytes("25M"))
         {
             $maxCount = 20;
             $maxSize = 15000000; // 15MB
@@ -206,7 +207,6 @@ class FILETOTEXT
         $session->setVar("cache_AttachmentsDone", $done);
         
         ini_set('display_errors', $errorDisplay);
-        ini_set('memory_limit', $mem);
         ini_set('max_execution_time', $maxExecTime);
         
         if ($nbFilesMissing > 0)

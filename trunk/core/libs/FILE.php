@@ -153,7 +153,7 @@ namespace FILE
     /**
      * Convert some ini values to numerical values (to bytes)
      *
-     * @param string $val
+     * @param int|string $val
      *
      * @return int
      */
@@ -162,30 +162,37 @@ namespace FILE
         // cf. https://secure.php.net/manual/en/ini.core.php#ini.post-max-size
         // cf. https://secure.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
 
-        // Unit extraction
-        $val = mb_strtolower(trim($val));
-        $unit = mb_substr($val, -1);
-
-        // If the unit is not defined, VAL is already in bytes
-        // Otherwise, compute it
-        if (!is_int($unit))
+        if (is_int($val))
         {
-            $val = intval(mb_substr($val, 0, mb_strlen($val) - 1));
-
-            $factor = 1024;
-            switch ($unit) {
-                case 'g':
-                    $val *= $factor;
-                    // no break
-                case 'm':
-                    $val *= $factor;
-                    // no break
-                case 'k':
-                    $val *= $factor;
-            }
+            return $val;
         }
-
-        return intval($val);
+        else
+        {
+            // Unit extraction
+            $val = mb_strtolower(trim($val));
+            $unit = mb_substr($val, -1);
+    
+            // If the unit is not defined, VAL is already in bytes
+            // Otherwise, compute it
+            if (!is_int($unit))
+            {
+                $val = intval(mb_substr($val, 0, mb_strlen($val) - 1));
+    
+                $factor = 1024;
+                switch ($unit) {
+                    case 'g':
+                        $val *= $factor;
+                        // no break
+                    case 'm':
+                        $val *= $factor;
+                        // no break
+                    case 'k':
+                        $val *= $factor;
+                }
+            }
+    
+            return intval($val);
+        }
     }
 
     /**

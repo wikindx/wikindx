@@ -2236,8 +2236,7 @@ END;
         $countTransfered = 0;
         // Try to set an unlimited memmory temporarily
         ini_set('memory_limit', -1);
-        $memory_limit = ini_get('memory_limit');
-        $memory_limit = $memory_limit == -1 ? -1 : \FILE\return_bytes($memory_limit);
+        $memory_limit = \FILE\return_bytes(ini_get('memory_limit'));
         
         $this->db->formatConditions(['resourceattachmentsText' => 'IS NULL']);
         $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsHashFilename']);

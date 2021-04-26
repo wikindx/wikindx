@@ -118,7 +118,7 @@ Following is a list of the major text-type document formats and their caching su
 |OTP       |ODF Presentation Template           |No     |[application/vnd.oasis.opendocument.presentation-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation-template)
 |OTT       |ODF Text Template                   |Yes    |[application/vnd.oasis.opendocument.text-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text-template)
 |PAGES     |Apple Pages                         |No     |
-|PDB       |PlamDoc                             |No     |
+|PDB       |PalmDoc                             |No     |
 |PDB       |Plucker eBook                       |No     |
 |PDF       |Portable Document Format            |Yes    |[application/pdf](https://www.iana.org/assignments/media-types/application/pdf)
 |POTM      |PowerPoint 2007-365 Template+macro  |No     |[application/vnd.ms-powerpoint.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.template.macroEnabled.12)

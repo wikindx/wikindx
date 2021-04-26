@@ -1680,4 +1680,28 @@ namespace FILE
 
         return round(($size / $factor), 2) . "&nbsp;" . $prefix;
     }
+    /**
+     * Return the mime-type of a file
+     *
+     * @param string $file
+     *
+     * @return string
+     */
+    function getMimeType($file)
+    {
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        return $finfo->file($file);
+    }
+    /**
+     * Return the extension of a file
+     *
+     * @param string $file
+     *
+     * @return string
+     */
+    function getExtension($file)
+    {
+        $path_parts = pathinfo($file);
+        return $path_parts['extension'];
+    }
 }

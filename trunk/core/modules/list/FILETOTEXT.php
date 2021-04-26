@@ -225,17 +225,23 @@ class FILETOTEXT
      * convertToText
      *
      * @param string $filename
+     * @param string $extension
      *
      * @return string
      */
-    public function convertToText($filename)
+    public function convertToText($filename, $extension = "")
     {
-        // Retrieve the mime type of the original file
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($filename);
+        // Retrieve the mime type and the extension of the original file
+        $mimeType = \FILE\getMimeType($filename);
+        if ($extension == "")
+        {
+            $extension = \FILE\getExtension($resourceattachmentsFileName);
+        }
+        $extension = mb_strtolower($extension);
         
         // Convert to text with a specific function by mimetype and return it
-        switch ($mimeType) {
+        switch ($mimeType)
+        {
             case WIKINDX_MIMETYPE_DOC:
                 $text = $this->readWord($filename);
             break;
@@ -258,7 +264,18 @@ class FILETOTEXT
                 $text = $this->readRtf($filename);
             break;
             case WIKINDX_MIMETYPE_TXT:
-                $text = $this->readText($filename);
+                switch ($extension)
+                {
+                    case "csv":
+                    case "tsv":
+                    case "silk":
+                        // Type not handled
+                        $text = "";
+                    break;
+                    default:
+                        $text = $this->readText($filename);
+                    break;
+                }
             break;
             default:
                 // Type not handled

@@ -641,7 +641,11 @@ class ATTACHMENTS
         $ftt = new FILETOTEXT();
         
         // Save the text
-        $contentCache = $ftt->convertToText($pathData);
+        $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
+        $resourceattachmentsFileName = $this->db->selectFirstField('resource_attachments', ['resourceattachmentsFileName']);
+        
+        $contentCache = $ftt->convertToText($pathData, \FILE\getExtension($resourceattachmentsFileName));
+        
         $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
         $this->db->update("resource_attachments", ["resourceattachmentsText" => $contentCache]);
         

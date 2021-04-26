@@ -134,9 +134,10 @@ class LOADICONS
     public function getIconForAFileExtension($file)
     {
         // Extension of a MIME/type
-        if (array_key_exists('extension', pathinfo(strtolower($file))))
+        $ext = \FILE\getExtension($file);
+        if ($ext != "")
         {
-            $basename = "file_extension_" . pathinfo(strtolower($file))['extension'];
+            $basename = "file_extension_" . $ext;
         }
         else
         {

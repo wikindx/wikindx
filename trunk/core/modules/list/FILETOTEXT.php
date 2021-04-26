@@ -237,7 +237,6 @@ class FILETOTEXT
         {
             $extension = \FILE\getExtension($resourceattachmentsFileName);
         }
-        $extension = mb_strtolower($extension);
         
         // Convert to text with a specific function by mimetype and return it
         switch ($mimeType)

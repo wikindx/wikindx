@@ -223,7 +223,7 @@ class IDEAEXPORT
         $filepath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $this->vars['filename']]);
         if (file_exists($filepath))
         {
-            switch (pathinfo($filepath)['extension']) {
+            switch (\FILE\getExtension($filepath)) {
                 case 'bib':
                     $type = WIKINDX_MIMETYPE_BIB;
                     $charset = 'UTF-8';

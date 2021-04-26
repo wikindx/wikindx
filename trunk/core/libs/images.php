@@ -175,9 +175,9 @@ class FileManager
         $name = implode('', $split);
         $upload_file = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $name]);
 
-        $mime_type = FileServer::getFileMime($userfile['tmp_name']);
+        $mime_type = \FILE\getMimeType($userfile['tmp_name']);
         $hash = sha1_file($userfile['tmp_name']);
-        $extension = FileServer::getFileExtension($userfile['name']);
+        $extension = \FILE\getExtension($userfile['name']);
         $extensions = ['gif', 'jpeg', 'jpg', 'png', 'webp'];
         $upload_file .= '_' . $hash . '.' . $extension;
         $maxSize = \FILE\imageUploadMaxSize();
@@ -252,7 +252,7 @@ class FileManager
         {
             if ($object != "." && $object != "..")
             {
-                $ext = FileServer::getFileExtension($object);
+                $ext = \FILE\getExtension($object);
                 if (($ext == 'gif') || ($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'png') || ($ext == 'webp'))
                 {
                     $this->files[] = $object;
@@ -292,8 +292,8 @@ class FileServer
         $this->name = $name;
         $this->location = $location;
 
-        $this->type = FileServer::getFileType(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $this->getName()]));
-        $this->size = FileServer::getFileSize(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $this->getName()]));
+        $this->type = \FILE\getExtension(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $this->getName()]));
+        $this->size = filesize(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $this->getName()]));
         $this->modTime = filemtime(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $this->getName()]));
     }
     /**
@@ -351,63 +351,6 @@ class FileServer
     public function getModTime()
     {
         return $this->modTime;
-    }
-
-    /**
-     * Get file size
-     *
-     * @param string $file
-     *
-     * @return int
-     */
-    public static function getFileSize($file)
-    {
-        return filesize($file);
-    }
-    /**
-     * Get file mime type
-     *
-     * @param string $filepath
-     *
-     * @return string
-     */
-    public static function getFileType($filepath)
-    {
-        /*
-         * This extracts the information from the file contents.
-         * Unfortunately it doesn't properly detect the difference between text-based file types.
-         *
-        $mime_type = FileServer::getMimeType($filepath);
-        $mime_type_chunks = \UTF8\mb_explode("/", $mime_type, 2);
-        $type = $mime_type_chunks[1];
-        */
-        return FileServer::getFileExtension($filepath);
-    }
-
-    /**
-     * Get file mime type
-     *
-     * @param string $filepath
-     *
-     * @return string
-     */
-    public static function getFileMime($filepath)
-    {
-        $fhandle = finfo_open(FILEINFO_MIME_TYPE);
-        $mime_type = finfo_file($fhandle, $filepath);
-
-        return $mime_type;
-    }
-    /**
-     * Get file extension
-     *
-     * @param string $filepath
-     *
-     * @return string
-     */
-    public static function getFileExtension($filepath)
-    {
-        return mb_strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
     }
 
     /**
@@ -485,7 +428,7 @@ class EncodeExplorer
         {
             array_pop($filenameArray);
 
-            return implode('_', $filenameArray) . '.' . $file->getFileExtension($file->getName());
+            return implode('_', $filenameArray) . '.' . \FILE\getExtension($file->getName());
         }
         else
         {
@@ -548,7 +491,7 @@ class EncodeExplorer
         {
             if ($object != "." && $object != "..")
             {
-                if (in_array(FileServer::getFileExtension($object), ['gif', 'jpeg', 'jpg', 'png', 'webp']) === TRUE)
+                if (in_array(\FILE\getExtension($object), ['gif', 'jpeg', 'jpg', 'png', 'webp']) === TRUE)
                 {
                     $this->files[] = new FileServer($object, $this->location);
                 }

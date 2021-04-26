@@ -243,7 +243,7 @@ define('WIKINDX_MIMETYPE_PS',      'application/postscript');
 define('WIKINDX_MIMETYPE_RIS',     'application/x-research-info-systems');
 define('WIKINDX_MIMETYPE_RSS',     'application/rss+xml');
 define('WIKINDX_MIMETYPE_RTF',     'application/rtf');
-define('WIKINDX_MIMETYPE_RTF2',    'text/rtf'); // finfo() mistakenly identifies RTF documents with this MIME type
+define('WIKINDX_MIMETYPE_RTF2',    'text/rtf');
 define('WIKINDX_MIMETYPE_SCRIBUS', 'application/vnd.scribus');
 define('WIKINDX_MIMETYPE_TEI',     'application/tei+xml');
 define('WIKINDX_MIMETYPE_TROFF',   'text/troff');

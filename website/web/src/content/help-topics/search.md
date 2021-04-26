@@ -88,17 +88,21 @@ You can attach files of any type to resources. For those that are text-type docu
 a small number can be converted to text and cached for fulltext search from within Advanced Search.
 Following is a list of the major text-type document formats and their caching support for fulltext search.
 
+The documents are analyzed according to their mime-type and then according to their extension if there is any ambiguity.
+
+The `plain/text` mime-type is a generic format that covers a multitude of files.
+As the search targets written documents, attachments with the following extension are excluded: CSV, TSV, SILK.
 
 |Extension |Kind of document                    |Fulltext search |MIME Type
 |----------|------------------------------------|-------|----------------------------------------------------------------------------
 |ABW, ZABW |AbiWord Document                    |No     |application/x-abiword
 |CWK       |ClarisWorks/AppleWorks Document     |No     |
 |DOC       |Word 97-2003 / DOS Word             |Yes    |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
-|DOCM	   |Word 2007-365 document+macro        |Yes    |[application/vnd.ms-word.document.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.document.macroEnabled.12)
-|DOCX	   |Word 2007-365 document              |Yes    |[application/vnd.openxmlformats-officedocument.wordprocessingml.document]()
+|DOCM	     |Word 2007-365 document+macro        |Yes    |[application/vnd.ms-word.document.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.document.macroEnabled.12)
+|DOCX	     |Word 2007-365 document              |Yes    |[application/vnd.openxmlformats-officedocument.wordprocessingml.document]()
 |DOT, WPT  |Word 97-2003 / DOS Word Template    |Yes    |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
-|DOTM	   |Word 2007-365 template+macro        |Yes    |[application/vnd.ms-word.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.template.macroEnabled.12)
-|DOTX	   |Word 2007-365 template              |Yes    |[application/vnd.openxmlformats-officedocument.wordprocessingml.template]()
+|DOTM	     |Word 2007-365 template+macro        |Yes    |[application/vnd.ms-word.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.template.macroEnabled.12)
+|DOTX	     |Word 2007-365 template              |Yes    |[application/vnd.openxmlformats-officedocument.wordprocessingml.template]()
 |EPUB      |Electronic publication              |No     |application/epub+zip
 |FB2       |FictionBook 2.0                     |No     |
 |FODP      |ODF Presentation Flat               |No     |
@@ -108,7 +112,7 @@ Following is a list of the major text-type document formats and their caching su
 |KWD       |KWord                               |No     |[application/vnd.kde.kword](https://www.iana.org/assignments/media-types/application/vnd.kde.kword)
 |LRF       |BroadBand Ebook                     |No     |
 |LWP       |Lotus WordPro                       |No     |[application/vnd.lotus-wordpro](https://www.iana.org/assignments/media-types/application/vnd.lotus-wordpro)
-|MAN,MDOC  |Manpage, mandoc                     |No     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
+|MAN, MDOC |Manpage, mandoc                     |No     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
 |MD        |Markdown                            |No     |[text/markdown](https://www.iana.org/assignments/media-types/text/markdown)
 |MHT, MHTML|Multipart HTML                      |No     |multipart/related
 |MW, MCW   |MacWrite Document                   |No     |
@@ -126,7 +130,7 @@ Following is a list of the major text-type document formats and their caching su
 |PPT       |PowerPoint 97-2003                  |No     |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
 |PPTM      |PowerPoint 2007-365 +macro          |No     |[application/vnd.ms-powerpoint.presentation.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.presentation.macroEnabled.12)
 |PPTX      |PowerPoint 2007-365                 |No     |[application/vnd.openxmlformats-officedocument.presentationml.presentation](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.presentation)
-|PS,EPS,AI |PostScript                          |No     |[application/postscript](https://www.iana.org/assignments/media-types/application/postscript)
+|PS, EPS, AI |PostScript                        |No     |[application/postscript](https://www.iana.org/assignments/media-types/application/postscript)
 |RTF       |Rich Text Format 1.9.1              |Yes    |[application/rtf](https://www.iana.org/assignments/media-types/application/rtf) or [text/rtf](https://www.iana.org/assignments/media-types/text/rtf)
 |SCD, SLA  |Scribus Document                    |No     |[application/vnd.scribus](https://www.iana.org/assignments/media-types/application/vnd.scribus)
 |SDD       |StarOffice presentation             |No     |
@@ -138,8 +142,8 @@ Following is a list of the major text-type document formats and their caching su
 |TEI       |Text Encoding Initiative            |No     |[application/tei+xml](https://www.iana.org/assignments/media-types/application/tei+xml)
 |TEX, LATEX|TeX, LaTeX                          |No     |
 |TEXI      |TexInfo File                        |No     |
-|TROFF,ROFF|Groff, Roff, Troff                  |No     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
-|TXT       |Plain text                          |Yes    |text/plain
+|TROFF, ROFF|Groff, Roff, Troff                 |No     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
+|TXT, others|Plain text                         |Yes   |text/plain
 |UOF, UOT  |Unified Office Text                 |No     |
 |UOP       |Unified Office presentation         |No     |
 |WML       |Wireless Mark-up Language           |No     |[text/vnd.wap.wml](https://www.iana.org/assignments/media-types/text/vnd.wap.wml)
@@ -148,5 +152,5 @@ Following is a list of the major text-type document formats and their caching su
 |WPD       |Wordperfect                         |No     |[application/vnd.wordperfect](https://www.iana.org/assignments/media-types/application/vnd.wordperfect) or [application/wordperfect5.1](https://www.iana.org/assignments/media-types/application/wordperfect5.1)
 |WPS       |Microsoft Works                     |No     |[application/vnd.ms-works](https://www.iana.org/assignments/media-types/application/vnd.ms-works)
 |WRI       |Microsoft Write                     |No     |application/mswrite
-|XHTML	   |Extensible HyperText Markup Language|No     |[application/xhtml+xml](https://www.iana.org/assignments/media-types/application/xhtml+xml)
+|XHTML	  |Extensible HyperText Markup Language|No     |[application/xhtml+xml](https://www.iana.org/assignments/media-types/application/xhtml+xml)
 |XPS, OXPS |XML Paper Specification             |No     |[application/vnd.ms-xpsdocument](https://www.iana.org/assignments/media-types/application/vnd.ms-xpsdocument)

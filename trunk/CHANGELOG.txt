@@ -7,7 +7,7 @@ Focus: bug fixes & feature enhancements
 BUG FIXES:
 1. Fixed a rare error (missing URL array) when adding/editing resources.
 2. Replace some some call to strstr by mb_strstr (UTF-8 support).
-3. Set max_allowed_packet to 1073741824 (allow to store LONGTEXT type in one statement).
+3. Set max_allowed_packet to 1073741824 (allow to store LONGTEXT type in one statement, MySQL).
 4. Fix an error in paging ideas following Advanced Search when ideas are the only field searched on.
 
 FEATURE ENHANCEMENTS:
@@ -16,9 +16,9 @@ FEATURE ENHANCEMENTS:
 3. New plugin XpdfReader PdftoText: a second option to convert PDF attachments.
 
 MAINTENANCE:
-1. Align group_concat_max_len value with max_allowed_packet.
+1. Align group_concat_max_len value with max_allowed_packet (MySQL).
 2. Document MySQL/MariaDB settings.
-3. Store the content of attachment cache files in the database.
+3. Store the content of attachment cache files in the database [#352].
 4. Add missing mime-types of parsable attachments.
 
 

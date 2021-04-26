@@ -174,6 +174,7 @@ class ATTACHMENT
      * 1. Check for any rows in table that do not have attachments – if found, delete the row
      * 2. Check for attachments not in the table – if found, delete the attachment
      */
+    /*
     public function checkAttachmentRows()
     {
         // Delete uncorrelated rows
@@ -227,4 +228,5 @@ class ATTACHMENT
             }
         }
     }
+    */
 }

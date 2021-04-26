@@ -2226,7 +2226,7 @@ END;
     /**
      * Upgrade database schema to version 61 (6.4.8)
      *
-     * Copy the content of atttachment cache files in the resourceattachmentsText column to resource_attachments table
+     * Copy the content of attachment cache files in the resourceattachmentsText column to resource_attachments table
      * keep a copy on the cache attachment folder
      */
     private function upgradeTo61()
@@ -2275,6 +2275,23 @@ END;
                     }
                 }
             }
+        }
+        
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 62 (6.4.8)
+     *
+     * Remove the content of attachment cache files
+     */
+    private function upgradeTo62()
+    {
+        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
+        
+        foreach (\FILE\fileInDirToArray($dirCache) as $file)
+        {
+            \FILE\rmfile(implode(DIRECTORY_SEPARATOR, [$dirCache, $file]));
         }
         
         $this->updateCoreInternalVersion();

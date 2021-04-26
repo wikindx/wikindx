@@ -449,7 +449,6 @@ class ATTACHMENTS
             if (!$this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsHashFilename')))
             {
                 @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]));
-                @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $hash]));
             }
             // remove reference in statistics_attachment_downloads
             $this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $this->resourceId]);
@@ -606,7 +605,7 @@ class ATTACHMENTS
     }
     
     /**
-     * Write or update the cache file of an attachment file
+     * Extract the text of an attachment file in a cache column of the database
      *
      * @param string $filename // Attachment filename
      * @param bool $force
@@ -616,10 +615,7 @@ class ATTACHMENTS
     public function refreshCache($filename, $force = FALSE)
     {
         $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
-        
         $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $filename]);
-        $pathCache = implode(DIRECTORY_SEPARATOR, [$dirCache, $filename]);
         
         // Impossible to go further without the original file
         if (!file_exists($pathData))
@@ -627,30 +623,29 @@ class ATTACHMENTS
             return FALSE;
         }
         
-        // When the cache file exists and is newer than (or equal) the original file there is nothing to do
-        if (!$force && file_exists($pathCache) && filemtime($pathCache) >= filemtime($pathData))
+        if (!$force)
         {
-            return TRUE;
+            // Check if the text is not yet extracted
+            $this->db->formatConditions(["resourceattachmentsText" => 'IS NOT NULL']);
+            $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
+            $resultSet = $this->db->selectCounts('resource_attachments', 'resourceattachmentsId');
+            if (count($resultSet) > 0)
+            {
+                $count = $this->db->fetchRow($resultSet);
+                if ($count > 0) return TRUE;
+            }
         }
         
-        // Make the cached file
+        // Extract the text
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
         $ftt = new FILETOTEXT();
+        
+        // Save the text
         $contentCache = $ftt->convertToText($pathData);
-        if (file_put_contents($pathCache, $contentCache) === FALSE)
-        {
-            $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
-            $this->db->updateNull("resource_attachments", ["resourceattachmentsText"]);
-            
-            return FALSE;
-        }
-        else
-        {
-            $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
-            $this->db->update("resource_attachments", ["resourceattachmentsText" => $contentCache]);
-            
-            return TRUE;
-        }
+        $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
+        $this->db->update("resource_attachments", ["resourceattachmentsText" => $contentCache]);
+        
+        return TRUE;
     }
     
     /**

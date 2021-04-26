@@ -29,31 +29,28 @@ class FILETOTEXT
      *
      * @return array [nbMissing, nbTotal]
      */
-    public function countMissingCacheFile()
+    public function countMissingCacheAttachment()
     {
-        $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
+        $sql = "
+            SELECT COUNT(*) AS nbFilesTotal, COUNT(*) - COUNT(resourceattachmentsText) AS nbFilesMissing
+            FROM resource_attachments;
+        ";
         
-        $listDataFiles = \FILE\fileInDirToArray($dirData);
-        
-        $nbFilesMissing = $nbFilesTotal = 0;
-        
-        foreach($listDataFiles as $k => $file)
+        $db = FACTORY_DB::getInstance();
+        $resultSet = $db->query($sql);       
+        if (count($resultSet) > 0)
         {
-            $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $file]);
-            $pathCache = implode(DIRECTORY_SEPARATOR, [$dirCache, $file]);
-            // When the cache file exists and is newer than (or equal) the original file there is nothing to do
-            if (!file_exists($pathCache)  || filemtime($pathCache) < filemtime($pathData))
-            {
-                $nbFilesMissing++;
-            }
-            $nbFilesTotal++;
+            $row = $db->fetchRow($resultSet);
+            return array($row["nbFilesMissing"], $row["nbFilesTotal"]);
         }
-        return array($nbFilesMissing, $nbFilesTotal);
+        else
+        {
+            return array(0, 0);
+        }
     }
 
     /**
-     * Generate every file missing in attachments cache
+     * Extract every missing cached text of attachments
      */
     public function checkCache()
     {
@@ -62,7 +59,6 @@ class FILETOTEXT
         $session = FACTORY_SESSION::getInstance();
         
         $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
         
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "attachments", "ATTACHMENTS.php"]));
         $att = new ATTACHMENTS();
@@ -129,60 +125,54 @@ class FILETOTEXT
             $mh = curl_multi_init();
         }
         
-        $listDataFiles = \FILE\fileInDirToArray($dirData);
-        shuffle($listDataFiles);
-        
-        foreach($listDataFiles as $k => $file)
+        $db->formatConditions(["resourceattachmentsText" => 'IS NULL']);
+        $resultSet = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
+        while ($row = $db->fetchRow($resultSet))
         {
+            $file = $row['resourceattachmentsHashFilename'];
             $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $file]);
-            $pathCache = implode(DIRECTORY_SEPARATOR, [$dirCache, $file]);
             
-            // When the cache file exists and is newer than (or equal) the original file there is nothing to do
-            if (!file_exists($pathCache) || filemtime($pathCache) < filemtime($pathData))
+            if ($curlExists)
             {
-                if ($curlExists)
+                $curlTarget = WIKINDX_URL_BASE . '/index.php?' .
+                'action=attachments_ATTACHMENTS_CORE' .
+                '&method=curlRefreshCache' .
+                '&filename=' . urlencode($file);
+                $ch_x = curl_init($curlTarget);
+                $ch[$file] = $ch_x;
+                curl_setopt($ch_x, CURLOPT_RETURNTRANSFER, TRUE);
+                // Get the headers too
+                curl_setopt($ch_x, CURLOPT_HEADER, TRUE);
+                curl_setopt($ch_x, CURLOPT_TIMEOUT, ini_get('max_execution_time'));
+                curl_multi_add_handle($mh, $ch_x);
+            }
+            else
+            {
+                try
                 {
-                    $curlTarget = WIKINDX_URL_BASE . '/index.php?' .
-                    'action=attachments_ATTACHMENTS_CORE' .
-                    '&method=curlRefreshCache' .
-                    '&filename=' . urlencode($file);
-                    $ch_x = curl_init($curlTarget);
-                    $ch[$file] = $ch_x;
-                    curl_setopt($ch_x, CURLOPT_RETURNTRANSFER, TRUE);
-                    // Get the headers too
-                    curl_setopt($ch_x, CURLOPT_HEADER, TRUE);
-                    curl_setopt($ch_x, CURLOPT_TIMEOUT, ini_get('max_execution_time'));
-                    curl_multi_add_handle($mh, $ch_x);
+                    $att->refreshCache($file, TRUE);
                 }
-                else
+                catch (Exception $e)
                 {
-                    
-                    try
-                    {
-                        $att->refreshCache($file);
-                    }
-                    catch (Exception $e)
-                    {
-                        file_put_contents($pathCache, "");
-                    }
+                    // Nothing to do
                 }
-                
-                ++$count;
-                $size += filesize($pathData);
-                
-                if ($maxCount)
+            }
+            
+            ++$count;
+            $size += filesize($pathData);
+            
+            if ($maxCount)
+            {
+                if ($count >= $maxCount)
                 {
-                    if ($count >= $maxCount)
-                    {
-                        break;
-                    }
+                    break;
                 }
-                if ($maxSize)
+            }
+            if ($maxSize)
+            {
+                if ($size >= $maxSize)
                 {
-                    if ($size >= $maxSize)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
         }
@@ -209,7 +199,7 @@ class FILETOTEXT
             }
         }
         
-        list($nbFilesMissing, $nbFilesTotal) = $this->countMissingCacheFile();
+        list($nbFilesMissing, $nbFilesTotal) = $this->countMissingCacheAttachment();
         $previousRemain = $session->getVar("cache_AttachmentsRemain");
         $session->setVar("cache_AttachmentsRemain", $nbFilesMissing);
         $done = $session->getVar("cache_AttachmentsDone") + ($previousRemain - $nbFilesMissing);

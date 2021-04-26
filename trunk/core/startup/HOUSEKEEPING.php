@@ -43,11 +43,10 @@ class HOUSEKEEPING
         }
         
         $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        $cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
         
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "list", "FILETOTEXT.php"]));
         $f2t = new FILETOTEXT();
-        list($nbMissingCacheFile, $nbFilesTotal) = $f2t->countMissingCacheFile();
+        list($nbMissingCacheFile, $nbFilesTotal) = $f2t->countMissingCacheAttachment();
         
         if ($nbMissingCacheFile > 0) {
             $this->session->setVar("cache_AttachmentsRemain", $nbMissingCacheFile);

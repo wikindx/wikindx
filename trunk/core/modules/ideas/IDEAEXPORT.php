@@ -16,7 +16,6 @@ class IDEAEXPORT
     private $db;
     private $vars;
     private $errors;
-    private $session;
     private $messages;
     private $cite;
     private $bibStyle;
@@ -43,7 +42,6 @@ class IDEAEXPORT
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->cite = FACTORY_CITE::getInstance('rtf');

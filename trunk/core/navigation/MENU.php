@@ -615,7 +615,10 @@ class MENU
             if (WIKINDX_IMPORT_BIB || $this->superAdmin)
             {
                 $this->res['importSub'][$messages->text("menu", "importBibtex")] = 'index.php?action=import_BIBTEXFILE_CORE';
+           		$this->res['importSub'][$messages->text('menu', 'importEndnote')] = 'index.php?action=import_ENDNOTE_CORE';
+				$this->res['importSub'][$messages->text('menu', 'importPubMed')] = 'index.php?action=import_PUBMED_CORE';
             }
+			$this->res[$messages->text('menu', 'bibutils')] = 'index.php?action=bibutils_BIBUTILS_CORE';
         }
         
         
@@ -825,7 +828,7 @@ class MENU
      */
     private function menuInsert()
     {
-        $menuHeadings = ["wikindx", "res", "search", "metadata", "admin", "importexport", "plugin1", "plugin2", "plugin3"];
+        $menuHeadings = ["wikindx", "res", "search", "metadata", "admin", "plugin1", "plugin2", "plugin3"];
         
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "startup", "LOADPLUGINS.php"]));
         $loadmodules = new LOADPLUGINS();

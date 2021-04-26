@@ -472,6 +472,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configImgUploadMaxSize"          => ["constname" => "WIKINDX_IMG_UPLOAD_MAX_SIZE",           "type" => "configInt"],
     "configImgWidthLimit"             => ["constname" => "WIKINDX_IMG_WIDTH_LIMIT",               "type" => "configInt"],
     "configImportBib"                 => ["constname" => "WIKINDX_IMPORT_BIB",                    "type" => "configBoolean"],
+    "configBibutilsPath"              => ["constname" => "WIKINDX_BIBUTILS_PATH",                 "type" => "configVarchar"],
     "configImpressum"				  => ["constname" => "WIKINDX_IMPRESSUM",            		  "type" => "configText"],
     "configIsTrunk"                   => ["constname" => "WIKINDX_IS_TRUNK",                      "type" => "configBoolean"],
     "configLanguage"                  => ["constname" => "WIKINDX_LANGUAGE",                      "type" => "configVarchar"],

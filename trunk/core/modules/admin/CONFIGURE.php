@@ -1736,6 +1736,7 @@ class CONFIGURE
         
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
+        
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
@@ -1769,6 +1770,27 @@ class CONFIGURE
             $this->messages->text("config", "impressum"),
             "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=displayImpressum" . "', 90)"
         ) . BR . \HTML\span($hint, 'hint'));
+        
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\trStart();
+        
+        $pString .= \HTML\td('&nbsp;');
+        $pString .= \HTML\td('&nbsp;');
+        $pString .= \HTML\td('&nbsp;');
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\trStart();
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "bibUtils"));
+        array_key_exists("configBibutilsPath", $this->formData) ? $input = $this->formData["configBibutilsPath"] : WIKINDX_BIBUTILS_PATH_DEFAULT;
+        $pString .= \HTML\td(\FORM\textInput(
+            $this->messages->text('config', 'bibUtils'),
+            "configBibutilsPath",
+            $input,
+            10,
+            10
+        ) . BR . \HTML\span($hint, 'hint'));
+        
+        $pString .= \HTML\td('&nbsp;');
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1923,6 +1945,7 @@ class CONFIGURE
                     "configSiteMapAllow",
                     "configResourceUrlPrefix",
                     "configBrowserTabID",
+                    "configBibutilsPath",
                 ];
 
                 break;

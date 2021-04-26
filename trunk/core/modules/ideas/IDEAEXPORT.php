@@ -90,7 +90,7 @@ class IDEAEXPORT
      */
     public function init($message = FALSE)
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("importexport", "headerIdeaExport"));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "ideaExport"));
         $pString = $message ? $message : FALSE;
         $pString .= $this->exportOptions();
         GLOBALS::clearTplVar('pagingList');
@@ -170,7 +170,7 @@ class IDEAEXPORT
         $errors = FACTORY_ERRORS::getInstance();
         // Perform some system admin
         FILE\tidyFiles();
-        GLOBALS::setTplVar('heading', $this->messages->text("importexport", "headerListFiles"));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "listFiles"));
         list($dirName, $deletePeriod, $fileArray) = FILE\listFiles();
 
         if (!$dirName)

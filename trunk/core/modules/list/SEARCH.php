@@ -3807,30 +3807,16 @@ class SEARCH
                 $this->partials[$key] = FALSE;
             }
         }
-        $attachDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        $cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
-        $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC, WIKINDX_MIMETYPE_TXT];
-        $this->db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
+        $this->db->formatConditions('resourceattachmentsText', ['IS NOT NULL']);
         $resultset = $this->db->select(
             'resource_attachments',
             ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsHashFilename',
-                'resourceattachmentsFileType', 'resourceattachmentsFileSize', ]
+                'resourceattachmentsText']
         );
         $attachments = $texts = [];
         while ($row = $this->db->fetchRow($resultset))
         {
-            $fileName = $attachDir . DIRECTORY_SEPARATOR . $row['resourceattachmentsHashFilename'];
-            $fileNameCache = $cacheDir . DIRECTORY_SEPARATOR . $row['resourceattachmentsHashFilename'];
-            if (!file_exists($fileName))
-            {
-                continue;
-            }
-            $attachments[] = $row;
-            // all attachments should be cached but check anyway
-            if (file_exists($fileNameCache) && filemtime($fileNameCache) > filemtime($fileName))
-            {
-                $texts[$row['resourceattachmentsHashFilename']] = file_get_contents($fileNameCache);
-            }
+            $texts[$row['resourceattachmentsHashFilename']] = $row['resourceattachmentsText'];
         }
         foreach ($attachments as $row)
         {

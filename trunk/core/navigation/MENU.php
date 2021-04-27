@@ -607,8 +607,11 @@ class MENU
             $this->res['importSub'] = [
                 $messages->text("menu", "importSub") => FALSE,
             ];
-            
-            if (WIKINDX_MAX_PASTE > 0 || $this->superAdmin)
+            $this->res['exportSub'] = [
+                $messages->text("menu", "exportSub") => FALSE,
+            ];
+// import sub first            
+            if ((WIKINDX_MAX_PASTE > 0) || $this->superAdmin)
             {
                 $this->res['importSub'][$messages->text("menu", "pasteBibtex")] = 'index.php?action=import_PASTEBIBTEX_CORE';
             }
@@ -619,6 +622,9 @@ class MENU
 				$this->res['importSub'][$messages->text('menu', 'importPubMed')] = 'index.php?action=import_PUBMED_CORE';
             }
 			$this->res[$messages->text('menu', 'bibutils')] = 'index.php?action=bibutils_BIBUTILS_CORE';
+			
+// then export sub . . .
+			$this->res['exportSub'][$messages->text("menu", "listFiles")] = 'index.php?action=export_FILES_CORE&method=listFiles';
         }
         
         

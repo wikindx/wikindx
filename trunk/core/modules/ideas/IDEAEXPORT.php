@@ -15,6 +15,7 @@ class IDEAEXPORT
 {
     private $db;
     private $vars;
+    private $files;
     private $errors;
     private $messages;
     private $cite;
@@ -50,6 +51,8 @@ class IDEAEXPORT
         $this->common = FACTORY_EXPORTCOMMON::getInstance();
         $this->rtf = FACTORY_RICHTEXTFORMAT::getInstance();
         $this->userObj = FACTORY_USER::getInstance();
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "export", "FILES.php"]));
+        $this->files = new FILES();
         $this->fontSizes = [
             1 => 8, 2 => 10, 3 => 12, 4 => 14, 5 => 16, 6 => 18, 7 => 20, 8 => 22,
         ];
@@ -155,114 +158,6 @@ class IDEAEXPORT
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('ideaList', $ideaList);
     }
-    /**
-     * listFiles
-     *
-     * @param false|string $message
-     * @param false|string $errorMethod
-     *
-     * @return string
-     */
-    public function listFiles($message = FALSE, $errorMethod = FALSE)
-    {
-        $errors = FACTORY_ERRORS::getInstance();
-        // Perform some system admin
-        FILE\tidyFiles();
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "listFiles"));
-        list($dirName, $deletePeriod, $fileArray) = FILE\listFiles();
-
-        if (!$dirName)
-        {
-            if (!$fileArray)
-            {
-                GLOBALS::addTplVar('content', HTML\p($this->messages->text("importexport", "noContents"), 'error'));
-            }
-            elseif (!$errorMethod)
-            {
-                GLOBALS::addTplVar('content', $errors->text('file', "read"));
-            }
-            else
-            {
-                $this->{$errorMethod}($errors->text("file", "read"));
-            }
-
-            return;
-        }
-        if (array_key_exists('uuid', $this->vars))
-        {
-            $data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
-            if (is_array($data))
-            { // FALSE if no longer there (reloading page e.g.)
-                \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
-                $message = $data['message'];
-            }
-        }
-        $pString = $message;
-        $filesDir = TRUE;
-        $pString .= HTML\p($this->messages->text("importexport", "contents"));
-        $minutes = $deletePeriod / 60;
-        if (!empty($fileArray))
-        {
-            foreach ($fileArray as $key => $value)
-            {
-                $pString .= date(DateTime::W3C, filemtime($dirName . DIRECTORY_SEPARATOR . $key)) . ': ';
-                $pString .= HTML\a("link", $key, "index.php?action=ideas_IDEAEXPORT_CORE&method=downloadFile" .
-                htmlentities("&filename=" . $key), "_blank") . BR . LF;
-            }
-        }
-        $pString .= HTML\hr();
-        $pString .= HTML\p($this->messages->text("importexport", "warning", " $minutes "));
-        GLOBALS::addTplVar('content', $pString);
-    }
-    /**
-     * /**
-     * downloadFile
-     */
-    public function downloadFile()
-    {
-        $filepath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $this->vars['filename']]);
-        if (file_exists($filepath))
-        {
-            switch (\FILE\getExtension($filepath)) {
-                case 'bib':
-                    $type = WIKINDX_MIMETYPE_BIB;
-                    $charset = 'UTF-8';
-
-                break;
-                case 'html':
-                    $type = WIKINDX_MIMETYPE_HTML;
-                    $charset = 'UTF-8';
-
-                break;
-                case 'ris':
-                    $type = WIKINDX_MIMETYPE_RIS;
-                    $charset = 'UTF-8';
-
-                break;
-                case 'rtf':
-                    $type = WIKINDX_MIMETYPE_RTF;
-                    $charset = 'Windows-1252';
-
-                break;
-                case 'xml':
-                    $type = WIKINDX_MIMETYPE_ENDNOTE;
-                    $charset = 'UTF-8';
-
-                break;
-            }
-            $size = filesize($filepath);
-            $lastmodified = date(DateTime::RFC1123, filemtime($filepath));
-            FILE\setHeaders($type, $size, basename($filepath), $lastmodified, $charset);
-            FILE\readfile_chunked($filepath);
-        }
-        else
-        {
-            header('HTTP/1.0 404 Not Found');
-            $this->badInput->closeType = 'closePopup';
-            $this->badInput->close($this->errors->text("file", "missing"));
-        }
-        die;
-    }
     
     /*
      * Open a memory stream file
@@ -353,7 +248,7 @@ class IDEAEXPORT
         $this->common->closeFile();
         $pString = HTML\p($this->messages->text("importexport", 'exported') . ': ' . $this->common->fileName, 'success');
         $this->common->writeFilenameToSession($this->common->fileName);
-        $this->listFiles($pString, 'initRtfExport');
+        $this->files->listFiles($pString);
     }
     /*
      * get data from database

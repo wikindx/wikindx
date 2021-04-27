@@ -620,6 +620,8 @@ class ATTACHMENTS
         // Impossible to go further without the original file
         if (!file_exists($pathData))
         {
+            $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
+            $this->db->update("resource_attachments", ["resourceattachmentsText" => ""]);
             return FALSE;
         }
         

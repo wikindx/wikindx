@@ -249,6 +249,9 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_DOTX:
                 $text = $this->readDocx($filename);
             break;
+            //case WIKINDX_MIMETYPE_EPUB:
+            //    $text = $this->readEpub($filename);
+            //break;
             case WIKINDX_MIMETYPE_ODT:
             case WIKINDX_MIMETYPE_OTT:
                 $text = $this->readOdt($filename);
@@ -620,5 +623,154 @@ class FILETOTEXT
         unset($texter);
         
         return $striped_content;
+    }
+
+    /**
+     * readEpub, extract the text content of EPUB ebooks
+     *
+     * All version of EPUB are supported with a single function
+     * because the specification has changed very little
+     * when we consider only its structure and text extraction. 
+     *
+     * Versions supported :
+     *
+     * - EPUB 3.2
+     * - EPUB 3.1
+     * - EPUB 3.0
+     * - EPUB 2.0.1
+     *
+     * cf. EPUB 3.2 Spec., https://www.w3.org/publishing/epub3/epub-spec.html
+     * cf. EPUB EPUB Specifications and Projects, http://idpf.org/epub/dir/
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    private function readEpub($filename)
+    {
+        $content = "";
+        
+        // Open the container
+        $za = new \ZipArchive();
+        
+        if ($za->open($filename))
+        {
+            $path_container = "META-INF/container.xml"; // Standard location of the top level entry file
+            $file_container = $za->getFromName($path_container);
+            if ($file_container !== FALSE)
+            {
+                // Extract the default Package Document path from the OCF Container
+                // It's a manifest (map) of content files to render, and metadata
+                // Alternatives manifest can be ignored safely (explained in the spec )
+                // cf. https://www.w3.org/publishing/epub3/epub-ocf.html#sec-container-abstract
+                $pXML = new \XMLReader();
+                
+                if ($pXML->XML($file_container))
+                {
+                    while ($pXML->read())
+                    {
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "rootfile")
+                        {
+                            $path_opf = $pXML->getAttribute("full-path");
+                            break;
+                        }
+                    }
+                }
+                
+                unset($pXML);
+                
+                // Package Document found
+                $opf = [];   // List of content files
+                $spine = []; // Rendering order of content files
+                if ($path_opf !== NULL)
+                {
+                    $file_opf = $za->getFromName($path_opf);
+                    if ($file_opf !== FALSE)
+                    {
+                        // Extract usefull metadata, the list of XHTML content files, and the spine
+                        // There is no reuse of important tag names so we can simplify the parsing
+                        // by reading only the elements encountered as we go. 
+                        // cf. https://www.w3.org/publishing/epub3/epub-packages.html#sec-package-doc
+                        $pXML = new \XMLReader();
+                        
+                        if ($pXML->XML($file_opf))
+                        {
+                            while ($pXML->read())
+                            {
+                                if ($pXML->nodeType == \XMLReader::ELEMENT)
+                                {
+                                    // Extract the list of XHTML content files (XHTML only, ignore SVG files, images, audio ...)
+                                    if ($pXML->name == "item" && $pXML->getAttribute("media-type") == "application/xhtml+xml")
+                                    {
+                                        $opf[$pXML->getAttribute("id")] = $pXML->getAttribute("href");
+                                    }
+                                    // Extract the spine
+                                    if ($pXML->name == "itemref")
+                                    {
+                                        $spine[] = $pXML->getAttribute("idref");
+                                    }
+                                    // Extract metadata (EPUB 2.0.1 only)
+                                    elseif (in_array($pXML->name, ["dc:description", "dc:publisher"]))
+                                    {
+                                        $content .= $pXML->readInnerXml() . LF;
+                                    }
+                                    // Extract metadata (all EPUB versions)
+                                    elseif (in_array($pXML->name, ["dc:contributor", "dc:creator", "dc:creator", "dc:title"]))
+                                    {
+                                        $content .= $pXML->readInnerXml() . LF;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        unset($pXML);
+                    }
+                }
+                
+                // Extract the content from XHTML files following the rendering order of the spine
+                // The spine doesn't include the navigation file but we don't need it
+                if (count($opf) > 0 && count($spine) > 0)
+                {
+                    foreach ($spine as $idref)
+                    {
+                        if (array_key_exists($idref, $opf))
+                        {
+                            // The path can be absolute or relative to the OPF file directory
+                            $path_xhtml = $opf[$idref];
+                            if (basename($path_xhtml) == $path_xhtml)
+                            {
+                                $path_xhtml = implode("/", [dirname($path_opf), $path_xhtml]);
+                            }
+                            
+                            $file_xhtml = $za->getFromName($path_xhtml);
+                            if ($file_xhtml !== FALSE)
+                            {
+                                $path_xhtml_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "epub_" . \UTILS\uuid() . "xhtml"]);
+                                if (file_put_contents($path_xhtml_cache, $file_xhtml) !== FALSE)
+                                {
+                                    // The format is XHTML and not HTML according to the spec
+                                    $content .= $this->readXhtml($path_xhtml_cache) . LF;
+                                    @unlink($path_xhtml_cache);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $content;
+    }
+
+    /**
+     * readXhtml, extract the text content of an XHTML file
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    private function readXhtml($filename)
+    {
+        return file_get_contents($filename);
     }
 }

@@ -78,6 +78,13 @@ class xpdftotext_MODULE
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('heading'));
         GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('xpdftotext'));
         $this->vars = GLOBALS::getVars();
+        
+        // Make sure the utilities are executable
+        $bindir = implode(DIRECTORY_SEPARATOR, [__DIR__, "bin"]);
+        foreach (\FILE\fileInDirToArray() as $bin)
+        {
+            chmod(implode(DIRECTORY_SEPARATOR, [$bindir, $bin]), 0777);
+        }
     }
     
     /**

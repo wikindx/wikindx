@@ -235,7 +235,7 @@ class FILETOTEXT
         $mimeType = \FILE\getMimeType($filename);
         if ($extension == "")
         {
-            $extension = \FILE\getExtension($resourceattachmentsFileName);
+            $extension = \FILE\getExtension($filename);
         }
         
         // Convert to text with a specific function by mimetype and return it

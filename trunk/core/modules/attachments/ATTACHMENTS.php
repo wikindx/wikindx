@@ -180,7 +180,7 @@ class ATTACHMENTS
         $this->getEmbargo();
         if (!$this->storeFile())
         { // FALSE if attachment already exists
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attchmentExists&browserTabID=" . $this->browserTabID);
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&error=file_attachmentExists&browserTabID=" . $this->browserTabID);
             die;
         }
         // send back to view this resource with success message
@@ -630,11 +630,10 @@ class ATTACHMENTS
             // Check if the text is not yet extracted
             $this->db->formatConditions(["resourceattachmentsText" => 'IS NOT NULL']);
             $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
-            $resultSet = $this->db->selectCounts('resource_attachments', 'resourceattachmentsId');
-            if (count($resultSet) > 0)
-            {
-                $count = $this->db->fetchRow($resultSet);
-                if ($count > 0) return TRUE;
+            $this->db->formatConditions(['resourceattachmentsResourceId' => $this->resourceId]);
+            $resultSet = $this->db->select('resource_attachments', 'resourceattachmentsId');
+            if ($this->db->numRows($resultSet)) {
+                return TRUE;
             }
         }
         
@@ -645,12 +644,10 @@ class ATTACHMENTS
         // Save the text
         $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
         $resourceattachmentsFileName = $this->db->selectFirstField('resource_attachments', ['resourceattachmentsFileName']);
-        
         $contentCache = $ftt->convertToText($pathData, \FILE\getExtension($resourceattachmentsFileName));
         
         $this->db->formatConditions(["resourceattachmentsHashFilename" => $filename]);
         $this->db->update("resource_attachments", ["resourceattachmentsText" => $contentCache]);
-        
         return TRUE;
     }
     

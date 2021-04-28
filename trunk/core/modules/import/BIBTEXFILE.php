@@ -13,7 +13,7 @@
  */
 class BIBTEXFILE
 {
-    private $gatekeep;
+    private $session;
     private $import;
 
     /**
@@ -21,7 +21,7 @@ class BIBTEXFILE
      */
     public function __construct()
     {
-        $this->gatekeep = FACTORY_GATEKEEP::getInstance();
+        $this->session = FACTORY_SESSION::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IMPORTCOMMON.php"]));
         $this->import = new IMPORTCOMMON();
         $this->import->importType = 'bibtex';
@@ -33,11 +33,13 @@ class BIBTEXFILE
      */
     public function init($message = FALSE)
     {
-        if (!WIKINDX_IMPORT_BIB)
-        {
-            $this->gatekeep->requireSuper = TRUE;
+    	if (!WIKINDX_IMPORT_BIB || !$this->session->getVar("setup_Write")) { 
+    		if (!$this->session->getVar("setup_Superadmin")) {
+				$auth = FACTORY_AUTHORIZE::getInstance();
+				$auth->initLogon();
+				FACTORY_CLOSE::getInstance();
+			}
         }
-        $this->gatekeep->init();
         $this->import->display($message);
     }
 }

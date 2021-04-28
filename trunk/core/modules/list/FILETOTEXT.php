@@ -237,7 +237,6 @@ class FILETOTEXT
         {
             $extension = \FILE\getExtension($filename);
         }
-        
         // Convert to text with a specific function by mimetype and return it
         switch ($mimeType)
         {

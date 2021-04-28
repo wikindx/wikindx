@@ -148,7 +148,6 @@ namespace XPDFREADER
 
         // File options
         $cmd .= ' "' . $file  . '" ';
-
         // Extraction
         $execerrno = 0;
         $execoutput = [];

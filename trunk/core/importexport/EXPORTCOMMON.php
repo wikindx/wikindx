@@ -36,7 +36,7 @@ class EXPORTCOMMON
     {
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->coremessages = FACTORY_MESSAGES::getInstance();
+        $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->cite = FACTORY_CITE::getInstance($outputType);
         $this->filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
@@ -222,8 +222,8 @@ class EXPORTCOMMON
         $customLabels = array_unique($customLabels);
         if ($export == 'bibtex')
         {
-            $pString = HTML\p(HTML\strong($this->coremessages->text("misc", "customFieldMap")) .
-                ' ' . $this->coremessages->text("misc", "customFieldMap2"));
+            $pString = HTML\p(HTML\strong($this->messages->text("misc", "customFieldMap")) .
+                ' ' . $this->messages->text("misc", "customFieldMap2"));
             foreach ($customLabels as $id => $label)
             {
                 $text = $this->session->getVar("export_Map_$id");
@@ -232,9 +232,9 @@ class EXPORTCOMMON
         }
         elseif ($export == 'endnote')
         {
-            $pString = HTML\p(HTML\strong($this->coremessages->text("misc", "customFieldMap")));
+            $pString = HTML\p(HTML\strong($this->messages->text("misc", "customFieldMap")));
             $mapArray = [
-                "0" => $this->coremessages->text('misc', 'ignore'),
+                "0" => $this->messages->text('misc', 'ignore'),
                 "1" => "Custom 1",
                 "2" => "Custom 2",
                 "3" => "Custom 3",

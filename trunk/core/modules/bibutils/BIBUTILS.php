@@ -425,7 +425,7 @@ class BIBUTILS
     private function process($command, $inputFile)
     {
         $cmd = $this->bibutilsPath . $command;
-        if (getenv("OS") == "Windows_NT")
+        if (\UTILS\OSName() == "windows")
         {
             $this->win_execute($cmd, $inputFile);
         }

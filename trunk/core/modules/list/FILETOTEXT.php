@@ -754,7 +754,7 @@ class FILETOTEXT
                             $file_xhtml = $za->getFromName($path_xhtml);
                             if ($file_xhtml !== FALSE)
                             {
-                                $path_xhtml_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "epub_" . \UTILS\uuid() . "xhtml"]);
+                                $path_xhtml_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "epub_" . \UTILS\uuid() . ".xhtml"]);
                                 if (file_put_contents($path_xhtml_cache, $file_xhtml) !== FALSE)
                                 {
                                     // The format is XHTML and not HTML according to the spec

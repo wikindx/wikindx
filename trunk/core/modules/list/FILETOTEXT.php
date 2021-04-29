@@ -786,7 +786,7 @@ class FILETOTEXT
             while ($pXML->read())
             {
                 // Start extracting at the start of the text of the body
-                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["a","abbr","access","address","b","blockcode","blockquote","br","caption","cite","code","dd","dfn","di","div","dl","dt","em","h","heading","hr","i","kbd","l","label","li","nl","ol","p","pre","quote","ruby","samp","section","span","strong","sub","summary","sup","table","tbody","td","tfoot","th","thead","tr","ul","var"]))
+                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["a","abbr","access","acronym","address","article","aside","b","bdi","blockcode","blockquote","br","caption","cite","code","dd","del","dfn","di","div","dl","dt","em","figcaption","figure","footer","h1","h2","h3","h4","h5","h6","header","heading","hgroup","hr","i","ins","kbd","l","label","li","main","mark","nl","ol","p","pre","quote","rp","rt","ruby","s","samp","section","small","span","strong","sub","summary","sup","table","tbody","td","tfoot","th","thead","tr","track","tt","u","ul","var","wbr"]))
                 {
                     $pXML->read();
                     if ($pXML->nodeType == \XMLReader::TEXT)

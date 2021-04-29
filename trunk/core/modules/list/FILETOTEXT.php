@@ -771,6 +771,41 @@ class FILETOTEXT
      */
     private function readXhtml($filename)
     {
-        return file_get_contents($filename);
+        $content = "";
+        $xhtml = file_get_contents($filename);
+        
+        // Extract the text part of the body and rudimentary formats major blocks with newlines
+        // We assume that the document is well formed and that the tags do not intersect
+        $pXML = new \XMLReader();
+        
+        // Extract the TEXT cell of the parser that follows each allowed XHTML element (withlist)
+        // TODO(LkpPo): 2021-04-29, check the list of supportted ellement
+        // Ignore events, forms elements, images, objects, scripts, styles
+        if ($pXML->XML($xhtml))
+        {
+            while ($pXML->read())
+            {
+                // Start extracting at the start of the text of the body
+                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["a","abbr","access","address","b","blockcode","blockquote","br","caption","cite","code","dd","dfn","di","div","dl","dt","em","h","heading","hr","i","kbd","l","label","li","nl","ol","p","pre","quote","ruby","samp","section","span","strong","sub","summary","sup","table","tbody","td","tfoot","th","thead","tr","ul","var"]))
+                {
+                    $pXML->read();
+                    if ($pXML->nodeType == \XMLReader::TEXT)
+                    {
+                        $content .= $pXML->value . "\n";
+                    }
+                }
+                elseif ($pXML->nodeType == \XMLReader::ELEMENT)
+                {
+                    // Ignored element (debug)
+                    //echo $pXML->name . "\n";
+                    //$pXML->read();
+                    //echo $pXML->value . "\n";
+                }
+            }
+        }
+        
+        unset($pXML);
+        
+        return $content;
     }
 }

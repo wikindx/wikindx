@@ -786,29 +786,30 @@ class FILETOTEXT
     private function readHtml($filename)
     {
         $content = "";
-        $xhtml = file_get_contents($filename);
         
-        $pXML = new \XMLReader();
+        $doc = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $doc->loadHTMLFile($filename, LIBXML_NOWARNING | LIBXML_NOERROR);
         
-        // Extracting
-        if ($pXML->XML($xhtml))
+        $elements = $doc->getElementsByTagName('body');
+        
+        if (!is_null($elements))
         {
-            while ($pXML->read())
+            foreach ($elements as $element)
             {
-                // Skip blacklisted elements and their content
-                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["applet","colgroup","form","head","img","listener","object","script","style"]))
+                $nodes = $element->childNodes;
+                foreach ($nodes as $node)
                 {
-                    $pXML->next();
-                }
-                // Extract the TEXT cell of others elements
-                elseif ($pXML->nodeType == \XMLReader::TEXT)
-                {
-                    $content .= $pXML->value . LF;
+                    // Skip blacklisted elements and their content
+                    if (!in_array($node->nodeName, ["applet","colgroup","form","head","img","listener","object","script","style"]))
+                    {
+                        $content .= $node->nodeValue . LF;
+                    }
                 }
             }
         }
         
-        unset($pXML);
+        unset($doc);
         
         return $content;
     }

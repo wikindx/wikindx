@@ -188,7 +188,7 @@ class importexportbib_MODULE
 
                 break;
                 case 'rtf':
-                    $type = WIKINDX_MIMETYPE_RTF;
+                    $type = WIKINDX_MIMETYPE_RTF_APP;
                     $charset = 'Windows-1252';
 
                 break;

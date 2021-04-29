@@ -498,7 +498,7 @@ class wordprocessor_MODULE
         $fileName = $this->vars['filename'];
         if ($this->vars['extension'] == 'rtf')
         {
-            $type = WIKINDX_MIMETYPE_RTF;
+            $type = WIKINDX_MIMETYPE_RTF_APP;
             $charset = '';
         }
         else

@@ -59,7 +59,7 @@ class SITEMAP
 
 
         // Declare text/xml as the header content-type
-        header('Content-type: ' . WIKINDX_MIMETYPE_XML . '; charset=' . WIKINDX_CHARSET);
+        header('Content-type: ' . WIKINDX_MIMETYPE_XML_APP . '; charset=' . WIKINDX_CHARSET);
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: X-Requested-With");
 

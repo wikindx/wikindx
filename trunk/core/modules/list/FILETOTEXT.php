@@ -249,9 +249,18 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_DOTX:
                 $text = $this->readDocx($filename);
             break;
-            //case WIKINDX_MIMETYPE_EPUB:
-            //    $text = $this->readEpub($filename);
-            //break;
+            case WIKINDX_MIMETYPE_EPUB:
+                $text = $this->readEpub($filename);
+            break;
+            case WIKINDX_MIMETYPE_HTML:
+            case WIKINDX_MIMETYPE_XHTML:
+            case WIKINDX_MIMETYPE_XML_APP:
+            case WIKINDX_MIMETYPE_XML_TEXT:
+                $text = $this->readHtml($filename);
+            break;
+            case WIKINDX_MIMETYPE_EPUB:
+                $text = $this->readEpub($filename);
+            break;
             case WIKINDX_MIMETYPE_ODT:
             case WIKINDX_MIMETYPE_OTT:
                 $text = $this->readOdt($filename);
@@ -260,8 +269,8 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_XPDF:
                 $text = $this->readPdf($filename);
             break;
-            case WIKINDX_MIMETYPE_RTF:
-            case WIKINDX_MIMETYPE_RTF2:
+            case WIKINDX_MIMETYPE_RTF_APP:
+            case WIKINDX_MIMETYPE_RTF_TEXT:
                 $text = $this->readRtf($filename);
             break;
             case WIKINDX_MIMETYPE_TXT:
@@ -749,7 +758,7 @@ class FILETOTEXT
                                 if (file_put_contents($path_xhtml_cache, $file_xhtml) !== FALSE)
                                 {
                                     // The format is XHTML and not HTML according to the spec
-                                    $content .= $this->readXhtml($path_xhtml_cache) . LF;
+                                    $content .= $this->readHtml($path_xhtml_cache) . LF;
                                     @unlink($path_xhtml_cache);
                                 }
                             }
@@ -763,43 +772,38 @@ class FILETOTEXT
     }
 
     /**
-     * readXhtml, extract the text content of an XHTML file
+     * readHtml, extract the text content of an (X)HTML file loosly
+     *
+     * Widely accepts elements of (X)HTML in all versions.
+     * Remove items that are not textual or purely technical items.
+     *
+     * We assume that the document is well formed and the order is right
      *
      * @param string $filename
      *
      * @return string
      */
-    private function readXhtml($filename)
+    private function readHtml($filename)
     {
         $content = "";
         $xhtml = file_get_contents($filename);
         
-        // Extract the text part of the body and rudimentary formats major blocks with newlines
-        // We assume that the document is well formed and that the tags do not intersect
         $pXML = new \XMLReader();
         
-        // Extract the TEXT cell of the parser that follows each allowed XHTML element (withlist)
-        // TODO(LkpPo): 2021-04-29, check the list of supportted ellement
-        // Ignore events, forms elements, images, objects, scripts, styles
+        // Extracting
         if ($pXML->XML($xhtml))
         {
             while ($pXML->read())
             {
-                // Start extracting at the start of the text of the body
-                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["a","abbr","access","acronym","address","article","aside","b","bdi","blockcode","blockquote","br","caption","cite","code","dd","del","dfn","di","div","dl","dt","em","figcaption","figure","footer","h1","h2","h3","h4","h5","h6","header","heading","hgroup","hr","i","ins","kbd","l","label","li","main","mark","nl","ol","p","pre","quote","rp","rt","ruby","s","samp","section","small","span","strong","sub","summary","sup","table","tbody","td","tfoot","th","thead","tr","track","tt","u","ul","var","wbr"]))
+                // Skip blacklisted elements and their content
+                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["applet","colgroup","form","head","img","listener","object","script","style"]))
                 {
-                    $pXML->read();
-                    if ($pXML->nodeType == \XMLReader::TEXT)
-                    {
-                        $content .= $pXML->value . "\n";
-                    }
+                    $pXML->next();
                 }
-                elseif ($pXML->nodeType == \XMLReader::ELEMENT)
+                // Extract the TEXT cell of others elements
+                elseif ($pXML->nodeType == \XMLReader::TEXT)
                 {
-                    // Ignored element (debug)
-                    //echo $pXML->name . "\n";
-                    //$pXML->read();
-                    //echo $pXML->value . "\n";
+                    $content .= $pXML->value . LF;
                 }
             }
         }

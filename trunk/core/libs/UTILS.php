@@ -86,6 +86,7 @@ namespace UTILS
      */
     function matchPrefix($string, $prefix)
     {
+        $prefix = mb_strtolower($prefix);
         return (mb_strtolower(mb_substr($string, 0, mb_strlen($prefix))) == $prefix);
     }
     
@@ -99,6 +100,7 @@ namespace UTILS
      */
     function matchSuffix($string, $suffix)
     {
+        $prefix = mb_strtolower($prefix);
         return (mb_strtolower(mb_substr($string, -mb_strlen($suffix))) == $suffix);
     }
     

@@ -247,6 +247,10 @@ class QUICKSEARCH
         $matchAgainst = $this->db->fulltextSearch('resourcetextNote', $searchFT);
         $this->db->formatConditions($matchAgainst);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_text', [['resourcetextId' => 'rId']]));
+        // resourceattachmentsText
+        $matchAgainst = $this->db->fulltextSearch('resourceattachmentsText', $searchFT);
+        $this->db->formatConditions($matchAgainst);
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_attachments', [['resourceattachmentsResourceId' => 'rId']]));
 
         $this->unions = $this->db->union($unions);
     }

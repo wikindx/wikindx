@@ -107,18 +107,18 @@ As the search targets written documents, attachments with the following extensio
 |DOT, WPT  |Word 97-2003 / DOS Word Template    |Yes    |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
 |DOTM	     |Word 2007-365 template+macro        |Yes    |[application/vnd.ms-word.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.template.macroEnabled.12)
 |DOTX	     |Word 2007-365 template              |Yes    |[application/vnd.openxmlformats-officedocument.wordprocessingml.template]()
-|EPUB      |Electronic publication              |No     |application/epub+zip
+|EPUB      |Electronic publication              |Yes    |application/epub+zip
 |FB2       |FictionBook 2.0                     |No     |
 |FODP      |ODF Presentation Flat               |No     |
 |FODT      |ODF XML Text Document Flat          |No     |
-|HTML, HTML|HyperText Markup Language           |No     |[text/html](https://www.iana.org/assignments/media-types/text/html)
+|HTML, HTML|HyperText Markup Language           |Yes    |[text/html](https://www.iana.org/assignments/media-types/text/html)
 |HWP       |Hangul WP 97                        |No     |
 |KWD       |KWord                               |No     |[application/vnd.kde.kword](https://www.iana.org/assignments/media-types/application/vnd.kde.kword)
 |LRF       |BroadBand Ebook                     |No     |
 |LWP       |Lotus WordPro                       |No     |[application/vnd.lotus-wordpro](https://www.iana.org/assignments/media-types/application/vnd.lotus-wordpro)
 |MAN, MDOC |Manpage, mandoc                     |No     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
 |MD        |Markdown                            |No     |[text/markdown](https://www.iana.org/assignments/media-types/text/markdown)
-|MHT, MHTML|Multipart HTML                      |No     |multipart/related
+|MHT, MHTML|Multipart HTML                      |Yes    |multipart/related
 |MW, MCW   |MacWrite Document                   |No     |
 |MWD       |Mariner Mac Write Classic           |No     |
 |ODP       |ODF Presentation                    |No     |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
@@ -147,7 +147,7 @@ As the search targets written documents, attachments with the following extensio
 |TEX, LATEX|TeX, LaTeX                          |No     |
 |TEXI      |TexInfo File                        |No     |
 |TROFF, ROFF|Groff, Roff, Troff                 |No     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
-|TXT, others|Plain text                         |Yes   |text/plain
+|TXT, others|Plain text                         |Yes    |text/plain
 |UOF, UOT  |Unified Office Text                 |No     |
 |UOP       |Unified Office presentation         |No     |
 |WML       |Wireless Mark-up Language           |No     |[text/vnd.wap.wml](https://www.iana.org/assignments/media-types/text/vnd.wap.wml)
@@ -156,5 +156,5 @@ As the search targets written documents, attachments with the following extensio
 |WPD       |Wordperfect                         |No     |[application/vnd.wordperfect](https://www.iana.org/assignments/media-types/application/vnd.wordperfect) or [application/wordperfect5.1](https://www.iana.org/assignments/media-types/application/wordperfect5.1)
 |WPS       |Microsoft Works                     |No     |[application/vnd.ms-works](https://www.iana.org/assignments/media-types/application/vnd.ms-works)
 |WRI       |Microsoft Write                     |No     |application/mswrite
-|XHTML	  |Extensible HyperText Markup Language|No     |[application/xhtml+xml](https://www.iana.org/assignments/media-types/application/xhtml+xml)
+|XHTML	  |Extensible HyperText Markup Language|Yes    |[application/xhtml+xml](https://www.iana.org/assignments/media-types/application/xhtml+xml)
 |XPS, OXPS |XML Paper Specification             |No     |[application/vnd.ms-xpsdocument](https://www.iana.org/assignments/media-types/application/vnd.ms-xpsdocument)

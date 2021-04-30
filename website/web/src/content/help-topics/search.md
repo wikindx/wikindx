@@ -21,6 +21,7 @@ There are two types of search available:
   - Resource keyword
   - User tag
   - Any custom fields
+  - Any cached attachments
 
 * Partial word searches are the default unless the search term is an exact phrase
 * You can use control words as noted below

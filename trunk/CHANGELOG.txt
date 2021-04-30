@@ -18,6 +18,7 @@ FEATURE ENHANCEMENTS:
 4. Support EPUB text extraction (attachments) [#355].
 5. Support TXT text extraction (attachments) [#360].
 6. Support (X)HTML text extraction (attachments) [#359].
+7. Support MHT/HTML text extraction (attachments) [#357].
 
 MAINTENANCE:
 1. Align group_concat_max_len value with max_allowed_packet (MySQL).

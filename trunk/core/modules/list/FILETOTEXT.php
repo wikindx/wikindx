@@ -258,8 +258,10 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_XML_TEXT:
                 $text = $this->readHtml($filename);
             break;
-            case WIKINDX_MIMETYPE_EPUB:
-                $text = $this->readEpub($filename);
+            case WIKINDX_MIMETYPE_MHT_APP:
+            case WIKINDX_MIMETYPE_MHT_MUL:
+            case WIKINDX_MIMETYPE_MHT_RFC:
+                $text = $this->readMht($filename);
             break;
             case WIKINDX_MIMETYPE_ODT:
             case WIKINDX_MIMETYPE_OTT:
@@ -281,6 +283,10 @@ class FILETOTEXT
                     case "silk":
                         // Type not handled
                         $text = "";
+                    break;
+                    case "mht":
+                    case "mhtml":
+                        $text = $this->readMht($filename);
                     break;
                     default:
                         $text = $this->readText($filename);
@@ -770,6 +776,136 @@ class FILETOTEXT
         
         return $content;
     }
+    
+    /**
+     * readMht, extract the text content of an MHT multipart file (RFC2557)
+     *
+     * cf. https://tools.ietf.org/html/rfc2557
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    private function readMht($filename)
+    {
+        $content = "";
+        $boundary = "";
+        $nBoundary = -1;
+        $isHeader = TRUE;
+        $headers = "";
+        $file = "";
+        $mime = "";
+        $location = "";
+        $cte = "";
+        $charset = "";
+        
+        $fh = fopen($filename, "rb");
+        if ($fh !== FALSE)
+        {
+            while (!feof($fh))
+            {
+                $line = fgets($fh);
+                
+                // Search the bondary token
+                if ($boundary == "" && \UTILS\matchPrefix($line, "Content-Type:"))
+                {
+                    $matches = [];
+                    if (preg_match("/boundary=\"(.+)\"/ui", $line, $matches) == 1)
+                    {
+                        $boundary = "--" . $matches[1] . "\r\n";
+                    }
+                }
+                // Read files at boundaries
+                elseif ($line == $boundary)
+                {
+                    $nBoundary++;
+                    $isHeader = TRUE;
+                    
+                    if ($nBoundary > 0)
+                    {
+                        // Extract only document files
+                        $path = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "mht_" . \UTILS\uuid() . ".txt"]);
+                        $extension = \FILE\getExtension($path);
+                        
+                        if ($cte == "quoted-printable")
+                        {
+                            $file = quoted_printable_decode($file);
+                        }
+                        elseif ($cte == "base64")
+                        {
+                            $file = base64_decode($file);
+                        }
+                        
+                        if (file_put_contents($path, $file) !== FALSE)
+                        {
+                            // Go full circle!!!
+                            $text = $this->convertToText($path, $extension);
+                            $content .= $text . LF;
+                            
+                            @unlink($path);
+                        }
+                    }
+                    
+                    // Reset the file
+                    $headers = "";
+                    $file = "";
+                    $location = "";
+                    $cte = "";
+                    $mime = "";
+                    $charset = "";
+                }
+                else
+                {
+                    if ($isHeader)
+                    {
+                        if ($line == "\r\n")
+                            $isHeader = FALSE;
+                        else
+                            $headers .= $line;
+                        
+                        // Extract headers
+                        if (!$isHeader)
+                        {
+                            $matches = [];
+                            if (preg_match("/Content-Location:(.+)/ui", $headers, $matches) == 1)
+                            {
+                                $location = trim($matches[1]);
+                            }
+                            $matches = [];
+                            if (preg_match("/Content-Transfer-Encoding:(.+)/ui", $headers, $matches) == 1)
+                            {
+                                $cte = trim($matches[1]);
+                            }
+                            $matches = [];
+                            if (preg_match("/Content-Type:(.+)/ui", $headers, $matches) == 1)
+                            {
+                                $mime = trim($matches[1]);
+                                
+                                $v = explode(";", $mime);
+                                if (count($v) == 2)
+                                {
+                                    $mime = trim($v[0]);
+                                    $matches = [];
+                                    if (preg_match("/charset=\"(.+)\"/ui", $v[1], $matches) == 1)
+                                    {
+                                        $charset = trim($matches[1]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        $file .= $line;
+                    }
+                }
+            }
+            
+            fclose($fh);
+        }
+        
+        return $content;
+    }
 
     /**
      * readHtml, extract the text content of an (X)HTML file loosly
@@ -801,7 +937,12 @@ class FILETOTEXT
                 foreach ($nodes as $node)
                 {
                     // Skip blacklisted elements and their content
-                    if (!in_array($node->nodeName, ["applet","colgroup","form","head","img","listener","object","script","style"]))
+                    // TODO(LkpPo): 2021-04-30, all blacklisted elements are not skipped because the reading is not recursive descendant!!!
+                    if (in_array($node->nodeName, ["applet","colgroup","form","head","img","listener","object","script","style"]))
+                    {
+                        // Do nothing
+                    }
+                    else
                     {
                         $content .= $node->nodeValue . LF;
                     }

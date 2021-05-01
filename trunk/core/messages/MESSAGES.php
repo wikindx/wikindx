@@ -407,6 +407,8 @@ class MESSAGES
 				"nothingToDo" => dgettext($domain, "Nothing to do or the upload failed."),
 				"installSuccess" => dgettext($domain, "Package ### installed."),
 				"wrongParameters" => dgettext($domain, "Wrong parameters"),
+				"listDownloadFail" => dgettext($domain, "The component list has not yet been downloaded."),
+				"captionTableCompat" => dgettext($domain, "Compatibility versions of components"),
 			),
 /// viewResource_ Viewing a single resource
 		    "viewResource" => array(

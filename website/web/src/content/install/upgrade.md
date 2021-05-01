@@ -46,12 +46,12 @@ From v5.9.1, components are downloaded, updated, and managed from the __Componen
 If you are upgrading a component by hand, follow these steps:
 
 1. Download the component source code from the [SourceForge Files](https://sourceforge.net/projects/wikindx/files/) section.
-   Until v6.3.5 each version has a `archives/X.y.Z/components` folder on SF
+   Until v6.3.5 each version has a `archives/X.Y.Z/components` folder on SF
    where components are stored. After v6.3.5 components are stored
    in `components/<type>/<components_compatible_version>/` folder on SF.
    <__components_compatible_version__> is a number specific to the core
    of the version installed. Find this number in **WIKINDX_COMPONENTS_COMPATIBLE_VERSION**
-   constant in `core/startup/CONSTANTS.php` file.
+   constant in `core/startup/CONSTANTS.php` file or in the __Components Manager__.
 
 2. Uncompress the source code into a folder on your computer -- this will create a folder named after its __component id__.
 

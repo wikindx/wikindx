@@ -116,7 +116,7 @@ class ADMINCOMPONENTS
         {
             $componentsRelease = [];
             $AllowUpdate = FALSE;
-            $pString .= "The component list has not yet been downloaded.";
+            $pString .= $this->errors->text("components", "listDownloadFail");
         }
         
         // abb. for hash key names that use the name of the hashing algo
@@ -283,8 +283,8 @@ class ADMINCOMPONENTS
             $h .= HTML\trStart();
             $h .= HTML\th($this->messages->text("components", "description"), "alternate2 padding5px width40percent");
             $h .= HTML\th($this->messages->text("components", "credits"), "alternate2 padding5px");
-            $h .= HTML\th($this->messages->text("components", "version"), "alternate2 padding5px");
             $h .= HTML\th($this->messages->text("components", "licence"), "alternate2 padding5px");
+            $h .= HTML\th($this->messages->text("components", "version"), "alternate2 padding5px");
             $h .= HTML\th($this->messages->text("components", "package"), "alternate2 padding5px");
             $h .= HTML\th($this->messages->text("components", "action"), "alternate2 padding5px");
             $h .= HTML\trEnd();
@@ -362,6 +362,10 @@ class ADMINCOMPONENTS
             $h .= HTML\tdEnd();
                 
             $h .= HTML\tdStart("padding5px");
+            $h .= array_key_exists("component_licence", $cmp) ? $cmp["component_licence"] : "&nbsp;";
+            $h .= HTML\tdEnd();
+                
+            $h .= HTML\tdStart("padding5px");
             $h .= $this->messages->text("components", "installed");
             $h .= array_key_exists("component_version", $cmp) && $cmp["component_version"] != "" ? $cmp["component_version"] : "--";
             $h .= array_key_exists($hashkeyid, $cmp) && $cmp[$hashkeyid] != "" ? " <span title=\"" . WIKINDX_PACKAGE_HASH_ALGO . " hash: " . $cmp[$hashkeyid] . "\">&#x1f511;</span>" : "";
@@ -369,10 +373,6 @@ class ADMINCOMPONENTS
             $h .= $this->messages->text("components", "latest");
             $h .= array_key_exists("component_version_latest", $cmp) && $cmp["component_version_latest"] != "" ? $cmp["component_version_latest"] : "--";
             $h .= array_key_exists($lasthashkeyid, $cmp) && $cmp[$lasthashkeyid] != "" ? " <span title=\"" . WIKINDX_PACKAGE_HASH_ALGO . " hash: " . $cmp[$lasthashkeyid] . "\">&#x1f511;</span>" : "";
-            $h .= HTML\tdEnd();
-                
-            $h .= HTML\tdStart("padding5px");
-            $h .= array_key_exists("component_licence", $cmp) ? $cmp["component_licence"] : "&nbsp;";
             $h .= HTML\tdEnd();
             
             $h .= HTML\tdStart("padding5px");
@@ -384,8 +384,7 @@ class ADMINCOMPONENTS
                     {
                         $h .= "" . \HTML\a("link", "&#x1f4e6;", $dlink["package_location"], "blank", $dlink["package_location"]);
                         $h .= "&nbsp;<span title=\"" . WIKINDX_PACKAGE_HASH_ALGO . " hash: " . $dlink["package_" . WIKINDX_PACKAGE_HASH_ALGO] . "\">&#x1f511;</span>";
-                        $h .= "&nbsp;<span class=\"small\">zip</span>";
-                        $h .= "&nbsp;<span class=\"small\">" . \FILE\formatSize($dlink["package_size"]) . "</span>";
+                        $h .= "<br><span class=\"small\">" . \FILE\formatSize($dlink["package_size"]) . "</span>";
                         $h .= "<br>";
                     }
                 }
@@ -447,39 +446,80 @@ class ADMINCOMPONENTS
         {
             $datedl = "none";
         }
-        $h .= HTML\p(\HTML\a("link", $this->messages->text("components", "checkUpdates"), "index.php?action=admin_ADMINCOMPONENTS_CORE&amp;method=checkUpdatesOnline&amp;dummy=" . \UTILS\uuid()) . " (" . $this->messages->text("components", "lastUpdate") . "&nbsp;" . $datedl . ")", "", "right");
-        $h .= "\n";
         
-        // Action of fixing misconfigured user preferences
-        if ($this->checkMisconfiguredUserPreferences($componentsInstalled))
-        {
-            $h .= HTML\p($this->messages->text("components", "defaultQuery")
-                . " " . \HTML\a("link", $this->messages->text("components", "defaultInstall"), "index.php?action=admin_ADMINCOMPONENTS_CORE&amp;method=fixUsersPreferences&amp;dummy=" . \UTILS\uuid(), "", "right"));
-            $h .= "\n";
-        }
         
-        // Display the upload form only if an archive format is supported
-        $h .= \HTML\h($this->messages->text("components", "manualComponent"));
-        if (ini_get("file_uploads"))
-        {
-            $h .= \FORM\formMultiHeader("admin_ADMINCOMPONENTS_CORE");
-            $h .= \FORM\hidden('method', 'installByUpload');
-            $h .= \FORM\hidden('type', 'file');
-            $h .= \FORM\hidden('dummy', \UTILS\uuid());
+        // Heading table (forms + actions)
+        $h .= \HTML\tableStart();
+        $h .= \HTML\tbodyStart();
+        $h .= \HTML\trStart();
+        $h .= \HTML\tdStart();
+    
+            // Display the upload form only if an archive format is supported
+            $h .= \HTML\h($this->messages->text("components", "manualComponent"));
+            if (ini_get("file_uploads"))
+            {
+                $h .= \FORM\formMultiHeader("admin_ADMINCOMPONENTS_CORE");
+                $h .= \FORM\hidden('method', 'installByUpload');
+                $h .= \FORM\hidden('type', 'file');
+                $h .= \FORM\hidden('dummy', \UTILS\uuid());
+                
+                $h .= \HTML\p(
+                    $this->messages->text("components", "packageFile") . \FORM\fileUpload("", "packaqefile", 30, ".zip")
+                    . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ", Zip format only)"
+                );
+                $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "hashFile"));
+                $h .= \HTML\p($this->messages->text("components", "hashFile") . \FORM\fileUpload("", "hashfile", 30) . BR . \HTML\span($hint, 'hint'));
+                $h .= \FORM\formSubmit($this->messages->text("submit", "Submit"));
+            }
+            else
+            {
+                $h .= \HTML\p($this->messages->text("misc", "uploadDisabled"));
+            }
             
-            $h .= \HTML\p(
-                $this->messages->text("components", "packageFile") . \FORM\fileUpload("", "packaqefile", 30, ".zip")
-                . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ", Zip format only)"
-            );
-            $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "hashFile"));
-            $h .= \HTML\p($this->messages->text("components", "hashFile") . \FORM\fileUpload("", "hashfile", 30) . BR . \HTML\span($hint, 'hint'));
-            $h .= \FORM\formSubmit($this->messages->text("submit", "Submit"));
-        }
-        else
-        {
-            $h .= \HTML\p($this->messages->text("misc", "uploadDisabled"));
-        }
+        $h .= \HTML\tdEnd();
+        $h .= \HTML\tdStart();
         
+            $h .= HTML\p(\HTML\a("link", $this->messages->text("components", "checkUpdates"), "index.php?action=admin_ADMINCOMPONENTS_CORE&amp;method=checkUpdatesOnline&amp;dummy=" . \UTILS\uuid()) . " (" . $this->messages->text("components", "lastUpdate") . "&nbsp;" . $datedl . ")", "", "right");
+            $h .= "\n";
+            
+            // Action of fixing misconfigured user preferences
+            if ($this->checkMisconfiguredUserPreferences($componentsInstalled))
+            {
+                $h .= HTML\p($this->messages->text("components", "defaultQuery")
+                    . " " . \HTML\a("link", $this->messages->text("components", "defaultInstall"), "index.php?action=admin_ADMINCOMPONENTS_CORE&amp;method=fixUsersPreferences&amp;dummy=" . \UTILS\uuid(), "", "right"));
+                $h .= "\n";
+            }
+            
+            // Compatibility versions table
+            $h .= \HTML\tableStart("generalTable borderStyleSolid");
+            $h .= \HTML\tableCaption($this->messages->text("components", "captionTableCompat"));
+            $h .= \HTML\theadStart();
+            $h .= \HTML\trStart("alternate3");
+                $h .= \HTML\th("Type");
+                $h .= \HTML\th("Version");
+            $h .= \HTML\trEnd();
+            $h .= \HTML\theadEnd();
+            $h .= \HTML\tbodyStart();
+            
+            $n = 0;
+            foreach(WIKINDX_COMPONENTS_COMPATIBLE_VERSION as $k => $v)
+            {
+                $n++;
+                $h .= \HTML\trStart("alternate" . (1 + ($n % 2)));
+                    $h .= \HTML\td($k);
+                    $h .= \HTML\td($v);
+                $h .= \HTML\trEnd();
+                $h .= \HTML\tbodyEnd();
+            }
+            
+            $h .= \HTML\tableEnd();
+        
+        $h .= \HTML\tdEnd();
+        $h .= \HTML\trEnd();
+        $h .= \HTML\tbodyEnd();
+        $h .= \HTML\tableEnd();
+        
+        // Display the table of components and its navigation
         $h .= HTML\p($nav, "", "right");
         $h .= "\n";
         
@@ -490,6 +530,7 @@ class ADMINCOMPONENTS
         $h .= "";
         $h .= HTML\tbodyEnd();
         $h .= HTML\tableEnd();
+        
         $h .= HTML\p("&nbsp;");
         $h .= "\n";
         $pString .= $h . "\n";

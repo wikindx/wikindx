@@ -100,7 +100,7 @@ namespace UTILS
      */
     function matchSuffix($string, $suffix)
     {
-        $prefix = mb_strtolower($prefix);
+        $suffix = mb_strtolower($suffix);
         return (mb_strtolower(mb_substr($string, -mb_strlen($suffix))) == $suffix);
     }
     

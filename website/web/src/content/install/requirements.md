@@ -118,7 +118,9 @@ for proper functioning, which should be the case for almost all installations.
 | Extensions | WIKINDX version
 |------------|-----------------------
 | core       |
+| curl       | >= 6.4.8 (was optional >= 5.2.0)
 | date       |
+| dom        | >= 6.4.8
 | fileinfo   |
 | filter     | >= 5.2.0
 | gd         | >= 4.0.0
@@ -136,24 +138,20 @@ for proper functioning, which should be the case for almost all installations.
 | SimpleXML  | >= 4.2.0
 | xml        |
 | xmlreader  | >= 5.2.0
+| zip        | >= 6.4.8 (was optional >= 5.9.1)
 
 
 #### Optional extensions and configuration
 
 | Extensions       | WIKINDX version | Note
 |------------------|-----------------|-----------------
-| curl             | >= 5.2.0        | Needed to extract texts of a PDF.
+| bzip2            |                 | Used by the release process (development only).
 | enchant / pspell | >= 5.2.0        | Used by the spell checker of [TinyMCE](https://www.tiny.cloud/). It is always disabled under Windows because the pspell is uninstallable in practice on this OS.
 | ldap             | >= 6.4.0        | Needed only for LDAP authentification mode.
 | openssl          | >= 5.2.0        | Needed if you intend to send emails with secure protocols (starttls, tls, ssl) in SMTP mode and encryption (See [PHPMailer](https://github.com/PHPMailer/PHPMailer)).
+| Phar             |                 | Used by the release process (development only).
 | sockets          | >= 5.2.0        | Needed if you intend to send emails with the SMTP protocol.
-| zip              |                 | Without this extension attachments will not be exported in a Zip archive. Also used by the release process.
-| curl + zip       | >= 5.9.1        | if disabled, the update feature of WIKINDX components will be disabled.
-| Phar             |                 | Used by the release process.
-| zlib             |                 | Used by the release process.
-
-If **allow_url_fopen** is disabled on php.ini,
-WIKINDX will be not be able to embed an external image in an RTF export.
+| zlib             |                 | Used by the release process (development only).
 
 
 #### Official plugins requirements
@@ -162,7 +160,7 @@ This list only indicates the need of extensions when it is more
 important than those of the core:
 
  * backupMySQL: __zlib__ (optional)
- * dbAdminer: __bzi2__ (optional), __openssl__ (optional), __zip__ (optional), __zlib__ (optional)
+ * dbAdminer: __openssl__ (optional), __zlib__ (optional)
  * wordProcessor: __enchant__ (optional), __socket__ (optional)
 
 

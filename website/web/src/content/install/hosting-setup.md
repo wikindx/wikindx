@@ -69,7 +69,6 @@ We need a few more tweaks to accommodate WIKINDX.
 * Comment __open_basedir__ directive.
 * Comment __disable_functions__ directive.
 * Comment __disable_classes__ directive.
-* Change for `allow_url_fopen = On` (allow to insert images in RTF exports).
 * Change for `memory_limit = 128M` (max memory consumption by process).
 * Change for `post_max_size = 128M` (max size of one HTTP request).
 * Change for `upload_max_filesize = 128M` (Max size of one uploaded file).
@@ -151,7 +150,7 @@ file_uploads = On
 upload_tmp_dir = "c:/winnmp/tmp"
 upload_max_filesize = 128M
 max_file_uploads = 20
-allow_url_fopen = On
+allow_url_fopen = Off
 allow_url_include = Off
 default_socket_timeout = 180
 extension_dir = "ext"

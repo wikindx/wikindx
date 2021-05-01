@@ -27,7 +27,7 @@ namespace UTILS
      */
     function listCoreMandatoryPHPExtensions()
     {
-        return ['Core', 'date', 'fileinfo', 'filter', 'gd', 'gettext', 'hash', 'iconv', 'intl', 'json', 'mbstring', 'libxml','mysqli', 'pcre', 'session', 'SimpleXML', 'xmlreader'];
+        return ['Core', 'curl', 'date', 'dom', 'fileinfo', 'filter', 'gd', 'gettext', 'hash', 'iconv', 'intl', 'json', 'mbstring', 'libxml','mysqli', 'pcre', 'session', 'SimpleXML', 'xmlreader', 'zip'];
     }
     /**
      * Return an array of optional PHP extensions used by the WIKINDX core
@@ -39,7 +39,7 @@ namespace UTILS
      */
     function listCoreOptionalPHPExtensions()
     {
-        return ['bzip2', 'curl', 'enchant', 'ldap', 'openssl', 'Phar', 'pspell', 'sockets', 'zlib', 'zip'];
+        return ['bzip2', 'enchant', 'ldap', 'openssl', 'Phar', 'pspell', 'sockets', 'zlib'];
     }
     /**
      * Return the normalized name of the current os

@@ -73,7 +73,6 @@ foreach ($componentlist as $k => $cmp)
 {
     $dircmpsrc = $component_types[$cmp["component_type"]] . DIRECTORY_SEPARATOR . $cmp["component_id"];
     $dircmpdst = DIR_BUILD . DIRECTORY_SEPARATOR . $cmp["component_type"] . "_" . $cmp["component_id"];
-    $pkgcmp = DIR_BUILD . DIRECTORY_SEPARATOR . $cmp["component_id"] . ".zip";
     
     echo $dircmpsrc . "\n";
     

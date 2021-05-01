@@ -462,74 +462,42 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             }
             else
             {
-                // Download the file from the web to a temp file
+                // Download the file from the web to a temp file with curl
                 $dlTempFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_FILES, 'dl' . \UTILS\uuid() . '.img']);
 
-                if (ini_get('allow_url_fopen') == "1")
+                $fp = fopen($dlTempFile, 'wb');
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $file);
+                curl_setopt($ch, CURLOPT_BINARYTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, FALSE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+                curl_setopt($ch, CURLOPT_FILE, $fp);
+
+                if (curl_exec($ch) !== FALSE)
                 {
-                    $fddl = fopen($file, 'rb');
-                    if ($fddl !== FALSE)
+                    // PHP 8.0, LkpPo, 20201126
+                    // The curl_close() function no longer has an effect
+                    if (version_compare(PHP_VERSION, '8.0.0', '<'))
                     {
-                        if (file_put_contents($dlTempFile, $fddl) !== FALSE)
-                        {
-                            fclose($fddl);
-                            $file = $dlTempFile;
-                            $webimage = TRUE;
-                        }
-                        else
-                        {
-                            fclose($fddl);
-                            @unlink($dlTempFile);
-
-                            return $file;
-                        }
+                        curl_close($ch);
                     }
-                    else
-                    {
-                        return $file;
-                    }
-                }
-                // Use curl as a fallback if allow_url_fopen is disabled
-                elseif (extension_loaded('curl'))
-                {
-                    $fp = fopen($dlTempFile, 'wb');
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $file);
-                    curl_setopt($ch, CURLOPT_BINARYTRANSFER, TRUE);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, FALSE);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-
-                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-                    curl_setopt($ch, CURLOPT_FILE, $fp);
-
-                    if (curl_exec($ch) !== FALSE)
-                    {
-                        // PHP 8.0, LkpPo, 20201126
-                        // The curl_close() function no longer has an effect
-                        if (version_compare(PHP_VERSION, '8.0.0', '<'))
-                        {
-                            curl_close($ch);
-                        }
-                        fclose($fp);
-                        $file = $dlTempFile;
-                        $webimage = TRUE;
-                    }
-                    else
-                    {
-                        // PHP 8.0, LkpPo, 20201126
-                        // The curl_close() function no longer has an effect
-                        if (version_compare(PHP_VERSION, '8.0.0', '<'))
-                        {
-                            curl_close($ch);
-                        }
-                        fclose($fp);
-                        @unlink($dlTempFile);
-
-                        return $file;
-                    }
+                    fclose($fp);
+                    $file = $dlTempFile;
+                    $webimage = TRUE;
                 }
                 else
                 {
+                    // PHP 8.0, LkpPo, 20201126
+                    // The curl_close() function no longer has an effect
+                    if (version_compare(PHP_VERSION, '8.0.0', '<'))
+                    {
+                        curl_close($ch);
+                    }
+                    fclose($fp);
+                    @unlink($dlTempFile);
+
                     return $file;
                 }
             }
@@ -1170,36 +1138,22 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
      */
     private function URL_exists($url)
     {
-        if (ini_get('allow_url_fopen') == "1")
-        {
-            $header = @get_headers($url);
+        $ch = curl_init($url);
 
-            return !is_bool($header) && stripos($header[0], "200 OK") ? TRUE : FALSE;
-        }
-        // Use curl as a fallback if allow_url_fopen is disabled
-        elseif (extension_loaded('curl'))
+        curl_setopt($ch, CURLOPT_HEADER, TRUE);    // we want headers
+        curl_setopt($ch, CURLOPT_NOBODY, TRUE);    // we don't need the body
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        $output = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        // PHP 8.0, LkpPo, 20201126
+        // The curl_close() function no longer has an effect
+        if (version_compare(PHP_VERSION, '8.0.0', '<'))
         {
-            $ch = curl_init($url);
-
-            curl_setopt($ch, CURLOPT_HEADER, TRUE);    // we want headers
-            curl_setopt($ch, CURLOPT_NOBODY, TRUE);    // we don't need body
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            $output = curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            // PHP 8.0, LkpPo, 20201126
-            // The curl_close() function no longer has an effect
-            if (version_compare(PHP_VERSION, '8.0.0', '<'))
-            {
-                curl_close($ch);
-            }
-
-            return ($httpcode >= 200 && $httpcode < 300);
+            curl_close($ch);
         }
-        else
-        {
-            return FALSE;
-        }
+
+        return ($httpcode >= 200 && $httpcode < 300);
     }
     /**
      * Convert a binary file to a hexadecimal file encoded with bin2hex

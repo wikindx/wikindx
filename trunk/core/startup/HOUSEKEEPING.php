@@ -62,18 +62,18 @@ class HOUSEKEEPING
             $pString .= \HTML\p($messages->text("misc", "attachmentCache3", $doneCache));
             $pString .= \FORM\formHeader("list_FILETOTEXT_CORE");
             $pString .= \FORM\hidden("method", "checkCache");
-            if (function_exists('curl_multi_exec')) {
-                if (!$this->session->getVar("cache_AttachmentsRemain")) { // At beginning
-                    $checked = 'CHECKED';
-                }
-                elseif ($this->session->getVar("cache_Curl")) {
-                    $checked = 'CHECKED';
-                }
-                else {
-                    $checked = FALSE;
-                }
-                $pString .= \HTML\p(\FORM\checkbox($messages->text("misc", "attachmentCache4"), "cacheCurl", $checked));
+            
+            if (!$this->session->getVar("cache_AttachmentsRemain")) { // At beginning
+                $checked = 'CHECKED';
             }
+            elseif ($this->session->getVar("cache_Curl")) {
+                $checked = 'CHECKED';
+            }
+            else {
+                $checked = FALSE;
+            }
+            $pString .= \HTML\p(\FORM\checkbox($messages->text("misc", "attachmentCache4"), "cacheCurl", $checked));
+            
             $value = $this->session->getVar("cache_Limit");
             $pString .= \HTML\p($messages->text("misc", "attachmentCache5", \FORM\textInput(FALSE, "cacheLimit", $value, 3)));
             $pString .= \HTML\p(\FORM\formSubmit($messages->text("submit", "Cache")) . \FORM\formEnd());

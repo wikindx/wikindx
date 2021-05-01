@@ -100,40 +100,23 @@ class ADMINCOMPONENTS
         $componentsRelease = [];
         $AllowUpdate = TRUE;
         
-        $InstalledExtensions = get_loaded_extensions();
-        
         $pString = "";
-        // Without curl we can't download
-        if (!in_array("curl", $InstalledExtensions))
-        {
-            $AllowUpdate = FALSE;
-            $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'missingCurl'));
-        }
-        // Without a decompressor we can't update
-        elseif (!in_array("zip", $InstalledExtensions))
-        {
-            $AllowUpdate = FALSE;
-            $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'missingCompression'));
-        }
         // Retrieve the list
-        else
+        if (file_exists($this->serverComponentsListPath))
         {
-            if (file_exists($this->serverComponentsListPath))
-            {
-                $componentsRelease = \FILE\read_json_file($this->serverComponentsListPath);
-                if ($componentsRelease === NULL)
-                {
-                    $componentsRelease = [];
-                    $AllowUpdate = FALSE;
-                    $pString .= $this->errors->text("components", "parse");
-                }
-            }
-            else
+            $componentsRelease = \FILE\read_json_file($this->serverComponentsListPath);
+            if ($componentsRelease === NULL)
             {
                 $componentsRelease = [];
                 $AllowUpdate = FALSE;
-                $pString .= "The component list has not yet been downloaded.";
+                $pString .= $this->errors->text("components", "parse");
             }
+        }
+        else
+        {
+            $componentsRelease = [];
+            $AllowUpdate = FALSE;
+            $pString .= "The component list has not yet been downloaded.";
         }
         
         // abb. for hash key names that use the name of the hashing algo
@@ -397,7 +380,7 @@ class ADMINCOMPONENTS
             {
                 foreach ($cmp["component_packages"] as $dlink)
                 {
-                    if (\UTILS\matchSuffix($dlink["package_location"], ".zip") && in_array("zip", $InstalledExtensions))
+                    if (\UTILS\matchSuffix($dlink["package_location"], ".zip"))
                     {
                         $h .= "" . \HTML\a("link", "&#x1f4e6;", $dlink["package_location"], "blank", $dlink["package_location"]);
                         $h .= "&nbsp;<span title=\"" . WIKINDX_PACKAGE_HASH_ALGO . " hash: " . $dlink["package_" . WIKINDX_PACKAGE_HASH_ALGO] . "\">&#x1f511;</span>";
@@ -454,21 +437,18 @@ class ADMINCOMPONENTS
         }
         
         // Global admin actions
-        if (in_array("curl", $InstalledExtensions))
+        if (file_exists($this->serverComponentsListPath))
         {
-            if (file_exists($this->serverComponentsListPath))
-            {
-                $datedl = date_create();
-                date_timestamp_set($datedl, filemtime($this->serverComponentsListPath));
-                $datedl = $datedl->format("c");
-            }
-            else
-            {
-                $datedl = "none";
-            }
-            $h .= HTML\p(\HTML\a("link", $this->messages->text("components", "checkUpdates"), "index.php?action=admin_ADMINCOMPONENTS_CORE&amp;method=checkUpdatesOnline&amp;dummy=" . \UTILS\uuid()) . " (" . $this->messages->text("components", "lastUpdate") . "&nbsp;" . $datedl . ")", "", "right");
-            $h .= "\n";
+            $datedl = date_create();
+            date_timestamp_set($datedl, filemtime($this->serverComponentsListPath));
+            $datedl = $datedl->format("c");
         }
+        else
+        {
+            $datedl = "none";
+        }
+        $h .= HTML\p(\HTML\a("link", $this->messages->text("components", "checkUpdates"), "index.php?action=admin_ADMINCOMPONENTS_CORE&amp;method=checkUpdatesOnline&amp;dummy=" . \UTILS\uuid()) . " (" . $this->messages->text("components", "lastUpdate") . "&nbsp;" . $datedl . ")", "", "right");
+        $h .= "\n";
         
         // Action of fixing misconfigured user preferences
         if ($this->checkMisconfiguredUserPreferences($componentsInstalled))
@@ -480,7 +460,7 @@ class ADMINCOMPONENTS
         
         // Display the upload form only if an archive format is supported
         $h .= \HTML\h($this->messages->text("components", "manualComponent"));
-        if (in_array("zip", $InstalledExtensions) && ini_get("file_uploads"))
+        if (ini_get("file_uploads"))
         {
             $h .= \FORM\formMultiHeader("admin_ADMINCOMPONENTS_CORE");
             $h .= \FORM\hidden('method', 'installByUpload');
@@ -489,7 +469,7 @@ class ADMINCOMPONENTS
             
             $h .= \HTML\p(
                 $this->messages->text("components", "packageFile") . \FORM\fileUpload("", "packaqefile", 30, ".zip")
-                . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ")"
+                . " (max.&nbsp;" . \FILE\formatSize(\FILE\fileUploadMaxSize()) . ", Zip format only)"
             );
             $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "hashFile"));
             $h .= \HTML\p($this->messages->text("components", "hashFile") . \FORM\fileUpload("", "hashfile", 30) . BR . \HTML\span($hint, 'hint'));
@@ -497,14 +477,7 @@ class ADMINCOMPONENTS
         }
         else
         {
-            if (!in_array("zip", $InstalledExtensions))
-            {
-                $h .= \HTML\p($this->messages->text("components", 'missingCompression'));
-            }
-            if (!ini_get("file_uploads"))
-            {
-                $h .= \HTML\p($this->messages->text("misc", "uploadDisabled"));
-            }
+            $h .= \HTML\p($this->messages->text("misc", "uploadDisabled"));
         }
         
         $h .= HTML\p($nav, "", "right");
@@ -628,104 +601,88 @@ class ADMINCOMPONENTS
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
             $AllowUpdate = TRUE;
-            $InstalledExtensions = get_loaded_extensions();
             
-            // Without curl we can't download
-            if (!in_array("curl", $InstalledExtensions))
-            {
-                $AllowUpdate = FALSE;
-                $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'missingCurl'));
-            }
-            // Without a decompressor we can't update
-            elseif (!in_array("zip", $InstalledExtensions))
-            {
-                $AllowUpdate = FALSE;
-                $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'missingCompression'));
-            }
             // Install
-            else
+            $componentsRelease = \FILE\read_json_file($this->serverComponentsListPath);
+            
+            $rootPathByType = [
+                'plugin' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
+                'style' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
+                'template' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
+                'vendor' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
+            ];
+            
+            
+            $dlpkg = [];
+            
+            // Keep the packages with a compression algo supported on the current system
+            foreach ($componentsRelease as $k => $cr)
             {
-                $componentsRelease = \FILE\read_json_file($this->serverComponentsListPath);
-                
-                $rootPathByType = [
-                    'plugin' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
-                    'style' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
-                    'template' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
-                    'vendor' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
-                ];
-                
-                
-                $dlpkg = [];
-                
-                // Keep the packages with a compression algo supported on the current system
-                foreach ($componentsRelease as $k => $cr)
+                if ($cr["component_type"] == $this->vars['component_type'] && $cr["component_id"] == $this->vars['component_id'])
                 {
-                    if ($cr["component_type"] == $this->vars['component_type'] && $cr["component_id"] == $this->vars['component_id'])
+                    foreach ($cr["component_packages"] as $kd => $dlink)
                     {
-                        foreach ($cr["component_packages"] as $kd => $dlink)
+                        if (\UTILS\matchSuffix($dlink["package_location"], ".zip"))
                         {
-                            if (\UTILS\matchSuffix($dlink["package_location"], ".zip") && in_array("zip", $InstalledExtensions))
-                            {
-                                $dlpkg[$dlink["package_size"]] = $dlink;
-                            }
+                            $dlpkg[$dlink["package_size"]] = $dlink;
                         }
                     }
                 }
-                
-                // Sort by size
-                ksort($dlpkg);
-                
-                // Try to install the component from the smallest package to the largest
-                // The first successful installation completes the operation
-                foreach ($dlpkg as $pkg)
+            }
+            
+            // Sort by size
+            ksort($dlpkg);
+            
+            // Try to install the component from the smallest package to the largest
+            // The first successful installation completes the operation
+            foreach ($dlpkg as $pkg)
+            {
+                // Purge and recreate the setup cache before each attempt
+                // for cleaning any byproduct of a failed setup
+                $pkgcachedir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "setup"]);
+                if (file_exists($pkgcachedir))
                 {
-                    // Purge and recreate the setup cache before each attempt
-                    // for cleaning any byproduct of a failed setup
-                    $pkgcachedir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "setup"]);
-                    if (file_exists($pkgcachedir))
+                    \FILE\recurse_rmdir($pkgcachedir);
+                }
+                if (!file_exists($pkgcachedir))
+                {
+                    mkdir($pkgcachedir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
+                }
+                
+                $pkgcachefile = $pkgcachedir . DIRECTORY_SEPARATOR . basename($pkg["package_location"]);
+                $cmpdstdir = $rootPathByType[$this->vars['component_type']];
+                
+                if (\UTILS\download_sf_file($pkg["package_location"], $pkgcachefile))
+                {
+                    $pkghash = \UTILS\hash_path($pkgcachefile, WIKINDX_PACKAGE_HASH_ALGO);
+                    if ($pkghash == $pkg["package_" . WIKINDX_PACKAGE_HASH_ALGO])
                     {
-                        \FILE\recurse_rmdir($pkgcachedir);
-                    }
-                    if (!file_exists($pkgcachedir))
-                    {
-                        mkdir($pkgcachedir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
-                    }
-                    
-                    $pkgcachefile = $pkgcachedir . DIRECTORY_SEPARATOR . basename($pkg["package_location"]);
-                    $cmpdstdir = $rootPathByType[$this->vars['component_type']];
-                    
-                    if (\UTILS\download_sf_file($pkg["package_location"], $pkgcachefile))
-                    {
-                        $pkghash = \UTILS\hash_path($pkgcachefile, WIKINDX_PACKAGE_HASH_ALGO);
-                        if ($pkghash == $pkg["package_" . WIKINDX_PACKAGE_HASH_ALGO])
+                        if (\FILE\extractComponentPackage($pkgcachefile, $cmpdstdir))
                         {
-                            if (\FILE\extractComponentPackage($pkgcachefile, $cmpdstdir))
-                            {
-                                $this->messageString = $this->success->text("componentSuccess");
-                                \FILE\rmfile($pkgcachefile);
+                            $this->messageString = $this->success->text("componentSuccess");
+                            \FILE\rmfile($pkgcachefile);
 
-                                break;
-                            }
-                            else
-                            {
-                                $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'installError', basename($pkg["package_location"])));
-                            }
+                            break;
                         }
                         else
                         {
-                            $this->messageString = $this->errors->text(
-                                "components",
-                                'adminFailed',
-                                $this->messages->text("components", 'downloadSignature', $pkg["package_location"]) .
-                                $this->messages->text("components", 'corruptDownload', $pkg["package_" . WIKINDX_PACKAGE_HASH_ALGO]) .
-                                $this->messages->text("components", 'computedHash', $pkghash)
-                            );
+                            $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'installError', basename($pkg["package_location"])));
                         }
                     }
                     else
                     {
-                        $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'downloadError', basename($pkg["package_location"])));
+                        $this->messageString = $this->errors->text(
+                            "components",
+                            'adminFailed',
+                            $this->messages->text("components", 'downloadSignature', $pkg["package_location"]) .
+                            $this->messages->text("components", 'corruptDownload', $pkg["package_" . WIKINDX_PACKAGE_HASH_ALGO]) .
+                            $this->messages->text("components", 'computedHash', $pkghash)
+                        );
                     }
+                }
+                else
+                {
+                    $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'downloadError', basename($pkg["package_location"])));
                 }
             }
         }
@@ -826,7 +783,7 @@ class ADMINCOMPONENTS
                     $pString = $this->errors->text(
                         "components",
                         'adminFailed',
-                        "Archive format unknown. Only ZIP is used."
+                        $this->messages->text("components", 'compressionFormatError')
                     );
                 }
             }

@@ -4,6 +4,16 @@ RELEASES:
 v6.4.8
 Focus: bug fixes & feature enhancements
 
+IMPORTANT INFORMATION:
+
+Three extensions become mandatory: curl, dom (libxml) and zip. 
+
+This allows:
+
+- More attachment format covered by research
+- Component update more stable
+
+
 BUG FIXES:
 1. Fixed a rare error (missing URL array) when adding/editing resources.
 2. Replace some some call to strstr by mb_strstr (UTF-8 support).
@@ -27,9 +37,13 @@ MAINTENANCE:
 3. Store the content of attachment cache files in the database [#352].
 4. Add missing mime-types of parsable attachments.
 5. Fix return_bytes for negative values (e.g. memory_limit) [#351].
+6. curl PHP extension is mandatory now.
+7. dom PHP extension is mandatory now.
+8. zip PHP extension is mandatory now.
 
 SECURITY
 1. Update PHPMailer (v6.4.1, CVE-2020-36326, a regression of CVE-2018-19296 object injection introduced in 6.1.8).
+
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

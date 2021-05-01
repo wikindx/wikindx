@@ -70,7 +70,7 @@ class FILETOTEXT
         // Turn error display off so that errors from PdfToText don't get written to screen (still written to the cache files)
         $errorDisplay = ini_get('display_errors');
         ini_set('display_errors', FALSE);
-        if (array_key_exists('cacheCurl', $vars) && ($vars['cacheCurl'] == 'on') && function_exists('curl_multi_exec'))
+        if (array_key_exists('cacheCurl', $vars) && ($vars['cacheCurl'] == 'on'))
         {
             $session->setVar("cache_Curl", TRUE);
             $curlExists = TRUE;

@@ -40,17 +40,8 @@ mysqldump --user=wkxuser --password=4hv563UFM9Hnte5J --result-file=wikindx_backu
 
 ## Upgrading components
 
-From v5.9.1, components are updated and managed from the __Components Manager__
+From v5.9.1, components are downloaded, updated, and managed from the __Components Manager__
 (Menu entry: _Admin > Components_). Update them after the core is fully upgraded.
-
-The cURL and Zip PHP extensions are not mandatory but used by the __Components Manager__.
-We recommend to enable these extensions and use the __Components Manager__.
-
-Without cURL, components cannot be downloaded by WIKINDX but you can still manage to install
-a component with the top form of the __Components Manager__ from a local copy downloaded from Sourceforge.
-
-Without Zip, you cannot install components via the __Components Manager__ and
-have to do it by hand.
 
 If you are upgrading a component by hand, follow these steps:
 

@@ -828,7 +828,7 @@ class FILETOTEXT
                         $path = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "mht_" . \UTILS\uuid() . ".txt"]);
                         $extension = \FILE\getExtension($path);
                         
-                        cf. https://tools.ietf.org/html/rfc1521#section-5.1
+                        // cf. https://tools.ietf.org/html/rfc2045#section-6
                         if ($cte == "quoted-printable")
                         {
                             $file = quoted_printable_decode($file);

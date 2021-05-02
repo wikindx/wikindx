@@ -27,7 +27,7 @@ namespace UTILS
      */
     function listCoreMandatoryPHPExtensions()
     {
-        return ['Core', 'curl', 'date', 'dom', 'fileinfo', 'filter', 'gd', 'gettext', 'hash', 'iconv', 'intl', 'json', 'mbstring', 'libxml','mysqli', 'pcre', 'session', 'SimpleXML', 'xmlreader', 'zip'];
+        return ['Core', 'curl', 'date', 'dom', 'fileinfo', 'filter', 'gd', 'gettext', 'hash', 'iconv', 'intl', 'json', 'mbstring', 'libxml','mysqli', 'pcre', 'session', 'SimpleXML', 'SPL', 'xmlreader', 'zip'];
     }
     /**
      * Return an array of optional PHP extensions used by the WIKINDX core

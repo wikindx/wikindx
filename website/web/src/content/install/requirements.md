@@ -135,6 +135,7 @@ for proper functioning, which should be the case for almost all installations.
 | pcre       |
 | Reflection | >= 5.2.0 and <= 6.0.1
 | session    |
+| SPL        | >= 6.0.1
 | SimpleXML  | >= 4.2.0
 | xml        |
 | xmlreader  | >= 5.2.0

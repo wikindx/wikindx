@@ -22,6 +22,7 @@ class FILETOTEXT
     {
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "pdftotext", "PdfToText.phpclass"]));
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "rtftools", "RtfTexter.phpclass"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "RecursiveDOMIterator.php"]));
     }
     
     /**
@@ -919,38 +920,45 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readHtml($filename)
+    function readHtml($filename)
     {
         $content = "";
         
-        $doc = new DOMDocument();
+        // Load an normalize the content
+        $dom = new DOMDocument();
         libxml_use_internal_errors(true);
-        $doc->loadHTMLFile($filename, LIBXML_NOWARNING | LIBXML_NOERROR);
+        $dom->loadHTMLFile($filename, LIBXML_NOWARNING | LIBXML_NOERROR);
+        $dom->normalizeDocument();
         
-        $elements = $doc->getElementsByTagName('body');
-        
-        if (!is_null($elements))
+        // Initalize the iterator
+        $dit = new RecursiveIteratorIterator(
+            new RecursiveDOMIterator($dom),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        // Extract text
+        foreach($dit as $node)
         {
-            foreach ($elements as $element)
+            // Remove blacklisted elements
+            if ($node->nodeType === XML_ELEMENT_NODE && in_array($node->nodeName, ["applet","colgroup","form","head","img","link","listener","object","script","style"]))
             {
-                $nodes = $element->childNodes;
-                foreach ($nodes as $node)
+                $node->parentNode->removeChild($node);
+            }
+            // Read other elements
+            elseif ($node->nodeType === XML_TEXT_NODE)
+            {
+                echo $node->parentNode->nodeName, " ", $node->getNodePath(), LF;
+                
+                $content .= $node->nodeValue;
+                $lastchar = mb_substr($node->nodeValue, -1);
+                
+                // Add an EOL for block elements if it is missing in the stream
+                if ($lastchar != "\r" && $lastchar != "\n" && $node->parentNode->lastChild->isSameNode($node) && in_array($node->parentNode->nodeName, ["hr","li","ul","ol","hgroup","dd","div","dt","address","details","blockquote","p","h1","h2","h3","h4","h4","h6","table","tr","nav","main","aside","header","footer","article","section","figure","pre"]))
                 {
-                    // Skip blacklisted elements and their content
-                    // TODO(LkpPo): 2021-04-30, all blacklisted elements are not skipped because the reading is not recursive descendant!!!
-                    if (in_array($node->nodeName, ["applet","colgroup","form","head","img","listener","object","script","style"]))
-                    {
-                        // Do nothing
-                    }
-                    else
-                    {
-                        $content .= $node->nodeValue . LF;
-                    }
+                    $content .= LF;
                 }
             }
         }
-        
-        unset($doc);
         
         return $content;
     }

@@ -115,7 +115,7 @@ class IMPORTCOMMON
         }
         if ($this->importType == 'endnote')
         {
-            $pString .= FORM\formMultiHeader("importexportbib_importEndnote");
+            $pString .= FORM\formMultiHeader("import_ENDNOTEIMPORT_CORE");
             $pString .= FORM\hidden('method', 'process');
         }
         else

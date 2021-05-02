@@ -17,7 +17,6 @@ class IMPORTBIBTEX
     public $type = FALSE;
     private $db;
     private $vars;
-    private $gatekeep;
     private $errors;
     private $success;
     private $messages;
@@ -92,7 +91,6 @@ class IMPORTBIBTEX
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IMPORTCOMMON.php"]));
         $this->import = new IMPORTCOMMON();
@@ -140,7 +138,13 @@ class IMPORTBIBTEX
     {
         if (!$this->importFile)
         {
-            $this->gatekeep->init();
+        	if (!WIKINDX_IMPORT_BIB || !$this->session->getVar("setup_Write")) { 
+				if (!$this->session->getVar("setup_Superadmin")) {
+					$auth = FACTORY_AUTHORIZE::getInstance();
+					$auth->initLogon();
+					FACTORY_CLOSE::getInstance();
+				}
+			}
         }
         $this->fileName = $this->gatherStage1();
         $this->parse->expandMacro = TRUE; // substitute @string values
@@ -160,7 +164,6 @@ class IMPORTBIBTEX
      */
     public function stage2Invalid()
     {
-        $this->gatekeep->init();
         $this->formData = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
         \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         if (!is_file($this->formData["import_FileNameEntries"]))

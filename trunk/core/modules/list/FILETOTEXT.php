@@ -828,6 +828,7 @@ class FILETOTEXT
                         $path = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "mht_" . \UTILS\uuid() . ".txt"]);
                         $extension = \FILE\getExtension($path);
                         
+                        cf. https://tools.ietf.org/html/rfc1521#section-5.1
                         if ($cte == "quoted-printable")
                         {
                             $file = quoted_printable_decode($file);
@@ -835,6 +836,18 @@ class FILETOTEXT
                         elseif ($cte == "base64")
                         {
                             $file = base64_decode($file);
+                        }
+                        elseif ($cte == "binary")
+                        {
+                            // Raw data (do nothing)
+                        }
+                        elseif ($cte == "8bit")
+                        {
+                            // Raw data (do nothing)
+                        }
+                        elseif ($cte == "7bit")
+                        {
+                            // Raw data in ASCII (do nothing)
                         }
                         
                         if (file_put_contents($path, $file) !== FALSE)
@@ -875,7 +888,7 @@ class FILETOTEXT
                             $matches = [];
                             if (preg_match("/Content-Transfer-Encoding:(.+)/ui", $headers, $matches) == 1)
                             {
-                                $cte = trim($matches[1]);
+                                $cte = mb_strtolower(trim($matches[1]));
                             }
                             $matches = [];
                             if (preg_match("/Content-Type:(.+)/ui", $headers, $matches) == 1)
@@ -885,11 +898,11 @@ class FILETOTEXT
                                 $v = explode(";", $mime);
                                 if (count($v) == 2)
                                 {
-                                    $mime = trim($v[0]);
+                                    $mime = mb_strtolower(trim($v[0]));
                                     $matches = [];
                                     if (preg_match("/charset=\"(.+)\"/ui", $v[1], $matches) == 1)
                                     {
-                                        $charset = trim($matches[1]);
+                                        $charset = mb_strtolower(trim($matches[1]));
                                     }
                                 }
                             }

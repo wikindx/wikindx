@@ -900,9 +900,9 @@ class FILETOTEXT
                                 {
                                     $mime = mb_strtolower(trim($v[0]));
                                     $matches = [];
-                                    if (preg_match("/charset=\"(.+)\"/ui", $v[1], $matches) == 1)
+                                    if (preg_match("/charset=(.+)/ui", $v[1], $matches) == 1)
                                     {
-                                        $charset = mb_strtolower(trim($matches[1]));
+                                        $charset = mb_strtolower(trim($matches[1], " \"\n\r\t\v\0"));
                                     }
                                 }
                             }

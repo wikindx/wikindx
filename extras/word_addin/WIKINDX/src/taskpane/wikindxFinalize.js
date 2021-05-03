@@ -29,7 +29,6 @@ export function finalizeDisplay() {
         cc.items[i].delete();
         continue;
       }
-      console.log('here');
       // 'looking for wikindx-id-{[JSON string/array]}'
       if ((split.length < 3)
         || (split[0] != 'wikindx')) {

@@ -2232,10 +2232,10 @@
 <dependentPostAlternative></dependentPostAlternative>
 <singular></singular>
 <plural></plural>
-<pre></pre>
-<post></post>
+<pre>(</pre>
+<post>)</post>
 </type>
-<number><dependentPre> </dependentPre>
+<number><dependentPre>, </dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2244,13 +2244,13 @@
 <pre>__DEPENDENT_ON_PREVIOUS_FIELD__No. </pre>
 <post></post>
 </number>
-<institutionLocation><dependentPre></dependentPre>
+<institutionLocation><dependentPre>. </dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
 <singular></singular>
 <plural></plural>
-<pre></pre>
+<pre>__DEPENDENT_ON_PREVIOUS_FIELD__</pre>
 <post>: </post>
 </institutionLocation>
 <institution><dependentPre></dependentPre>

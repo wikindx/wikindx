@@ -375,6 +375,9 @@ class UPDATEDATABASE
             // Operations always carried out at the start of the last upgrade
             if ($dbVersion + 1 == WIKINDX_INTERNAL_VERSION)
             {
+                // Prevent session fixing before a major change of status
+                session_regenerate_id();
+                
                 // Refresh the locales list
                 \LOCALES\refreshSystemLocalesCache(TRUE);
                 

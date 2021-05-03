@@ -816,6 +816,8 @@ class USER
         {
             $this->session->setVar("setup_Superadmin", TRUE);
         }
+        // Prevent session fixing before a major change of status
+        session_regenerate_id();
         $this->session->setVar("setup_UserId", $row['usersId']);
         $this->session->setVar("setup_Write", TRUE);
         $this->session->delVar("setup_ReadOnly");
@@ -1062,6 +1064,8 @@ class USER
     {
         if ($userId)
         {
+            // Prevent session fixing before a major change of status
+            session_regenerate_id();
             $this->session->setVar("setup_UserId", $userId);
             $bib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
             $bibs = $bib->getUserBibs();

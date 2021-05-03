@@ -242,6 +242,8 @@ class REGISTER
         // grab id and write initial session details to grant write access
         $this->db->formatConditions(['usersUsername' => $this->vars['usersUsername']]);
         $userId = $this->db->selectFirstField('users', 'usersId');
+        // Prevent session fixing before a major change of status
+        session_regenerate_id();
         $this->session->setVar("setup_UserId", $userId);
         $this->session->setVar("setup_Write", TRUE);
         // Write default preferences (TRUE == insert)

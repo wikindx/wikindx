@@ -255,11 +255,11 @@ class FILETOTEXT
             break;
             case WIKINDX_MIMETYPE_HTML:
             case WIKINDX_MIMETYPE_XHTML:
-            case WIKINDX_MIMETYPE_XML_APP:
-            case WIKINDX_MIMETYPE_XML_TEXT:
                 $text = $this->readHtml($filename);
             break;
+            case WIKINDX_MIMETYPE_MHT_ALT:
             case WIKINDX_MIMETYPE_MHT_APP:
+            case WIKINDX_MIMETYPE_MHT_MIX:
             case WIKINDX_MIMETYPE_MHT_MUL:
             case WIKINDX_MIMETYPE_MHT_RFC:
                 $text = $this->readMht($filename);
@@ -285,6 +285,7 @@ class FILETOTEXT
                         // Type not handled
                         $text = "";
                     break;
+                    case "eml":
                     case "mht":
                     case "mhtml":
                         $text = $this->readMht($filename);
@@ -293,6 +294,10 @@ class FILETOTEXT
                         $text = $this->readText($filename);
                     break;
                 }
+            break;
+            case WIKINDX_MIMETYPE_XML_APP:
+            case WIKINDX_MIMETYPE_XML_TEXT:
+                $text = $this->readHtml($filename);
             break;
             default:
                 // Type not handled

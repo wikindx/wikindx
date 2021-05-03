@@ -227,7 +227,9 @@ define('WIKINDX_MIMETYPE_JSON',    'application/json');
 define('WIKINDX_MIMETYPE_KWD',     'application/vnd.kde.kword');
 define('WIKINDX_MIMETYPE_LWP',     'application/vnd.lotus-wordpro');
 define('WIKINDX_MIMETYPE_MD',      'text/markdown');
+define('WIKINDX_MIMETYPE_MHT_ALT', 'message/alternative'); // Emails
 define('WIKINDX_MIMETYPE_MHT_APP', 'application/x-mimearchive');
+define('WIKINDX_MIMETYPE_MHT_MIX', 'message/mixed'); // Emails
 define('WIKINDX_MIMETYPE_MHT_MUL', 'multipart/related');
 define('WIKINDX_MIMETYPE_MHT_RFC', 'message/rfc822');
 define('WIKINDX_MIMETYPE_ODP',     'application/vnd.oasis.opendocument.presentation');

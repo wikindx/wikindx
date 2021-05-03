@@ -89,72 +89,85 @@ You can attach files of any type to resources. For those that are text-type docu
 a small number can be converted to text and cached for fulltext search from within Advanced Search.
 Following is a list of the major text-type document formats and their caching support for fulltext search.
 
-Many old or rare office suite formats will not be directly supported. They are appointed to remove any ambiguity.
-Consider converting them to DOCX or ODF format before attaching them.
-
 The documents are analyzed according to their mime-type and then according to their extension if there is any ambiguity.
 
 The `plain/text` mime-type is a generic format that covers a multitude of files.
-As the search targets written documents, attachments with the following extension are excluded: CSV, TSV, SILK. Then encoding is assumed to be __UTF-8 only__.
+As the search targets written documents, attachments with the following extension are excluded: CSV, TSV, SILK.
 
-|Extension |Kind of document                    |Fulltext search |MIME Type
-|----------|------------------------------------|-------|----------------------------------------------------------------------------
-|ABW, ZABW |AbiWord Document                    |No     |application/x-abiword
-|CWK       |ClarisWorks/AppleWorks Document     |No     |
-|DOC       |Word 97-2003 / DOS Word             |Yes    |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
-|DOCM	     |Word 2007-365 document+macro        |Yes    |[application/vnd.ms-word.document.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.document.macroEnabled.12)
-|DOCX	     |Word 2007-365 document              |Yes    |[application/vnd.openxmlformats-officedocument.wordprocessingml.document]()
-|DOT, WPT  |Word 97-2003 / DOS Word Template    |Yes    |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
-|DOTM	     |Word 2007-365 template+macro        |Yes    |[application/vnd.ms-word.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.template.macroEnabled.12)
-|DOTX	     |Word 2007-365 template              |Yes    |[application/vnd.openxmlformats-officedocument.wordprocessingml.template]()
-|EPUB      |Electronic publication              |Yes    |application/epub+zip
-|FB2       |FictionBook 2.0                     |No     |
-|FODP      |ODF Presentation Flat               |No     |
-|FODT      |ODF XML Text Document Flat          |No     |
-|HTML, HTML|HyperText Markup Language           |Yes    |[text/html](https://www.iana.org/assignments/media-types/text/html)
-|HWP       |Hangul WP 97                        |No     |
-|KWD       |KWord                               |No     |[application/vnd.kde.kword](https://www.iana.org/assignments/media-types/application/vnd.kde.kword)
-|LRF       |BroadBand Ebook                     |No     |
-|LWP       |Lotus WordPro                       |No     |[application/vnd.lotus-wordpro](https://www.iana.org/assignments/media-types/application/vnd.lotus-wordpro)
-|MAN, MDOC |Manpage, mandoc                     |No     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
-|MD        |Markdown                            |No     |[text/markdown](https://www.iana.org/assignments/media-types/text/markdown)
-|MHT, MHTML|Multipart HTML                      |Yes    |multipart/related
-|MW, MCW   |MacWrite Document                   |No     |
-|MWD       |Mariner Mac Write Classic           |No     |
-|ODP       |ODF Presentation                    |No     |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
-|ODT       |ODF Text Document                   |Yes    |[application/vnd.oasis.opendocument.text](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text)
-|OTP       |ODF Presentation Template           |No     |[application/vnd.oasis.opendocument.presentation-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation-template)
-|OTT       |ODF Text Template                   |Yes    |[application/vnd.oasis.opendocument.text-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text-template)
-|PAGES     |Apple Pages                         |No     |
-|PDB       |PalmDoc                             |No     |
-|PDB       |Plucker eBook                       |No     |
-|PDF       |Portable Document Format            |Yes    |[application/pdf](https://www.iana.org/assignments/media-types/application/pdf)
-|POTM      |PowerPoint 2007-365 Template+macro  |No     |[application/vnd.ms-powerpoint.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.template.macroEnabled.12)
-|POTX      |PowerPoint 2007-365 Template        |No     |[application/vnd.openxmlformats-officedocument.presentationml.template](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.template)
-|PPT       |PowerPoint 97-2003                  |No     |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
-|PPTM      |PowerPoint 2007-365 +macro          |No     |[application/vnd.ms-powerpoint.presentation.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.presentation.macroEnabled.12)
-|PPTX      |PowerPoint 2007-365                 |No     |[application/vnd.openxmlformats-officedocument.presentationml.presentation](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.presentation)
-|PS, EPS, AI |PostScript                        |No     |[application/postscript](https://www.iana.org/assignments/media-types/application/postscript)
-|RTF       |Rich Text Format 1.9.1              |Yes    |[application/rtf](https://www.iana.org/assignments/media-types/application/rtf) or [text/rtf](https://www.iana.org/assignments/media-types/text/rtf)
-|SCD, SLA  |Scribus Document                    |No     |[application/vnd.scribus](https://www.iana.org/assignments/media-types/application/vnd.scribus)
-|SDD       |StarOffice presentation             |No     |
-|SDW       |StarOffice Document                 |No     |
-|STI       |OpenOffice.org 1.0 Presentation Template |No|
-|STW       |OpenOffice.org 1.0 Text Template    |No     |[application/vnd.oasis.opendocument.presentation-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation-template)
-|SXI       |OpenOffice.org 1.0 Presentation     |No     |
-|SXW       |OpenOffice.org 1.0 Text Document    |No     |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
-|TEI       |Text Encoding Initiative            |No     |[application/tei+xml](https://www.iana.org/assignments/media-types/application/tei+xml)
-|TEX, LATEX|TeX, LaTeX                          |No     |
-|TEXI      |TexInfo File                        |No     |
-|TROFF, ROFF|Groff, Roff, Troff                 |No     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
-|TXT, others|Plain text                         |Yes    |text/plain
-|UOF, UOT  |Unified Office Text                 |No     |
-|UOP       |Unified Office presentation         |No     |
-|WML       |Wireless Mark-up Language           |No     |[text/vnd.wap.wml](https://www.iana.org/assignments/media-types/text/vnd.wap.wml)
-|WMLC      |Wireless Mark-up Language           |No     |[application/vnd.wap.wmlc](https://www.iana.org/assignments/media-types/application/vnd.wap.wmlc)
-|WN        |WriteNow Document                   |No     |
-|WPD       |Wordperfect                         |No     |[application/vnd.wordperfect](https://www.iana.org/assignments/media-types/application/vnd.wordperfect) or [application/wordperfect5.1](https://www.iana.org/assignments/media-types/application/wordperfect5.1)
-|WPS       |Microsoft Works                     |No     |[application/vnd.ms-works](https://www.iana.org/assignments/media-types/application/vnd.ms-works)
-|WRI       |Microsoft Write                     |No     |application/mswrite
-|XHTML	  |Extensible HyperText Markup Language|Yes    |[application/xhtml+xml](https://www.iana.org/assignments/media-types/application/xhtml+xml)
-|XPS, OXPS |XML Paper Specification             |No     |[application/vnd.ms-xpsdocument](https://www.iana.org/assignments/media-types/application/vnd.ms-xpsdocument)
+Then encoding is assumed to be __UTF-8 only__, unless the format specification says otherwise.
+
+Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
+
+### Formats supported by Full Text search
+
+|Extension |Kind of document                    |MIME Type
+|----------|------------------------------------|----------------------------------------------------------------------------
+|DOC       |Word 97-2003 / DOS Word             |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
+|DOCM	     |Word 2007-365 document+macro        |[application/vnd.ms-word.document.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.document.macroEnabled.12)
+|DOCX	     |Word 2007-365 document              |[application/vnd.openxmlformats-officedocument.wordprocessingml.document]()
+|DOT, WPT  |Word 97-2003 / DOS Word Template    |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
+|DOTM	     |Word 2007-365 template+macro        |[application/vnd.ms-word.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.template.macroEnabled.12)
+|DOTX	     |Word 2007-365 template              |[application/vnd.openxmlformats-officedocument.wordprocessingml.template]()
+|EPUB      |Electronic publication              |application/epub+zip
+|HTML, HTML|HyperText Markup Language           |[text/html](https://www.iana.org/assignments/media-types/text/html)
+|MHT, MHTML|Multipart HTML                      |multipart/related
+|ODT       |ODF Text Document                   |[application/vnd.oasis.opendocument.text](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text)
+|OTT       |ODF Text Template                   |[application/vnd.oasis.opendocument.text-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text-template)
+|PDF       |Portable Document Format            |[application/pdf](https://www.iana.org/assignments/media-types/application/pdf)
+|RTF       |Rich Text Format 1.9.1              |[application/rtf](https://www.iana.org/assignments/media-types/application/rtf) or [text/rtf](https://www.iana.org/assignments/media-types/text/rtf)
+|TXT, others|Plain text                         |text/plain
+|XHTML	  |Extensible HyperText Markup Language|[application/xhtml+xml](https://www.iana.org/assignments/media-types/application/xhtml+xml)
+
+### Formats unsupported by Full Text search
+
+Many old or rare office suite formats will not be directly supported. They are appointed to remove any ambiguity.
+Consider converting them to DOCX or ODF format before attaching them.
+
+DRM protected ebooks and password protected documents are not supported.
+
+|Extension |Kind of document                    |MIME Type
+|----------|------------------------------------|----------------------------------------------------------------------------
+|ABW, ZABW |AbiWord Document                    |application/x-abiword
+|CWK       |ClarisWorks/AppleWorks Document     |
+|FB2       |FictionBook 2.0                     |
+|FODP      |ODF Presentation Flat               |
+|FODT      |ODF XML Text Document Flat          |
+|HWP       |Hangul WP 97                        |
+|KWD       |KWord                               |[application/vnd.kde.kword](https://www.iana.org/assignments/media-types/application/vnd.kde.kword)
+|LRF       |BroadBand Ebook                     |
+|LWP       |Lotus WordPro                       |[application/vnd.lotus-wordpro](https://www.iana.org/assignments/media-types/application/vnd.lotus-wordpro)
+|MAN, MDOC |Manpage, mandoc                     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
+|MD        |Markdown                            |[text/markdown](https://www.iana.org/assignments/media-types/text/markdown)
+|MW, MCW   |MacWrite Document                   |
+|MWD       |Mariner Mac Write Classic           |
+|ODP       |ODF Presentation                    |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
+|OTP       |ODF Presentation Template           |[application/vnd.oasis.opendocument.presentation-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation-template)
+|PAGES     |Apple Pages                         |
+|PDB       |PalmDoc                             |
+|PDB       |Plucker eBook                       |
+|POTM      |PowerPoint 2007-365 Template+macro  |[application/vnd.ms-powerpoint.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.template.macroEnabled.12)
+|POTX      |PowerPoint 2007-365 Template        |[application/vnd.openxmlformats-officedocument.presentationml.template](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.template)
+|PPT       |PowerPoint 97-2003                  |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
+|PPTM      |PowerPoint 2007-365 +macro          |[application/vnd.ms-powerpoint.presentation.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.presentation.macroEnabled.12)
+|PPTX      |PowerPoint 2007-365                 |[application/vnd.openxmlformats-officedocument.presentationml.presentation](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.presentation)
+|PS, EPS, AI |PostScript                        |[application/postscript](https://www.iana.org/assignments/media-types/application/postscript)
+|SCD, SLA  |Scribus Document                    |[application/vnd.scribus](https://www.iana.org/assignments/media-types/application/vnd.scribus)
+|SDD       |StarOffice presentation             |
+|SDW       |StarOffice Document                 |
+|STI       |OpenOffice.org 1.0 Presentation Template |
+|STW       |OpenOffice.org 1.0 Text Template    |[application/vnd.oasis.opendocument.presentation-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation-template)
+|SXI       |OpenOffice.org 1.0 Presentation     |
+|SXW       |OpenOffice.org 1.0 Text Document    |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
+|TEI       |Text Encoding Initiative            |[application/tei+xml](https://www.iana.org/assignments/media-types/application/tei+xml)
+|TEX, LATEX|TeX, LaTeX                          |
+|TEXI      |TexInfo File                        |
+|TROFF, ROFF|Groff, Roff, Troff                 |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
+|UOF, UOT  |Unified Office Text                 |
+|UOP       |Unified Office presentation         |
+|WML       |Wireless Mark-up Language           |[text/vnd.wap.wml](https://www.iana.org/assignments/media-types/text/vnd.wap.wml)
+|WMLC      |Wireless Mark-up Language           |[application/vnd.wap.wmlc](https://www.iana.org/assignments/media-types/application/vnd.wap.wmlc)
+|WN        |WriteNow Document                   |
+|WPD       |Wordperfect                         |[application/vnd.wordperfect](https://www.iana.org/assignments/media-types/application/vnd.wordperfect) or [application/wordperfect5.1](https://www.iana.org/assignments/media-types/application/wordperfect5.1)
+|WPS       |Microsoft Works                     |[application/vnd.ms-works](https://www.iana.org/assignments/media-types/application/vnd.ms-works)
+|WRI       |Microsoft Write                     |application/mswrite
+|XPS, OXPS |XML Paper Specification             |[application/vnd.ms-xpsdocument](https://www.iana.org/assignments/media-types/application/vnd.ms-xpsdocument)

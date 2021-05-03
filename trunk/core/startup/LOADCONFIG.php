@@ -51,6 +51,7 @@ class LOADCONFIG
         {
             wkx_session_set_db_handler();
             // start session
+            session_name(WIKINDX_SESSION_NAME);
             session_start();
         }
     }

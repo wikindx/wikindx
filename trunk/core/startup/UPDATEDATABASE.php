@@ -57,6 +57,7 @@ class UPDATEDATABASE
             // Don't garbage the session during an upgrade
             ini_set('session.gc_probability', 0);
             // start session
+            session_name(WIKINDX_SESSION_NAME);
             session_start();
         }
         

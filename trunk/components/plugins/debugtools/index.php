@@ -470,7 +470,7 @@ class debugtools_MODULE
         {
             $pString .= HTML\trStart("alternate" . (1 + $i % 2));
             $pString .= HTML\td($k, "middle padding5px");
-            if ($k != 'PHPSESSID')
+            if ($k != WIKINDX_SESSION_NAME)
             {
                 $pString .= HTML\td('<pre>' . $this->dumpEncodedData2Text($v) . '</pre>', "middle padding5px");
             }

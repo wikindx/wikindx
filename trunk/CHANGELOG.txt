@@ -43,7 +43,7 @@ MAINTENANCE:
 
 SECURITY
 1. Update PHPMailer (v6.4.1, CVE-2020-36326, a regression of CVE-2018-19296 object injection introduced in 6.1.8).
-2. Prevent session fixing by using a custom session name for WIKINDX.
+2. Prevent session fixing by using a custom session name.
 3. Prevent session fixing by regenerating the session id before a major change of status.
 
 

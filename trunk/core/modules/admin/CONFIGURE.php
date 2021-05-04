@@ -1785,8 +1785,8 @@ class CONFIGURE
             $this->messages->text('config', 'bibUtils'),
             "configBibutilsPath",
             $input,
-            10,
-            10
+            30,
+            255
         ) . BR . \HTML\span($hint, 'hint'));
         
         $pString .= \HTML\td('&nbsp;');

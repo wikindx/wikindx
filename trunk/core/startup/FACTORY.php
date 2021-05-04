@@ -970,14 +970,15 @@ class FACTORY_EXPORTCOMMON
     /**
      * Get instance
      *
+     * @param $outputType
      * @return object (self::$instance)
      */
-    public static function getInstance()
+    public static function getInstance($outputType = 'plain')
     {
         if (empty(self::$instance))
         {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTCOMMON.php"]));
-            self::$instance = new EXPORTCOMMON;
+            self::$instance = new EXPORTCOMMON($outputType);
         }
 
         return self::$instance;

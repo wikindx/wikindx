@@ -602,15 +602,12 @@ class MENU
             }
         }
         
+// import sub first . . .
         if ($this->write)
         {
             $this->res['importSub'] = [
                 $messages->text("menu", "importSub") => FALSE,
-            ];
-            $this->res['exportSub'] = [
-                $messages->text("menu", "exportSub") => FALSE,
-            ];
-// import sub first            
+            ];          
             if ((WIKINDX_MAX_PASTE > 0) || $this->superAdmin)
             {
                 $this->res['importSub'][$messages->text("menu", "pasteBibtex")] = 'index.php?action=import_PASTEBIBTEX_CORE';
@@ -622,10 +619,33 @@ class MENU
 				$this->res['importSub'][$messages->text('menu', 'importPubMed')] = 'index.php?action=import_PUBMED_CORE';
             }
 			$this->res[$messages->text('menu', 'bibutils')] = 'index.php?action=bibutils_BIBUTILS_CORE';
-			
-// then export sub . . .
-			$this->res['exportSub'][$messages->text("menu", "listFiles")] = 'index.php?action=export_FILES_CORE&method=listFiles';
         }
+// then export sub . . .
+		if ($this->basketList) {
+			$this->res['exportbasketSub'] = [
+				$messages->text("menu", "exportbasket") => FALSE,
+			];
+			$this->res['exportbasketSub'][$messages->text("menu", 'exportRtf')] = "initRtfExportB";
+			$this->res['exportbasketSub'][$messages->text("menu", 'exportBibtex')] = "initBibtexExportB";
+			$this->res['exportbasketSub'][$messages->text("menu", 'exportHTML')] = 
+				'index.php?action=export_HTMLEXPORT_CORE&method=initHtmlExportB';
+			$this->res['exportbasketSub'][$messages->text("menu", 'exportEndNote')] = 'initEndnoteExportB';
+			$this->res['exportbasketSub'][$messages->text("menu", 'exportRIS')] = 'initRisExportB';
+		}
+		if ($this->lastMulti) {
+			$this->res['exportlistSub'] = [
+				$messages->text("menu", "exportlist") => FALSE,
+			];
+			$this->res['exportlistSub'][$messages->text("menu", 'exportRtf')] = "initRtfExportL";
+			$this->res['exportlistSub'][$messages->text("menu", 'exportBibtex')] = "initBibtexExportB";
+			$this->res['exportlistSub'][$messages->text("menu", 'exportHTML')] = 
+				'index.php?action=export_HTMLEXPORT_CORE&method=initHtmlExportL';
+			$this->res['exportlistSub'][$messages->text("menu", 'exportEndNote')] = 'initEndnoteExportB';
+			$this->res['exportlistSub'][$messages->text("menu", 'exportRIS')] = 'initRisExportB';
+		}
+		if ($this->session->getVar("fileExports")) {
+			$this->res['exportSub'][$messages->text("menu", "listFiles")] = 'index.php?action=export_FILES_CORE&method=listFiles';
+		}
         
         
         // SEARCH MENU

@@ -48,7 +48,7 @@ class IDEAEXPORT
         $this->cite = FACTORY_CITE::getInstance('rtf');
         $this->bibStyle = FACTORY_BIBSTYLE::getInstance('rtf');
         $this->styles = LOADSTYLE\loadDir();
-        $this->common = FACTORY_EXPORTCOMMON::getInstance();
+        $this->common = FACTORY_EXPORTCOMMON::getInstance('rtf');
         $this->rtf = FACTORY_RICHTEXTFORMAT::getInstance();
         $this->userObj = FACTORY_USER::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "export", "FILES.php"]));

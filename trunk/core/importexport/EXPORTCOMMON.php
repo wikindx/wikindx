@@ -176,7 +176,7 @@ class EXPORTCOMMON
             if ($this->browserTabID) {
             	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
             }
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "basket", "BASKET.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "basket", "BASKET.php"]));
             $basket = new BASKET();
             $sqlEncoded = base64_encode(serialize([$basket->returnBasketSql(FALSE, 'creator')]));
             $this->session->setVar("list_AllIds", $tempAllIds);

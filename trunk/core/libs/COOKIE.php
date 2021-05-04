@@ -44,7 +44,7 @@ class COOKIE
     {
         $valueArray = ['username' => $username];
         $value = base64_encode(serialize($valueArray));
-        $expire = 60 * 60 * 24 * 100; // 100 days
+        $expire = 60 * 60 * 24 * 31; // 1 month
         $path = "/";
         // we don't fail if this cookie can't be set.
         setcookie($this->cookieName, $value, time() + $expire, $path);

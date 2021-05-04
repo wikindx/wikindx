@@ -182,7 +182,7 @@ function wkx_session_write(string $sessionId, string $sessionData) : bool
             VALUES (" . $db->tidyInput($sessionId) . ", " . $db->tidyInput($sessionUserId) . ", " . $db->tidyInput($sessionData) . ")
             ON DUPLICATE KEY UPDATE
                 sessionId = " . $db->tidyInput($sessionId) . ",
-                sessionUserId = " . $db->tidyInput($sessionUserId) . ",
+                sessionUserId = CASE WHEN sessionUserId = 0 THEN " . $db->tidyInput($sessionUserId) . " ELSE sessionUserId END,
                 sessionData= " . $db->tidyInput($sessionData) . ";
         ";
         

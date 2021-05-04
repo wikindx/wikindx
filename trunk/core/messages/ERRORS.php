@@ -230,6 +230,7 @@ class ERRORS
 				"invalidConfigLoading" => dgettext($domain, "Loading failed. The configuration has not been updated."),
 				"invalidConfigClassName" => dgettext($domain, "The  CONFIG class is incorrectly named. The configuration has not been updated."),
 				"missingConfigClassMember" => dgettext($domain, "Member ### of the CONFIG class is missing. The configuration has not been updated."),
+				"listDownloadFail" => dgettext($domain, "The component list has not yet been downloaded."),
 			),
 		);
 	}

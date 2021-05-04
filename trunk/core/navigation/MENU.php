@@ -625,7 +625,8 @@ class MENU
 			$this->res['exportbasketSub'] = [
 				$messages->text("menu", "exportbasket") => FALSE,
 			];
-			$this->res['exportbasketSub'][$messages->text("menu", 'exportRtf')] = "initRtfExportB";
+			$this->res['exportbasketSub'][$messages->text("menu", 'exportRtf')] = 
+				'index.php?action=export_RTFINIT_CORE&method=initRtfExportB';
 			$this->res['exportbasketSub'][$messages->text("menu", 'exportBibtex')] = 
 				'index.php?action=export_BIBTEXEXPORT_CORE&method=initBibtexExportB';
 			$this->res['exportbasketSub'][$messages->text("menu", 'exportHTML')] = 
@@ -638,7 +639,8 @@ class MENU
 			$this->res['exportlistSub'] = [
 				$messages->text("menu", "exportlist") => FALSE,
 			];
-			$this->res['exportlistSub'][$messages->text("menu", 'exportRtf')] = "initRtfExportL";
+			$this->res['exportlistSub'][$messages->text("menu", 'exportRtf')] = 
+				'index.php?action=export_RTFINIT_CORE&method=initRtfExportL';
 			$this->res['exportlistSub'][$messages->text("menu", 'exportBibtex')] = 
 				'index.php?action=export_BIBTEXEXPORT_CORE&method=initBibtexExportL';
 			$this->res['exportlistSub'][$messages->text("menu", 'exportHTML')] = 

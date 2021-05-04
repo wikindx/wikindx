@@ -164,7 +164,7 @@ class IDEAEXPORT
      *
      * @return resource
      */
-    public function openTempFile()
+    private function openTempFile()
     {
         $fd = fopen("php://memory", 'r+');
 
@@ -176,7 +176,7 @@ class IDEAEXPORT
      *
      * @param resourceb $fd
      */
-    public function closeTempFile($fd)
+    private function closeTempFile($fd)
     {
         return fclose($fd);
     }
@@ -186,6 +186,10 @@ class IDEAEXPORT
      */
     public function process()
     {
+        // Use an unlimited memmory temporarily,
+        // because the recordset can be really huge
+        // Memory is reset automatically at the next script.
+        ini_set('memory_limit', '-1');
         $this->prepareFontBlocks();
         // The body will be written in memory by a PHP stream
         $this->bodyTempFile = $this->openTempFile();

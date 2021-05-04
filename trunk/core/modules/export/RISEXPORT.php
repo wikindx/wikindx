@@ -63,6 +63,10 @@ class RISEXPORT
      */
     public function processExport()
     {
+        // Use an unlimited memmory temporarily,
+        // because the recordset can be really huge
+        // Memory is reset automatically at the next script.
+        ini_set('memory_limit', '-1');
         $sql = $this->common->getSQL();
         if (!$sql)
         {
@@ -73,7 +77,6 @@ class RISEXPORT
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }
         $sqlArray = unserialize(base64_decode($sql));
-
         foreach ($sqlArray as $sql)
         {
             $recordset = $this->db->query($sql);

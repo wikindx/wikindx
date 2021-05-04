@@ -64,7 +64,7 @@ class FILES
                 $message = $data['message'];
             }
         }
-        $pString = $message;
+        $pString = $message ? $message : $this->vars['message'];
         $filesDir = TRUE;
         $pString .= HTML\p($this->messages->text("importexport", "contents"));
         $minutes = $deletePeriod / 60;

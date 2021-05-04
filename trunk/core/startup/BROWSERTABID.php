@@ -33,7 +33,7 @@ class BROWSERTABID
         	'list_LISTSOMERESOURCES_CORE', 'basket_BASKET_CORE', 'attachments_ATTACHMENTS_CORE', 'resource_RESOURCECATEGORYEDIT_CORE', 
         	'urls_URLS_CORE', 'resource_RESOURCEQUOTE_CORE', 'resource_RESOURCEPARAPHRASE_CORE', 'resource_RESOURCEMUSING_CORE', 
         	'metadata_EDITMETADATA_CORE', 'resource_RESOURCEFORM_CORE', 'resource_RESOURCEWRITE_CORE', 'list_LISTADDTO_CORE', 'list_SEARCH_CORE', 
-        	'admin_QUARANTINE_CORE', 'resource_RESOURCECUSTOM_CORE', 'resource_RESOURCEMETA_CORE', 'statistics_STATS_CORE'];
+        	'admin_QUARANTINE_CORE', 'resource_RESOURCECUSTOM_CORE', 'resource_RESOURCEMETA_CORE', 'statistics_STATS_CORE', 'export_FILES_CORE'];
         $tempSession = [];
         if (WIKINDX_BROWSER_TAB_ID && 
         	((array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active)) || !array_key_exists('action', $this->vars)))

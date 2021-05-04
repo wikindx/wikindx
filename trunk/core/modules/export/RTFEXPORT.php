@@ -15,7 +15,6 @@ class RTFEXPORT
 {
     private $db;
     private $vars;
-    private $files;
     private $errors;
     private $session;
     private $messages;
@@ -37,6 +36,7 @@ class RTFEXPORT
     private $user;
     private $bodyTempFile;
     private $formattedText = [];
+    private $browserTabID = FALSE;
 
     /**
      * Constructor
@@ -52,10 +52,9 @@ class RTFEXPORT
         $this->bibStyle = FACTORY_BIBSTYLE::getInstance('rtf');
         $this->styles = LOADSTYLE\loadDir();
         $this->common = FACTORY_EXPORTCOMMON::getInstance('rtf');
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FILES.php"]));
-        $this->files = new FILES();
         $this->rtf = FACTORY_RICHTEXTFORMAT::getInstance();
         $this->user = FACTORY_USER::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         $this->fontSizes = [
             1 => 8, 2 => 10, 3 => 12, 4 => 14, 5 => 16, 6 => 18, 7 => 20, 8 => 22,
         ];
@@ -187,7 +186,8 @@ class RTFEXPORT
 
         $pString = HTML\p($this->messages->text("importexport", 'exported') . ': ' . $this->common->fileName, 'success');
         $this->common->writeFilenameToSession($this->common->fileName);
-        $this->files->listFiles($pString);
+        header("Location: index.php?action=export_FILES_CORE&method=listFiles&message=$pString&browserTabID=" . $this->browserTabID);
+        die;
     }
     /*
      * get data from database

@@ -21,7 +21,6 @@ class BIBTEXEXPORT
     private $errors;
     private $common;
     private $bibtex;
-    private $files;
     private $browserTabID = FALSE;
 
     /**
@@ -34,8 +33,6 @@ class BIBTEXEXPORT
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->common = FACTORY_EXPORTCOMMON::getInstance('bibtex');
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FILES.php"]));
-        $this->files = new FILES();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "VIEWBIBTEX.php"]));
         $this->bibtex = new VIEWBIBTEX();
         $this->browserTabID = GLOBALS::getBrowserTabID();
@@ -132,7 +129,8 @@ class BIBTEXEXPORT
         }
         $pString = HTML\p($this->messages->text("importexport", 'exported') . ": " . $this->common->fileName, 'success');
         $this->common->writeFilenameToSession($this->common->fileName);
-        $this->files->listFiles($pString);
+        header("Location: index.php?action=export_FILES_CORE&method=listFiles&message=$pString&browserTabID=" . $this->browserTabID);
+        die;
     }
     /**
      * failure()

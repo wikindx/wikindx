@@ -20,7 +20,7 @@ class RISEXPORT
     private $errors;
     private $common;
     private $map;
-    private $files;
+    private $browserTabID = FALSE;
 
     /**
      * Constructor
@@ -33,10 +33,9 @@ class RISEXPORT
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->common = FACTORY_EXPORTCOMMON::getInstance('ris');
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FILES.php"]));
-        $this->files = new FILES();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "importexport", "RISMAP.php"]));
         $this->map = new RISMAP();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * initRisExportB
@@ -91,7 +90,8 @@ class RISEXPORT
         }
         $pString = HTML\p($this->messages->text("importexport", 'exported') . ": " . $this->common->fileName, 'success');
         $this->common->writeFilenameToSession($this->common->fileName);
-        $this->files->listFiles($pString);
+        header("Location: index.php?action=export_FILES_CORE&method=listFiles&message=$pString&browserTabID=" . $this->browserTabID);
+        die;
     }
     /*
      * get data from database

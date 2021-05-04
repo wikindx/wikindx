@@ -501,8 +501,20 @@ class MENU
             $this->res['basketSub'] = [
                 $messages->text("menu", "basketSub") => FALSE,
                 $messages->text("menu", "basketView") => 'index.php?action=basket_BASKET_CORE&method=view' . "&browserTabID=" . $this->browserTabID,
-                $messages->text("menu", "basketDelete") => 'index.php?action=basket_BASKET_CORE&method=delete' . "&browserTabID=" . $this->browserTabID,
+                $messages->text("menu", "basketDelete") => 'index.php?action=basket_BASKET_CORE&method=delete' . "&browserTabID=" . 
+                	$this->browserTabID,
             ];
+			$this->res['basketSub']['exportbasketSub'][$messages->text("menu", "exportbasket")] = FALSE;
+			$this->res['basketSub']['exportbasketSub'][$messages->text("menu", 'exportRtf')] = 
+				'index.php?action=export_RTFINIT_CORE&method=initRtfExportB';
+			$this->res['basketSub']['exportbasketSub'][$messages->text("menu", 'exportBibtex')] = 
+				'index.php?action=export_BIBTEXEXPORT_CORE&method=initBibtexExportB';
+			$this->res['basketSub']['exportbasketSub'][$messages->text("menu", 'exportHTML')] = 
+				'index.php?action=export_HTMLEXPORT_CORE&method=initHtmlExportB';
+			$this->res['basketSub']['exportbasketSub'][$messages->text("menu", 'exportEndNote')] = 
+				'index.php?action=export_ENDNOTEINIT_CORE&method=initEndnoteExportB';
+			$this->res['basketSub']['exportbasketSub'][$messages->text("menu", 'exportRIS')] = 
+				'index.php?action=export_RISEXPORT_CORE&method=initRisExportB';
         }
             
         $this->res['bookmarkSub'] = [
@@ -621,21 +633,6 @@ class MENU
 			$this->res[$messages->text('menu', 'bibutils')] = 'index.php?action=bibutils_BIBUTILS_CORE';
         }
 // then export sub . . .
-		if ($this->basketList) {
-			$this->res['exportbasketSub'] = [
-				$messages->text("menu", "exportbasket") => FALSE,
-			];
-			$this->res['exportbasketSub'][$messages->text("menu", 'exportRtf')] = 
-				'index.php?action=export_RTFINIT_CORE&method=initRtfExportB';
-			$this->res['exportbasketSub'][$messages->text("menu", 'exportBibtex')] = 
-				'index.php?action=export_BIBTEXEXPORT_CORE&method=initBibtexExportB';
-			$this->res['exportbasketSub'][$messages->text("menu", 'exportHTML')] = 
-				'index.php?action=export_HTMLEXPORT_CORE&method=initHtmlExportB';
-			$this->res['exportbasketSub'][$messages->text("menu", 'exportEndNote')] = 
-				'index.php?action=export_ENDNOTEINIT_CORE&method=initEndnoteExportB';
-			$this->res['exportbasketSub'][$messages->text("menu", 'exportRIS')] = 
-				'index.php?action=export_RISEXPORT_CORE&method=initRisExportB';
-		}
 		if ($this->lastMulti) {
 			$this->res['exportlistSub'] = [
 				$messages->text("menu", "exportlist") => FALSE,

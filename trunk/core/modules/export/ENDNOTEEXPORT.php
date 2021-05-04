@@ -19,13 +19,13 @@ class ENDNOTEEXPORT
     private $messages;
     private $errors;
     private $common;
-    private $files;
     private $map;
     private $pString;
     private $authorFound;
     private $rawEntries;
     // 2012: Endnote currently has a bug regarding tabbed files and reference field: Electronic Resource Number. Therefore, for now, tabbed file exporting is disabled.
     private $xml = TRUE;
+    private $browserTabID = FALSE;
     private $badInput;
     private $customMap = [];
 
@@ -43,8 +43,7 @@ class ENDNOTEEXPORT
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "importexport", "ENDNOTEMAP.php"]));
         $this->map = new ENDNOTEMAP();
         $this->common = FACTORY_EXPORTCOMMON::getInstance('endnote');
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FILES.php"]));
-        $this->files = new FILES();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * write $this->pString to file.  If file exists, it is written over.
@@ -141,7 +140,8 @@ class ENDNOTEEXPORT
         }
         $pString = HTML\p($this->messages->text("importexport", 'exported') . ": " . $this->common->fileName, 'success');
         $this->common->writeFilenameToSession($this->common->fileName);
-        $this->files->listFiles($pString);
+        header("Location: index.php?action=export_FILES_CORE&method=listFiles&message=$pString&browserTabID=" . $this->browserTabID);
+        die;
     }
     /**
      * decode()

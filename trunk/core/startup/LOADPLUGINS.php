@@ -34,6 +34,7 @@ class LOADPLUGINS
                        $cmp["component_type"] == "plugin" // Components of plugin type
                     && $cmp["component_status"] == "enabled" // Enabled components
                     && $cmp["component_integrity"] == 0 // Sane components
+                    && is_readable(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $cmp["component_id"]])) // Not removed before being disabled
                 ) {
                     self::$moduleList[] = $cmp["component_id"];
                 }

@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.8');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 62.0);
+define('WIKINDX_INTERNAL_VERSION', 63.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -322,7 +322,8 @@ define('WIKINDX_USE_BIBTEX_KEY_DEFAULT', FALSE);
 define('WIKINDX_USE_WIKINDX_KEY_DEFAULT', FALSE);
 define('WIKINDX_DISPLAY_RESOURCE_STATISTICS_DEFAULT', FALSE);
 define('WIKINDX_SESSION_NAME', 'WKXSESSID');
-
+define('WIKINDX_SESSION_GC_FREQUENCY', 900); // 15 min = 60 * 15, because the PCI DSS 3.1 recommend it and some sysadmin will ask for it.
+define('WIKINDX_SESSION_MAXLIFETIME_UPPER_LIMIT', 86400); // 24h = 60 * 60 * 24 s, for a reasonable lifetime of a session that spans two working days.
 
 /**
  * MySQL GLOBAL max_allowed_packet option
@@ -449,6 +450,7 @@ define('WIKINDX_POPULARITY_DOWNLOADS_WEIGHT', 0.75);
 define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configAuthGate"                  => ["constname" => "WIKINDX_AUTHGATE_USE",                  "type" => "configBoolean"],
     "configAuthGateMessage"           => ["constname" => "WIKINDX_AUTHGATE_MESSAGE",              "type" => "configVarchar"],
+    "configBibutilsPath"              => ["constname" => "WIKINDX_BIBUTILS_PATH",                 "type" => "configVarchar"],
     "configBrowserTabID"              => ["constname" => "WIKINDX_BROWSER_TAB_ID",                "type" => "configBoolean"],
     "configBypassSmartyCompile"       => ["constname" => "WIKINDX_BYPASS_SMARTY_COMPILATION",     "type" => "configBoolean"],
     "configCmsAllow"                  => ["constname" => "WIKINDX_CMS_ALLOW",                     "type" => "configBoolean"],
@@ -479,7 +481,6 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configImgUploadMaxSize"          => ["constname" => "WIKINDX_IMG_UPLOAD_MAX_SIZE",           "type" => "configInt"],
     "configImgWidthLimit"             => ["constname" => "WIKINDX_IMG_WIDTH_LIMIT",               "type" => "configInt"],
     "configImportBib"                 => ["constname" => "WIKINDX_IMPORT_BIB",                    "type" => "configBoolean"],
-    "configBibutilsPath"              => ["constname" => "WIKINDX_BIBUTILS_PATH",                 "type" => "configVarchar"],
     "configImpressum"				  => ["constname" => "WIKINDX_IMPRESSUM",            		  "type" => "configText"],
     "configIsTrunk"                   => ["constname" => "WIKINDX_IS_TRUNK",                      "type" => "configBoolean"],
     "configLanguage"                  => ["constname" => "WIKINDX_LANGUAGE",                      "type" => "configVarchar"],
@@ -538,6 +539,9 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configRssLimit"                  => ["constname" => "WIKINDX_RSS_LIMIT",                     "type" => "configInt"],
     "configRssTitle"                  => ["constname" => "WIKINDX_RSS_TITLE",                     "type" => "configVarchar"],
     "configSearchFilter"              => ["constname" => "WIKINDX_SEARCH_FILTER",                 "type" => "configText"],
+    "configSessionAuthMaxlifetime"    => ["constname" => "WIKINDX_SESSION_AUTH_MAXLIFETIME",      "type" => "configInt"],
+    "configSessionGCLastExecTimestamp"=> ["constname" => "WIKINDX_SESSION_GC_LASTEXEC_TIMESTAMP", "type" => "configInt"],
+    "configSessionNotAuthMaxlifetime" => ["constname" => "WIKINDX_SESSION_NOTAUTH_MAXLIFETIME",   "type" => "configInt"],
     "configSiteMapAllow"              => ["constname" => "WIKINDX_SITEMAP_ALLOW",                 "type" => "configBoolean"],
     "configStatisticsCompiled"        => ["constname" => "WIKINDX_STATISTICS_COMPILED",           "type" => "configDatetime"],
     "configStringLimit"               => ["constname" => "WIKINDX_STRING_LIMIT",                  "type" => "configInt"],

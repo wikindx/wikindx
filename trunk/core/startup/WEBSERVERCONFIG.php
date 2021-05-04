@@ -83,6 +83,21 @@ ini_set('session.serialize_handler', 'php_serialize');
 // It rejects session ID supplied by user forgery
 //ini_set('session.use_strict_mode', 'On');
 
+/*
+ * Disable the default PHP probabilistic Garbage Collector,
+ * WIKINDX uses its own Garbage Collector Policy.
+ */
+ini_set('session.gc_probability', 0);
+
+/*
+ * Hard idle maxlifetime limit of 1 day for every session
+ * if custom maxlifetime settings are not defined or available,
+ * and the session of a user is inactive.
+ *
+ * 24h = 60 * 60 * 254 s
+ */
+ini_set('session.gc_maxlifetime', 86400);
+
 
 
 // Set the time zone to whatever the default is to avoid 500 errors

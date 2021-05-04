@@ -768,8 +768,47 @@ class CONFIGURE
         $input = array_key_exists("configDisplayUserStatistics", $this->formData) && ($this->formData['configDisplayUserStatistics']) ? "CHECKED" : WIKINDX_DISPLAY_USER_STATISTICS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "displayUserStatistics"), "configDisplayUserStatistics", $input) .
              BR . \HTML\span($hint, 'hint'));
-        $pString .= \HTML\td('&nbsp;');
-        $pString .= \HTML\td('&nbsp;');
+        
+        // Scale of the maxlifetime of a session authenticated (in secondes)
+        $configSessionAuthMaxlifetimeScale = [];
+        foreach (range(WIKINDX_SESSION_GC_FREQUENCY, WIKINDX_SESSION_MAXLIFETIME_UPPER_LIMIT, 60 * 15) as $v)
+        {
+            $dt = new DateTime();
+            $dt->add(new DateInterval('PT' . $v . 'S'));
+            $interval = $dt->diff(new DateTime());
+            $configSessionAuthMaxlifetimeScale[$v] = str_replace("00h 00m", "24h 00m", $interval->format('%Hh %Im'));
+        }
+        
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "sessionAuthMaxlifetime"));
+        array_key_exists("configSessionAuthMaxlifetime", $this->formData) ? $input = $this->formData["configSessionAuthMaxlifetime"] : $input = WIKINDX_SESSION_AUTH_MAXLIFETIME_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
+            $this->messages->text("config", "sessionAuthMaxlifetime"),
+            "configSessionAuthMaxlifetime",
+            $configSessionAuthMaxlifetimeScale,
+            $input,
+            1
+        ) . BR . \HTML\span($hint, 'hint'));
+        
+        // Scale of the maxlifetime of a session not authenticated (in secondes)
+        $configSessionNotAuthMaxlifetimeScale = [];
+        foreach (range(WIKINDX_SESSION_GC_FREQUENCY, WIKINDX_SESSION_MAXLIFETIME_UPPER_LIMIT, 60 * 15) as $v)
+        {
+            $dt = new DateTime();
+            $dt->add(new DateInterval('PT' . $v . 'S'));
+            $interval = $dt->diff(new DateTime());
+            $configSessionNotAuthMaxlifetimeScale[$v] = str_replace("00h 00m", "24h 00m", $interval->format('%Hh %Im'));
+        }
+        
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "sessionNotAuthMaxlifetime"));
+        array_key_exists("configSessionNotAuthMaxlifetime", $this->formData) ? $input = $this->formData["configSessionNotAuthMaxlifetime"] : $input = WIKINDX_SESSION_NOTAUTH_MAXLIFETIME_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
+            $this->messages->text("config", "sessionNotAuthMaxlifetime"),
+            "configSessionNotAuthMaxlifetime",
+            $configSessionNotAuthMaxlifetimeScale,
+            $input,
+            1
+        ) . BR . \HTML\span($hint, 'hint'));
+        
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1879,6 +1918,8 @@ class CONFIGURE
                     "configOriginatorEditOnly",
                     "configQuarantine",
                     "configReadOnlyAccess",
+                    "configSessionAuthMaxlifetime",
+                    "configSessionNotAuthMaxlifetime",
                     "configUserRegistration",
                     "configUserRegistrationModerate",
                 ];
@@ -2091,6 +2132,8 @@ class CONFIGURE
             "configPagingMaxLinks" => WIKINDX_PAGING_MAXLINKS_DEFAULT,
             "configPagingTagCloud" => WIKINDX_PAGING_TAG_CLOUD_DEFAULT,
             "configPasswordSize" => WIKINDX_PASSWORD_SIZE_DEFAULT,
+            "configSessionAuthMaxlifetime" => WIKINDX_SESSION_AUTH_MAXLIFETIME_DEFAULT,
+            "configSessionNotAuthMaxlifetime" => WIKINDX_SESSION_NOTAUTH_MAXLIFETIME_DEFAULT,
             "configStringLimit" => WIKINDX_STRING_LIMIT_DEFAULT,
             "configTagHighFactor" => WIKINDX_TAG_HIGH_FACTOR_DEFAULT,
             "configTagLowFactor" => WIKINDX_TAG_LOW_FACTOR_DEFAULT,
@@ -2148,6 +2191,8 @@ class CONFIGURE
             "configPasswordSize",
             "configRestrictUserId",
             "configRssLimit",
+            "configSessionAuthMaxlifetime",
+            "configSessionNotAuthMaxlifetime",
             "configStringLimit",
             "configTagHighColour",
             "configTagHighFactor",

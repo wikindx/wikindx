@@ -32,6 +32,7 @@ FEATURE ENHANCEMENTS:
 7. Support MHT/HTML text extraction (attachments) [#357].
 8. QUICKSEARCH now also searches on cached resource attachments.
 9. Moved the functions of the importexportbib plugin to the core code (Under Resources menu, Resources|Basket menu, and Metadata menu).
+10. Custom session garbage collector.
 
 MAINTENANCE:
 1. Align group_concat_max_len value with max_allowed_packet (MySQL).

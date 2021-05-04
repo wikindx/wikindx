@@ -28,6 +28,7 @@ class HOUSEKEEPING
     {
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
+        $this->custom_session_gc();
         $this->statistics();
         $this->tempStorage();
         $this->cacheAttachments();
@@ -102,5 +103,36 @@ class HOUSEKEEPING
     {
         $stats = FACTORY_STATISTICS::getInstance();
         $stats->runCompile();
+    }
+    /**
+     * WIKINDX custom Garbage Collector
+     *
+     * Call the session_gc() routine of PHP at the frequency
+     * defined by WIKINDX_SESSION_GC_FREQUENCY instead of the PHP default GC.
+     *
+     * The custom session handler collects all expired sessions.
+     */
+    private function custom_session_gc()
+    {
+        $bExecGC = $this->db->queryFetchFirstField("
+            SELECT EXISTS(
+                SELECT 1
+                FROM config
+                WHERE
+                    configName = 'configSessionGCLastExecTimestamp'
+                    AND DATE_ADD(
+                        FROM_UNIXTIME(configInt),
+                        INTERVAL " . WIKINDX_SESSION_GC_FREQUENCY . " SECOND
+                    ) < UTC_TIMESTAMP()
+            );
+		");
+		
+		if ($bExecGC)
+		{
+		    $this->db->formatConditions(["configName" => "configSessionGCLastExecTimestamp"]);
+		    $this->db->update("config", ["configInt"  => WIKINDX_SESSION_GC_LASTEXEC_TIMESTAMP_DEFAULT]);
+		    
+		    session_gc();
+		}
     }
 }

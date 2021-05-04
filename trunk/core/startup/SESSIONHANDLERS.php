@@ -177,6 +177,7 @@ function wkx_session_write(string $sessionId, string $sessionData) : bool
             $sessionUserId = 0;
         }
         
+        // Save session data and keep the sessionUserId if the session have been authenticated at least once
         $sql = "
             INSERT INTO session (sessionId, sessionUserId, sessionData)
             VALUES (" . $db->tidyInput($sessionId) . ", " . $db->tidyInput($sessionUserId) . ", " . $db->tidyInput($sessionData) . ")
@@ -214,9 +215,17 @@ function wkx_session_destroy(string $sessionId) : bool
 /*
  * The garbage collector callback is invoked internally by PHP periodically in order to purge old session data.
  *
- * The frequency is controlled by session.gc_probability and session.gc_divisor.
- * The value of lifetime which is passed to this callback can be set in session.gc_maxlifetime.
- * Return value should be true for success, false for failure. 
+ * The frequency is controlled by WIKINDX_SESSION_GC_FREQUENCY.
+ * The value of lifetime which is passed to this callback is a fallback set in session.gc_maxlifetime.
+ *
+ * The real value of lifetime is:
+ *
+ * - WIKINDX_SESSION_AUTH_MAXLIFETIME for sessions which have been authenticated at least once.
+ * - WIKINDX_SESSION_NOTAUTH_MAXLIFETIME for sessions which have never been authenticated.
+ *
+ * WIKINDX_SESSION_MAXLIFETIME_UPPER_LIMIT is a hard lifetime limit that can never be exceeded.
+ *
+ * Return value should be true for success, false for failure.
  *
  * @param int $maxSessionLifetime (in seconds)
  *
@@ -226,9 +235,54 @@ function wkx_session_gc(int $maxSessionLifetime) : bool
 {
     $db = FACTORY_DB::getInstance();
     
+    // Collect expired sessions which have been authenticated at least once
+    if (defined("WIKINDX_SESSION_AUTH_MAXLIFETIME"))
+    {
+        $maxSessionAuthLifetime = WIKINDX_SESSION_AUTH_MAXLIFETIME;
+    }
+    elseif (defined("WIKINDX_SESSION_AUTH_MAXLIFETIME_DEFAULT"))
+    {
+        $maxSessionAuthLifetime = WIKINDX_SESSION_AUTH_MAXLIFETIME_DEFAULT;
+    }
+    else
+    {
+        $maxSessionAuthLifetime = $maxSessionLifetime;
+    }
+    if (defined("WIKINDX_SESSION_MAXLIFETIME_UPPER_LIMIT"))
+    {
+        $maxSessionAuthLifetime = min(WIKINDX_SESSION_MAXLIFETIME_UPPER_LIMIT, $maxSessionAuthLifetime);
+    }
+    
+    // Collect expired sessions which have never been authenticated
+    if (defined("WIKINDX_SESSION_NOTAUTH_MAXLIFETIME"))
+    {
+        $maxSessionNotAuthLifetime = WIKINDX_SESSION_NOTAUTH_MAXLIFETIME;
+    }
+    elseif (defined("WIKINDX_SESSION_NOTAUTH_MAXLIFETIME_DEFAULT"))
+    {
+        $maxSessionNotAuthLifetime = WIKINDX_SESSION_NOTAUTH_MAXLIFETIME_DEFAULT;
+    }
+    else
+    {
+        $maxSessionNotAuthLifetime = $maxSessionLifetime;
+    }
+    if (defined("WIKINDX_SESSION_MAXLIFETIME_UPPER_LIMIT"))
+    {
+        $maxSessionNotAuthLifetime = min(WIKINDX_SESSION_MAXLIFETIME_UPPER_LIMIT, $maxSessionNotAuthLifetime);
+    }
+    
+    // Garbage collection
     $sql = "
         DELETE FROM session
-        WHERE DATE_ADD(sessionLastAccessTimestamp, INTERVAL " . $maxSessionLifetime . " SECOND) < CURRENT_TIMESTAMP();
+        WHERE DATE_ADD(
+            sessionLastAccessTimestamp,
+            INTERVAL (
+                CASE
+                    WHEN sessionUserId = 0 THEN " . $maxSessionNotAuthLifetime . "
+                    ELSE " . $maxSessionAuthLifetime . "
+                END
+            ) SECOND
+        ) < CURRENT_TIMESTAMP();
     ";
     
     $db->query($sql);

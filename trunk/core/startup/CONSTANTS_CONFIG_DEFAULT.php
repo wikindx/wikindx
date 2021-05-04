@@ -184,6 +184,9 @@ define('WIKINDX_MAX_PASTE_DEFAULT', 10);
 define('WIKINDX_RESOURCE_URL_PREFIX_DEFAULT', '');
 define('WIKINDX_BROWSER_TAB_ID_DEFAULT', FALSE);
 define('WIKINDX_IMPRESSUM_DEFAULT', '');
+define('WIKINDX_SESSION_GC_LASTEXEC_TIMESTAMP_DEFAULT', time()); // Now in UTC
+define('WIKINDX_SESSION_AUTH_MAXLIFETIME_DEFAULT', 86400); // 24h = 60 * 60 * 24 s, for a reasonable lifetime of a session that spans two working days.
+define('WIKINDX_SESSION_NOTAUTH_MAXLIFETIME_DEFAULT', 3600); // 1h = 60 * 60 s, that seems a lot of idle time for reading and searching resources.
 
 
 // Debugging

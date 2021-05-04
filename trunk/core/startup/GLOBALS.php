@@ -163,7 +163,7 @@ class GLOBALS
      */
     public static function getTempStorage($key = FALSE)
     {
-        if ($key)
+        if ($key && !is_array($key))
         {
             if (!array_key_exists($key, self::$tempStorage))
             {

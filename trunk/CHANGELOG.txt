@@ -16,7 +16,7 @@ This allows:
 
 BUG FIXES:
 1. Fixed a rare error (missing URL array) when adding/editing resources.
-2. Replace some some call to strstr by mb_strstr (UTF-8 support).
+2. Replace some call to strstr by mb_strstr (UTF-8 support).
 3. Set max_allowed_packet to 1073741824 (allow to store LONGTEXT type in one statement, MySQL).
 4. Fix an error in paging ideas following Advanced Search when ideas are the only field searched on.
 5. Matching with matchPrefix()  and matchSuffix() was partly insensitive.

@@ -631,7 +631,8 @@ class MENU
 			$this->res['exportbasketSub'][$messages->text("menu", 'exportHTML')] = 
 				'index.php?action=export_HTMLEXPORT_CORE&method=initHtmlExportB';
 			$this->res['exportbasketSub'][$messages->text("menu", 'exportEndNote')] = 'initEndnoteExportB';
-			$this->res['exportbasketSub'][$messages->text("menu", 'exportRIS')] = 'initRisExportB';
+			$this->res['exportbasketSub'][$messages->text("menu", 'exportRIS')] = 
+				'index.php?action=export_RISEXPORT_CORE&method=initRisExportB';
 		}
 		if ($this->lastMulti) {
 			$this->res['exportlistSub'] = [
@@ -643,7 +644,8 @@ class MENU
 			$this->res['exportlistSub'][$messages->text("menu", 'exportHTML')] = 
 				'index.php?action=export_HTMLEXPORT_CORE&method=initHtmlExportL';
 			$this->res['exportlistSub'][$messages->text("menu", 'exportEndNote')] = 'initEndnoteExportB';
-			$this->res['exportlistSub'][$messages->text("menu", 'exportRIS')] = 'initRisExportB';
+			$this->res['exportlistSub'][$messages->text("menu", 'exportRIS')] = 
+				'index.php?action=export_RISEXPORT_CORE&method=initRisExportL';
 		}
 		if ($this->session->getVar("fileExports")) {
 			$this->res['exportSub'][$messages->text("menu", "listFiles")] = 'index.php?action=export_FILES_CORE&method=listFiles';

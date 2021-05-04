@@ -11,14 +11,14 @@
 /**
  * VIEWBIBTEX View single resource as BibTeX
  *
- * NB Some variables and methods are public for use with the importexportbib plugin -- DO NOT CHANGE!
+ * NB Some variables and methods are public for use with the import/export feature -- DO NOT CHANGE!
  */
 class VIEWBIBTEX
 {
-    public $vars; // public for use with importexportbib plugin
+    public $vars; // public for use with import/export feature
     /** array */
-    public $rawStringArray = []; // public for use with importexportbib plugin
-    public $resourceId; // public for use with importexportbib plugin
+    public $rawStringArray = []; // public for use with import/export feature
+    public $resourceId; // public for use with import/export feature
     public $customFieldString = FALSE;
     private $db;
     private $errors;
@@ -163,7 +163,7 @@ class VIEWBIBTEX
         $pString = $this->process();
         $pString = str_replace(LF, BR, $pString);
         $pString .= \HTML\hr();
-        // These form elements kept here so the importexportbib plugin can use functions in this class such as options()
+        // These form elements kept here so the import/export feature can use functions in this class such as options()
         $pString .= \FORM\formHeader("resource_VIEWBIBTEX_CORE");
         $pString .= \FORM\hidden('method', 'display');
         $pString .= \FORM\hidden("id", $this->vars['id']);
@@ -245,7 +245,7 @@ class VIEWBIBTEX
         if (!$cString)
         {
             if (!$this->customFieldString)
-            { // cf importexportbib plugin
+            {
                 $pString .= $this->getCustomFields();
             }
             elseif (($this->customFieldString != -1))

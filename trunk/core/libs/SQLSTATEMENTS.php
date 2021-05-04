@@ -254,7 +254,7 @@ class SQLSTATEMENTS
     }
     /**
      * Produce a SQL statement for exporting bibliographies that is not LIMITed or paged alphabetically -- i.e. all resources in the query are gathered.
-     * The SQL statement is base64_encoded and returned to the calling script (usually plugins/importexportbib/EXPORTCOMMON::getSQL())
+     * The SQL statement is base64_encoded and returned to the calling script
      * Large numbers of rows can exhaust PHP memory so we return an array of query statements to be executed. The number of statements is set by $totalPossible.
      * The calling script should cycle through these statements and concatenate the results of each.
      * By trial and error, c.1500 rows seems to be the limit with PHP memory of 64M

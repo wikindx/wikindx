@@ -73,7 +73,8 @@ Listed below are the core features available by default. Functionality can be ex
 * Manage users and resource categories and sub-categories.
 * Merge keywords into one keyword.
 * Merge and group creators into one creator.
-* Importation of BibTeX (.bib) bibliographies.
+* Importbibliographies into WIKINDX and export bibliographies – Endnote, RIS, BibTeX, RTF, HTML, PubMed
+
 * Manage plug-ins, visual templates and localizations.
 * Add general news items and optionally email the item to registered users.
 * Optionally receive email notification of user registrations.
@@ -97,7 +98,6 @@ WIKINDX uses a components system to extend or alter its capabilities. All offica
 * The WYSIWYG word processor – write an article, from draft through to publication with automatic citation formatting, entirely within the one software
 * IdeaGen – randomly selects and displays two items of metadata (quotes, paraphrases, musings, or ideas) in the hope that the new juxtaposition might lead to serendipity
 * Bibutils – convert between a number of bibliographic formats in preparation for an import into WIKINDX
-* ImportExportBib – import bibliographies into WIKINDX and export bibliographies – Endnote, RIS, BibTeX, RTF, HTML, PubMed
 * SoundExplorer – experimental aural notification of selected resource additions
 * ChooseLanguage – quickly select a new language
 * Localization – easily create a new localization

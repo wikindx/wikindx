@@ -47,6 +47,7 @@ SECURITY
 2. Prevent session fixing by using a custom session name.
 3. Prevent session fixing by regenerating the session id before a major change of status.
 4. Reduce cookie lifetime to 1 month.
+5. Hide the value of WIKINDX_DB_PASSWORD in the debugtool.
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

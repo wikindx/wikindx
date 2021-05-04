@@ -577,6 +577,11 @@ class debugtools_MODULE
         
         foreach ($envConfig as $k => $v)
         {
+            if ($k == "WIKINDX_DB_PASSWORD")
+            {
+                $v = "**********";
+            }
+            
             $pString .= HTML\trStart("alternate" . (1 + $i % 2));
             $pString .= HTML\td($k, "middle padding5px");
             $pString .= HTML\td("<pre>" . $this->dumpEncodedData2Text($v) . "</pre>", "middle padding5px");

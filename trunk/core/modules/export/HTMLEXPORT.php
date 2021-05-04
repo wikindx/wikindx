@@ -59,6 +59,7 @@ class HTMLEXPORT
     {
         $this->session->delVar("exportBasket", TRUE);
         $this->initHtmlExport();
+        GLOBALS::clearTplVar('pagingList');
     }
     /**
      * initHtmlExport

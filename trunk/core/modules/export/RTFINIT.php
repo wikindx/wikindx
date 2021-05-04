@@ -79,6 +79,7 @@ class RTFINIT
     {
         $this->session->delVar("exportBasket", TRUE);
         $this->initRtfExport();
+        GLOBALS::clearTplVar('pagingList');
     }
     /**
      * initRtfExport
@@ -95,7 +96,7 @@ class RTFINIT
     private function display()
     {
         // Check we have a list to export
-        $common = FACTORY_EXPORTCOMMON::getInstance('html');
+        $common = FACTORY_EXPORTCOMMON::getInstance('rtf');
         $sql = $common->getSQL();
         if (!$sql)
         {

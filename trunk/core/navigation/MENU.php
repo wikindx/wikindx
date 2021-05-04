@@ -631,7 +631,8 @@ class MENU
 				'index.php?action=export_BIBTEXEXPORT_CORE&method=initBibtexExportB';
 			$this->res['exportbasketSub'][$messages->text("menu", 'exportHTML')] = 
 				'index.php?action=export_HTMLEXPORT_CORE&method=initHtmlExportB';
-			$this->res['exportbasketSub'][$messages->text("menu", 'exportEndNote')] = 'initEndnoteExportB';
+			$this->res['exportbasketSub'][$messages->text("menu", 'exportEndNote')] = 
+				'index.php?action=export_ENDNOTEINIT_CORE&method=initEndnoteExportB';
 			$this->res['exportbasketSub'][$messages->text("menu", 'exportRIS')] = 
 				'index.php?action=export_RISEXPORT_CORE&method=initRisExportB';
 		}
@@ -645,7 +646,8 @@ class MENU
 				'index.php?action=export_BIBTEXEXPORT_CORE&method=initBibtexExportL';
 			$this->res['exportlistSub'][$messages->text("menu", 'exportHTML')] = 
 				'index.php?action=export_HTMLEXPORT_CORE&method=initHtmlExportL';
-			$this->res['exportlistSub'][$messages->text("menu", 'exportEndNote')] = 'initEndnoteExportB';
+			$this->res['exportlistSub'][$messages->text("menu", 'exportEndNote')] = 
+				'index.php?action=export_ENDNOTEINIT_CORE&method=initEndnoteExportL';
 			$this->res['exportlistSub'][$messages->text("menu", 'exportRIS')] = 
 				'index.php?action=export_RISEXPORT_CORE&method=initRisExportL';
 		}

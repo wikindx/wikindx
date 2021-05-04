@@ -91,6 +91,10 @@ class BIBTEXEXPORT
      */
     public function processExport()
     {
+        // Use an unlimited memmory temporarily,
+        // because the recordset can be really huge
+        // Memory is reset automatically at the next script.
+        ini_set('memory_limit', '-1');
         $this->bibtex->writeSession();
         $sql = $this->common->getSQL();
         if (!$sql)

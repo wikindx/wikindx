@@ -68,7 +68,7 @@ class ENDNOTEIMPORT
         $this->tag = FACTORY_TAG::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "importexport", "ENDNOTEMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "importexport", "ENDNOTEMAP.php"]));
         $this->map = new ENDNOTEMAP();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEDATEPARSE.php"]));
         $this->date = new ENDNOTEDATEPARSE();

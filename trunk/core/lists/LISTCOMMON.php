@@ -193,6 +193,7 @@ class LISTCOMMON
             if ($this->browserTabID)
             {
                 GLOBALS::unsetTempStorage(['search_Highlight']);
+				\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['search_Highlight']);
             }
         }
         $this->bibStyle->bibformat->patterns = $this->patterns;

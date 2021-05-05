@@ -72,6 +72,7 @@ class FRONT
         $this->session->delVar("search_Highlight");
         $this->session->delVar("list_AllIds");
         if ($this->browserTabID) {
+            GLOBALS::unsetTempStorage(['search_Highlight']);
         	\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['search_Highlight', 'list_AllIds']);
         }
         

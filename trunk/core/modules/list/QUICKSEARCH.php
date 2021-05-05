@@ -454,7 +454,7 @@ class QUICKSEARCH
             //	        GLOBALS::setTempStorage(['search_AscDesc' => $this->db->asc]);
             GLOBALS::setTempStorage(['search_Patterns' => $patterns]);
         }
-        $this->common->keepHighlight = TRUE;
+//        $this->common->keepHighlight = TRUE;
         $sql = $this->getFinalSql($reprocess, $queryString);
         $this->common->display($sql, 'search');
         // set the lastMulti session variable for quick return to this process.

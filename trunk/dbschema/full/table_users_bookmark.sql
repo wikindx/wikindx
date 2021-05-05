@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS `users_bookmarks` (
     `usersbookmarksUserId` int(11) NOT NULL DEFAULT 0,
     `usersbookmarksBookmarks` LONGTEXT COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
     PRIMARY KEY (`usersbookmarksId`),
-    PRIMARY KEY (`usersbookmarksUserId`)
+    KEY (`usersbookmarksUserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

@@ -237,7 +237,7 @@ class UPDATEDATABASE
      */
     public function createDbSchema($pluginPath = DIRECTORY_SEPARATOR)
     {
-        if ($this->db->listTables() == 0)
+        if (count($this->db->listTables()) == 0)
         {
             // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
             // or /plugins/<PluginDirectory>/dbschema/full

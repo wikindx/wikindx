@@ -21,7 +21,10 @@ class BASKET
     private $success;
     private $session;
     private $stmt;
+    private $userId;
     private $browserTabID = FALSE;
+    public $useDB = FALSE; // accessed elsewhere
+    public $useDBnorow = FALSE; // accessed elsewhere
 
     public function __construct()
     {
@@ -32,6 +35,7 @@ class BASKET
         $this->session = FACTORY_SESSION::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->browserTabID = GLOBALS::getBrowserTabID();
+        $this->userId = $this->session->getVar("setup_UserId");
         if ($this->browserTabID)
         {
             // 1. Load any pre-existing search data into GLOBALS $tempStorage
@@ -50,17 +54,54 @@ class BASKET
         	}
         }
     }
+    /** Get basket from one of three possible locations
+     *
+     * @param $userId Default: $this->userId
+     *
+     * @return array
+     */
+    public function getBasket($userId = FALSE)
+    {
+    	if (!$userId) {
+    		$userId = $this->userId;
+    	}
+    	$basketList = [];
+    	$this->db->formatConditions(['usersbasketUserId' => $userId]);
+        $resultSet = $this->db->select('users_basket', ['usersbasketBasket']);
+        $row = $this->db->fetchRow($resultSet);
+        if ($row) { // a row exists for this user
+        	$basketList = unserialize($row['usersbasketBasket']);
+        	$this->useDB = TRUE;
+        } else if ($userId) { // write access but no row yet – function checking this will insert rather than update (LISTADDTO.php and init() here)
+        	$this->useDBnorow = TRUE;
+        } else if ($this->browserTabID) {
+        	$basketList = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List');
+        } else {
+        	$basketList = $this->session->getVar("basket_List");
+        }
+    // Check that resource still exists so that menu item at least can be dealt with (another user might have deleted the resource)
+    	if (!empty($basketList) && !$this->useDB) { // From session or TEMPSTORAGE. DELETERESOURCE already checks all users_basket rows
+    		$this->db->formatConditionsOneField($basketList, 'resourceId');
+    		$resultSet = $this->db->select('resource', 'resourceId');
+    		if (!$this->db->numRows($resultSet)) {
+    			$this->session->delVar("basket_List");
+    			if ($this->browserTabID) {
+        			\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
+        		}
+    			$basketList = [];
+    		}
+    	}
+        if (!is_array($basketList)) {
+        	return [];
+        }
+        return $basketList;
+    } 
     /**
      * Add resource to basket
      */
     public function init()
     {
-        if (!$basket = GLOBALS::getTempStorage('basket_List')) {
-        	$basket = $this->session->getVar("basket_List");
-        }
-        if (!is_array($basket)) {
-        	$basket = [];
-        }
+        $basket = $this->getBasket();
         if (array_key_exists('resourceId', $this->vars))
         {
             $resourceId = $this->vars['resourceId'];
@@ -71,11 +112,18 @@ class BASKET
         }
         // Ensure array is unique
         array_unique($basket);
-        $this->session->setVar("basket_List", $basket);
-        if ($this->browserTabID) {
-        	GLOBALS::setTempStorage(['basket_List' => $basket]);
-        	\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
-        }
+        if ($this->useDB) {
+    		$this->db->formatConditions(['usersbasketUserId' => $this->userId]);
+    		$this->db->update('users_basket', ['usersbasketBasket' => serialize($basket)]);
+        } else if ($this->useDBnorow) {
+        	$this->db->insert('users_basket', ['usersbasketUserId', 'usersbasketBasket'], [$this->userId, serialize($basket)]);
+        } else {
+			$this->session->setVar("basket_List", $basket);
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['basket_List' => $basket]);
+				\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
+			}
+		}
         // send back to view this resource with success message
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
@@ -90,22 +138,22 @@ class BASKET
      */
     public function remove()
     {
-        if (!$basket = GLOBALS::getTempStorage('basket_List')) {
-        	$basket = $this->session->getVar("basket_List");
-        }
-        if (!is_array($basket)) {
-        	$basket = [];
-        }
+        $basket = $this->getBasket();
         $resourceId = $this->vars['resourceId'];
         if (($key = array_search($resourceId, $basket)) !== FALSE)
         {
             unset($basket[$key]);
         }
-        $this->session->setVar("basket_List", $basket);
-        if ($this->browserTabID) {
-        	GLOBALS::setTempStorage(['basket_List' => $basket]);
-        	\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
-        }
+        if ($this->useDB) {
+    		$this->db->formatConditions(['usersbasketUserId' => $this->userId]);
+    		$this->db->update('users_basket', ['usersbasketBasket' => serialize($basket)]);
+        } else {
+			$this->session->setVar("basket_List", $basket);
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['basket_List' => $basket]);
+				\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
+			}
+		}
         // send back to view this resource with success message
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
@@ -131,18 +179,12 @@ class BASKET
      */
     public function view()
     {
-    	if ($this->browserTabID) {
-			if (!$bl = GLOBALS::getTempStorage('basket_List')) {
-		        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
-        		new FRONT(); // __construct() runs on autopilot
-        		return;
-        	}
-		} else {
-			$bl = $this->session->getVar("basket_List");
-		}
-        if (!is_array($bl)) {
-        	$bl = [];
-        }
+        $basket = $this->getBasket();
+        if (empty($basket)) {
+		    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
+        	new FRONT(); // __construct() runs on autopilot
+    		return;
+    	}
     	$message = FALSE;
         if (array_key_exists('success', $this->vars) && $this->vars['success']) {
             $message = $this->success->text($this->vars['success']);
@@ -161,11 +203,11 @@ class BASKET
 		}
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $queryString = 'action=basket_BASKET_CORE&method=view';
-        $sizeOfbl = is_array($bl) ? count($bl) : 0;
-        $this->session->setVar("setup_PagingTotal", $sizeOfbl);
+        $sizeOfbasket = is_array($basket) ? count($basket) : 0;
+        $this->session->setVar("setup_PagingTotal", $sizeOfbasket);
 		if ($this->browserTabID)
 		{
-			GLOBALS::setTempStorage(['setup_PagingTotal' => $sizeOfbl]);
+			GLOBALS::setTempStorage(['setup_PagingTotal' => $sizeOfbasket]);
 		}
         $this->pagingObject = FACTORY_PAGING::getInstance();
         $this->pagingObject->queryString = $queryString;
@@ -192,7 +234,6 @@ class BASKET
         {
             $this->session->delVar("list_PagingAlphaLinks");
             $this->session->delVar("list_AllIds");
-            $this->session->setVar("list_AllIds", $this->session->getVar("basket_List"));
 			if ($this->browserTabID)
 			{
 				GLOBALS::unsetTempStorage(['list_PagingAlphaLinks', 'list_AllIds']);
@@ -237,13 +278,12 @@ class BASKET
 				$order = $this->session->getVar("list_Order");
 			}
         }
-        if (!$bl = GLOBALS::getTempStorage('basket_List')) {
-        	$bl = $this->session->getVar("basket_List");
+        $basket = $this->getBasket();
+        $this->session->setVar("list_AllIds", $basket);
+        if ($this->browserTabID) {
+        	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
         }
-        if (!is_array($bl)) {
-        	$bl = [];
-        }
-        $subStmt = $this->setSubQuery($bl);
+        $subStmt = $this->setSubQuery($basket);
         $this->stmt->listSubQuery($order, $queryString, $subStmt);
 
         return $this->stmt->listList($order);
@@ -255,18 +295,20 @@ class BASKET
      */
     public function delete()
     {
-    	if ($this->browserTabID) {
-			if (!GLOBALS::getTempStorage('basket_List')) {
-		        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
-        		new FRONT(); // __construct() runs on autopilot
-        		return;
-        	}
-		}
+        $basket = $this->getBasket();
+        if (empty($basket)) {
+		    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
+        	new FRONT(); // __construct() runs on autopilot
+    		return;
+    	}
         // Ask for confirmation first
         GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basketDelete'));
 
         $pString = \FORM\formHeader('basket_BASKET_CORE');
         $pString .= \FORM\hidden('method', 'deleteConfirm');
+        if ($this->useDB) {
+        	$pString .= \FORM\hidden('useDB', 1);
+        }
         $pString .= \FORM\formSubmit($this->messages->text("submit", "Confirm")) . \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
     }
@@ -275,10 +317,13 @@ class BASKET
      */
     public function deleteConfirm()
     {
-        $this->session->clearArray('basket');
-        if ($this->browserTabID) {
+        if (array_key_exists('useDB', $this->vars)) {
+    		$this->db->formatConditions(['usersbasketUserId' => $this->userId]);
+    		$this->db->delete('users_basket');
+    	} else if ($this->browserTabID) {
         	\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
         }
+        $this->session->clearArray('basket');
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
         new FRONT($this->success->text("basketDelete")); // __construct() runs on autopilot
     }

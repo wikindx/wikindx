@@ -1700,11 +1700,9 @@ class RESOURCEVIEW
      */
     private function displayBasket($row)
     {
-    	if ($this->browserTabID) {
-    		$basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List');
-    	} else {
-    		$basket = $this->session->getVar("basket_List");
-    	}
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "basket", "BASKET.php"]));
+        $basketObj = new BASKET();
+        $basket = $basketObj->getBasket();
         if (is_array($basket) && !empty($basket))
         {
             if (array_search($row['resourceId'], $basket) !== FALSE)

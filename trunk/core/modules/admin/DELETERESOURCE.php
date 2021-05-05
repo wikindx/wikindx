@@ -436,25 +436,7 @@ class DELETERESOURCE
         $this->db->delete('statistics_resource_views');
         $this->db->formatConditionsOneField($this->idsRaw, 'statisticsattachmentdownloadsResourceId');
         $this->db->delete('statistics_attachment_downloads');
-        // Delete resource from basket
-        if (!$basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List')) {
-        	$this->session->getVar("basket_List");
-        }
-        if (is_array($basket)) {
-			$basketIds = array_diff($basket, $this->idsRaw);
-			if (empty($basketIds))
-			{
-				$this->session->delVar("basket_List");
-				\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
-			}
-			else
-			{
-				$this->session->setVar("basket_List", $basketIds);
-				if ($this->browserTabID) {
-					\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basketIds]);
-				}
-			}
-		}
+        $this->deleteBasket();
         $this->deleteMetadata();
         $this->checkBibtexStringTable();
         // delete these ids from any user bibliographies
@@ -486,6 +468,54 @@ class DELETERESOURCE
             }
         }
     }
+    /**
+     * Delete resource from all user baskets
+     */
+     private function deleteBasket()
+     {
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "basket", "BASKET.php"]));
+        $basketObj = new BASKET();
+// Do this user and storage first . . .
+        $basket = $basketObj->getBasket($this->session->getVar('setup_UserId'));
+        if (!empty($basket)) {
+			$basketIds = array_diff($basket, $this->idsRaw);
+			if (empty($basketIds)) {
+				if ($basketObj->useDB) {
+                	$this->db->formatConditions(['usersbasketUserId' => $this->session->getVar('setup_UserId')]);
+                	$this->db->delete('users_basket');
+				} else {
+					$this->session->delVar("basket_List");
+					\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
+				}
+			}
+			else {
+				if ($basketObj->useDB) {
+					$this->db->formatConditions(['usersbasketUserId' => $this->session->getVar('setup_UserId')]);
+					$this->db->update('users_basket', ['usersbasketBasket' => serialize($basketIds)]);
+				} else {
+					$this->session->setVar("basket_List", $basketIds);
+					if ($this->browserTabID) {
+						\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basketIds]);
+					}
+				}
+			}
+		}
+// Then other users' baskets . . .
+		$this->db->formatConditions(['usersbasketUserId' => $this->session->getVar('setup_UserId')], TRUE); // Not this user's
+		$resultSet = $this->db->select('users_basket', ['usersbasketUserId', 'usersbasketBasket']);
+		while ($row = $this->db->fetchRow($resultSet)) {
+			$basket = unserialize($row['usersbasketBasket']);
+			$basketIds = array_diff($basket, $this->idsRaw);
+			if (empty($basketIds)) {
+                $this->db->formatConditions(['usersbasketUserId' => $row['usersbasketUserId']]);
+            	$this->db->delete('users_basket');
+			} else {
+				$this->db->formatConditions(['usersbasketUserId' => $row['usersbasketUserId']]);
+				$this->db->update('users_basket', ['usersbasketBasket' => serialize($basketIds)]);
+			}
+		}
+	}
+    
     /**
      * checkHanging
      *

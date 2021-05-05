@@ -229,11 +229,9 @@ class MENU
         $stateArray[] = $this->lastMultiMeta = $this->session->getVar("sql_LastMultiMeta");
         $stateArray[] = $this->lastIdeaSearch = $this->session->getVar("sql_LastIdeaSearch");
         
-        if ($this->browserTabID) {
-        	$this->basketList = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List');
-        } else {
-        	$this->basketList = $this->session->getVar("basket_List");
-        }
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "basket", "BASKET.php"]));
+        $basket = new BASKET();
+        $this->basketList = $basket->getBasket();
         $stateArray[] = $this->basketList;
         $stateArray[] = WIKINDX_IMPORT_BIB;
         $state = base64_encode(serialize($stateArray));

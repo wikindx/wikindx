@@ -1517,6 +1517,12 @@ class USER
         	$this->db->formatConditionsOneField($input, 'userbibliographyUserId');
         	$this->db->delete('user_bibliography');
         }
+        // Delete from users_basket
+        $this->db->formatConditionsOneField($input, 'usersbasketUserId');
+        $this->db->delete('users_basket');
+        // Delete from users_bookmarks
+        $this->db->formatConditionsOneField($input, 'usersbookmarksUserId');
+        $this->db->delete('users_bookmarks');
         // Delete from user_groups
         $this->db->formatConditionsOneField($input, 'usergroupsAdminId');
         $this->db->delete('user_groups');

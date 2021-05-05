@@ -169,15 +169,8 @@ class EXPORTCOMMON
         	if (!$tempListStmt = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt')) {
 	            $tempListStmt = $this->session->getVar("sql_ListStmt");
 	        }
-        	if (!$basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List')) {
-	            $basket = $this->session->getVar("basket_List");
-	        }
-            $this->session->setVar("list_AllIds", $basket);
-            if ($this->browserTabID) {
-            	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
-            }
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "basket", "BASKET.php"]));
-            $basket = new BASKET();
+	        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "basket", "BASKET.php"]));
+        	$basket = new BASKET();
             $sqlEncoded = base64_encode(serialize([$basket->returnBasketSql(FALSE, 'creator')]));
             $this->session->setVar("list_AllIds", $tempAllIds);
             $this->session->setVar("sql_ListStmt", $tempListStmt);

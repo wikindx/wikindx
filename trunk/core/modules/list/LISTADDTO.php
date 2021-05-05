@@ -812,6 +812,8 @@ class LISTADDTO
      */
     private function addToBasket()
     {
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "basket", "BASKET.php"]));
+        $basketObj = new BASKET();
         list($idFound, $string) = $this->checkIdInput();
         if (!$idFound)
         {
@@ -831,12 +833,7 @@ class LISTADDTO
         {
             $ids = unserialize(base64_decode($string));
         }
-        if (is_bool($basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List'))) {
-	        $basket = $this->session->getVar("basket_List");
-	    }
-        if (!is_array($basket)) {
-            $basket = [];
-        }
+        $basket = $basketObj->getBasket();
         foreach ($ids as $resourceId)
         {
             if (array_search($resourceId, $basket) === FALSE)
@@ -846,10 +843,19 @@ class LISTADDTO
         }
         // Ensure array is unique
         array_unique($basket);
-        $this->session->setVar("basket_List", $basket);
-        if ($this->browserTabID) {
-	    	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
-	    }
+        if ($basketObj->useDB) {
+    		$this->db->formatConditions(['usersbasketUserId' => $this->session->getVar('setup_UserId')]);
+    		$this->db->update('users_basket', ['usersbasketBasket' => serialize($basket)]);
+        } else if ($basketObj->useDBnorow) {
+        	$this->db->insert('users_basket', ['usersbasketUserId', 'usersbasketBasket'], 
+        		[$this->session->getVar('setup_UserId'), serialize($basket)]);
+        } else {
+			$this->session->setVar("basket_List", $basket);
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['basket_List' => $basket]);
+				\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
+			}
+		}
         $this->navigate->listView("basketAdd");
         FACTORY_CLOSE::getInstance(); // die
     }
@@ -858,6 +864,8 @@ class LISTADDTO
      */
     private function removeFromBasket()
     {
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "basket", "BASKET.php"]));
+        $basketObj = new BASKET();
         list($idFound, $string) = $this->checkIdInput();
         if (!$idFound)
         {
@@ -875,12 +883,7 @@ class LISTADDTO
         {
             $ids = unserialize(base64_decode($string));
         }
-        if (is_bool($basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List'))) {
-	        $basket = $this->session->getVar("basket_List");
-	    }
-        if (!is_array($basket)) {
-            $basket = [];
-        }
+        $basket = $basketObj->getBasket();
         foreach ($ids as $resourceId)
         {
             if (($key = array_search($resourceId, $basket)) !== FALSE)
@@ -890,14 +893,24 @@ class LISTADDTO
         }
         if (empty($basket))
         {
-            $this->session->delVar("basket_List");
-            \TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
+			if ($basketObj->useDB) {
+				$this->db->formatConditions(['usersbasketUserId' => $this->session->getVar('setup_UserId')]);
+				$this->db->delete('users_basket');
+			} else {
+	            $this->session->delVar("basket_List");
+	            \TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
+	        }
         }
         else
         {
-            $this->session->setVar("basket_List", $basket);
-            if ($this->browserTabID) {
-	    		\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
+        	if ($basketObj->useDB) {
+				$this->db->formatConditions(['usersbasketUserId' => $this->session->getVar('setup_UserId')]);
+				$this->db->update('users_basket', ['usersbasketBasket' => serialize($basket)]);
+			} else {
+	            $this->session->setVar("basket_List", $basket);
+    	        if ($this->browserTabID) {
+	    			\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
+	    		}
 	    	}
         }
         if (empty($basket))

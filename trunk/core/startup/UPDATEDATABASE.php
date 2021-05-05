@@ -2318,6 +2318,35 @@ END;
     private function upgradeTo64()
     {
         $this->upgradeToTargetVersion();
+        $this->db->formatConditions(['sessionUserId' => 0], TRUE);
+        $resultSet = $this->db->select('session', ['sessionUserId', 'sessionData']);
+        while ($row = $this->db->fetchRow($resultSet)) {
+        	$data = unserialize($row['sessionData']);
+        	print $row['sessionUserId']; print_r($data); print BR . BR;
+		// Write user's basket
+			if (array_key_exists('basket_List', $data)) {
+				$this->db->insert('users_basket', ['usersbasketUserId', 'usersbasketBasket'], 
+					[$row['sessionUserId'], serialize($data['basket_List'])]);
+			}
+		// write user's bookmarks
+			$bookmarks = [];
+			for ($i = 1; $i <= 20; $i++) {
+				if (array_key_exists("bookmark_" . $i . "_name", $data)) {
+					if (array_key_exists("bookmark_" . $i . "_multi", $data)) {
+						$bookmarks[$i . "_name"] = $data["bookmark_" . $i . "_name"];
+						$bookmarks[$i . "_multi"] = $data["bookmark_" . $i . "_multi"];
+					}
+					elseif (array_key_exists("bookmark_" . $i . "_id", $data)) {
+						$bookmarks[$i . "_name"] = $data["bookmark_" . $i . "_name"];
+						$bookmarks[$i . "_id"] = $data["bookmark_" . $i . "_id"];
+					}
+				}
+			}
+			if (!empty($bookmarks)) {
+				$this->db->insert('users_bookmarks', ['usersbookmarksUserId', 'usersbookmarksBookmarks'], 
+					[$row['sessionUserId'], serialize($bookmarks)]);
+			}
+        }
     }
     
     /**

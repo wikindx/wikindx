@@ -81,7 +81,7 @@ class xpdftotext_MODULE
         
         // Make sure the utilities are executable
         $bindir = implode(DIRECTORY_SEPARATOR, [__DIR__, "bin"]);
-        foreach (\FILE\fileInDirToArray() as $bin)
+        foreach (\FILE\fileInDirToArray($bindir) as $bin)
         {
             chmod(implode(DIRECTORY_SEPARATOR, [$bindir, $bin]), 0777);
         }

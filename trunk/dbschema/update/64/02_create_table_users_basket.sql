@@ -10,7 +10,7 @@
 CREATE TABLE IF NOT EXISTS `users_basket` (
   	`usersbasketId` int(11) NOT NULL AUTO_INCREMENT,
     `usersbasketUserId` int(11) NOT NULL DEFAULT 0,
-    `usersbasketBasket` LONGTEXT COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+    `usersbasketBasket` MEDIUMTEXT COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
     PRIMARY KEY (`usersbasketId`),
     KEY (`usersbasketUserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

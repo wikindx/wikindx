@@ -2322,7 +2322,6 @@ END;
         $resultSet = $this->db->select('session', ['sessionUserId', 'sessionData']);
         while ($row = $this->db->fetchRow($resultSet)) {
         	$data = unserialize($row['sessionData']);
-        	print $row['sessionUserId']; print_r($data); print BR . BR;
 		// Write user's basket
 			if (array_key_exists('basket_List', $data)) {
 				$this->db->insert('users_basket', ['usersbasketUserId', 'usersbasketBasket'], 

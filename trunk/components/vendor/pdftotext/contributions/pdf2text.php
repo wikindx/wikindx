@@ -384,7 +384,7 @@ function pdf2text ( $filename )
 				}
 				else
 					getCharTransformations ( $transformations, $data );
-	print_r ( $transformations ) ;
+	//print_r ( $transformations ) ;
 			}
 		}
 	}

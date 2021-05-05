@@ -482,7 +482,7 @@ namespace UTILS
                 return 5;
             }
             
-            // Check if the component type is right directory for the component directory
+            // Check if the component type is right for the component directory
             $componentRootName = realpath(dirname($componentDirPath));
             if ($componentMetadata["component_type"] == "plugin" && $componentRootName != implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]))
             {

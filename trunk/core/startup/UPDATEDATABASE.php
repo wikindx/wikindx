@@ -2317,7 +2317,8 @@ END;
      */
     private function upgradeTo64()
     {
-        $this->upgradeToTargetVersion();
+        $this->updateDbSchema('64');
+        
         $this->db->formatConditions(['sessionUserId' => 0], TRUE);
         $resultSet = $this->db->select('session', ['sessionUserId', 'sessionData']);
         while ($row = $this->db->fetchRow($resultSet)) {
@@ -2346,6 +2347,8 @@ END;
 					[$row['sessionUserId'], serialize($bookmarks)]);
 			}
         }
+        
+        $this->updateCoreInternalVersion();
     }
     
     /**

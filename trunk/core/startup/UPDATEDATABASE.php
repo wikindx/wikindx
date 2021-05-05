@@ -2311,6 +2311,16 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 64 (6.4.8)
+     *
+     * Add 
+     */
+    private function upgradeTo64()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

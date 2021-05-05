@@ -26,6 +26,6 @@ CREATE TABLE IF NOT EXISTS `resource_attachments` (
   KEY `resourceattachmentsPrimary` (`resourceattachmentsPrimary`),
   KEY `resourceattachmentsEmbargo` (`resourceattachmentsEmbargo`),
   KEY `resourceattachmentsTimestamp` (`resourceattachmentsTimestamp`),
-  KEY `resourceattachmentsEmbargoUntil` (`resourceattachmentsEmbargoUntil`)
+  KEY `resourceattachmentsEmbargoUntil` (`resourceattachmentsEmbargoUntil`),
   FULLTEXT KEY `resourceattachmentsText` (`resourceattachmentsText`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

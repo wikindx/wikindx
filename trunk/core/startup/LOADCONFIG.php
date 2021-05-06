@@ -90,6 +90,11 @@ class LOADCONFIG
             $db->formatConditions([$table . 'Id' => $session->getVar("setup_UserId")]);
             $resultSet = $db->select($table, $preferences);
             $row = $db->fetchRow($resultSet);
+            if ($row === FALSE) { // Perhaps this user, while logged on, has been deleted by the admin . . .?
+				$auth = FACTORY_AUTHORIZE::getInstance();
+				$auth->initLogon();
+				FACTORY_CLOSENOMENU::getInstance();
+            }
         }
         else
         { // read only user – read default settings from config table

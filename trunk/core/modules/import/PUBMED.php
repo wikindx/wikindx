@@ -60,7 +60,7 @@ class PUBMED
     		if (!$this->session->getVar("setup_Superadmin")) {
 				$auth = FACTORY_AUTHORIZE::getInstance();
 				$auth->initLogon();
-				FACTORY_CLOSE::getInstance();
+				FACTORY_CLOSENOMENU::getInstance();
 			}
         }
         if (!\FILE\command_exists($this->bibutilsPath . 'med2xml')) {

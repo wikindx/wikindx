@@ -437,6 +437,7 @@ class DELETERESOURCE
         $this->db->formatConditionsOneField($this->idsRaw, 'statisticsattachmentdownloadsResourceId');
         $this->db->delete('statistics_attachment_downloads');
         $this->deleteBasket();
+        $this->deleteBookmark();
         $this->deleteMetadata();
         $this->checkBibtexStringTable();
         // delete these ids from any user bibliographies
@@ -512,6 +513,75 @@ class DELETERESOURCE
 			} else {
 				$this->db->formatConditions(['usersbasketUserId' => $row['usersbasketUserId']]);
 				$this->db->update('users_basket', ['usersbasketBasket' => serialize($basketIds)]);
+			}
+		}
+	}
+    
+    /**
+     * Delete resource from all user bookmarks
+     */
+     private function deleteBookmark()
+     {
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bookmarks", "BOOKMARK.php"]));
+        $bookmarkObj = new BOOKMARK();
+// Do this user and storage first . . .
+        $bookmarks = $bookmarkObj->getBookmarks($this->session->getVar('setup_UserId'));
+        if (!empty($bookmarks)) {
+			foreach ($bookmarks as $key => $value) {
+				if (array_search($value, $this->idsRaw) !== FALSE) {
+					$split = explode('_', $key);
+					if ($split[1] != 'id') { // Don't want to match on name but on id instead
+						continue;
+					}
+					unset($bookmarks[$split[0] . '_name']);
+					unset($bookmarks[$split[0] . '_id']);
+					$this->session->delVar('bookmark_' . $split[0] . '_name');
+					$this->session->delVar('bookmark_' . $split[0] . '_id');
+				}
+			}
+			if (empty($bookmarks)) {
+				if ($bookmarkObj->useDB) {
+                	$this->db->formatConditions(['usersbookmarksUserId' => $this->session->getVar('setup_UserId')]);
+                	$this->db->delete('users_bookmarks');
+				} else {
+					if ($this->browserTabID) {
+						\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['bookmarks']);
+					}
+				}
+			}
+			else {
+				if ($bookmarkObj->useDB) {
+					$this->db->formatConditions(['usersbookmarksUserId' => $this->session->getVar('setup_UserId')]);
+					$this->db->update('users_bookmarks', ['usersbookmarksBookmarks' => serialize($bookmarks)]);
+				} else {
+					if ($this->browserTabID) {
+						GLOBALS::setTempStorage(['bookmarks' => $bookmarks]);
+						\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
+					}
+				}
+			}
+		}
+// Then other users' bookmarks . . .
+		$this->db->formatConditions(['usersbookmarksUserId' => $this->session->getVar('setup_UserId')], TRUE); // Not this user's
+		$resultSet = $this->db->select('users_bookmarks', ['usersbookmarksUserId', 'usersbookmarksBookmarks']);
+		while ($row = $this->db->fetchRow($resultSet)) {
+			$bookmarks = unserialize($row['usersbookmarksBookmarks']);
+			foreach ($bookmarks as $key => $value) {
+				if (array_search($value, $this->idsRaw) !== FALSE) {
+					$split = explode('_', $key);
+					if ($split[1] != 'id') { // Don't want to match on name but on id instead
+						continue;
+					}
+					unset($bookmarks[$split[0] . '_name']);
+					unset($bookmarks[$split[0] . '_id']);
+				}
+			}
+			if (empty($bookmarks)) {
+                $this->db->formatConditions(['usersbookmarksUserId' => $row['usersbookmarksUserId']]);
+            	$this->db->delete('users_bookmarks');
+			} else {
+				$this->db->formatConditions(['usersbookmarksUserId' => $row['usersbookmarksUserId']]);
+				$this->db->update('users_bookmarks', ['usersbookmarksBookmarks' => serialize($bookmarks)]);
 			}
 		}
 	}

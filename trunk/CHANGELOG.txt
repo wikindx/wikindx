@@ -23,6 +23,8 @@ BUG FIXES:
 6. Prevent issues when a plugin is removed but not disabled safely by the admin.
 7. Fix a crash on creation of resource_attachments table.
 8. Fix a crash during a fresh install (error on table counting).
+9. Fix a bug in search highlighting that remembered a previous search instead of removing it.
+10. Fix a bug in resource view for the delete icon for a user's own resource if they are not the superadmin.
 
 FEATURE ENHANCEMENTS:
 1. Add a switch in MyWikindx|Resources to toggle the display of certain statistics when viewing a single resource. The display of views index and popularity index greatly slows down the display of the resource so these can be turned off (the default on upgrade) and only number of views, number of downloads, and maturity index will be viewed. Popularity and view indices will appear in a later version in the Statistics menu.
@@ -34,7 +36,7 @@ FEATURE ENHANCEMENTS:
 7. Support MHT/HTML text extraction (attachments) [#357].
 8. QUICKSEARCH now also searches on cached resource attachments.
 9. Moved the functions of the importexportbib plugin to the core code (Under Resources menu, Resources|Basket menu, and Metadata menu).
-10. Custom session garbage collector.
+10. Custom session garbage collector (see Admin|Configure|Users).
 
 MAINTENANCE:
 1. Align group_concat_max_len value with max_allowed_packet (MySQL).
@@ -46,6 +48,7 @@ MAINTENANCE:
 7. dom PHP extension is mandatory now.
 8. zip PHP extension is mandatory now.
 9. Keep the userId of users who have been logged in at least once.
+10. Transfer registered users' baskets and bookmarks to separate tables – these are maintained permanently regardless of what happens with FEATURE ENHANCEMENT 10 above.
 
 SECURITY
 1. Update PHPMailer (v6.4.1, CVE-2020-36326, a regression of CVE-2018-19296 object injection introduced in 6.1.8).
@@ -53,6 +56,7 @@ SECURITY
 3. Prevent session fixing by regenerating the session id before a major change of status.
 4. Reduce cookie lifetime to 1 month.
 5. Hide the value of WIKINDX_DB_PASSWORD in the debugtool.
+6. Just in case while a user is logged on and is deleted by the superadmin, ensure their next action returns them to the logon prompt.
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

@@ -37,7 +37,7 @@ class BIBTEXFILE
     		if (!$this->session->getVar("setup_Superadmin")) {
 				$auth = FACTORY_AUTHORIZE::getInstance();
 				$auth->initLogon();
-				FACTORY_CLOSE::getInstance();
+				FACTORY_CLOSENOMENU::getInstance();
 			}
         }
         $this->import->display($message);

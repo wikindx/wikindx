@@ -142,7 +142,7 @@ class IMPORTBIBTEX
 				if (!$this->session->getVar("setup_Superadmin")) {
 					$auth = FACTORY_AUTHORIZE::getInstance();
 					$auth->initLogon();
-					FACTORY_CLOSE::getInstance();
+					FACTORY_CLOSENOMENU::getInstance();
 				}
 			}
         }

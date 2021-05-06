@@ -80,7 +80,7 @@ class BASKET
         	$basketList = $this->session->getVar("basket_List");
         }
     // Check that resource still exists so that menu item at least can be dealt with (another user might have deleted the resource)
-    	if (!empty($basketList) && !$this->useDB) { // From session or TEMPSTORAGE. DELETERESOURCE already checks all users_basket rows
+    	if (!empty($basketList) && !$this->useDB) { // From session or TEMPSTORAGE only. DELETERESOURCE already checks all users_basket rows
     		$this->db->formatConditionsOneField($basketList, 'resourceId');
     		$resultSet = $this->db->select('resource', 'resourceId');
     		if (!$this->db->numRows($resultSet)) {
@@ -306,6 +306,7 @@ class BASKET
 
         $pString = \FORM\formHeader('basket_BASKET_CORE');
         $pString .= \FORM\hidden('method', 'deleteConfirm');
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         if ($this->useDB) {
         	$pString .= \FORM\hidden('useDB', 1);
         }

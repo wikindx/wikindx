@@ -189,14 +189,16 @@ class MENU
                 }
             }
         }
-        $this->bookmarkArray = $this->session->getArray('bookmark');
-        if (array_key_exists('DisplayAdd', $this->bookmarkArray))
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "bookmarks", "BOOKMARK.php"]));
+        $bookmark = new BOOKMARK();
+        $this->bookmarkArray = $bookmark->getBookmarks();
+        if ($this->session->getVar("bookmark_DisplayAdd"))
         {
-            $stateArray[] = $this->bookmarkAdd = $this->bookmarkArray['DisplayAdd'];
+            $stateArray[] = $this->bookmarkAdd = $this->session->getVar("bookmark_DisplayAdd");
         }
-        if (array_key_exists('View', $this->bookmarkArray))
+        if ($this->session->getVar("bookmark_View"))
         {
-            $stateArray[] = $this->bookmarkView = $this->bookmarkArray['View'];
+            $stateArray[] = $this->bookmarkView = $this->session->getVar("bookmark_View");
         }
         $stateArray[] = WIKINDX_MULTIUSER;
         $stateArray[] = $this->bibliographies = $this->session->getVar("setup_Bibliographies");
@@ -551,21 +553,23 @@ class MENU
             }
             if (!$found)
             {
-                $this->res['bookmarkSub'][$messages->text("menu", "bookmarkAdd")] = 'index.php?action=bookmarks_BOOKMARK_CORE';
+                $this->res['bookmarkSub'][$messages->text("menu", "bookmarkAdd")] = 'index.php?action=bookmarks_BOOKMARK_CORE' . 
+                	"&browserTabID=" . $this->browserTabID;
             }
         }
-        if (count($this->bookmarkArray) > 2)
+        if (!empty($this->bookmarkArray))
         {
-            $this->res['bookmarkSub'][$messages->text("menu", "bookmarkDelete")] = 'index.php?action=bookmarks_BOOKMARK_CORE&method=deleteInit';
+            $this->res['bookmarkSub'][$messages->text("menu", "bookmarkDelete")] = 'index.php?action=bookmarks_BOOKMARK_CORE&method=deleteInit' . 
+                	"&browserTabID=" . $this->browserTabID;
             for ($i = 1; $i <= 20; $i++)
             {
                 if (array_key_exists($i . "_name", $this->bookmarkArray) && array_key_exists($i . "_id", $this->bookmarkArray))
                 {
-                    $this->res['bookmarkSub'][stripslashes($this->bookmarkArray[$i . "_name"])] = "index.php?action=resource_RESOURCEVIEW_CORE&id=" . $this->bookmarkArray[$i . "_id"];
+                    $this->res['bookmarkSub'][stripslashes($this->bookmarkArray[$i . "_name"])] = "index.php?action=resource_RESOURCEVIEW_CORE&id=" . $this->bookmarkArray[$i . "_id"] . "&browserTabID=" . $this->browserTabID;
                 }
                 elseif (array_key_exists($i . "_name", $this->bookmarkArray) && array_key_exists($i . "_multi", $this->bookmarkArray))
                 {
-                    $this->res['bookmarkSub'][stripslashes($this->bookmarkArray[$i . "_name"])] = 'index.php?action=bookmarks_BOOKMARK_CORE&method=multiView&id=' . $i;
+                    $this->res['bookmarkSub'][stripslashes($this->bookmarkArray[$i . "_name"])] = 'index.php?action=bookmarks_BOOKMARK_CORE&method=multiView&id=' . $i . "&browserTabID=" . $this->browserTabID;
                 }
             }
         }

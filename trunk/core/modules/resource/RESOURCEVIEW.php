@@ -1027,8 +1027,7 @@ class RESOURCEVIEW
                 $links['delete'] =
                     "index.php?action=admin_DELETERESOURCE_CORE" . htmlentities('&function=deleteResourceConfirm') .
                     htmlentities('&navigate=front&resource_id=' . $row['resourceId']. "&browserTabID=" . $this->browserTabID);
-// Delete? Seems not to be necessary
-//                $links['delete'] = \HTML\a($this->icons->getClass("delete"), $this->icons->getHTML("delete"), $links['delete']);
+                $links['delete'] = \HTML\a($this->icons->getClass("delete"), $this->icons->getHTML("delete"), $links['delete']);
             }
             $edit = $this->allowEdit = TRUE;
         }

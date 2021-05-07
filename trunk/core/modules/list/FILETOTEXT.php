@@ -965,8 +965,6 @@ class FILETOTEXT
             // Read other elements
             elseif ($node->nodeType === XML_TEXT_NODE)
             {
-                echo $node->parentNode->nodeName, " ", $node->getNodePath(), LF;
-                
                 $content .= $node->nodeValue;
                 $lastchar = mb_substr($node->nodeValue, -1);
                 

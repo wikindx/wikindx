@@ -96,8 +96,8 @@ class STATS
         if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_USER_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
-
-            return $authorize->initLogon();
+			$authorize->initLogon();
+            FACTORY_CLOSENOMENU::getInstance(); // die
         }
         $icons = FACTORY_LOADICONS::getInstance();
         list($users, $resources, $quotes, $paraphrases, $musings) = $this->getUsers();
@@ -287,8 +287,8 @@ class STATS
         if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
-
-            return $authorize->initLogon();
+			$authorize->initLogon();
+            FACTORY_CLOSENOMENU::getInstance(); // die
         }
         // Use an unlimited memmory temporarily,
         // because the recordset can be really huge
@@ -331,8 +331,8 @@ class STATS
         if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
-
-            return $authorize->initLogon();
+			$authorize->initLogon();
+            FACTORY_CLOSENOMENU::getInstance(); // die
         }
         // Use an unlimited memmory temporarily,
         // because the recordset can be really huge
@@ -375,8 +375,8 @@ class STATS
         if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
-
-            return $authorize->initLogon();
+			$authorize->initLogon();
+            FACTORY_CLOSENOMENU::getInstance(); // die
         }
         // Use an unlimited memmory temporarily,
         // because the recordset can be really huge
@@ -424,8 +424,8 @@ class STATS
         if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
-
-            return $authorize->initLogon();
+			$authorize->initLogon();
+            FACTORY_CLOSENOMENU::getInstance(); // die
         }
         // Use an unlimited memmory temporarily,
         // because the recordset can be really huge
@@ -473,8 +473,8 @@ class STATS
         if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
-
-            return $authorize->initLogon();
+			$authorize->initLogon();
+            FACTORY_CLOSENOMENU::getInstance(); // die
         }
         // Use an unlimited memmory temporarily,
         // because the recordset can be really huge
@@ -517,8 +517,8 @@ class STATS
         if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
-
-            return $authorize->initLogon();
+			$authorize->initLogon();
+            FACTORY_CLOSENOMENU::getInstance(); // die
         }
         // Use an unlimited memmory temporarily,
         // because the recordset can be really huge

@@ -45,7 +45,6 @@ class ABOUT
         
         $pString .= \HTML\p('Co-programmers:');
         $list = \HTML\li(\HTML\strong('Stéphane Aulery:') . ' (France) ~ ' . \HTML\em('Senior programmer'));
-        $list .= \HTML\li(\HTML\strong('Dimitri Joukoff:') . ' (Australia)');
         $pString .= \HTML\ul($list);
         
         $pString .= \HTML\p('Beta-testers and de-buggers:');

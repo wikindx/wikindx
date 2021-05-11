@@ -78,6 +78,9 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
     			case 'getCiteCCs':
     				$this->getCiteCCs();
     				break;
+    			case 'getCreators':
+    				$this->getCreators();
+    				break;
     			case 'getStyles':
     				$this->getStyles();
     				break;
@@ -115,6 +118,23 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
     	$sql = $search->getFinalSqlResources();
     	$json = $this->formatResultsReferences($sql, FALSE);
     	echo $json;
+    	die;
+    }
+    /**
+     * Get all resource creators as an array
+     */
+    private function getCreators()
+    {
+    	$creator = FACTORY_CREATOR::getInstance();
+    	$creators = $creator->grabAll();
+    	if (!is_array($creators)) {
+    		$jsonArray = [];
+    	} else {
+    		foreach ($creators as $id => $name) {
+	    		$jsonArray[] = ['id' => $id, 'creator' => $name];
+	    	}
+    	}
+    	echo json_encode($jsonArray);
     	die;
     }
     /**
@@ -326,6 +346,8 @@ echo $scriptExecutionTimeAfterRendering . 's';die;
         include_once(implode(DIRECTORY_SEPARATOR, ["core", "modules", "office", "SEARCH.php"]));
         $search = new SEARCH();
     	$search->input['Word'] = \UTF8\mb_trim($this->vars['searchWord']);
+    	$search->input['AndOr'] = \UTF8\mb_trim($this->vars['searchAndOr']);
+    	$search->input['Creator'] = \UTF8\mb_trim($this->vars['searchCreator']);
     	$split = explode('_', $this->vars['searchParams']);
     	$search->order = $split[0];
     	$search->ascDesc = $split[1];

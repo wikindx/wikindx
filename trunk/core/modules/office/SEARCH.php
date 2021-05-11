@@ -75,12 +75,45 @@ class SEARCH
     	$this->citationSearch = TRUE;
         $this->db->ascDesc = $this->ascDesc;
         $this->stmt->listType = 'search';
+// First get the word search
         $this->input['Partial'] = TRUE;
-        if (!$this->getIds()) {
+        $this->getIds();
+// Then get the creator search if any
+		$this->creatorCitations();
+        if (empty($this->ids)) {
             return FALSE;
         }
         return $this->getFinalSqlCitations();
         
+    }
+    /**
+     * Get resource ids when searching citations on creators.
+     * If $this->ids is not empty, OR or AND the results of this search
+     */
+    private function creatorCitations()
+    {
+    	if (!$this->input['Creator']) {
+    		return FALSE;
+    	}
+    	$ids = [];
+		$this->metadata->setCondition(FALSE, FALSE, TRUE);
+		$this->db->formatConditions(['resourcemetadataResourceId' => 'IS NOT NULL']);
+		$this->db->formatConditions(['resourcecreatorCreatorId' => $this->input['Creator']]);
+		$this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourcemetadataResourceId');
+		$resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
+		while ($row = $this->db->fetchRow($resultSet)) {
+			$ids[] = $row['resourcemetadataId'];
+		}
+		if (!empty($this->ids)) {
+			if ($this->input['AndOr'] == 'OR') {
+				$this->ids = array_merge($this->ids, $ids);
+			} else {
+				$this->ids = array_intersect($this->ids, $ids);
+			}
+		} else {
+			$this->ids = $ids;
+		}
+		array_unique($this->ids);
     }
     /**
      * create the unions

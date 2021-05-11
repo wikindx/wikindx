@@ -46,6 +46,29 @@ export function getCitation(id) {
   doXml();
 }
 
+export function citationCreatorsSelectBox() {
+  var hrReturn = heartbeat(false);
+  if (hrReturn !== true) {
+    displayError(hrReturn);
+    return false;
+  }
+  getCitationCreators();
+  if (xmlResponse == null) {
+    displayError(errorXMLHTTP);
+    return false;
+  }
+  var len = xmlResponse.length;
+  if (!len) {
+    return false;
+  }
+  var i;
+  var text = '<option value="' + 0 + '">' + 'IGNORE' + '</option>';;
+  for (i = 0; i < len; i++) {
+    text += '<option value="' + xmlResponse[i]['id'] + '">' + xmlResponse[i]['creator'] + '</option>';
+  }
+  document.getElementById("wikindx-creatorsSelectBox").innerHTML = text;
+}
+
 export function finalizeGetReferences(wikindxURL, ids) {
   var searchParams = document.getElementById("wikindx-finalize-order");
   var styleSelectBox = document.getElementById("wikindx-finalize-styleSelectBox");
@@ -83,6 +106,13 @@ export function getStyles() {
   document.getElementById("wikindx-url-visit").href = selectedURL;
 }
 
+export function getCitationCreators() {
+  var wikindxURL = document.getElementById("wikindx-url");
+  searchURL = wikindxURL.value 
+    + "office.php" + '?method=getCreators';
+  doXml();
+}
+
 export function getUrlSelectBox(jsonArray) {
   var len = jsonArray.length;
   var i;
@@ -111,13 +141,15 @@ export function getSearchInputReferences(searchText) {
   doXml();
 }
 
-export function getSearchInputCitations(searchText) {
+export function getSearchInputCitations(searchText, andOr, creator) {
   var searchParams = document.getElementById("wikindx-citation-params");
   var styleSelectBox = document.getElementById("wikindx-styleSelectBox");
   var wikindxURL = document.getElementById("wikindx-url");
   searchURL = wikindxURL.value 
     + "office.php" + '?method=getCitations' 
     + '&searchWord=' + encodeURI(searchText)
+    + '&searchAndOr=' + encodeURI(andOr)
+    + '&searchCreator=' + encodeURI(creator)
     + '&style=' + encodeURI(styleSelectBox.value) 
     + '&searchParams=' + encodeURI(searchParams.value);
   doXml();

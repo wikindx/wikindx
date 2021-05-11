@@ -16,9 +16,6 @@ import * as Styles from "./wikindxStyles";
 import * as UrlManagement from "./wikindxUrlManagement";
 import * as Finalize from "./wikindxFinalize";
 
-/* Compatibility number. Must be equal to office.php's $officeVersion */
-export var compatibility = '1';
-
 /* global vars */
 var bibEntry = '';
 var inTextReference = '';
@@ -100,6 +97,7 @@ function displayInit() {
   if (document.getElementById("wikindx-action").value == 'references') {
     Visible.displayReferencePane();
   } else if (document.getElementById("wikindx-action").value == 'citations') {
+    Xml.citationCreatorsSelectBox();
     Visible.displayCitationPane();
   } else if (document.getElementById("wikindx-action").value == 'finalize') {
     Visible.displayFinalizePane();
@@ -115,16 +113,26 @@ async function wikindxSearch() {
   }
 */
   var searchText = document.getElementById("wikindx-search-text").value;
+  var andOr = 'AND';
   searchText = searchText.trim();
   searchText = searchText.replace(/[\u201C\u201D]/g, '"'); // Really!!!!! Ensure smart quotes are standard double quotes!!!!!
-  if (!searchText) {
+  if (document.getElementById("wikindx-action").value == 'citations') {
+    if (document.getElementById("wikindx-citations-or").checked) {
+        andOr = 'OR';
+    }
+    var creator = document.getElementById("wikindx-creatorsSelectBox").value;
+    if (!searchText && !creator) {
+      displayError(errorSearch);
+      return false;
+    }
+  } else if (!searchText) {
     displayError(errorSearch);
     return false;
   }
   if (document.getElementById("wikindx-action").value == 'references') {
-    await search('references', searchText);
+    await search('references', searchText, false, false);
   } else if (document.getElementById("wikindx-action").value == 'citations') {
-    await search('citations', searchText);
+    await search('citations', searchText, andOr, creator);
   }
 }
 /**
@@ -135,21 +143,21 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function search(type, searchText) {
+async function search(type, searchText, andOr, creator) {
   document.getElementById("wikindx-search-completed").style.display = "none";
   document.getElementById("wikindx-search-working").style.display = "block"; 
   await sleep(13); // seems to be the smallest value possible . . .
   if (type == 'references') {
     searchReferences(searchText);
   } else {
-    searchCitations(searchText);
+    searchCitations(searchText, andOr, creator);
   }
   document.getElementById("wikindx-search-working").style.display = "none";
   document.getElementById("wikindx-search-completed").style.display = "block";
 }
 
-function searchCitations(searchText) {
-  Xml.getSearchInputCitations(searchText);
+function searchCitations(searchText, andOr, creator) {
+  Xml.getSearchInputCitations(searchText, andOr, creator);
   if (Xml.xmlResponse == null) {
     displayError(errorNoResultsCitations);
     return false;

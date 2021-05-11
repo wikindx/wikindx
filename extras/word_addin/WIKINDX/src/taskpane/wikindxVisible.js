@@ -56,6 +56,7 @@ export function displayReferencePane() {
   document.getElementById("wikindx-search-completed").style.display = "none";
   document.getElementById("wikindx-search-working").style.display = "none";
   document.getElementById("wikindx-citations-help").style.display = "none";
+  document.getElementById("wikindx-citations-options").style.display = "none";
   document.getElementById("wikindx-finalize-help").style.display = "none";
   document.getElementById("wikindx-display-citations-help").src = "../../assets/lightbulb_off.png";
   document.getElementById("wikindx-display-finalize-help").src = "../../assets/lightbulb_off.png";
@@ -80,6 +81,7 @@ export function displayCitationPane() {
   document.getElementById("wikindx-action-title-citations").style.display = "block";
   document.getElementById("wikindx-citation-order").style.display = "block";
   document.getElementById("wikindx-search-parameters").style.display = "block";
+  document.getElementById("wikindx-citations-options").style.display = "block";
 }
 
 export function displayFinalizePane() {

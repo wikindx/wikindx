@@ -79,46 +79,12 @@ class PARSEPHRASE
         $this->NOTfragments = [];
         $this->useRegex = [];
         $this->attachmentSearch = $attachmentSearch;
-        // Check for malformed or empty $phrase
-        if (!array_key_exists('Word', $input))
-        {
-            $this->validSearch = FALSE;
-
-            return ' 1 = 0 ';
-        }
-        // check for equal no. double quotes
-        if (substr_count($input['Word'], '"') % 2)
-        { // i.e. odd number
-            $this->validSearch = FALSE;
-
-            return \HTML\color($this->errors->text("inputError", "invalid"), 'redText');
-        }
-        // check for valid use of wildcards
-        if (substr_count($input['Word'], '**') || substr_count($input['Word'], '??'))
-        {
-            $this->validSearch = FALSE;
-
-            return \HTML\color($this->errors->text("inputError", "invalid"), 'redText');
-        }
-        $phrase = str_replace('"', 'WIKINDXDOUBLEQUOTEWIKINDX', $input['Word']);
-        $phrase = preg_quote(stripslashes(trim($phrase)), '/');
-        if (!$phrase || !$this->malformedString($phrase))
-        {
-            $this->validSearch = FALSE;
-
-            return \HTML\color($this->errors->text("inputError", "invalid"), 'redText');
-        }
-        // remove all punctuation (keep wildcard characters, apostrophe and dash for names such as Grimshaw-Aagaard and D'Eath)
-        $phrase = preg_replace('/[^\p{L}\p{N}\s\*\?\-\'\/]/u', '', $phrase);
-        $phrase = str_replace('WIKINDXDOUBLEQUOTEWIKINDX', '"', $phrase);
-        if (!$phrase = $this->tidySearch($phrase))
-        {
-            $this->validSearch = FALSE;
-
-            return \HTML\color($this->errors->text("inputError", "invalid"), 'redText');
+        list($error, $phrase) = $this->cleanupAndCheck($input);
+        if (!$this->validSearch) {
+        	return $error;
         }
         // split up search string on single spaces -- NB, multiple spaces will result in empty elements
-        $fragments = $this->splitSpaces(trim($phrase));
+        $fragments = $this->splitSpaces($phrase);
         // loop through $fragments sorting into 'exact phrase', AND fragments, NOT fragments and OR fragments
         $this->sortFragments($fragments);
 //        $this->removeNot_and_FilterWords(); // probably not needed
@@ -132,7 +98,7 @@ class PARSEPHRASE
         {
             $partial = array_key_exists('Partial', $input) ? TRUE : FALSE;
 
-            return $this->createConditionFT($input['Word'], $partial);
+            return $this->createConditionFT($partial);
         }
         if (is_bool($stringSearch) && $stringSearch)
         {
@@ -142,15 +108,77 @@ class PARSEPHRASE
         return $this->createCondition($input, $test);
     }
     /**
+     * Perform various clean-up and validation routines on the input search phrase
+     */
+    private function cleanupAndCheck($input)
+    {
+        // Check for malformed or empty $phrase
+        if (!array_key_exists('Word', $input))
+        {
+            $this->validSearch = FALSE;
+
+            return array(' 1 = 0 ', '');
+        }
+        // check for equal no. double quotes
+        if (substr_count($input['Word'], '"') % 2)
+        { // i.e. odd number
+            $this->validSearch = FALSE;
+
+            return array(\HTML\color($this->errors->text("inputError", "invalid"), 'redText'), '');
+        }
+        // check for valid use of wildcards
+        if (substr_count($input['Word'], '**') || substr_count($input['Word'], '??'))
+        {
+            $this->validSearch = FALSE;
+
+            return array(\HTML\color($this->errors->text("inputError", "invalid"), 'redText'), '');
+        }
+        $phrase = trim($input['Word']);
+        $phrase = str_replace('"', 'WIKINDXDOUBLEQUOTEWIKINDX', $phrase);
+        $phrase = preg_quote(stripslashes(trim($phrase)), '/');
+        if (!$phrase || !$this->malformedString($phrase))
+        {
+            $this->validSearch = FALSE;
+
+            return array(\HTML\color($this->errors->text("inputError", "invalid"), 'redText'), '');
+        }
+        // remove all punctuation (keep wildcard characters, apostrophe and dash for names such as Grimshaw-Aagaard and D'Eath)
+        $phrase = preg_replace('/[^\p{L}\p{N}\s\*\?\-\'\/]/u', '', $phrase);
+        $phrase = str_replace('WIKINDXDOUBLEQUOTEWIKINDX', '"', $phrase);
+        if (!$phrase = $this->tidySearch($phrase))
+        {
+            $this->validSearch = FALSE;
+
+            return array(\HTML\color($this->errors->text("inputError", "invalid"), 'redText'), '');
+        }
+        return array('', trim($phrase));
+    }
+    /**
      * Create the condition clause for FULL TEXT and store search highlighting in the session
      *
-     * @param string $input
      * @param bool $partial
      *
      * @return string
      */
-    private function createConditionFT($input, $partial)
+    private function createConditionFT($partial)
     {
+    	$inputArray = [];
+    	foreach ($this->stringArray as $array) {
+    		if ($array['type'] == 'exactNOT') {
+    			$inputArray[] = 'NOT';
+    			$inputArray[] = '"' . $array['string'] . '"';
+    		} else if ($array['type'] == 'exactAND') {
+    			$inputArray[] = 'AND';
+    			$inputArray[] = '"' . $array['string'] . '"';
+    		} else if ($array['type'] == 'exactOR') {
+    			$inputArray[] = 'OR';
+    			$inputArray[] = '"' . $array['string'] . '"';
+    		} else {
+    			$inputArray[] = $array['type'];
+    			$inputArray[] = $array['string'];
+    		}
+    	}
+    	$input = implode(' ', $inputArray);
         $searchHighlight = [];
         // Remove leading control words AND and OR
         if (strpos($input, 'AND ') === 0)
@@ -311,32 +339,7 @@ class PARSEPHRASE
         {
             $this->orsFT[] = ltrim(array_pop($this->andsFT), '+');
         }
-        if (!$this->idea)
-        {
-            if (!$storedHighlight = GLOBALS::getTempStorage('search_Highlight'))
-            {
-                $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_Highlight")));
-            }
-            $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
-            $this->session->setVar("search_Highlight", implode(",", $searchHighlight));
-            if ($this->browserTabID)
-            {
-                GLOBALS::setTempStorage(['search_Highlight' => $searchHighlight]);
-            }
-        }
-        else
-        {
-            if (!$storedHighlight = GLOBALS::getTempStorage('search_HighlightIdea'))
-            {
-                $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_HighlightIdea")));
-            }
-            $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
-            $this->session->setVar("search_HighlightIdea", implode(",", $searchHighlight));
-            if ($this->browserTabID)
-            {
-                GLOBALS::setTempStorage(['search_HighlightIdea' => $searchHighlight]);
-            }
-        }
+        $this->setHighlights($searchHighlight);
         return trim($phrase);
     }
     /**
@@ -529,32 +532,7 @@ class PARSEPHRASE
                 $searchHighlight[] = $highlightSearch;
             }
         }
-        if (!$this->idea)
-        {
-            if (!$storedHighlight = GLOBALS::getTempStorage('search_Highlight'))
-            {
-                $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_Highlight")));
-            }
-            $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
-            $this->session->setVar("search_Highlight", implode(",", $searchHighlight));
-            if ($this->browserTabID)
-            {
-                GLOBALS::setTempStorage(['search_Highlight' => $searchHighlight]);
-            }
-        }
-        else
-        {
-            if (!$storedHighlight = GLOBALS::getTempStorage('search_HighlightIdea'))
-            {
-                $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_HighlightIdea")));
-            }
-            $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
-            $this->session->setVar("search_HighlightIdea", implode(",", $searchHighlight));
-            if ($this->browserTabID)
-            {
-                GLOBALS::setTempStorage(['search_HighlightIdea' => $searchHighlight]);
-            }
-        }
+        $this->setHighlights($searchHighlight);
         $sizeof = count($conditions);
         $count = 0;
         $multipleORs = FALSE;
@@ -614,6 +592,40 @@ class PARSEPHRASE
         }
 
         return implode(' ', $stringArray);
+    }
+    /**
+     * Store the search highlights
+     *
+     * @param $searchHightlight
+     */
+      private function setHighlights($searchHighlight)
+      {
+        if (!$this->idea)
+        {
+            if (!$storedHighlight = GLOBALS::getTempStorage('search_Highlight'))
+            {
+                $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_Highlight")));
+            }
+            $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
+            $this->session->setVar("search_Highlight", implode(",", $searchHighlight));
+            if ($this->browserTabID)
+            {
+                GLOBALS::setTempStorage(['search_Highlight' => $searchHighlight]);
+            }
+        }
+        else
+        {
+            if (!$storedHighlight = GLOBALS::getTempStorage('search_HighlightIdea'))
+            {
+                $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_HighlightIdea")));
+            }
+            $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
+            $this->session->setVar("search_HighlightIdea", implode(",", $searchHighlight));
+            if ($this->browserTabID)
+            {
+                GLOBALS::setTempStorage(['search_HighlightIdea' => $searchHighlight]);
+            }
+        }
     }
     /**
      * loop through $fragments sorting into 'exact phrase', AND fragments, NOT fragments and OR fragments
@@ -785,8 +797,21 @@ class PARSEPHRASE
     {
         // remove multiple spaces
         $phrase = preg_replace('!\s+!', ' ', $phrase);
-
         return \UTF8\mb_explode(' ', $phrase);
+        $control = FALSE;
+        $count = 0;
+        foreach (\UTF8\mb_explode(' ', $phrase) as $element) {
+        	if ((($element != 'OR') || ($element != 'AND') || ($element != 'NOT')) && !$control && $count) {
+        		$array[] = 'OR';
+        		$control = TRUE;
+        	} else {
+        		$control = FALSE;
+        	}
+        	$array[] = $element;
+        	
+        	++$count;
+        }
+        return $array;
     }
     /**
      * check for malformed search strings -- i.e. odd no. of " chars
@@ -834,7 +859,7 @@ class PARSEPHRASE
         return TRUE;
     }
     /**
-     * Return words governed by AND, OR or NOT
+     * Remove invalid instances of AND, OR or NOT at beginning or end of phrase
      *
      * @param string $phrase
      *

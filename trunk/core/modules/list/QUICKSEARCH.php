@@ -366,9 +366,10 @@ class QUICKSEARCH
         {
             $this->session->delVar("list_AllIds");
             $this->session->delVar("list_PagingAlphaLinks");
+        	$this->session->delVar("search_Highlight");
             if ($this->browserTabID)
             {
-                GLOBALS::unsetTempStorage(['list_AllIds', 'list_PagingAlphaLinks']);
+                GLOBALS::unsetTempStorage(['list_AllIds', 'list_PagingAlphaLinks', 'search_Highlight']);
             }
         }
         if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A'))
@@ -454,7 +455,7 @@ class QUICKSEARCH
             //	        GLOBALS::setTempStorage(['search_AscDesc' => $this->db->asc]);
             GLOBALS::setTempStorage(['search_Patterns' => $patterns]);
         }
-//        $this->common->keepHighlight = TRUE;
+        $this->common->keepHighlight = TRUE;
         $sql = $this->getFinalSql($reprocess, $queryString);
         $this->common->display($sql, 'search');
         // set the lastMulti session variable for quick return to this process.
@@ -477,6 +478,13 @@ class QUICKSEARCH
         if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A'))
         {
             $this->parseWord();
+/*    print 'OR: '; print_r($this->parsePhrase->ors); print BR;
+    print 'OR FT: '; print_r($this->parsePhrase->orsFT); print BR;
+    print 'AND: '; print_r($this->parsePhrase->ands); print BR;
+    print 'AND FT: '; print_r($this->parsePhrase->andsFT); print BR;
+    print 'NOT: '; print_r($this->parsePhrase->nots); print BR;
+    print 'NOT FT: '; print_r($this->parsePhrase->notsFT); print BR;
+*/
             // Deal with OR strings first
             $ors = implode($this->db->or, $this->parsePhrase->ors);
             $orsFT = implode(' ', $this->parsePhrase->orsFT);

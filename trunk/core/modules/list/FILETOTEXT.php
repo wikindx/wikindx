@@ -88,12 +88,12 @@ class FILETOTEXT
             $maxCount = FALSE;
             $maxSize = FALSE; // unlimited
         }
-        elseif ($memtmp >= \FILE\return_bytes("40M"))
+        elseif ($memtmp >= \FILE\return_bytes("129M"))
         {
             $maxCount = 30;
             $maxSize = 30000000; // 30MB
         }
-        elseif ($memtmp >= \FILE\return_bytes("25M"))
+        elseif ($memtmp >= \FILE\return_bytes("65M"))
         {
             $maxCount = 20;
             $maxSize = 15000000; // 15MB

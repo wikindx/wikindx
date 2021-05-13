@@ -76,7 +76,7 @@ define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
  * Integer. For office add-ins. In each add-in (Word, Google Docs, LibreOffice etc.) the compatibility variable must equal this.
  *
  * @name WIKINDX_OFFICE_VERSION */
-define('WIKINDX_OFFICE_VERSION', 1);
+define('WIKINDX_OFFICE_VERSION', 2);
 /**
  * Minimum required PHP version
  *

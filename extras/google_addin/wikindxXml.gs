@@ -4,6 +4,13 @@ function getBlankBlob() {
   return doXmlBlob(url, formData);
 }
 
+function getCitationCreators(url) {
+  var formData = {
+    method: 'getCreators'
+  };
+  return doXml(url, formData);
+}
+
 function finalizeGetReferences(url, params, style, ids) {
   var formData = {
     method: 'getBib',
@@ -39,10 +46,12 @@ function getReference(url, style, id) {
   };
   return doXml(url, formData);
 }
-function getSearchInputCitations(url, params, style, searchText) {
+function getSearchInputCitations(url, params, style, searchText, andOr, creator) {
   var formData = {
     method: 'getCitations',
     searchWord: searchText,
+    searchAndOr: andOr,
+    searchCreator: creator,
     searchParams: params,
     style: style
   };

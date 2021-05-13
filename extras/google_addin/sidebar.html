@@ -30,7 +30,7 @@
     <section id="wikindx-about" style="display:none">
       <table class="wikindx-table"><tr><td class="wikindx-td">
         <strong>Welcome to the WIKINDX citation tool.</strong><br/>
-        v.1.0 (&copy;Mark Grimshaw-Aagaard 2021)
+        v.1.1 (&copy;Mark Grimshaw-Aagaard 2021)
         <p>If you have a WIKINDX, you can import formatted in-text citations and references into your document. The WIKINDX 
         must be accessed through SSL (i.e. the URL starts with 'https://') and the WIKINDX admin must have enabled read-only 
         mode. If your WIKINDX is normally accessed through a browser as, for example, 'www.mywikindx.com', then the URL here should be 
@@ -54,7 +54,11 @@
                 <li>Keywords</li>
                 <li>Quotations and paraphrases</li>
             </ul>
-            </p>
+            OR/AND
+            <ul class="wikindx-list">
+                <li>Author name</li>
+            </ul>
+        </p>
         <p>
         Once you have inserted your references and citations, you can then finalize your document. This produces in-text citations and 
         the reference list formatted to the chosen citation format style. If you have inserted citations and references from more than 
@@ -164,6 +168,10 @@
                     <li>Keywords</li>
                     <li>Quotations and paraphrases</li>
                 </ul>
+                OR/AND
+                <ul class="wikindx-list">
+                <li>Author name</li>
+                </ul>
                 </p>
             <p>
             <p>Wait for the search to finish before clicking on the button again.</p>
@@ -205,6 +213,15 @@
             <!-- Search text -->
             Search text:<br/>
             <input class="inputText" type="text" id="wikindx-search-text" placeholder="Enter search here"></input>
+            <section id="wikindx-citations-options" style="display:none">
+                <label for="wikindx-citations-or"><span style="font-size:12px;">OR:</span></label>
+                <input type="radio" name="wikindx-citations-AndOr" id="wikindx-citations-or" value="OR" checked>
+                <label for="wikindx-citations-and"><span style="font-size:12px;">AND:</span></label>
+                <input type="radio" name="wikindx-citations-AndOr" id="wikindx-citations-and" value="AND"><br>
+                Creator:<br/>
+                <select class="select" id="wikindx-creatorsSelectBox">
+                </select>
+            </section>
         </td></tr>
         <tr><td class="wikindx-td">
             Search order:<br/>
@@ -409,7 +426,7 @@
     document.getElementById("wikindx-url-delete").onclick = urlDeleteDisplay;
     document.getElementById("wikindx-close-url-entry").onclick = wikindxClose;
     document.getElementById("wikindx-url-heartbeat").onclick = heartbeat;
-    document.getElementById("wikindx-url").onchange = styleSelectBox;
+    document.getElementById("wikindx-url").onchange = function () {styleSelectBox(), citationCreatorsSelectBox() };
     document.getElementById("wikindx-display-references-help").onclick = displayReferencesHelp;
     document.getElementById("wikindx-display-citations-help").onclick = wikindxDisplayCitationsHelp;
     document.getElementById("wikindx-display-finalize-help").onclick = wikindxDisplayFinalizeHelp;
@@ -478,19 +495,29 @@ function insertCitationResult(result) {
 /** Search stuff */
 function wikindxSearch() {
   var searchText = document.getElementById("wikindx-search-text").value;
+  var andOr = 'AND';
   searchText = searchText.trim();
   searchText = searchText.replace(/[\u201C\u201D]/g, '"'); // Really!!!!! Ensure smart quotes are standard double quotes!!!!!
-  if (!searchText) {
+  if (document.getElementById("wikindx-action").value == 'citations') {
+    if (document.getElementById("wikindx-citations-or").checked) {
+        andOr = 'OR';
+    }
+    var creator = document.getElementById("wikindx-creatorsSelectBox").value;
+    if (!searchText && !creator) {
+      displayError(errorSearch);
+      return false;
+    }
+  } else if (!searchText) {
     displayError(errorSearch);
     return false;
   }
   if (document.getElementById("wikindx-action").value == 'references') {
-    search('references', searchText);
+    search('references', searchText, false, false);
   } else if (document.getElementById("wikindx-action").value == 'citations') {
-    search('citations', searchText);
+    search('citations', searchText, andOr, creator);
   }
 }
-async function search(type, searchText) {
+async function search(type, searchText, andOr, creator) {
   document.getElementById("wikindx-search-completed").style.display = "none";
   document.getElementById("wikindx-search-working").style.display = "block"; 
   if (type == 'references') {
@@ -509,7 +536,9 @@ async function search(type, searchText) {
         document.getElementById("wikindx-url").value,
         document.getElementById("wikindx-reference-params").value,
         document.getElementById("wikindx-styleSelectBox").value,
-        searchText
+        searchText,
+        andOr,
+        creator
       );
   }
 }
@@ -830,12 +859,25 @@ function displayCitationResult(result) {
     displayReferencePane();
   } else if (document.getElementById("wikindx-action").value == 'citations') {
     displayCitationPane();
+    citationCreatorsSelectBox();
   } else if (document.getElementById("wikindx-action").value == 'finalize') {
     displayFinalizePane();
     google.script.run
       .withSuccessHandler(finalizeDisplayResult)
       .finalizeDisplay();
   }
+}
+  function citationCreatorsSelectBox() {
+      google.script.run
+        .withSuccessHandler(citationCreatorsSelectBoxResult)
+        .citationCreatorsSelectBox(document.getElementById("wikindx-url").value);
+  }
+function citationCreatorsSelectBoxResult(result) {
+  if(!result.xmlResponse) {
+    displayError(result.message);
+    return;
+  }
+  document.getElementById("wikindx-creatorsSelectBox").innerHTML = result.creatorsSelectBox;
 }
 function finalizeDisplayResult(result) {
   if(!result.xmlResponse) {
@@ -917,6 +959,7 @@ function finalizeRunResult(result) {
     document.getElementById("wikindx-search-completed").style.display = "none";
     document.getElementById("wikindx-search-working").style.display = "none";
     document.getElementById("wikindx-citations-help").style.display = "none";
+    document.getElementById("wikindx-citations-options").style.display = "none";
     document.getElementById("wikindx-finalize-help").style.display = "none";
     document.getElementById("wikindx-display-citations-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
     document.getElementById("wikindx-display-finalize-help").src = "https://www.wikindx.com/wikindx-addins/lightbulb_off.png";
@@ -940,6 +983,7 @@ function finalizeRunResult(result) {
     document.getElementById("wikindx-action-title-citations").style.display = "block";
     document.getElementById("wikindx-citation-order").style.display = "block";
     document.getElementById("wikindx-search-parameters").style.display = "block";
+    document.getElementById("wikindx-citations-options").style.display = "block";
   }
   function displayFinalizePane() {
     hideVisible(["wikindx-messages", "wikindx-display-results", "wikindx-url-management", "wikindx-search-parameters"]);

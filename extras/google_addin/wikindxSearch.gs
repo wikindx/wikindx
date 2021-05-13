@@ -55,8 +55,8 @@ function displayReference(url, style, id) {
   };
 }
 
-function searchCitations(url, params, style, searchText) {
-  var response = getSearchInputCitations(url, params, style, searchText);
+function searchCitations(url, params, style, searchText, andOr, creator) {
+  var response = getSearchInputCitations(url, params, style, searchText, andOr, creator);
   if (response.xmlResponse === false) {
       return {
       xmlResponse: false,
@@ -115,4 +115,3 @@ function displayCitation(url, style, id) {
     bibEntry: response.xmlArray['bibEntry']
   };
 }
-

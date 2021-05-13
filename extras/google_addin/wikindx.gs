@@ -12,12 +12,12 @@
 /**
  * Compatibility number. Must be equal to office.php's $officeVersion
  */
-compatibility = 1;
+compatibility = 2;
 
 /** Error messages */
 errorJSON = "ERROR: Unspecified error. This could be any number of things from not being able to connect to the WIKINDX to no resources found matching your search.";
 errorAccess = 'The WIKINDX admin has not enabled read-only access.';
-errorCompatibility = 'ERROR: Incompatibility between add-in and WIKINDX.';
+errorCompatibility = 'ERROR: Incompatibility between add-in and WIKINDX. This version requires minimum WIKINDX v6.4.8.';
 errorXMLHTTP = "ERROR: XMLHTTP error – could not connect to the WIKINDX.  <br/><br/>There could be any number of reasons for this including an incorrect WIKINDX URL, an incompatibility between this add-in and the WIKINDX, the WIKINDX admin has not enabled read-only access, a network error . . .";
 errorDuplicateUrl = "ERROR: Duplicate URL input.";
 errorDuplicateName = "ERROR: Duplicate name input.";
@@ -149,3 +149,25 @@ function initializeWikindx() {
   };
 }
 
+
+/**
+ * Get a list of creators for citation searching
+ */
+function citationCreatorsSelectBox(url) {
+  var response = getCitationCreators(url);
+  if (!response.xmlResponse) {
+    return {
+      xmlResponse: false,
+      message: response.message
+    };
+  } 
+  var jsonArray = response.xmlArray;
+  var creatorsSelectBox = '<option value="' + 0 + '">' + 'IGNORE' + '</option>';
+  for (var i = 0; i < jsonArray.length; i++) {
+    creatorsSelectBox += '<option value="' + jsonArray[i].id + '">' + jsonArray[i].creator + '</option>';
+  }
+  return {
+    xmlResponse: true,
+    creatorsSelectBox: creatorsSelectBox
+  };
+}

@@ -2,7 +2,7 @@ import { displayError, displaySuccess } from "./wikindxMessages";
 
 
 /* Compatibility number. Must be equal to office.php's $officeVersion */
-var compatibility = 1;
+var compatibility = 2;
 var xml;
 var errorJSON = "ERROR: Unspecified error. This could be any number of things from not being able to connect to the WIKINDX to no resources found matching your search.";
 var errorAccess = 'The WIKINDX admin has not enabled read-only access.';

@@ -6,7 +6,7 @@ var compatibility = 2;
 var xml;
 var errorJSON = "ERROR: Unspecified error. This could be any number of things from not being able to connect to the WIKINDX to no resources found matching your search.";
 var errorAccess = 'The WIKINDX admin has not enabled read-only access.';
-var errorCompatibility = 'ERROR: Incompatibility between add-in and WIKINDX.';
+var errorCompatibility = 'ERROR: Incompatibility between add-in and WIKINDX. This version requires minimum WIKINDX v6.4.8.';
 var successHeartbeat = "Yes, I am alive and kicking. Try searching me . . .";
 export var errorXMLHTTP = "ERROR: XMLHTTP error – could not connect to the WIKINDX.  <br/><br/>There could be any number of reasons for this including an incorrect WIKINDX URL, an incompatibility between this add-in and the WIKINDX, the WIKINDX admin has not enabled read-only access, a network error . . .";
 export var xmlResponse = null;
@@ -62,7 +62,7 @@ export function citationCreatorsSelectBox() {
     return false;
   }
   var i;
-  var text = '<option value="' + 0 + '">' + 'IGNORE' + '</option>';;
+  var text = '<option value="' + 0 + '">' + 'IGNORE' + '</option>';
   for (i = 0; i < len; i++) {
     text += '<option value="' + xmlResponse[i]['id'] + '">' + xmlResponse[i]['creator'] + '</option>';
   }

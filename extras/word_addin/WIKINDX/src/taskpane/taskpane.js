@@ -56,7 +56,8 @@ OfficeExtension.config.extendedErrorLogging = true;
     document.getElementById("wikindx-search").onclick = wikindxSearch;
     document.getElementById("wikindx-action").onchange = displayInit;
     document.getElementById("wikindx-finalize-run").onclick = Finalize.finalizeRun;
-    document.getElementById("wikindx-url").onchange = Styles.styleSelectBox;
+    document.getElementById("wikindx-url").onchange = 
+      function () {Styles.styleSelectBox(), Xml.citationCreatorsSelectBox() };
     document.getElementById("wikindx-styleSelectBox").onchange = Visible.reset;
     document.getElementById("wikindx-reference-params").onchange = Visible.reset;
     document.getElementById("wikindx-citation-params").onchange = Visible.reset;

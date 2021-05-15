@@ -53,7 +53,7 @@ class RISEXPORT
     public function initRisExportL()
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "risExport"));
-        $this->session->delVar("exportBasket", TRUE);
+        $this->session->delVar("exportBasket");
         $this->processExport();
         GLOBALS::clearTplVar('pagingList');
     }

@@ -21,6 +21,8 @@ class SQLSTATEMENTS
     public $totalResourceSubquery;
     /** bool */
     public $basket = FALSE;
+    /** bool */
+    public $exportList = TRUE;
     /** string */
     public $listMethodAscDesc = 'list_AscDesc';
     /** string */
@@ -327,7 +329,7 @@ class SQLSTATEMENTS
         }
         if ($order == 'title')
         {
-            if (GLOBALS::getUserVar('PagingStyle') == 'A')
+            if (!$this->exportList && (GLOBALS::getUserVar('PagingStyle') == 'A'))
             {
                 $this->quickListAll = TRUE;
                 $this->pagingAlphaCondition($order);
@@ -363,7 +365,7 @@ class SQLSTATEMENTS
         }
         elseif ($order == 'creator')
         {
-            if (GLOBALS::getUserVar('PagingStyle') == 'A')
+            if (!$this->exportList && (GLOBALS::getUserVar('PagingStyle') == 'A'))
             {
                 $this->quickListAll = TRUE;
                 $this->pagingAlphaCondition($order);
@@ -434,7 +436,6 @@ class SQLSTATEMENTS
         {
             GLOBALS::setTempStorage([$listStmt => $listQuery]);
         }
-
         return $listQuery . $limit;
     }
     /**
@@ -607,7 +608,6 @@ class SQLSTATEMENTS
         { // FALSE
             return FALSE;
         }
-
         return TRUE;
     }
     /**
@@ -1089,7 +1089,7 @@ class SQLSTATEMENTS
         $this->db->groupBy('resourceId');
         if (!$QS)
         {
-            if ((GLOBALS::getUserVar('PagingStyle') == 'A') && (($order == 'creator') || ($order == 'title')))
+            if (!$this->exportList && (GLOBALS::getUserVar('PagingStyle') == 'A') && (($order == 'creator') || ($order == 'title')))
             {
                 $this->db->leftJoin('resource', 'resourceId', 'rId');
             }

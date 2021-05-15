@@ -273,11 +273,15 @@ class BASKET
      *
      * @param false|string $queryString Default FALSE
      * @param bool $order Default FALSE
+     * @param bool $exportList Default FALSE
      *
      * @return string
      */
-    public function returnBasketSql($queryString = FALSE, $order = FALSE)
+    public function returnBasketSql($queryString = FALSE, $order = FALSE, $exportList = FALSE)
     {
+    	if ($exportList) {
+    		$this->stmt->exportList = TRUE;
+    	}
         if (!$order) {
 			if (!$order = GLOBALS::getTempStorage('list_Order')) {
 				$order = $this->session->getVar("list_Order");

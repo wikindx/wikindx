@@ -163,19 +163,19 @@ class EXPORTCOMMON
         $stmt = FACTORY_SQLSTATEMENTS::getInstance();
         if ($this->session->getVar("exportBasket"))
         {
-        	if (!$tempAllIds = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_AllIds')) {
-	            $tempAllIds = $this->session->getVar("list_AllIds");
+        	if (!$tempAllIds = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_AllIdsBasket')) {
+	            $tempAllIds = $this->session->getVar("list_AllIdsBasket");
 	        }
-        	if (!$tempListStmt = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt')) {
-	            $tempListStmt = $this->session->getVar("sql_ListStmt");
+        	if (!$tempListStmt = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmtBasket')) {
+	            $tempListStmt = $this->session->getVar("sql_ListStmtBasket");
 	        }
 	        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "basket", "BASKET.php"]));
         	$basket = new BASKET();
-            $sqlEncoded = base64_encode(serialize([$basket->returnBasketSql(FALSE, 'creator')]));
-            $this->session->setVar("list_AllIds", $tempAllIds);
-            $this->session->setVar("sql_ListStmt", $tempListStmt);
+            $sqlEncoded = base64_encode(serialize([$basket->returnBasketSql(FALSE, 'creator', TRUE)]));
+            $this->session->setVar("list_AllIdsBasket", $tempAllIds);
+            $this->session->setVar("sql_ListStmtBasket", $tempListStmt);
             if ($this->browserTabID) {
-            	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['list_AllIds' => $tempAllIds, 'sql_ListStmt' => $tempListStmt]);
+            	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['list_AllIdsBasket' => $tempAllIds, 'sql_ListStmtBasket' => $tempListStmt]);
             }
 
             return $sqlEncoded;

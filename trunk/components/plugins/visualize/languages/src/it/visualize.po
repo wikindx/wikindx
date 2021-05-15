@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: visualize\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-07-18 02:48+0200\n"
+"POT-Creation-Date: 2021-05-15 17:00+0200\n"
 "PO-Revision-Date: 2019-09-27 01:50+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: components/plugins/visualize/visualizemessages.php:20
 #: components/plugins/visualize/visualizemessages.php:21
 #: components/plugins/visualize/visualizemessages.php:22
-#: components/plugins/visualize/visualizemessages.php:43
+#: components/plugins/visualize/visualizemessages.php:46
 msgid "Visualize"
 msgstr ""
 
@@ -48,57 +48,69 @@ msgid "No. resources"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:29
-msgid "Resource type"
+msgid "Resource views"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:30
-msgid "Publication year"
+msgid "Resource type"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:31
-msgid "Keyword"
+msgid "Publication year"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:32
-msgid "Category"
+msgid "Keyword"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:33
-msgid "Journal"
+msgid "Category"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:34
-msgid "Proceedings"
+msgid "Journal"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:35
-msgid "Missing input"
+msgid "Proceedings"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:36
-msgid "Type of plot"
+msgid "Months"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:37
-msgid "Line plot"
+msgid "Years"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:38
-msgid "Bar plot"
+msgid "Missing input"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:39
-msgid "Combined bar/line plot"
+msgid "Type of plot"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:40
-msgid "Scatter plot"
+msgid "Line plot"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:41
-msgid "Scatter plot with line"
+msgid "Bar plot"
 msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:42
+msgid "Combined bar/line plot"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:43
+msgid "Scatter plot"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:44
+msgid "Scatter plot with line"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:45
 msgid "Balloon plot"
 msgstr ""

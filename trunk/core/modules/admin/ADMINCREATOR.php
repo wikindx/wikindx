@@ -58,7 +58,7 @@ class ADMINCREATOR
             $message = $this->errors->text($split[0], $split[1]);
         }
         $pString = $message;
-        if (is_array($creators) && !empty($creators))
+        if (is_array($creators) && !empty($creators) && (sizeof($creators) > 1))
         {
             $pString .= \HTML\p($this->messages->text("misc", "creatorMerge"));
             $pString .= \FORM\formHeader('admin_ADMINCREATOR_CORE');
@@ -243,7 +243,7 @@ class ADMINCREATOR
         }
         $pString = $message;
         $this->potentialMasters = $this->creator->grabGroupAvailableMembers();
-        if (is_array($this->potentialMasters) && !empty($this->potentialMasters))
+        if (is_array($this->potentialMasters) && !empty($this->potentialMasters) && (sizeof($this->creator->grabAll()) > 1))
         {
             foreach ($this->potentialMasters as $id => $name)
             { // array_shift() breaks ids!
@@ -305,6 +305,13 @@ class ADMINCREATOR
         $js2 = \AJAX\jActionForm('onchange', $jsonArray);
         if ($initialize)
         {
+            if (is_array($this->creator->grabGroupMasters())) {
+            	$checkBox = \HTML\p(
+                $this->messages->text("misc", "creatorOnlyMasters") . ':&nbsp;' .
+                    \FORM\checkbox(FALSE, "onlyMasters", FALSE, FALSE, $js2));
+            } else {
+            	$checkBox = FALSE;
+            }
             return \FORM\selectFBoxValue(
                 \HTML\strong($this->messages->text("misc", "creatorGroupMaster")),
                 "creatorMaster",
@@ -312,10 +319,7 @@ class ADMINCREATOR
                 20,
                 FALSE,
                 $js1
-            ) . \HTML\p(
-                $this->messages->text("misc", "creatorOnlyMasters") . ':&nbsp;' .
-                    \FORM\checkbox(FALSE, "onlyMasters", FALSE, FALSE, $js2)
-            );
+            ) . $checkBox;
         }
         else
         {
@@ -329,6 +333,13 @@ class ADMINCREATOR
                 $checked = FALSE;
                 $masters = $this->creator->grabGroupAvailableMembers();
             }
+            if (is_array($masters)) {
+            	$checkBox = \HTML\p(
+                $this->messages->text("misc", "creatorOnlyMasters") . ':&nbsp;' .
+                    \FORM\checkbox(FALSE, "onlyMasters", $checked, FALSE, $js2));
+            } else {
+            	$checkBox = FALSE;
+            }
             $pString = \FORM\selectFBoxValue(
                 \HTML\strong($this->messages->text("misc", "creatorGroupMaster")),
                 "creatorMaster",
@@ -336,10 +347,7 @@ class ADMINCREATOR
                 20,
                 FALSE,
                 $js1
-            ) . \HTML\p(
-                $this->messages->text("misc", "creatorOnlyMasters") . ':&nbsp;' .
-                    \FORM\checkbox(FALSE, "onlyMasters", $checked, FALSE, $js2)
-            );
+            ) . $checkBox;
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
             FACTORY_CLOSERAW::getInstance();
         }
@@ -429,6 +437,9 @@ class ADMINCREATOR
         $existingMembers = $this->creator->grabGroupMembers($id);
         $potentialMembers = $this->creator->grabGroupAvailableMembers();
         $masters = $this->creator->grabGroupMasters();
+        if (!is_array($masters)) {
+        	$masters = [];
+        }
         // a potential group member cannot also be a master
         $potentialMembers = array_diff_key($potentialMembers, $masters);
         unset($potentialMembers[$id]);

@@ -19,12 +19,13 @@ BUG FIXES:
 2. Replace some call to strstr by mb_strstr (UTF-8 support).
 3. Set max_allowed_packet to 1073741824 (allow to store LONGTEXT type in one statement, MySQL).
 4. Fix an error in paging ideas following Advanced Search when ideas are the only field searched on.
-5. Matching with matchPrefix()  and matchSuffix() was partly insensitive.
+5. Matching with matchPrefix() and matchSuffix() was partly insensitive.
 6. Prevent issues when a plugin is removed but not disabled safely by the admin.
 7. Fix a crash on creation of resource_attachments table.
 8. Fix a crash during a fresh install (error on table counting).
 9. Fix a bug in search highlighting that remembered a previous search instead of removing it.
 10. Fix a bug in resource view for the delete icon for a user's own resource if they are not the superadmin.
+11. Fix bug #314 (warning if not enough creators available for creator grouping).
 
 FEATURE ENHANCEMENTS:
 1. Add a switch in MyWikindx|Resources to toggle the display of certain statistics when viewing a single resource. The display of views index and popularity index greatly slows down the display of the resource so these can be turned off (the default on upgrade) and only number of views, number of downloads, and maturity index will be viewed. Popularity and view indices will appear in a later version in the Statistics menu.

@@ -1114,7 +1114,7 @@ class MESSAGES
 				"matIndex" => dgettext($domain, "Mat. ###"),
 /// misc_ignore In select boxes - when it is not necessary to choose an existing selection.  WIKINDX will skip over this one. Could be '---'
 				"ignore" => dgettext($domain, "IGNORE"),
-				"noCreators" => dgettext($domain, "There are no creators in the database"),
+				"noCreators" => dgettext($domain, "There are no creators (or not enough) in the database"),
 				"noGroupMasterCreators" => dgettext($domain, "There are no group master creators in the database"),
 				"noCollections" => dgettext($domain, "There are no collections in the database"),
 				"noPublishers" => dgettext($domain, "There are no publishers in the database"),

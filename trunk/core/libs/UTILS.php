@@ -236,7 +236,7 @@ namespace UTILS
                     {
                         if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"])
                         {
-                            if ($cr["component_status"] == "enabled" && $ci["component_integrity"] == 8)
+                            if ($cr["component_status"] == "enabled" && $ci["component_integrity"] == 0)
                             {
                                 $status = "enabled";
                             }

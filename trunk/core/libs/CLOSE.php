@@ -57,7 +57,7 @@ class CLOSE
 
         // During setup, there are no default style configured in session
         // So, we take the default style
-        $styleId = strtolower(GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT));
+        $styleId = mb_strtolower(GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT));
         $styleName = array_key_exists($styleId, $styles) ? $styles[$styleId] : $styles[WIKINDX_STYLE_DEFAULT];
 
         if ($useBib = GLOBALS::getUserVar('BrowseBibliography'))

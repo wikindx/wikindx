@@ -227,7 +227,7 @@ namespace UTILS
             if ($cachedComponentsListStatusExists)
             {
                 $ComponentsListStatus = \FILE\read_json_file($path_components_list_status);
-                    
+                
                 foreach ($ComponentsList as $ki => $ci)
                 {
                     // Search installed components with a cached status
@@ -236,7 +236,16 @@ namespace UTILS
                     {
                         if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"])
                         {
-                            $ComponentsList[$ki]["component_status"] = $cr["component_status"];
+                            if ($cr["component_status"] == "enabled" && $ci["component_integrity"] == 8)
+                            {
+                                $status = "enabled";
+                            }
+                            else
+                            {
+                                $status = "disabled";
+                            }
+
+                            $ComponentsList[$ki]["component_status"] = $status;
                             $isStatusDefined = TRUE;
             
                             break;

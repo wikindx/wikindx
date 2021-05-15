@@ -10,8 +10,8 @@ Three extensions become mandatory: curl, dom (libxml) and zip.
 
 This allows:
 
-- More attachment format covered by research
-- Component update more stable
+- More attachment formats covered by search
+- Components update more stable
 
 
 BUG FIXES:

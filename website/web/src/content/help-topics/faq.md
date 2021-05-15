@@ -76,12 +76,12 @@ to the chosen style and append the bibliography.
 |Endnote  | X     | X     |
 |HTML     |       | X     |
 |ISI      |       |       |
-|Medline  | X     | X     |
-|MODS     | X     | X     | With BibUtils
-|Ovid     | X     |       |
-|PubMed   | X     | X     |
-|Refer    | X     | X     |
-|RIS      | X     | X     |
+|Medline  | X     |       |
+|MODS     | X     |       | With BibUtils
+|Ovid     |       |       |
+|PubMed   | X     |       |
+|Refer    |       |       |
+|RIS      |       | X     |
 |RTF      |       | X     |
 |SciFinder|       |       |
 

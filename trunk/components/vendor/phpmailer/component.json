@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "phpmailer",
-    "component_version": "452",
+    "component_version": "489",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "PHPMailer",
@@ -52,5 +52,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "2080891a9a6d70c09eb28ffab745b84fc9fbf6b1624403f2aeec8905e2c9374d"
+    "component_sha256": "6343bad9b21c62fbe3d72589aedf02bd2bb15557ae91b5f2e5fce0e0aaf0d603"
 }

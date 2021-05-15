@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "pdftotext",
-    "component_version": "175",
+    "component_version": "489",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "PdfToText",
@@ -31,5 +31,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "5e1ac8f70e270c05437830b2ffca89382df35cdf2db94dc213878479b14c1a1b"
+    "component_sha256": "413908526e6bd012c202b37a591928ff657baa0cd86c7dbace263ea5460188fb"
 }

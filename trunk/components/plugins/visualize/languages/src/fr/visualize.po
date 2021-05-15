@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Stéphane Aulery <saulery@legtux.org>, 2020
+# Stéphane Aulery <saulery@legtux.org>, 2021
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: visualize\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-07-18 02:48+0200\n"
+"POT-Creation-Date: 2021-05-15 17:00+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
-"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2021\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: components/plugins/visualize/visualizemessages.php:20
 #: components/plugins/visualize/visualizemessages.php:21
 #: components/plugins/visualize/visualizemessages.php:22
-#: components/plugins/visualize/visualizemessages.php:43
+#: components/plugins/visualize/visualizemessages.php:46
 msgid "Visualize"
 msgstr "Visualisation"
 
@@ -53,57 +53,69 @@ msgid "No. resources"
 msgstr "Id ressource"
 
 #: components/plugins/visualize/visualizemessages.php:29
+msgid "Resource views"
+msgstr "Nb de références vues"
+
+#: components/plugins/visualize/visualizemessages.php:30
 msgid "Resource type"
 msgstr "Type de ressource"
 
-#: components/plugins/visualize/visualizemessages.php:30
+#: components/plugins/visualize/visualizemessages.php:31
 msgid "Publication year"
 msgstr "Année de publication"
 
-#: components/plugins/visualize/visualizemessages.php:31
+#: components/plugins/visualize/visualizemessages.php:32
 msgid "Keyword"
 msgstr "Mot-clef"
 
-#: components/plugins/visualize/visualizemessages.php:32
+#: components/plugins/visualize/visualizemessages.php:33
 msgid "Category"
 msgstr "Catégorie"
 
-#: components/plugins/visualize/visualizemessages.php:33
+#: components/plugins/visualize/visualizemessages.php:34
 msgid "Journal"
 msgstr "Journal"
 
-#: components/plugins/visualize/visualizemessages.php:34
+#: components/plugins/visualize/visualizemessages.php:35
 msgid "Proceedings"
 msgstr "Procédure"
 
-#: components/plugins/visualize/visualizemessages.php:35
+#: components/plugins/visualize/visualizemessages.php:36
+msgid "Months"
+msgstr "Mois"
+
+#: components/plugins/visualize/visualizemessages.php:37
+msgid "Years"
+msgstr "Année"
+
+#: components/plugins/visualize/visualizemessages.php:38
 msgid "Missing input"
 msgstr "Entrée manquante"
 
-#: components/plugins/visualize/visualizemessages.php:36
+#: components/plugins/visualize/visualizemessages.php:39
 msgid "Type of plot"
 msgstr "Type de graphique"
 
-#: components/plugins/visualize/visualizemessages.php:37
+#: components/plugins/visualize/visualizemessages.php:40
 msgid "Line plot"
 msgstr "Ligne"
 
-#: components/plugins/visualize/visualizemessages.php:38
+#: components/plugins/visualize/visualizemessages.php:41
 msgid "Bar plot"
 msgstr "Barre"
 
-#: components/plugins/visualize/visualizemessages.php:39
+#: components/plugins/visualize/visualizemessages.php:42
 msgid "Combined bar/line plot"
 msgstr "Combinaison ligne/barre"
 
-#: components/plugins/visualize/visualizemessages.php:40
+#: components/plugins/visualize/visualizemessages.php:43
 msgid "Scatter plot"
 msgstr "Nuage de points"
 
-#: components/plugins/visualize/visualizemessages.php:41
+#: components/plugins/visualize/visualizemessages.php:44
 msgid "Scatter plot with line"
 msgstr "Nuage de points et ligne"
 
-#: components/plugins/visualize/visualizemessages.php:42
+#: components/plugins/visualize/visualizemessages.php:45
 msgid "Balloon plot"
 msgstr "Bulle"

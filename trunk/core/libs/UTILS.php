@@ -230,32 +230,39 @@ namespace UTILS
                 
                 foreach ($ComponentsList as $ki => $ci)
                 {
-                    // Search installed components with a cached status
-                    $isStatusDefined = FALSE;
+                    // By default a component is disabled if its previous status is unknown
+                    $status = "disabled";
+
+                    // Search for a previous status
                     foreach ($ComponentsListStatus as $kr => $cr)
                     {
                         if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"])
                         {
-                            if ($cr["component_status"] == "enabled" && $ci["component_integrity"] == 0)
-                            {
-                                $status = "enabled";
-                            }
-                            else
-                            {
-                                $status = "disabled";
-                            }
+                            $status = $cr["component_status"];
 
-                            $ComponentsList[$ki]["component_status"] = $status;
-                            $isStatusDefined = TRUE;
-            
                             break;
                         }
                     }
-                    // Search installed components without a cached status
-                    if (!$isStatusDefined)
+
+                    // Adjust status
+
+                    // The built-in components are exception. There must always be active for the software to work.
+                    if ($ci["component_builtin"] == "true")
                     {
-                        $ComponentsList[$ki]["component_status"] = "disabled";
+                        $status = "enabled";
                     }
+                    // vendor components are alway enabled because their are required by the core
+                    elseif ($ci["component_type"] == "vendor")
+                    {
+                        $status = "enabled";
+                    }
+                    // If the component was enabled before and is in good state, let it enabled
+                    elseif ($status == "enabled" && $ci["component_integrity"] != 0)
+                    {
+                        $status = "disabled";
+                    }
+
+                    $ComponentsList[$ki]["component_status"] = $status;
                 }
             }
             
@@ -315,22 +322,7 @@ namespace UTILS
                 }
                 
                 $componentMetadata["component_integrity"] = $component_integrity;
-                
-                // The built-in components are exception. There must always be active for the software to work.
-                if ($componentMetadata["component_builtin"] == "true")
-                {
-                    $componentMetadata["component_status"] = "enabled";
-                }
-                // vendor components are alway enabled because their are required by the core
-                elseif ($componentMetadata["component_type"] == "vendor")
-                {
-                    $componentMetadata["component_status"] = "enabled";
-                }
-                // All components are disabled by default to minimize errors and unwanted code execution
-                else
-                {
-                    $componentMetadata["component_status"] = "disabled";
-                }
+                $componentMetadata["component_status"] = "disabled";
                 $componentlist[] = $componentMetadata;
             }
         }

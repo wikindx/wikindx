@@ -235,7 +235,6 @@ class visualize_MODULE
     private function chooseOptions()
     {
         $yAxisTypes = $this->yAxisOptions();
-        $xAxisTypes = $this->xAxisOptions();
         $jScript = 'index.php?action=visualize_visualizeOptions';
         $jsonArray[] = [
             'startFunction' => 'triggerFromSelect',
@@ -254,20 +253,11 @@ class visualize_MODULE
             "yAxis",
             $yAxisTypes,
             $selected,
-            1,
+            2,
             FALSE,
             $js
         ));
-        reset($xAxisTypes);
-        $firstKey = key($xAxisTypes);
-        $selected = $this->session->getVar("visualize_XAxis") ? $this->session->getVar("visualize_XAxis") : $firstKey;
-        $pString .= HTML\td(FORM\selectedBoxValue(
-            $this->pluginmessages->text("xAxis"),
-            "xAxis",
-            $xAxisTypes,
-            $selected,
-            6
-        ));
+        $pString .= HTML\td($this->initXAxisOptions($selected));
         $selected = $this->session->getVar("visualize_MaxXAxis") ? $this->session->getVar("visualize_MaxXAxis") : -1;
         $hint = \HTML\aBrowse('green', '', $this->coremessages->text("hint", "hint"), '#', "", $this->pluginmessages->text("maxXAxisLimit"));
         $pString .= HTML\td(FORM\textInput($this->pluginmessages->text("maxXAxis"), "maxXAxis", $selected, 3, 3) . BR . \HTML\span($hint, 'hint'));
@@ -276,6 +266,21 @@ class visualize_MODULE
         $pString .= HTML\tableEnd();
 
         return $pString;
+    }
+    /**
+     * visualizeOptions
+     * AJAX DIV handler
+     */
+    public function visualizeOptions()
+    {
+        if ($this->vars['ajaxReturn'] == 'numResources') {
+        	$pString = $this->numXAxisOptions();
+        } else {
+        	$pString = $this->viewsXAxisOptions();
+        }
+        $div = HTML\div('xAxis', $pString);
+        GLOBALS::addTplVar('content', AJAX\encode_jArray(['innerHTML' => $div]));
+        FACTORY_CLOSERAW::getInstance();
     }
     /**
      * Choose the type of plot
@@ -489,6 +494,7 @@ class visualize_MODULE
         {
             throw new JpGraphException($this->pluginmessages->text('noData'));
         }
+        $yearsCount = [];
         while ($row = $this->db->fetchRow($recordSet))
         {
             if ($this->xAxisMetadata[$this->vars['xAxis']]['isNumeric'])
@@ -501,6 +507,17 @@ class visualize_MODULE
                             $this->xAxisMetadata[$this->vars['xAxis']]['messagesArray'],
                             $row[$yAxisField]
                         );
+                    }
+                    else if ($this->vars['xAxis'] == 'resourceViewsMonths') 
+                    {
+                    	$year = substr($row[$yAxisField], 0, 4);
+                    	$month = substr($row[$yAxisField], -2);
+                    	$this->xAxis[] = $month . '/' . $year;
+                    }
+                    else if ($this->vars['xAxis'] == 'resourceViewsYears') 
+                    {
+                    	$year = substr($row[$yAxisField], 0, 4);
+                    	$this->xAxis[] = $year;
                     }
                     else
                     {
@@ -606,9 +623,33 @@ class visualize_MODULE
                 'xScale' => 'text',
                 'yScale' => 'int',
                 'messagesArray' => FALSE,
-                'sql' => "SELECT `collectionId`, COUNT(`collectionId`) AS count , `resourcemiscCollection`, `collectionType`, `collectionTitle` FROM resource_misc LEFT OUTER JOIN collection ON `collectionId` = `resourcemiscCollection` WHERE (`collectionType` = 'proceedings') AND (`collectionId` IS NOT NULL) GROUP BY `collectionId`, `resourcemiscCollection`, `collectionType`, `collectionTitle` ORDER BY REPLACE( REPLACE(`collectionTitle`, '{', ''), '}', '') ASC",
+                'sql' => "SELECT `collectionId`, COUNT(`collectionId`) AS count, `resourcemiscCollection`, `collectionType`, `collectionTitle` FROM resource_misc LEFT OUTER JOIN collection ON `collectionId` = `resourcemiscCollection` WHERE (`collectionType` = 'proceedings') AND (`collectionId` IS NOT NULL) GROUP BY `collectionId`, `resourcemiscCollection`, `collectionType`, `collectionTitle` ORDER BY REPLACE( REPLACE(`collectionTitle`, '{', ''), '}', '') ASC",
                 'countField' => 'collectionId',
                 'labelField' => 'collectionTitle',
+            ],
+            'resourceViewsMonths' => ['table' => FALSE,
+                'isNumeric' => TRUE,
+                'xAxisMargin' => 100,
+                'xAxisTitleMargin' => 55,
+                'xAxisAngle' => 45,
+                'xScale' => 'text',
+                'yScale' => 'int',
+                'messagesArray' => FALSE,
+                'sql' => "SELECT COUNT(`statisticsresourceviewsCount`) AS `count`, `statisticsresourceviewsMonth` FROM `statistics_resource_views` GROUP BY `statisticsresourceviewsMonth` ORDER BY `statisticsresourceviewsMonth`",
+                'countField' => 'statisticsresourceviewsMonth',
+                'labelField' => FALSE,
+            ],
+            'resourceViewsYears' => ['table' => FALSE,
+                'isNumeric' => TRUE,
+                'xAxisMargin' => 100,
+                'xAxisTitleMargin' => 55,
+                'xAxisAngle' => 45,
+                'xScale' => 'text',
+                'yScale' => 'int',
+                'messagesArray' => FALSE,
+                'sql' => "SELECT COUNT(`statisticsresourceviewsCount`) AS `count`, SUBSTRING(`statisticsresourceviewsMonth`, 1, 4) AS `year` FROM `statistics_resource_views` GROUP BY `year` ORDER BY `year`",
+                'countField' => 'year',
+                'labelField' => FALSE,
             ],
         ];
     }
@@ -621,16 +662,31 @@ class visualize_MODULE
     {
         return [
             'numResources' => $this->pluginmessages->text('numResources'),
+            'resourceViews' => $this->pluginmessages->text('resourceViews'),
         ];
     }
     /**
-     * Choose options for the X axis
+     * Choose initial options for the X axis on loading
      *
-     * @return array
+     * @param $selected
+     * @return string
      */
-    private function xAxisOptions()
+    private function initXAxisOptions($selected)
     {
-        return [
+    	if ($selected == 'numResources') {
+    		return $this->numXAxisOptions();
+    	} else {
+    		return $this->viewsXAxisOptions();
+    	}
+    }
+    /**
+     * X axis options for numResources
+     *
+     * @return string
+     */
+    private function numXAxisOptions()
+    {
+        $xAxisTypes = [
             'resourceType' => $this->pluginmessages->text('resourceType'),
             'resourceyearYear1' => $this->pluginmessages->text('resourceyearYear1'),
             'keywordKeyword' => $this->pluginmessages->text('keywordKeyword'),
@@ -638,6 +694,44 @@ class visualize_MODULE
             'journal' => $this->pluginmessages->text('journal'),
             'proceedings' => $this->pluginmessages->text('proceedings'),
         ];
+        reset($xAxisTypes);
+        $firstKey = key($xAxisTypes);
+        $selected = $this->session->getVar("visualize_XAxis") ? $this->session->getVar("visualize_XAxis") : $firstKey;
+        if ($selected && !array_key_exists($selected, $xAxisTypes)) {
+        	$selected = $firstKey;
+        }
+        return HTML\div("xAxis", FORM\selectedBoxValue(
+            $this->pluginmessages->text("xAxis"),
+            "xAxis",
+            $xAxisTypes,
+            $selected,
+            6
+        ));
+    }
+    /**
+     * X axis options for resource views
+     *
+     * @return string
+     */
+    private function viewsXAxisOptions()
+    {
+        $xAxisTypes = [
+            'resourceViewsMonths' => $this->pluginmessages->text('resourceViewsMonths'),
+            'resourceViewsYears' => $this->pluginmessages->text('resourceViewsYears'),
+        ];
+        reset($xAxisTypes);
+        $firstKey = key($xAxisTypes);
+        $selected = $this->session->getVar("visualize_XAxis") ? $this->session->getVar("visualize_XAxis") : $firstKey;
+        if ($selected && !array_key_exists($selected, $xAxisTypes)) {
+        	$selected = $firstKey;
+        }
+        return HTML\div("xAxis", FORM\selectedBoxValue(
+            $this->pluginmessages->text("xAxis"),
+            "xAxis",
+            $xAxisTypes,
+            $selected,
+            2
+        ));
     }
     /**
      * Validate input and store in session

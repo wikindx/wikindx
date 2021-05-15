@@ -516,7 +516,6 @@ class MENU
 			$this->res['basketSub']['exportbasketSub'][$messages->text("menu", 'exportRIS')] = 
 				'index.php?action=export_RISEXPORT_CORE&method=initRisExportB';
         }
-            
         $this->res['bookmarkSub'] = [
             $messages->text("menu", "bookmarkSub") => FALSE,
         ];

@@ -24,7 +24,6 @@ class LISTADDTO
     private $user;
     private $badInput;
     private $navigate;
-    private $catForm;
     private $browserTabID = FALSE;
 
     public function __construct()
@@ -34,8 +33,6 @@ class LISTADDTO
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
-        $this->catForm = new RESOURCECATEGORYEDIT();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->user = FACTORY_USER::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
@@ -104,7 +101,9 @@ class LISTADDTO
      */
     public function organize()
     {
-        $this->catForm->storeData();
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
+        $catForm = new RESOURCECATEGORYEDIT();
+        $catForm->storeData();
         if (!array_key_exists("displayCategory", $this->vars) && !array_key_exists("displaySubcategory", $this->vars) &&
             !array_key_exists("displayLanguage", $this->vars) && !array_key_exists("displayKeyword", $this->vars) &&
             !array_key_exists("displayUsertag", $this->vars))
@@ -569,6 +568,8 @@ class LISTADDTO
      */
     public function organizeInit($message = FALSE)
     {
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
+        $catForm = new RESOURCECATEGORYEDIT();
         $pString = '';
         $uuid = FALSE;
         if (is_array($message))
@@ -585,7 +586,7 @@ class LISTADDTO
             'subcategoryDisplay' => $this->messages->text("resources", "subcategories"),
             'languageDisplay' => $this->messages->text("resources", "languages"),
             'keywordDisplay' => $this->messages->text("resources", "keywords"), ];
-        if (!empty($this->catForm->userTags))
+        if (!empty($catForm->userTags))
         {
             $display['usertagDisplay'] = $this->messages->text("resources", "usertags");
         }
@@ -599,9 +600,9 @@ class LISTADDTO
             $uuid = \TEMPSTORAGE\getUuid($this->db);
             \TEMPSTORAGE\store($this->db, $uuid, $string);
         }
-        $pString .= $this->catForm->getTable(TRUE);
+        $pString .= $catForm->getTable(TRUE);
         $pString .= \FORM\hidden('uuid', $uuid);
-        $check = !empty($this->catForm->formData) && array_key_exists('replaceExisting', $this->catForm->formData) ? TRUE : FALSE;
+        $check = !empty($catForm->formData) && array_key_exists('replaceExisting', $catForm->formData) ? TRUE : FALSE;
         $pString .= \HTML\p(\FORM\checkbox($this->messages->text("resources", "replaceExisting"), "replaceExisting", $check) . BR .
             \HTML\span(\HTML\aBrowse(
                 'green',

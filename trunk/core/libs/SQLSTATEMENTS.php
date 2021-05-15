@@ -19,6 +19,8 @@ class SQLSTATEMENTS
 {
     /** string */
     public $totalResourceSubquery;
+    /** bool */
+    public $basket = FALSE;
     /** string */
     public $listMethodAscDesc = 'list_AscDesc';
     /** string */
@@ -295,9 +297,14 @@ class SQLSTATEMENTS
      */
     public function listList($order = 'creator', $table = 'resource', $subQ = FALSE)
     {
-        if (!$allIds = GLOBALS::getTempStorage('list_AllIds'))
+    	if ($this->basket) {
+			$allIdsVar = "list_AllIdsBasket";
+		} else {
+			$allIdsVar = "list_AllIds";
+		}
+        if (!$allIds = GLOBALS::getTempStorage($allIdsVar))
         {
-            $allIds = $this->session->getVar("list_AllIds");
+            $allIds = $this->session->getVar($allIdsVar);
         }
         if (!$this->allIds && !$allIds)
         {
@@ -421,10 +428,11 @@ class SQLSTATEMENTS
         {
             $listQuery = $this->db->queryNoExecute($this->db->selectNoExecute('resource', $this->listFields));
         }
-        $this->session->setVar("sql_ListStmt", $listQuery);
+        $listStmt = $this->basket ? 'sql_ListStmtBasket' : 'sql_ListStmt';
+        $this->session->setVar($listStmt, $listQuery);
         if ($this->browserTabID)
         {
-            GLOBALS::setTempStorage(['sql_ListStmt' => $listQuery]);
+            GLOBALS::setTempStorage([$listStmt => $listQuery]);
         }
 
         return $listQuery . $limit;
@@ -524,6 +532,13 @@ class SQLSTATEMENTS
     public function listSubQuery($order = FALSE, $queryString = FALSE, $totalSubQuery = FALSE, $table = 'resource', $subQ = FALSE)
     {
         $ids = [];
+		if ($this->basket) {
+			$pagingTotalVar = "setup_PagingTotalBasket";
+			$allIdsVar = "list_AllIdsBasket";
+		} else {
+			$pagingTotalVar = "setup_PagingTotal";
+			$allIdsVar = "list_AllIds";
+		}
         if ($this->metadataPaging)
         {
             $this->common->metadataPaging = TRUE;
@@ -531,16 +546,16 @@ class SQLSTATEMENTS
         if (($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex'))
         {
             $this->totalResourceSubquery = $this->db->subQuery($totalSubQuery, 't1', TRUE, TRUE);
-            $this->session->delVar("list_AllIds");
-			GLOBALS::unsetTempStorage(['list_AllIds']);
+            $this->session->delVar($allIdsVar);
+			GLOBALS::unsetTempStorage([$allIdsVar]);
         }
 		if ($this->allIds and !GLOBALS::getUserVar('BrowseBibliography'))
 		{
 			$total = $this->db->selectCountOnly("resource", "resourceId");
-			$this->session->setVar("setup_PagingTotal", $total);
-			$this->session->setVar("list_AllIds", 'all');
+			$this->session->setVar($pagingTotalVar, $total);
+			$this->session->setVar($allIdsVar, 'all');
 			if ($this->browserTabID) {
-				GLOBALS::setTempStorage(['setup_PagingTotal' => $total, 'list_AllIds' => 'all']);
+				GLOBALS::setTempStorage([$pagingTotalVar => $total, $allIdsVar => 'all']);
 			}
 		}
 		else
@@ -556,12 +571,12 @@ class SQLSTATEMENTS
 			}
 			$ids = array_filter($ids); // array_filter() to ensure no null ids
 			$total = count($ids);
-			$this->session->setVar("setup_PagingTotal", $total);
-			$this->session->setVar("list_AllIds", $ids);
+			$this->session->setVar($pagingTotalVar, $total);
+			$this->session->setVar($allIdsVar, $ids);
 			$this->session->delVar("sql_CountAlphaStmt");
 			if ($this->browserTabID)
 			{
-				GLOBALS::setTempStorage(['setup_PagingTotal' => $total, 'list_AllIds' => $ids]);
+				GLOBALS::setTempStorage([$pagingTotalVar => $total, $allIdsVar => $ids]);
 				GLOBALS::unsetTempStorage(['sql_CountAlphaStmt']);
 			}
 		}
@@ -584,9 +599,9 @@ class SQLSTATEMENTS
             $clause = ' ' . $orderBy . ' ' . $limit;
             $this->totalResourceSubquery = str_replace('W!K!NDXW!K!NDXW!K!NDX', $clause, $this->totalResourceSubquery);
         }
-        if (!$ids = GLOBALS::getTempStorage('list_AllIds'))
+        if (!$ids = GLOBALS::getTempStorage($allIdsVar))
         {
-            $ids = $this->session->getVar("list_AllIds");
+            $ids = $this->session->getVar($allIdsVar);
         }
         if (is_bool($ids) || empty($ids))
         { // FALSE

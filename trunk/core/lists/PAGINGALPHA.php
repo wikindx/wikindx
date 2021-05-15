@@ -15,6 +15,8 @@
  */
 class PAGINGALPHA
 {
+    /** bool */
+    public $basket = FALSE;
     /** array */
     public $pagingArray;
     /** int */
@@ -68,13 +70,22 @@ class PAGINGALPHA
      */
     public function getPaging($conditions, $joins, $conditionsOneField, $subQ, $table = 'resource', $QS = FALSE)
     {
-        if (!$this->total = GLOBALS::getTempStorage('setup_PagingTotal'))
+		if ($this->basket) {
+			$pagingTotalVar = "setup_PagingTotalBasket";
+			$allIdsVar = "list_AllIdsBasket";
+			$alphaLinks = "list_PagingAlphaLinksBasket";
+		} else {
+			$pagingTotalVar = "setup_PagingTotal";
+			$allIdsVar = "list_AllIds";
+			$alphaLinks = "list_PagingAlphaLinks";
+		}
+        if (!$this->total = GLOBALS::getTempStorage($pagingTotalVar))
         {
-            $this->total = $this->session->getVar("setup_PagingTotal");
+            $this->total = $this->session->getVar($pagingTotalVar);
         }
-        if (!$this->pagingArray = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_PagingAlphaLinks'))
+        if (!$this->pagingArray = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, $alphaLinks))
         {
-            $this->pagingArray = $this->session->getVar("list_PagingAlphaLinks");
+            $this->pagingArray = $this->session->getVar($alphaLinks);
         }
         if (!is_bool($this->pagingArray))
         {
@@ -90,9 +101,9 @@ class PAGINGALPHA
         }
         if ($QS)
         {
-            if (!$ids = GLOBALS::getTempStorage('list_AllIds'))
+            if (!$ids = GLOBALS::getTempStorage($allIdsVar))
             {
-                $ids = $this->session->getVar("list_AllIds");
+                $ids = $this->session->getVar($allIdsVar);
             }
             $conditions[] = $this->db->formatConditionsOneField($ids, 'resourceId', '=', TRUE, FALSE, FALSE, TRUE);
             $joins = [];
@@ -125,12 +136,14 @@ class PAGINGALPHA
             $total = 0;
             ++$index;
         }
-        if (($index < $numRows) && !empty($letterArray))
-        {
+        if (($index < $numRows) && !empty($letterArray)) {
             $this->pagingArray[] = $letterArray;
         }
         $this->sizeOfPA = count($this->pagingArray);
-        $this->session->setVar("list_PagingAlphaLinks", $this->pagingArray);
+        $this->session->setVar($alphaLinks, $this->pagingArray);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage([$alphLinks => $this->pagingArray]);
+		}
         $this->createLinks();
     }
     /**

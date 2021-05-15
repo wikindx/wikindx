@@ -15,6 +15,8 @@
  */
 class PAGING
 {
+    /** bool */
+    public $basket = FALSE;
     /** int */
     public $total;
     /** int */
@@ -53,9 +55,14 @@ class PAGING
     public function getPaging()
     {
         $this->getPagingStart();
-        if (!$this->total = GLOBALS::getTempStorage('setup_PagingTotal'))
+		if ($this->basket) {
+			$pagingTotalVar = "setup_PagingTotalBasket";
+		} else {
+			$pagingTotalVar = "setup_PagingTotal";
+		}
+        if (!$this->total = GLOBALS::getTempStorage($pagingTotalVar))
         {
-            $this->total = $this->session->getVar("setup_PagingTotal");
+            $this->total = $this->session->getVar($pagingTotalVar);
         }
         $this->paging = GLOBALS::getUserVar('Paging');
         $this->maxLinks = GLOBALS::getUserVar('PagingMaxLinks');

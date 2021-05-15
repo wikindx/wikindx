@@ -15,6 +15,8 @@
  */
 class LISTCOMMON
 {
+	/** bool */
+	public $basket = FALSE;
     /** object */
     public $pagingObject = FALSE;
     /** boolean */
@@ -460,6 +462,9 @@ class LISTCOMMON
         if ((GLOBALS::getUserVar('PagingStyle') == 'A') && in_array($order, ['title', 'creator', 'attachments']))
         {
             $this->pagingObject = FACTORY_PAGINGALPHA::getInstance();
+            if ($this->basket) {
+            	$this->pagingObject->basket = TRUE;
+            }
             if ($this->metadataPaging)
             {
                 $this->pagingObject->metadata = TRUE;
@@ -472,6 +477,9 @@ class LISTCOMMON
         else
         {
             $this->pagingObject = FACTORY_PAGING::getInstance();
+            if ($this->basket) {
+            	$this->pagingObject->basket = TRUE;
+            }
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
         }

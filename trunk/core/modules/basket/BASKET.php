@@ -34,6 +34,7 @@ class BASKET
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
+		$this->stmt->basket = TRUE;
         $this->browserTabID = GLOBALS::getBrowserTabID();
         $this->userId = $this->session->getVar("setup_UserId");
         if ($this->browserTabID)
@@ -202,18 +203,22 @@ class BASKET
 			GLOBALS::unsetTempStorage(['sql_ListParams']);
 		}
         $this->common = FACTORY_LISTCOMMON::getInstance();
+		$this->common->basket = TRUE;
         $queryString = 'action=basket_BASKET_CORE&method=view';
         $sizeOfbasket = is_array($basket) ? count($basket) : 0;
-        $this->session->setVar("setup_PagingTotal", $sizeOfbasket);
+        $this->session->setVar("setup_PagingTotalBasket", $sizeOfbasket);
 		if ($this->browserTabID)
 		{
-			GLOBALS::setTempStorage(['setup_PagingTotal' => $sizeOfbasket]);
+			GLOBALS::setTempStorage(['setup_PagingTotalBasket' => $sizeOfbasket]);
 		}
         $this->pagingObject = FACTORY_PAGING::getInstance();
+/*        $this->pagingObject->basket = TRUE;
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
         $this->common->pagingObject = $this->pagingObject;
-        GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basket'));
+        $this->common->pagingObject->basket = TRUE;
+        $this->common->pagingObject->queryString = $queryString;
+*/        GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basket'));
         if (array_key_exists('list_Order', $this->vars))
         {
             $this->session->setVar("list_Order", $this->vars['list_Order']);
@@ -232,12 +237,12 @@ class BASKET
         }
         if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
         {
-            $this->session->delVar("list_PagingAlphaLinks");
-            $this->session->delVar("list_AllIds");
+            $this->session->delVar("list_PagingAlphaLinksBasket");
+            $this->session->delVar("list_AllIdsBasket");
 			if ($this->browserTabID)
 			{
-				GLOBALS::unsetTempStorage(['list_PagingAlphaLinks', 'list_AllIds']);
-				GLOBALS::setTempStorage(['list_AllIds' => $this->session->getVar("basket_List")]);
+				GLOBALS::unsetTempStorage(['list_PagingAlphaLinksBasket', 'list_AllIdsBasket']);
+				GLOBALS::setTempStorage(['list_AllIdsBasket' => $this->session->getVar("basket_List")]);
 			}
             $sql = $this->returnBasketSql($queryString);
         }
@@ -252,12 +257,12 @@ class BASKET
             $badInput->close($errors->text("inputError", "invalid"));
         }
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar("sql_LastMulti", $queryString);
+/*        $this->session->setVar("sql_LastMulti", $queryString);
         if ($this->browserTabID)
         {
             GLOBALS::setTempStorage(['sql_LastMulti' => $queryString]);
         }
-        // Turn on the 'add bookmark' menu item
+*/        // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
         $this->common->display($sql, 'basket');
         $this->common->updateTempStorage();
@@ -279,13 +284,12 @@ class BASKET
 			}
         }
         $basket = $this->getBasket();
-        $this->session->setVar("list_AllIds", $basket);
+        $this->session->setVar("list_AllIdsBasket", $basket);
         if ($this->browserTabID) {
         	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
         }
         $subStmt = $this->setSubQuery($basket);
         $this->stmt->listSubQuery($order, $queryString, $subStmt);
-
         return $this->stmt->listList($order);
     }
     /**
@@ -337,8 +341,8 @@ class BASKET
      */
     private function quickQuery($queryString)
     {
-        if (!$sql = GLOBALS::getTempStorage('sql_ListStmt')) {
-        	$sql = $this->session->getVar("sql_ListStmt");
+        if (!$sql = GLOBALS::getTempStorage('sql_ListStmtBasket')) {
+        	$sql = $this->session->getVar("sql_ListStmtBasket");
         }
         $sql .= $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         return $sql;

@@ -99,6 +99,10 @@ PHP version | Min WIKINDX Version | Max WIKINDX Version
 5.1         | 4.0.0               | ???
 4.3         | 3.8.1               | ???
 
+PHP 8.0 is not recommended at this time because it has not been tested extensively.
+However, the major features work, sometimes with a few warinigs. If you try the experiment
+let us know the errors you encounter. 
+
 
 ## PHP extensions
 

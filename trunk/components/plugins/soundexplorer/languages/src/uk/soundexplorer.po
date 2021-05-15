@@ -1,29 +1,36 @@
-# Ukrainian translations for soundexplorer package.
-# Copyright (C) 2021 THE soundexplorer'S COPYRIGHT HOLDER
+# WIKINDX's Translation ressource: Українська.
+# For copyright see the component.json file
 # This file is distributed under the same license as the soundexplorer package.
-# Automatically generated, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Yuri Chornoivan <yurchor@ukr.net>, 2021
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: soundexplorer\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-07-18 02:48+0200\n"
-"PO-Revision-Date: 2020-07-18 02:48+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2019-09-26 21:03+0000\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
+"Language-Team: Ukrainian (https://www.transifex.com/saulery/teams/103557/"
+"uk/)\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 "
+"> 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. *
 #. * Menu items
 #.
 #: components/plugins/soundexplorer/soundexplorermessages.php:27
 msgid "Sound Explorer"
-msgstr ""
+msgstr "Звуковий навігатор"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:28
 msgid ""
@@ -41,63 +48,77 @@ msgid ""
 "\t\t\t\tprototype and has been tested in the Firefox, Safari, and Chrome web "
 "browsers. Other browsers are untested."
 msgstr ""
+"«Звуковий навігатор» зберігає пошуки, а потім, будь-коли у майбутньому, "
+"відтворює звук, якщо під час дії із поточним списком буде виявлено\n"
+"\t\t\t\tресурс, що відповідає критеріям, раніше використаним під час пошуку. "
+"Принцип роботи засновано на корисному поєднанні виконаних раніше пошуків\n"
+"\t\t\t\tіз поточним результатом пошуку, у сподіванні, що це надасть вам змогу "
+"виявити нові несподівані зв'язки, розширюючи межі\n"
+"\t\t\t\tвашого поточного понятійного простору. Крім того, він корисний у "
+"WIKINDX із багатьма користувачами,\n"
+"\t\t\t\tде «Звуковий навігатор» працює як «дротовий» сигнал — звук буде "
+"відтворено, якщо новий ресурс або метадані, які було додано іншим\n"
+"\t\t\t\tкористувачем, відоповідають збереженому пошуку (якщо ресурс показано "
+"у списку). У поточній версії це експериментальний\n"
+"\t\t\t\tпрототип, роботу якого було перевірено у браузерах Firefox, Safari і "
+"Chrome. Працездатність у інших браузерах не перевіряли."
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:35
 msgid "Sound Explorer On"
-msgstr ""
+msgstr "Звуковий навігатор увімкнено"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:36
 msgid "Sound Explorer Off"
-msgstr ""
+msgstr "Звуковий навігатор вимкнено"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:37
 msgid "Search Label"
-msgstr ""
+msgstr "Шукати мітку"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:38
 msgid "Sound"
-msgstr ""
+msgstr "Звук"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:39
 msgid "Status"
-msgstr ""
+msgstr "Стан"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:40
 msgid "Enabled"
-msgstr ""
+msgstr "Увімкнено"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:41
 msgid "Disabled"
-msgstr ""
+msgstr "Вимкнено"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:42
 msgid "New search"
-msgstr ""
+msgstr "Новий пошук"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:43
 msgid "Delete"
-msgstr ""
+msgstr "Вилучити"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:44
 msgid "Notes"
-msgstr ""
+msgstr "Нотатки"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:45
 msgid "Matched searches for current list"
-msgstr ""
+msgstr "Відповідні пошуки для поточного списку"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:46
 msgid "Sound Explorer successfully configured"
-msgstr ""
+msgstr "Звуковий навігатор успішно налаштовано"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:47
 msgid "Store the Sound Explorer search"
-msgstr ""
+msgstr "Зберегти пошук зі Звуковим навігатором"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:48
 msgid "Sound Explorer search successfully stored"
-msgstr ""
+msgstr "Пошук зі звуковим навігатором успішно збережено"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:49
 msgid "Sound Explorer search successfully deleted"
-msgstr ""
+msgstr "Пошук зі звуковим навігатором успішно вилучено"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: visualize\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-07-18 02:48+0200\n"
+"POT-Creation-Date: 2021-05-15 17:00+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/saulery/teams/103557/"
@@ -28,7 +28,7 @@ msgstr ""
 #: components/plugins/visualize/visualizemessages.php:20
 #: components/plugins/visualize/visualizemessages.php:21
 #: components/plugins/visualize/visualizemessages.php:22
-#: components/plugins/visualize/visualizemessages.php:43
+#: components/plugins/visualize/visualizemessages.php:46
 msgid "Visualize"
 msgstr "Візуалізація"
 
@@ -57,57 +57,69 @@ msgid "No. resources"
 msgstr "К-ть ресурсів"
 
 #: components/plugins/visualize/visualizemessages.php:29
+msgid "Resource views"
+msgstr "Перегляди ресурсу"
+
+#: components/plugins/visualize/visualizemessages.php:30
 msgid "Resource type"
 msgstr "Тип ресурсу"
 
-#: components/plugins/visualize/visualizemessages.php:30
+#: components/plugins/visualize/visualizemessages.php:31
 msgid "Publication year"
 msgstr "Рік видання"
 
-#: components/plugins/visualize/visualizemessages.php:31
+#: components/plugins/visualize/visualizemessages.php:32
 msgid "Keyword"
 msgstr "Ключове слово"
 
-#: components/plugins/visualize/visualizemessages.php:32
+#: components/plugins/visualize/visualizemessages.php:33
 msgid "Category"
 msgstr "Категорія"
 
-#: components/plugins/visualize/visualizemessages.php:33
+#: components/plugins/visualize/visualizemessages.php:34
 msgid "Journal"
 msgstr "Журнал"
 
-#: components/plugins/visualize/visualizemessages.php:34
+#: components/plugins/visualize/visualizemessages.php:35
 msgid "Proceedings"
 msgstr "Доповіді"
 
-#: components/plugins/visualize/visualizemessages.php:35
+#: components/plugins/visualize/visualizemessages.php:36
+msgid "Months"
+msgstr "Місяці"
+
+#: components/plugins/visualize/visualizemessages.php:37
+msgid "Years"
+msgstr "Роки"
+
+#: components/plugins/visualize/visualizemessages.php:38
 msgid "Missing input"
 msgstr "Немає вхідних даних"
 
-#: components/plugins/visualize/visualizemessages.php:36
+#: components/plugins/visualize/visualizemessages.php:39
 msgid "Type of plot"
 msgstr "Тип креслення"
 
-#: components/plugins/visualize/visualizemessages.php:37
+#: components/plugins/visualize/visualizemessages.php:40
 msgid "Line plot"
 msgstr "Лінійчасте креслення"
 
-#: components/plugins/visualize/visualizemessages.php:38
+#: components/plugins/visualize/visualizemessages.php:41
 msgid "Bar plot"
 msgstr "Стовпчикова діаграма"
 
-#: components/plugins/visualize/visualizemessages.php:39
+#: components/plugins/visualize/visualizemessages.php:42
 msgid "Combined bar/line plot"
 msgstr "Поєднана стовпчиково-лінійчаста діаграма"
 
-#: components/plugins/visualize/visualizemessages.php:40
+#: components/plugins/visualize/visualizemessages.php:43
 msgid "Scatter plot"
 msgstr "Графік розсіяння"
 
-#: components/plugins/visualize/visualizemessages.php:41
+#: components/plugins/visualize/visualizemessages.php:44
 msgid "Scatter plot with line"
 msgstr "Графік розсіяння із лінією"
 
-#: components/plugins/visualize/visualizemessages.php:42
+#: components/plugins/visualize/visualizemessages.php:45
 msgid "Balloon plot"
 msgstr "Бульбашкова діаграма"

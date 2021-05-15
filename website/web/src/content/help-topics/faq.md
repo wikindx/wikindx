@@ -11,7 +11,11 @@ Yes. The server side of WIKINDX has been designed to run on free
 (in some cases, free for non-commercial use) and widely available software
 running on a variety of operating systems. PHP, MySQL and Apache are available
 for download (I know, you don't have access to the Internet...)
-from their respective sites.
+from their respective sites. It is also possible to manually update the core
+and the components.
+
+However, documentation and help are online. The component manager needs internet
+access if you are using it to update components. 
 
 
 ## Does upgrading My WIKINDX to a later version lose any database data?
@@ -61,27 +65,50 @@ you can install the addin and then insert WIKINDX references and citations into 
 Once you are ready to publish, a click of a button will format all references and citations
 to the chosen style and append the bibliography.
 
+## In what formats can I import or export my resources?
+
+|Format   |Import |Export | Note
+|---------|-------|-------|------
+|BiBTeX   | X     | X     |
+|COinS    |       | X     |
+|Copac    |       |       |
+|CSA      |       |       |
+|Endnote  | X     | X     |
+|HTML     |       | X     |
+|ISI      |       |       |
+|Medline  | X     | X     |
+|MODS     | X     | X     | With BibUtils
+|Ovid     | X     |       |
+|PubMed   | X     | X     |
+|Refer    | X     | X     |
+|RIS      | X     | X     |
+|RTF      |       | X     |
+|SciFinder|       |       |
+
 ## Which web browsers can I use?
 
 The default templates that ship with each release,
 have been tested and found to run acceptably on the following web browsers:
 
 * LINUX:
-  * Mozilla
+  * Chromium
+  * Firefox
   * Konqueror
 
 
 * WINDOWS:
-  * Mozilla Firefox
+  * Chrome
+  * Edge
+  * Firefox
+  * Internet Explorer (not recommended)
   * Netscape
-  * Internet Explorer
   * Opera
 
 
 * APPLE OSX:
-  * Mozilla
-  * Safari
   * Chrome
+  * Firefox
+  * Safari
 
 ## Do I need to allow cookies?
 

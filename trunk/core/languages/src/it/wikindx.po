@@ -9236,12 +9236,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid ""
-#~ "$menus should be an array of at least one of the following menu elements:"
-#~ msgstr ""
-#~ "$menus dovrebbe essere un raggruppamento di almeno uno dei seguenti "
-#~ "elementi di menu:"
-
 #~ msgid "<h3>Configure WIKINDX</h3>"
 #~ msgstr "<h3>Configura WIKINDX</h3>"
 
@@ -10174,6 +10168,12 @@ msgstr "Risorsa approvata con successo"
 #~ "amministratore, 'file' sarà visibile solamente se sono stati esportati "
 #~ "files, 'text' sarà visibile solamente se ci sono metadati (citazioni "
 #~ "ecc.), ed i tre alberi di menu 'pluginX' solamente se sono popolati."
+
+#~ msgid ""
+#~ "$menus should be an array of at least one of the following menu elements:"
+#~ msgstr ""
+#~ "$menus dovrebbe essere un raggruppamento di almeno uno dei seguenti "
+#~ "elementi di menu:"
 
 #~ msgid "Enabled Languages"
 #~ msgstr "Lingue Abilitate"

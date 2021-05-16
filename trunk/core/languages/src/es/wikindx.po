@@ -9136,17 +9136,6 @@ msgstr "La palabra clave ha sido editada correctamente"
 msgid "Successfully approved resource(s)"
 msgstr "Recurso eliminado correctamente del cesto"
 
-#, fuzzy
-#~| msgid ""
-#~| "<p>Most of the configuration options are self-explanatory but bear the "
-#~| "following in mind:</p>"
-#~ msgid ""
-#~ "<p>Most settings are self-explanatory but some require further explanation:"
-#~ "</p>"
-#~ msgstr ""
-#~ "<p>Most of the configuration options are self-explanatory but bear the "
-#~ "following in mind:</p>"
-
 #~ msgid "Upgrade the database"
 #~ msgstr "Actualizar la base de datos"
 
@@ -9313,9 +9302,15 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ "entries at a time.</p>"
 
 #, fuzzy
-#~| msgid "<h3>Preferences</h3>"
-#~ msgid "<h3>Components</h3>"
-#~ msgstr "<h3>Preferencias</h3>"
+#~| msgid ""
+#~| "<p>Most of the configuration options are self-explanatory but bear the "
+#~| "following in mind:</p>"
+#~ msgid ""
+#~ "<p>Most settings are self-explanatory but some require further explanation:"
+#~ "</p>"
+#~ msgstr ""
+#~ "<p>Most of the configuration options are self-explanatory but bear the "
+#~ "following in mind:</p>"
 
 #~ msgid "<h3>My Wikindx</h3>"
 #~ msgstr "<h3>Mi Wikindx</h3>"
@@ -9325,3 +9320,8 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ "initially required are username, password and email. From the Admin menu, "
 #~ "after configuration, you can add and edit other settings."
 #~ msgstr "Antes de poder utilizar WIKINDX debe configurarlo"
+
+#, fuzzy
+#~| msgid "<h3>Preferences</h3>"
+#~ msgid "<h3>Components</h3>"
+#~ msgstr "<h3>Preferencias</h3>"

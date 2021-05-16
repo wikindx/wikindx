@@ -3727,7 +3727,7 @@ msgstr "Файл хешу:"
 
 #: core/messages/messages.php:380
 msgid "Get latest components list"
-msgstr ""
+msgstr "Отримати список найсвіжіших компонентів"
 
 #: core/messages/messages.php:381 core/messages/messages.php:1801
 msgid "Last updated"
@@ -9263,6 +9263,3 @@ msgstr "Групу ключових слів успішно змінено"
 #: core/messages/success.php:183
 msgid "Successfully approved resource(s)"
 msgstr "Ресурси успішно схвалено"
-
-#~ msgid "Check for updates"
-#~ msgstr "Шукати оновлення"

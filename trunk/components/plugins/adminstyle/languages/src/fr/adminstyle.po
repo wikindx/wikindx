@@ -823,9 +823,6 @@ msgstr "(Pas d'espace)"
 msgid "(Fields are case-sensitive)"
 msgstr "(Champs sensibles à la casse)"
 
-#~ msgid "SYNTAX"
-#~ msgstr "SYNTAXE"
-
 #~ msgid ""
 #~ "The style definition syntax uses a number of rules and special characters:"
 #~ msgstr ""
@@ -1165,9 +1162,8 @@ msgstr "(Champs sensibles à la casse)"
 #~ "données pour chaque référence, plus il est probable que le formatage sera "
 #~ "correct."
 
-#~ msgid ""
-#~ "Bibliographic styles requiring this complexity are few and far between."
-#~ msgstr "Les styles bibliographiques exigeant cette complexité sont rares."
+#~ msgid "SYNTAX"
+#~ msgstr "SYNTAXE"
 
 #~ msgid ""
 #~ "If the value entered for the edition of a resource contains non-numeric "
@@ -1203,3 +1199,7 @@ msgstr "(Champs sensibles à la casse)"
 
 #~ msgid "<em>and:</em>"
 #~ msgstr "<em>et :</em>"
+
+#~ msgid ""
+#~ "Bibliographic styles requiring this complexity are few and far between."
+#~ msgstr "Les styles bibliographiques exigeant cette complexité sont rares."

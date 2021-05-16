@@ -9321,13 +9321,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid ""
-#~ "<p>Depending on your user permissions, you will see various statistics on "
-#~ "the page:</p>"
-#~ msgstr ""
-#~ "<p>Je nach Ihren Benutzerberechtigungen werden Sie verschiedene "
-#~ "Statistiken auf der Seite sehen:</p>"
-
 #~ msgid "Enabled Styles"
 #~ msgstr "Aktivierte Stile"
 
@@ -10274,6 +10267,13 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Logon as superAdmin:"
 #~ msgstr "Anmeldung als Superadmin:"
+
+#~ msgid ""
+#~ "<p>Depending on your user permissions, you will see various statistics on "
+#~ "the page:</p>"
+#~ msgstr ""
+#~ "<p>Je nach Ihren Benutzerberechtigungen werden Sie verschiedene "
+#~ "Statistiken auf der Seite sehen:</p>"
 
 #~ msgid "Disabled Plugins"
 #~ msgstr "Plugins deaktivieren"

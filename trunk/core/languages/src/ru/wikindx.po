@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-05-15 19:58+0200\n"
+"POT-Creation-Date: 2021-05-16 14:36+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -3796,7 +3796,7 @@ msgid "Hash file: "
 msgstr ""
 
 #: core/messages/messages.php:380
-msgid "Check for updates"
+msgid "Get latest components list"
 msgstr ""
 
 #: core/messages/messages.php:381 core/messages/messages.php:1801
@@ -9283,6 +9283,9 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
+#~ msgid "Enabled Languages"
+#~ msgstr "Активированные языки"
+
 #~ msgid "<h3>Paste BibTeX</h3>"
 #~ msgstr "Вставить код BibTeX"
 
@@ -9293,9 +9296,6 @@ msgstr "Источник успешно одобрен"
 
 #~ msgid "Disabled Plugins"
 #~ msgstr "Деактивированные плагины"
-
-#~ msgid "Enabled Languages"
-#~ msgstr "Активированные языки"
 
 #~ msgid "Select the creators you wish to remove from the group"
 #~ msgstr "Выберите авторов, которых вы хотите удалить из группы."
@@ -9491,9 +9491,6 @@ msgstr "Источник успешно одобрен"
 #~ msgid "bibtex"
 #~ msgstr "bibtex"
 
-#~ msgid "Disabled Templates"
-#~ msgstr "Деактивированные шаблоны"
-
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
 #~ "If your database is large or your server is slow, it is advised to "
@@ -9563,3 +9560,6 @@ msgstr "Источник успешно одобрен"
 
 #~ msgid "<h3>Category Tree</h3>"
 #~ msgstr "Дерево категорий"
+
+#~ msgid "Disabled Templates"
+#~ msgstr "Деактивированные шаблоны"

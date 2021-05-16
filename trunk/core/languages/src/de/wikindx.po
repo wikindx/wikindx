@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-05-15 19:58+0200\n"
+"POT-Creation-Date: 2021-05-16 14:36+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -3796,7 +3796,7 @@ msgid "Hash file: "
 msgstr ""
 
 #: core/messages/messages.php:380
-msgid "Check for updates"
+msgid "Get latest components list"
 msgstr ""
 
 #: core/messages/messages.php:381 core/messages/messages.php:1801
@@ -9321,9 +9321,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Anmeldung als Superadmin:"
-
 #~ msgid ""
 #~ "<p>Depending on your user permissions, you will see various statistics on "
 #~ "the page:</p>"
@@ -10242,9 +10239,6 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ msgid "Ungroup"
 #~ msgstr "Gruppierung aufheben"
 
-#~ msgid "Disabled Plugins"
-#~ msgstr "Plugins deaktivieren"
-
 #~ msgid ""
 #~ "<ul>\n"
 #~ "<li>Views: Number of views this month / total number of views.</li>\n"
@@ -10277,3 +10271,9 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "<li>Popularitäts-Index: Eine Kombination des Seitenansichts-Index und des "
 #~ "Download-Index, der die Popularität der Ressource angibt.</li>\n"
 #~ "</ul>"
+
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Anmeldung als Superadmin:"
+
+#~ msgid "Disabled Plugins"
+#~ msgstr "Plugins deaktivieren"

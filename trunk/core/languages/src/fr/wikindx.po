@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-05-15 19:58+0200\n"
+"POT-Creation-Date: 2021-05-16 14:36+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2021\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -3738,8 +3738,8 @@ msgid "Hash file: "
 msgstr "Hash du fichier téléchargé :"
 
 #: core/messages/messages.php:380
-msgid "Check for updates"
-msgstr "Vérifier les mises à jour"
+msgid "Get latest components list"
+msgstr "Télécharger la dernière liste de composants"
 
 #: core/messages/messages.php:381 core/messages/messages.php:1801
 msgid "Last updated"
@@ -5861,9 +5861,9 @@ msgstr ""
 "sorte qu'il existe généralement un moyen d'importer votre bibliographie dans "
 "WIKINDX. La plupart des conversions utilisent le format intermédiaire XML "
 "MODS. Indiquez le chemin du dossier des bibutils (p. ex. '/usr/bin/' pour les "
-"UNICES ou 'D:/wamp/www/wikindx/bibutils/' pour \n"
-"Windows). Si le chemin est vide, on suppose que les outils sont sur un "
-"système UNIX et dans le PATH. Vous devez préciser le '/' final."
+"UNICES ou 'D:/wamp/www/wikindx/bibutils/' pour Windows). Si le chemin est "
+"vide, on suppose que les outils sont sur un système UNIX et dans le PATH. "
+"Vous devez préciser le '/' final."
 
 #. / menu_home Wikindx menu starts here
 #: core/messages/messages.php:895

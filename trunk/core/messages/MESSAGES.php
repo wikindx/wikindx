@@ -377,7 +377,7 @@ class MESSAGES
 				"manualComponent" => dgettext($domain, "Manually install a component: "),
 				"packageFile" => dgettext($domain, "Package file: "),
 				"hashFile" => dgettext($domain, "Hash file: "),
-				"checkUpdates" => dgettext($domain, "Check for updates"),
+				"checkUpdates" => dgettext($domain, "Get latest components list"),
 				"lastUpdate" => dgettext($domain, "Last updated"),
 				"defaultQuery" => dgettext($domain, "Users have a favorite template or style that is no longer available (disabled or uninstalled). Do you want to replace this preference with the default values?"),
 				"defaultInstall" => dgettext($domain, "Fix users preferences:"),

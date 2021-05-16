@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "xpdftotext",
-    "component_version": "489",
+    "component_version": "490",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "XpdftoText",
@@ -30,5 +30,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "94449324bd81758405ab52414352336129f96aad24d1e39b2c4e1ad59f0b847f"
+    "component_sha256": "f217881a43d20ca375a3184d207bc0e8bf96e38c691bca1283fb0fc029d42211"
 }

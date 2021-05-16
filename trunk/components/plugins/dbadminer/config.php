@@ -14,5 +14,5 @@ class dbadminer_CONFIG
     /** int */
     public $authorize = 2;
     /** float */
-    public $wikindxVersion = 10;
+    public $wikindxVersion = 11;
 }

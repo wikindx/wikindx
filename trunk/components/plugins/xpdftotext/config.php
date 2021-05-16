@@ -14,5 +14,5 @@ class xpdftotext_CONFIG
     /** int */
     public $authorize = 1;
     /** float */
-    public $wikindxVersion = 10;
+    public $wikindxVersion = 11;
 }

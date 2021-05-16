@@ -15,6 +15,7 @@ Thus, plugins/debugtools/index.php etc.
 
 CHANGELOG:
 
+2021-05-16 : CHG : change of the compatibility version (11) (removal of importexportbib plugin).
 2021-05-04 : SEC : hide the value of WIKINDX_DB_PASSWORD.
 2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).

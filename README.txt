@@ -131,6 +131,7 @@ Release History (Active repository)
 
  Version    Release Date   Revision Note
  ---------  ------------   -------- --------------
+  6.4.8b     2021-05-17        1834 
   6.4.7      2021-04-19        1671 Broken install
   6.4.6      2021-04-17        1632 Session size explosion
   6.4.5      2021-04-10        1594 Session size explosion

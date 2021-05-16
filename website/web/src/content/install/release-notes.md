@@ -4,48 +4,65 @@ weight = 4
 disableToc = false
 +++
 
-***Focus**: bug fixes, maintenance*
+***Focus**: bug fixes & feature enhancements*
 
 ## Important information
 
-This version remove the database prefix 'wkx_' from tables (official and unofficial).
+Three extensions become mandatory: curl, dom (libxml) and zip.
 
-This functionality is only useful for several programs sharing the same database with the same table names or several WIKINDX installations in the same database. These two practices are to be avoided because they are a good way to lose your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. We believe that very few installs use this feature.
+This allows:
 
-6.4.0 harcoded the 'wkx_' prefix but still offered the possibility of cheating with the constant `WIKINDX_DB_TABLEPREFIX`.
-
-6.4.6 removed the 'cheat mode' and checks that you don't have a mix of tables with another. Otherwise, collisions could occur. If you are affected by this change please contact us for help with the transition.
-
-IT WOULD BE A GOOD IDEA TO BACK UP YOUR DATABASE FIRST BEFORE PROCEEDING WITH THE UPGRADE.
-
-You must apply one or more of these corrections before you can continue.
-
-- If you have written your own plugin with your own tables they should use the default prefix 'wkx_' to be portable.
-- If you customized the prefix, use the `cli-migrate-db-prefix.php` script to replace it with the default prefix 'wkx_'.
-- If you have installed another application in the same database, move the tables from WIKINDX, or the database objects from the other application, to its own database.
-- If you have other tables in the database for various reasons, please drop them or move them to another database.
-
-The official tables for version 6.4.6 were:
-
-wkx_bibtex_string, wkx_cache, wkx_category, wkx_collection, wkx_config,
-wkx_creator, wkx_custom, wkx_import_raw, wkx_keyword, wkx_language, wkx_news,
-wkx_plugin_localedescription, wkx_plugin_soundexplorer, wkx_plugin_wordprocessor,
-wkx_publisher, wkx_resource, wkx_resource_attachments, wkx_resource_category,
-wkx_resource_creator, wkx_resource_custom, wkx_resource_keyword,
-wkx_resource_language, wkx_resource_metadata, wkx_resource_misc, wkx_resource_page,
-wkx_resource_text, wkx_resource_timestamp, wkx_resource_url, wkx_resource_user_tags,
-wkx_resource_year, wkx_session, wkx_statistics_attachment_downloads, 
-wkx_statistics_resource_views, wkx_subcategory, wkx_tag, wkx_temp_storage,
-wkx_user_bibliography, wkx_user_bibliography_resource, wkx_user_groups,
-wkx_user_groups_users, wkx_user_keywordgroups, wkx_user_kg_keywords,
-wkx_user_kg_usergroups, wkx_user_register, wkx_user_tags, wkx_users, wkx_version
-
+- More attachment formats covered by search
+- Components update more stable
 
 ## Bug fixes
 
-- Fix appending of bibliographies to RTF exports in the word processor [#349].
+- Fixed a rare error (missing URL array) when adding/editing resources.
+- Replace some call to strstr by mb_strstr (UTF-8 support).
+- Set max_allowed_packet to 1073741824 (allow to store LONGTEXT type in one statement, MySQL).
+- Fix an error in paging ideas following Advanced Search when ideas are the only field searched on.
+- Matching with matchPrefix() and matchSuffix() was partly insensitive.
+- Prevent issues when a plugin is removed but not disabled safely by the admin.
+- Fix a crash on creation of resource_attachments table.
+- Fix a crash during a fresh install (error on table counting).
+- Fix a bug in search highlighting that remembered a previous search instead of removing it.
+- Fix a bug in resource view for the delete icon for a user's own resource if they are not the superadmin.
+- Fix bug #314 (warning if not enough creators available for creator grouping).
+
+## Feature enhancements
+
+- Add a switch in MyWikindx|Resources to toggle the display of certain statistics when viewing a single resource. The display of views index and popularity index greatly slows down the display of the resource so these can be turned off (the default on upgrade) and only number of views, number of downloads, and maturity index will be viewed. Popularity and view indices will appear in a later version in the Statistics menu.
+- Set the timezone of the db engine.
+- New plugin XpdfReader PdftoText: a second option to convert PDF attachments.
+- Support EPUB text extraction (attachments) [#355].
+- Support TXT text extraction (attachments) [#360].
+- Support (X)HTML text extraction (attachments) [#359].
+- Support MHT/HTML text extraction (attachments) [#357].
+- QUICKSEARCH now also searches on cached resource attachments.
+- Moved the functions of the importexportbib plugin to the core code (Under Resources menu, Resources|Basket menu, and Metadata menu).
+- Custom session garbage collector (see Admin|Configure|Users).
 
 ## Maintenance
 
-- Remove the db table prefix [#346].
-- Block the install if non WIKINDX tables are found [#348].
+- Align group_concat_max_len value with max_allowed_packet (MySQL).
+- Document MySQL/MariaDB settings.
+- Store the content of attachment cache files in the database [#352].
+- Add missing mime-types of parsable attachments.
+- Fix return_bytes for negative values (e.g. memory_limit) [#351].
+- curl PHP extension is mandatory now.
+- dom PHP extension is mandatory now.
+- zip PHP extension is mandatory now.
+- Keep the userId of users who have been logged in at least once.
+- Transfer registered users' baskets and bookmarks to separate tables – these are maintained permanently regardless of what happens with FEATURE ENHANCEMENT 10 above.
+- Be more reliable when a component is removed by hand [#373].
+- Bump component compatibility version of plugins to 11.
+
+## Security
+
+- Update PHPMailer (v6.4.1, CVE-2020-36326, a regression of CVE-2018-19296 object injection introduced in 6.1.8).
+- Prevent session fixing by using a custom session name.
+- Prevent session fixing by regenerating the session id before a major change of status.
+- Reduce cookie lifetime to 1 month.
+- Hide the value of WIKINDX_DB_PASSWORD in the debugtool.
+- Just in case while a user is logged on and is deleted by the superadmin, ensure their next action returns them to the logon prompt.
+- Update Adminer to version 4.8.1 (fix an XSS in doc_link + PHP 8.0 support).

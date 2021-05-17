@@ -392,7 +392,7 @@ class PUBMED
             $url = "https://www.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmax=" .
                 $this->maxResults . $modifier . "&term=";
             $url .= implode("+", $term_array);
-            $lines = file($url);
+            $lines = $this->queryurl2array($url);
             $ids = [];
             foreach ($lines as $line)
             {
@@ -505,10 +505,10 @@ class PUBMED
      */
     private function pubmed_fetch($id)
     {
-        $pubmed_file = file("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=$id");
+        $pubmed_file = $this->queryurl2array("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=$id");
         foreach ($pubmed_file as $line)
         {
-            if (mb_strpos($line, "Empty id list - nothing todo") !== FALSE)
+            if (mb_strpos($line, "Empty id list - nothing to do") !== FALSE)
             {
                 return [];
             }
@@ -526,7 +526,7 @@ class PUBMED
     private function pubmed_fetch_multiple($ids)
     {
         $idString = implode(',', $ids);
-        $pubmed_file = file("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=$idString");
+        $pubmed_file = $this->queryurl2array("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=$idString");
         if (count($ids) == 1)
         { // Only one result possible.
             return($pubmed_file);
@@ -720,5 +720,43 @@ class PUBMED
         $pString = $this->displayImport($error);
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSE::getInstance();
+    }
+    
+    /**
+     * Query an URL with GET method and transform it to an array
+     *
+     * Each line of the query response is a value of the array.
+     *
+     * @param string $url
+     *
+     * @return array
+     */
+    private function queryurl2array($url)
+    {
+        $ch = curl_init();
+        
+        curl_setopt($ch, CURLOPT_URL, $url);
+        
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_VERBOSE, FALSE);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 32);
+        
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        
+        $data = curl_exec($ch);
+        if ($data === FALSE) $data = "";
+        $data = preg_split("/\\R/u", $data);
+        
+        // PHP 8.0, LkpPo, 20201126
+        // The curl_close() function no longer has an effect
+        if (version_compare(PHP_VERSION, '8.0.0', '<'))
+        {
+            curl_close($ch);
+        }
+        
+        return $data;
     }
 }

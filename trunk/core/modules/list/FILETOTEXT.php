@@ -823,7 +823,15 @@ class FILETOTEXT
                         }
                         elseif ($cte == "8bit")
                         {
-                            // Raw data (do nothing)
+                            if ($charset != "utf8" && $charset != "utf-8" && $charset != "us-ascii")
+                            {
+                                $fileutf8 = iconv($charset, 'UTF-8//TRANSLIT', $file);
+                                if ($fileutf8 !== FALSE)
+                                {
+                                    $file = $fileutf8;
+                                    unset($fileutf8);
+                                }
+                            }
                         }
                         elseif ($cte == "7bit")
                         {
@@ -864,11 +872,15 @@ class FILETOTEXT
                             if (preg_match("/Content-Location:(.+)/ui", $headers, $matches) == 1)
                             {
                                 $location = trim($matches[1]);
+                                $location = preg_replace("/\(.+\)/u", "", $location); // Remove comments
+                                $location = trim($location);
                             }
                             $matches = [];
                             if (preg_match("/Content-Transfer-Encoding:(.+)/ui", $headers, $matches) == 1)
                             {
                                 $cte = mb_strtolower(trim($matches[1]));
+                                $cte = preg_replace("/\(.+\)/u", "", $cte); // Remove comments
+                                $cte = trim($cte);
                             }
                             $matches = [];
                             if (preg_match("/Content-Type:(.+)/ui", $headers, $matches) == 1)
@@ -883,8 +895,14 @@ class FILETOTEXT
                                     if (preg_match("/charset=(.+)/ui", $v[1], $matches) == 1)
                                     {
                                         $charset = mb_strtolower(trim($matches[1], " \"\n\r\t\v\0"));
+                                        $charset = preg_replace("/\(.+\)/u", "", $charset); // Remove comments
+                                        $charset = trim($charset);
                                     }
                                 }
+                                
+                                $mime = preg_replace("/\(.+\)/u", "", $mime); // Remove comments
+                                $mime = trim($mime);
+                                
                             }
                         }
                     }

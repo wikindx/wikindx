@@ -53,6 +53,47 @@ class FILETOTEXT
     /**
      * Extract every missing cached text of attachments
      */
+    public function checkCache2()
+    {
+        $db = FACTORY_DB::getInstance();
+        $vars = GLOBALS::getVars();
+        $session = FACTORY_SESSION::getInstance();
+        
+        // Don't launch a cache action when we are executing one 
+        $action = $vars['action'] ?? "";
+        $method = $vars['method'] ?? "";
+        if ($action == "attachments_ATTACHMENTS_CORE" && $method == "curlRefreshCache")
+        {
+            return;
+        }
+        
+        $db->limit(20, 0); // 20 * 100 ms imply a penality of 2 seconds
+        $db->formatConditions(["resourceattachmentsText" => 'IS NULL']);
+        $resultSet = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
+        while ($row = $db->fetchRow($resultSet))
+        {
+            $curlTarget = WIKINDX_URL_BASE . '/index.php' .
+            '?action=attachments_ATTACHMENTS_CORE' .
+            '&method=curlRefreshCache' .
+            '&filename=' . urlencode($row['resourceattachmentsHashFilename']);
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $curlTarget);
+            curl_setopt($ch, CURLOPT_VERBOSE, FALSE);
+            curl_setopt($ch, CURLOPT_HEADER, FALSE);
+            curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
+            curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 100); // 100 ms
+            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 100); // 100 ms
+            curl_exec($ch);
+        }
+    }
+
+    /**
+     * Extract every missing cached text of attachments
+     */
     public function checkCache()
     {
         $db = FACTORY_DB::getInstance();
@@ -143,10 +184,6 @@ class FILETOTEXT
         }
         
         list($nbFilesMissing, $nbFilesTotal) = $this->countMissingCacheAttachment();
-        $previousRemain = $session->getVar("cache_AttachmentsRemain");
-        $session->setVar("cache_AttachmentsRemain", $nbFilesMissing);
-        $done = $session->getVar("cache_AttachmentsDone") + ($previousRemain - $nbFilesMissing);
-        $session->setVar("cache_AttachmentsDone", $done);
         
         if ($nbFilesMissing > 0)
         {

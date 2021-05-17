@@ -34,10 +34,15 @@ class HOUSEKEEPING
         $this->cacheAttachments();
     }
     /**
-     * Check if any attachments need caching and provide a scrren to built the cache
+     * Check if any attachments need caching and provide a screen to built the cache
      */
     public function cacheAttachments()
     {
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "list", "FILETOTEXT.php"]));
+        $f2t = new FILETOTEXT();
+        $f2t->checkCache2();
+        return;
+        
         // superadmin logging on – caching requires the superadmin to click further
         if ($this->session->getVar("setup_UserId") != WIKINDX_SUPERADMIN_ID || $this->session->getVar("skipCachingAttachments", FALSE)) {
             return;
@@ -50,17 +55,11 @@ class HOUSEKEEPING
         list($nbMissingCacheFile, $nbFilesTotal) = $f2t->countMissingCacheAttachment();
         
         if ($nbMissingCacheFile > 0) {
-            $this->session->setVar("cache_AttachmentsRemain", $nbMissingCacheFile);
-            
             $messages = FACTORY_MESSAGES::getInstance();
             
-			if (!$doneCache = $this->session->getVar("cache_AttachmentsDone")) {
-				$doneCache = 0;
-				$this->session->setVar("cache_AttachmentsDone", 0);
-			}
             $pString = \HTML\p($messages->text("misc", "attachmentCache1"));
             $pString .= \HTML\p($messages->text("misc", "attachmentCache2", $nbMissingCacheFile));
-            $pString .= \HTML\p($messages->text("misc", "attachmentCache3", $doneCache));
+            $pString .= \HTML\p($messages->text("misc", "attachmentCache3", $nbFilesTotal - $nbMissingCacheFile));
             $pString .= \FORM\formHeader("list_FILETOTEXT_CORE");
             $pString .= \FORM\hidden("method", "checkCache");
             
@@ -70,10 +69,6 @@ class HOUSEKEEPING
             $pString .= \HTML\p(\HTML\a("skip", $messages->text("misc", "attachmentCache6"), htmlentities(WIKINDX_URL_BASE . "/index.php?action=attachments_ATTACHMENTS_CORE&method=skipCaching")));
             GLOBALS::addTplVar('content', $pString);
             FACTORY_CLOSENOMENU::getInstance(); // die
-        }
-        else {
-            $this->session->delVar("cache_AttachmentsRemain");
-            $this->session->delVar("cache_AttachmentsDone");
         }
     }
     /**

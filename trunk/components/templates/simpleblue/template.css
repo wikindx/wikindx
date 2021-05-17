@@ -483,6 +483,7 @@ h1 {
 .floatLeft { float:left; }
 .floatRight { float:right; }
 
+.widthauto { width:auto; }
 .width1percent { width:1%; }
 .width5percent { width:5%; }
 .width10percent { width:10%; }

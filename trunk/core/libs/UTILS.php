@@ -874,9 +874,16 @@ namespace UTILS
             }
             $string .= "</table>";
             
-            die("WIKINDX will not function correctly if various folders and files within them are not writeable for the web server user.
-            The following folders, shown with their current Unix permissions, should be made readable and writeable (along with their contents) for 
-            the web server user. The web server user can be the owner and/or the group of those folders. So you have to modify, the owner, the group and the permission bits according to the particular configuration of your web server, PHP and file transfer software. You may also be required to add the execution bit in certain cases. The same rights apply to files in these folders, but this script does not check them for performance reasons. See the chmod, web server and PHP manuals, and docs/INSTALL.txt for details.<p><p>r = readable; w = writable ; x = executable</p>" . $string);
+            die("<p>WIKINDX will not function correctly if various folders and files within them
+            are not writeable for the web server user. The following folders, shown with their current
+            Unix permissions, should be made readable and writeable (along with their contents) for
+            the web server user. The web server user can be the owner and/or the group of those folders.
+            So you have to modify, the owner, the group and the permission bits according to
+            the particular configuration of your web server, PHP and file transfer software.
+            You may also be required to add the execution bit in certain cases. The same rights apply to
+            files in these folders, but this script does not check them for performance reasons.
+            See the chmod, web server and PHP manuals, and docs/INSTALL.txt for details.</p>
+            <p>r = readable; w = writable ; x = executable</p>" . $string);
         }
     }
     

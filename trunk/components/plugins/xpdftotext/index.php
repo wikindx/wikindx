@@ -81,9 +81,46 @@ class xpdftotext_MODULE
         
         // Make sure the utilities are executable
         $bindir = implode(DIRECTORY_SEPARATOR, [__DIR__, "bin"]);
-        foreach (\FILE\fileInDirToArray($bindir) as $bin)
+        // Select a binary for the current OS
+        switch (\UTILS\OSName())
         {
-            @chmod(implode(DIRECTORY_SEPARATOR, [$bindir, $bin]), 0777);
+            case "windows":
+                $binpdftotext = "pdftotext-win.exe";
+                $binpdfinfo   = "pdfinfo-win.exe";
+            break;
+            case "mac":
+                $binpdftotext = "pdftotext-mac";
+                $binpdfinfo   = "pdfinfo-mac";
+            break;
+            default:
+                $binpdftotext = "pdftotext-lin";
+                $binpdfinfo   = "pdfinfo-lin";
+            break;
+        }
+        
+        foreach ([$binpdftotext, $binpdfinfo] as $bin)
+        {
+            $path = implode(DIRECTORY_SEPARATOR, [$bindir, $bin]);
+            if (!is_executable($path))
+            {
+                @chmod($path, 0777);
+                clearstatcache(TRUE, $path);
+            }
+        }
+        foreach ([$binpdftotext, $binpdfinfo] as $bin)
+        {
+            $path = implode(DIRECTORY_SEPARATOR, [$bindir, $bin]);
+            if (!is_executable($path))
+            {
+                die("
+                <p>Some binaries of XpdftoText plugin need the executable bit.
+                Please add it with chmod. The following commands should do the trick:</p>
+                <ul>
+                    <li>" . htmlspecialchars('chmod +x "' . realpath($binpdftotext) . '"') . "</li>
+                    <li>" . htmlspecialchars('chmod +x "' . realpath($binpdfinfo) . '"') . "</li>
+                </ul>
+                ");
+            }
         }
     }
     

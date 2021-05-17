@@ -647,7 +647,7 @@ class visualize_MODULE
                 'xScale' => 'text',
                 'yScale' => 'int',
                 'messagesArray' => FALSE,
-                'sql' => "SELECT SUM(`statisticsresourceviewsCount`) AS `count`, SUBSTRING(`statisticsresourceviewsMonth`, 1, 4) AS `year` FROM `statistics_resource_views` GROUP BY `year` ORDER BY `year`",
+                'sql' => "SELECT SUM(`monthCount`) AS `count`, SUBSTRING(`statisticsresourceviewsMonth`, 1, 4) AS `year` FROM (SELECT SUM(`statisticsresourceviewsCount`) AS `monthCount`, `statisticsresourceviewsMonth` FROM `statistics_resource_views` GROUP BY `statisticsresourceviewsMonth`) AS temp GROUP BY `year` ORDER BY `year`",
                 'countField' => 'year',
                 'labelField' => FALSE,
             ],

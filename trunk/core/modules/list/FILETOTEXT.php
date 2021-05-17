@@ -64,51 +64,21 @@ class FILETOTEXT
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "attachments", "ATTACHMENTS.php"]));
         $att = new ATTACHMENTS();
         
-        $mem = ini_get('memory_limit');
-        $maxExecTime = ini_get('max_execution_time');
-        ini_set('memory_limit', '-1'); // NB not always possible to set
-        ini_set('max_execution_time', '-1'); // NB not always possible to set
-        // Turn error display off so that errors from PdfToText don't get written to screen (still written to the cache files)
-        $errorDisplay = ini_get('display_errors');
-        ini_set('display_errors', FALSE);
-        if (array_key_exists('cacheCurl', $vars) && ($vars['cacheCurl'] == 'on'))
+        $maxExecTime = min(ini_get('max_execution_time'), 60);
+        if ($maxExecTime > 60)
         {
-            $session->setVar("cache_Curl", TRUE);
-            $curlExists = TRUE;
+            ini_set('max_execution_time', 60); // NB not always possible to set
         }
-        else
-        {
-            $session->delVar("cache_Curl");
-            $curlExists = FALSE;
-        }
+        
         // Attempting to avoid timeouts if max execution time cannot be set. This is done on a trial and error basis.
-        $memtmp = \FILE\return_bytes(ini_get('memory_limit'));
-        if ($memtmp == -1)
-        {
-            $maxCount = FALSE;
-            $maxSize = FALSE; // unlimited
-        }
-        elseif ($memtmp >= \FILE\return_bytes("129M"))
-        {
-            $maxCount = 30;
-            $maxSize = 30000000; // 30MB
-        }
-        elseif ($memtmp >= \FILE\return_bytes("65M"))
-        {
-            $maxCount = 20;
-            $maxSize = 15000000; // 15MB
-        }
-        else
-        {
-            $maxCount = 10;
-            $maxSize = 5000000; // 5MB
-        }
+        $maxCount = FALSE;
         $input = FALSE;
         if (array_key_exists('cacheLimit', $vars))
         {
             $input = trim($vars['cacheLimit']);
             if (is_numeric($input) && is_int($input + 0))
-            { // include cast to number
+            {
+                // include cast to number
                 $maxCount = $input;
                 $session->setVar("cache_Limit", $input);
             }
@@ -119,13 +89,9 @@ class FILETOTEXT
         }
         
         $count = 0;
-        $size = 0;
         
-        if ($curlExists)
-        {
-            $ch = [];
-            $mh = curl_multi_init();
-        }
+        $ch = [];
+        $mh = curl_multi_init();
         
         $db->formatConditions(["resourceattachmentsText" => 'IS NULL']);
         $resultSet = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
@@ -134,34 +100,19 @@ class FILETOTEXT
             $file = $row['resourceattachmentsHashFilename'];
             $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $file]);
             
-            if ($curlExists)
-            {
-                $curlTarget = WIKINDX_URL_BASE . '/index.php?' .
-                'action=attachments_ATTACHMENTS_CORE' .
-                '&method=curlRefreshCache' .
-                '&filename=' . urlencode($file);
-                $ch_x = curl_init($curlTarget);
-                $ch[$file] = $ch_x;
-                curl_setopt($ch_x, CURLOPT_RETURNTRANSFER, TRUE);
-                // Get the headers too
-                curl_setopt($ch_x, CURLOPT_HEADER, TRUE);
-                curl_setopt($ch_x, CURLOPT_TIMEOUT, ini_get('max_execution_time'));
-                curl_multi_add_handle($mh, $ch_x);
-            }
-            else
-            {
-                try
-                {
-                    $att->refreshCache($file, TRUE);
-                }
-                catch (Exception $e)
-                {
-                    // Nothing to do
-                }
-            }
+            $curlTarget = WIKINDX_URL_BASE . '/index.php?' .
+            'action=attachments_ATTACHMENTS_CORE' .
+            '&method=curlRefreshCache' .
+            '&filename=' . urlencode($file);
+            $ch_x = curl_init($curlTarget);
+            $ch[$file] = $ch_x;
+            curl_setopt($ch_x, CURLOPT_RETURNTRANSFER, TRUE);
+            // Get the headers too
+            curl_setopt($ch_x, CURLOPT_HEADER, TRUE);
+            curl_setopt($ch_x, CURLOPT_TIMEOUT, $maxExecTime - 2); // Keep 2 s to unstack curl contexts and display the form
+            curl_multi_add_handle($mh, $ch_x);
             
             ++$count;
-            $size += filesize($pathData);
             
             if ($maxCount)
             {
@@ -170,35 +121,25 @@ class FILETOTEXT
                     break;
                 }
             }
-            if ($maxSize)
-            {
-                if ($size >= $maxSize)
-                {
-                    break;
-                }
-            }
         }
         
-        if ($curlExists)
+        $running = NULL;
+        do
         {
-            $running = NULL;
-            do
-            {
-                curl_multi_exec($mh, $running);
-            } while ($running);
-            foreach ($ch as $ch_x)
-            {
-                curl_multi_remove_handle($mh, $ch_x);
+            curl_multi_exec($mh, $running);
+        } while ($running);
+        foreach ($ch as $ch_x)
+        {
+            curl_multi_remove_handle($mh, $ch_x);
 
-                if (version_compare(PHP_VERSION, '8.0.0', '<'))
-                {
-                    curl_close($ch_x);
-                }
-            }
             if (version_compare(PHP_VERSION, '8.0.0', '<'))
             {
-                curl_multi_close($mh);
+                curl_close($ch_x);
             }
+        }
+        if (version_compare(PHP_VERSION, '8.0.0', '<'))
+        {
+            curl_multi_close($mh);
         }
         
         list($nbFilesMissing, $nbFilesTotal) = $this->countMissingCacheAttachment();
@@ -206,9 +147,6 @@ class FILETOTEXT
         $session->setVar("cache_AttachmentsRemain", $nbFilesMissing);
         $done = $session->getVar("cache_AttachmentsDone") + ($previousRemain - $nbFilesMissing);
         $session->setVar("cache_AttachmentsDone", $done);
-        
-        ini_set('display_errors', $errorDisplay);
-        ini_set('max_execution_time', $maxExecTime);
         
         if ($nbFilesMissing > 0)
         {

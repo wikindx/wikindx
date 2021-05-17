@@ -85,39 +85,37 @@ class xpdftotext_MODULE
         switch (\UTILS\OSName())
         {
             case "windows":
-                $binpdftotext = "pdftotext-win.exe";
-                $binpdfinfo   = "pdfinfo-win.exe";
+                $pathpdftotext = implode(DIRECTORY_SEPARATOR, [$bindir, "pdftotext-win.exe"]);
+                $pathpdfinfo = implode(DIRECTORY_SEPARATOR, [$bindir, "pdfinfo-win.exe"]);
             break;
             case "mac":
-                $binpdftotext = "pdftotext-mac";
-                $binpdfinfo   = "pdfinfo-mac";
+                $pathpdftotext = implode(DIRECTORY_SEPARATOR, [$bindir, "pdftotext-mac"]);
+                $pathpdfinfo = implode(DIRECTORY_SEPARATOR, [$bindir, "pdfinfo-mac"]);
             break;
             default:
-                $binpdftotext = "pdftotext-lin";
-                $binpdfinfo   = "pdfinfo-lin";
+                $pathpdftotext = implode(DIRECTORY_SEPARATOR, [$bindir, "pdftotext-lin"]);
+                $pathpdfinfo = implode(DIRECTORY_SEPARATOR, [$bindir, "pdfinfo-lin"]);
             break;
         }
         
-        foreach ([$binpdftotext, $binpdfinfo] as $bin)
+        foreach ([$pathpdftotext, $pathpdfinfo] as $path)
         {
-            $path = implode(DIRECTORY_SEPARATOR, [$bindir, $bin]);
             if (!is_executable($path))
             {
                 @chmod($path, 0777);
                 clearstatcache(TRUE, $path);
             }
         }
-        foreach ([$binpdftotext, $binpdfinfo] as $bin)
+        foreach ([$pathpdftotext, $pathpdfinfo] as $path)
         {
-            $path = implode(DIRECTORY_SEPARATOR, [$bindir, $bin]);
             if (!is_executable($path))
             {
                 die("
                 <p>Some binaries of XpdftoText plugin need the executable bit.
                 Please add it with chmod. The following commands should do the trick:</p>
                 <ul>
-                    <li>" . htmlspecialchars('chmod +x "' . realpath($binpdftotext) . '"') . "</li>
-                    <li>" . htmlspecialchars('chmod +x "' . realpath($binpdfinfo) . '"') . "</li>
+                    <li>" . htmlspecialchars('chmod +x "' . realpath($pathpdftotext) . '"') . "</li>
+                    <li>" . htmlspecialchars('chmod +x "' . realpath($pathpdfinfo) . '"') . "</li>
                 </ul>
                 ");
             }

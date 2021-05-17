@@ -73,6 +73,19 @@ class BIBTEXPARSE
             debug_print_backtrace();
             die;
         }
+        
+        // Encode the file in UTF-8 if needed
+        $text = file_get_contents($file);
+        $fromenc = mb_detect_encoding($text, WIKINDX_CHARSET . ",ISO-8859-15,ISO-8859-1,ASCII");
+        if ($fromenc == "ISO-8859-1" || $fromenc == "ISO-8859-15")
+        {
+            $text = mb_convert_encoding($text, WIKINDX_CHARSET, $fromenc);
+            if ($text !== FALSE)
+            {
+                file_put_contents($file, $text);
+            }
+        }
+        
         $this->fid = fopen($file, 'r');
         $this->parseFile = TRUE;
     }

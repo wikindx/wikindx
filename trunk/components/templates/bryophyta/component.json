@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "bryophyta",
-    "component_version": "395",
+    "component_version": "492",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Bryophyta",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "21c519a8e504d3625484b35349ed167ca42562d711ffec3ba77de036cd93d200"
+    "component_sha256": "d09d8793bd80b898c00e6450f9553d79b00aa1d1968bdf6c6aa75e95528de6b4"
 }

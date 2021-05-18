@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "verticalorange",
-    "component_version": "395",
+    "component_version": "492",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Vertical Orange",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "e42a5e8fdefe98bdffdfc83097dd9f59ea0d7a63eda1a49c7b23abed8ade8b1e"
+    "component_sha256": "2901cd487710df502836fc82df4450b9cb33f80cb936629ccd1d581f12b61d7f"
 }

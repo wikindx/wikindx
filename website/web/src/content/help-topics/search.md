@@ -92,7 +92,7 @@ Following is a list of the major text-type document formats and their caching su
 The documents are analyzed according to their mime-type and then according to their extension if there is any ambiguity.
 
 The `plain/text` mime-type is a generic format that covers a multitude of files.
-As the search targets written documents, attachments with the following extension are excluded: CSV, TSV, SILK.
+As the search targets written documents, attachments with the following extension are excluded: CSV, TSV, SYLK.
 
 Then encoding is assumed to be __UTF-8 only__, unless the format specification says otherwise.
 

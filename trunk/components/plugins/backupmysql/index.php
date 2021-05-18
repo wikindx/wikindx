@@ -26,8 +26,8 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "s
 
 class backupmysql_MODULE
 {
-    // The dump directory is the cache dircetory of this plugin
-    const DUMP_DIRECTORY = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_CACHE_PLUGINS . DIRECTORY_SEPARATOR . "backupmysql";
+    // Cache directory of this plugin
+    const CACHE_DIRECTORY = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_CACHE_PLUGINS . DIRECTORY_SEPARATOR . "backupmysql";
 
     public $authorize;
     public $menus;
@@ -94,12 +94,12 @@ class backupmysql_MODULE
         {
             $pString = '';
         }
-        $pString .= HTML\tableStart('generalTable borderStyleSolid');
-        $pString .= HTML\trStart();
-        $td = FORM\formHeader("backupmysql_backup");
-        $td .= HTML\p(FORM\formSubmit($this->pluginmessages->text('heading')));
-        $td .= FORM\formEnd();
-        $pString .= HTML\td($td);
+        $pString .= \HTML\tableStart('generalTable borderStyleSolid');
+        $pString .= \HTML\trStart();
+        $td = \FORM\formHeader("backupmysql_backup");
+        $td .= \HTML\p(FORM\formSubmit($this->pluginmessages->text('heading')));
+        $td .= \FORM\formEnd();
+        $pString .= \HTML\td($td);
         $files = $this->listFiles();
         if (!empty($files))
         {
@@ -107,18 +107,18 @@ class backupmysql_MODULE
             $td = '';
             foreach ($files as $fileName => $tStamp)
             {
-                $td .= HTML\a("link", $fileName, "index.php?action=backupmysql_downloadFile" .
+                $td .= \HTML\a("link", $fileName, "index.php?action=backupmysql_downloadFile" .
                 htmlentities("&filename=" . $fileName), "_blank") . BR . LF;
             }
-            $pString .= HTML\td($td);
+            $pString .= \HTML\td($td);
         }
         if (!empty($files))
         {
-            $td = HTML\td($this->deleteList(array_keys($files)));
-            $pString .= HTML\td($td);
+            $td = \HTML\td($this->deleteList(array_keys($files)));
+            $pString .= \HTML\td($td);
         }
-        $pString .= HTML\trEnd();
-        $pString .= HTML\tableEnd();
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
         if (!empty($files))
         {
             $pString .= $this->renameInit($files);
@@ -130,7 +130,7 @@ class backupmysql_MODULE
      */
     public function downloadFile()
     {
-        $dirName = self::DUMP_DIRECTORY;
+        $dirName = self::CACHE_DIRECTORY;
         $filename = $this->vars['filename'];
         $filepath = $dirName . DIRECTORY_SEPARATOR . $filename;
         if (file_exists($filepath))
@@ -138,8 +138,8 @@ class backupmysql_MODULE
             $type = 'application/x-sql+gzip';
             $size = filesize($filepath);
             $lastmodified = date(DateTime::RFC1123, filemtime($filepath));
-            FILE\setHeaders($type, $size, $filename, $lastmodified);
-            FILE\readfile_chunked($filepath);
+            \FILE\setHeaders($type, $size, $filename, $lastmodified);
+            \FILE\readfile_chunked($filepath);
         }
         else
         {
@@ -207,7 +207,7 @@ class backupmysql_MODULE
 
             return;
         }
-        $oldFileName = self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $this->session->getVar('backupmysql_oldFileName') . '.sql.gz';
+        $oldFileName = self::CACHE_DIRECTORY . DIRECTORY_SEPARATOR . $this->session->getVar('backupmysql_oldFileName') . '.sql.gz';
         $this->session->delVar('backupmysql_oldFileName');
         // Sanitize filename
         $file = mb_ereg_replace("([^\\w\\s\\d\\-_~,;\\[\\]\\(\\).])", '', $this->vars['newFileName']);
@@ -218,16 +218,16 @@ class backupmysql_MODULE
 
             return;
         }
-        $newFileName = self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file . '.sql.gz';
+        $newFileName = self::CACHE_DIRECTORY . DIRECTORY_SEPARATOR . $file . '.sql.gz';
         if (!rename($oldFileName, $newFileName))
         {
-            $this->display(HTML\p($this->errors->text("file", "write", $newFileName)));
+            $this->display(\HTML\p($this->errors->text("file", "write", $newFileName)));
 
             return;
         }
         else
         {
-            $this->display(HTML\p($this->pluginmessages->text("renamed"), 'success'));
+            $this->display(\HTML\p($this->pluginmessages->text("renamed"), 'success'));
 
             return;
         }
@@ -245,9 +245,9 @@ class backupmysql_MODULE
         }
         foreach ($this->vars['files'] as $file)
         {
-            @unlink(self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file);
+            @unlink(self::CACHE_DIRECTORY . DIRECTORY_SEPARATOR . $file);
         }
-        $this->display(HTML\p($this->pluginmessages->text("deleted"), 'success'));
+        $this->display(\HTML\p($this->pluginmessages->text("deleted"), 'success'));
     }
     /**
      * backup the database
@@ -262,9 +262,9 @@ class backupmysql_MODULE
         ini_set('memory_limit', '-1');
         
         // Check the cache directory is writable
-        if (!is_writable(self::DUMP_DIRECTORY))
+        if (!is_writable(self::CACHE_DIRECTORY))
         {
-            $this->display(HTML\p($this->pluginmessages->text('noWrite', mb_substr(sprintf('%o', fileperms(self::DUMP_DIRECTORY)), -4)), 'error'));
+            $this->display(\HTML\p($this->pluginmessages->text('noWrite', mb_substr(sprintf('%o', fileperms(self::CACHE_DIRECTORY)), -4)), 'error'));
 
             return;
         }
@@ -284,7 +284,7 @@ class backupmysql_MODULE
         $backup_obj->comments = TRUE;
 
         //Directory on the server where the backup file will be placed. Used only if task parameter equals MSB_SAVE.
-        $backup_obj->backup_dir = self::DUMP_DIRECTORY;
+        $backup_obj->backup_dir = self::CACHE_DIRECTORY;
 
         //Default file name format.
         $backup_obj->fname_format = 'd_m_y__H_i_s';
@@ -300,11 +300,11 @@ class backupmysql_MODULE
 
         if (!$backup_obj->Execute($task, $filename, $use_gzip))
         {
-            $output = HTML\p($backup_obj->error, 'error');
+            $output = \HTML\p($backup_obj->error, 'error');
         }
         else
         {
-            $output = HTML\p('Operation Completed Successfully At: <strong>' . date('g:i:s A') . '</strong><em> ( Local Server Time )</em>', 'success');
+            $output = \HTML\p('Operation Completed Successfully At: <strong>' . date('g:i:s A') . '</strong><em> ( Local Server Time )</em>', 'success');
         }
         $this->display($output);
 
@@ -380,11 +380,11 @@ class backupmysql_MODULE
         {
             $fileArray[$file] = $file;
         }
-        $td = FORM\formHeader("backupmysql_delete");
-        $td .= FORM\selectFBoxValueMultiple(FALSE, 'files', $fileArray, 10) .
-            BR . HTML\span($this->coremessages->text("hint", "multiples"), 'hint');
-        $td .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Delete")));
-        $td .= FORM\formEnd();
+        $td = \FORM\formHeader("backupmysql_delete");
+        $td .= \FORM\selectFBoxValueMultiple(FALSE, 'files', $fileArray, 10) .
+            BR . \HTML\span($this->coremessages->text("hint", "multiples"), 'hint');
+        $td .= \HTML\p(\FORM\formSubmit($this->coremessages->text("submit", "Delete")));
+        $td .= \FORM\formEnd();
 
         return $td;
     }
@@ -397,9 +397,9 @@ class backupmysql_MODULE
     {
         $fileArray = [];
         
-        foreach (\FILE\fileInDirToArray(self::DUMP_DIRECTORY) as $file)
+        foreach (\FILE\fileInDirToArray(self::CACHE_DIRECTORY) as $file)
         {
-            $fileArray[$file] = filemtime(self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file);
+            $fileArray[$file] = filemtime(self::CACHE_DIRECTORY . DIRECTORY_SEPARATOR . $file);
         }
 
         asort($fileArray, SORT_NUMERIC);

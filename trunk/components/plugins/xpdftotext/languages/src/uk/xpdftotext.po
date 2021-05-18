@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: xpdftotext\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-04-22 05:33+0200\n"
+"POT-Creation-Date: 2021-05-18 03:12+0200\n"
 "PO-Revision-Date: 2021-04-22 05:33+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -24,4 +24,86 @@ msgstr ""
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:21
 msgid "XpdftoText tool"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:22
+msgid "Converted file"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:23
+msgid "Submission form"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:24
+msgid ""
+"This form allows you to submit a PDF file to the pdftotext tool to extract "
+"its text manually. It offers advanced options that are not available from the "
+"attachment caching feature. After a successful conversion a file containing "
+"the extracted text can be downloaded above this form."
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:25
+msgid "File"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:26
+msgid "First page to convert"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:27
+msgid "Last page to convert"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:28
+msgid "Mode"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:29
+msgid "Character pitch (in points)"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:30
+msgid "Line spacing (in points)"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:31
+msgid "Divert clipped text after covered content"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:32
+msgid "No diagonal text"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:33
+msgid "Don’t insert page breaks"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:34
+msgid "Margin left (in points)"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:35
+msgid "Margin right (in points)"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:36
+msgid "Margin top (in points)"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:37
+msgid "Margin bottom (in points)"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:38
+msgid "Owner password"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:39
+msgid "User password"
+msgstr ""
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:40
+msgid ""
+"Some binaries of XpdftoText plugin need the executable bit. Please add it "
+"with chmod. The following commands should do the trick:"
 msgstr ""

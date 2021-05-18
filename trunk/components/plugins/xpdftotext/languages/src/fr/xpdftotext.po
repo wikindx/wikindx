@@ -1,16 +1,20 @@
-# French translations for xpdftotext package.
-# Copyright (C) 2021 THE xpdftotext'S COPYRIGHT HOLDER
+# WIKINDX's Translation ressource: Français.
+# For copyright see the component.json file
 # This file is distributed under the same license as the xpdftotext package.
-# Automatically generated, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Stéphane Aulery <saulery@legtux.org>, 2021
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: xpdftotext\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-04-22 05:33+0200\n"
-"PO-Revision-Date: 2021-04-22 05:33+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"POT-Creation-Date: 2021-05-18 03:12+0200\n"
+"PO-Revision-Date: 2021-05-18 01:05+0000\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2021\n"
+"Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,8 +23,98 @@ msgstr ""
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:20
 msgid "XpdftoText"
-msgstr ""
+msgstr "XpdftoText"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:21
 msgid "XpdftoText tool"
+msgstr "Outils XpdftoText"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:22
+msgid "Converted file"
+msgstr "Fichier converti"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:23
+msgid "Submission form"
+msgstr "Formulaire de soumission"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:24
+msgid ""
+"This form allows you to submit a PDF file to the pdftotext tool to extract "
+"its text manually. It offers advanced options that are not available from the "
+"attachment caching feature. After a successful conversion a file containing "
+"the extracted text can be downloaded above this form."
 msgstr ""
+"Ce formulaire permet de soumettre un fichier PDF à l'outil pdftotext pour "
+"extraire son texte manuellement. Il offre des options avancées qui ne sont "
+"pas disponibles depuis la fonctionnalité de mise en cache des pièces jointes. "
+"Après une conversion réussie un fichier contenant le texte extrait est "
+"téléchargeable en dessus de ce formulaire."
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:25
+msgid "File"
+msgstr "Fichier"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:26
+msgid "First page to convert"
+msgstr "Première page convertie"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:27
+msgid "Last page to convert"
+msgstr "Dernière page convertie"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:28
+msgid "Mode"
+msgstr "Mode"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:29
+msgid "Character pitch (in points)"
+msgstr "Largeur des caractères"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:30
+msgid "Line spacing (in points)"
+msgstr "Espacement des lignes (en points)"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:31
+msgid "Divert clipped text after covered content"
+msgstr "Extraire le texte superposé avec le texte recouvert"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:32
+msgid "No diagonal text"
+msgstr "Ignorer le texte en diagonal"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:33
+msgid "Don’t insert page breaks"
+msgstr "Ne pas insérer de saut de ligne"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:34
+msgid "Margin left (in points)"
+msgstr "Marge gauche (en points)"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:35
+msgid "Margin right (in points)"
+msgstr "Marge droite (en points)"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:36
+msgid "Margin top (in points)"
+msgstr "Marge supérieure (en points)"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:37
+msgid "Margin bottom (in points)"
+msgstr "Marge inférieure (en points)"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:38
+msgid "Owner password"
+msgstr "Mot de passe du propriétaire"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:39
+msgid "User password"
+msgstr "Mot de passe de l'utilisateur"
+
+#: components/plugins/xpdftotext/xpdftotextmessages.php:40
+msgid ""
+"Some binaries of XpdftoText plugin need the executable bit. Please add it "
+"with chmod. The following commands should do the trick:"
+msgstr ""
+"Des fichiers binaires du plugin XpdftoText ont besoin d'être exécutables. "
+"Veuillez ajouter ce droit avec chmod. Les commandes suivantes devraient faire "
+"l'affaire :"

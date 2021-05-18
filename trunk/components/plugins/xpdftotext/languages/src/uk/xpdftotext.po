@@ -1,38 +1,45 @@
-# Ukrainian translations for xpdftotext package.
-# Copyright (C) 2021 THE xpdftotext'S COPYRIGHT HOLDER
+# WIKINDX's Translation ressource: Українська.
+# For copyright see the component.json file
 # This file is distributed under the same license as the xpdftotext package.
-# Automatically generated, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Yuri Chornoivan <yurchor@ukr.net>, 2021
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: xpdftotext\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2021-05-18 03:12+0200\n"
-"PO-Revision-Date: 2021-04-22 05:33+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-05-18 01:05+0000\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
+"Language-Team: Ukrainian (https://www.transifex.com/saulery/teams/103557/"
+"uk/)\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 "
+"> 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:20
 msgid "XpdftoText"
-msgstr ""
+msgstr "XpdftoText"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:21
 msgid "XpdftoText tool"
-msgstr ""
+msgstr "Засіб XpdftoText"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:22
 msgid "Converted file"
-msgstr ""
+msgstr "Перетворений файл"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:23
 msgid "Submission form"
-msgstr ""
+msgstr "Форма подання"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:24
 msgid ""
@@ -41,69 +48,77 @@ msgid ""
 "attachment caching feature. After a successful conversion a file containing "
 "the extracted text can be downloaded above this form."
 msgstr ""
+"За допомогою цієї форми ви можете подати файл PDF до засобу обробки pdftotext "
+"для видобування тексту вручну. Передбачено додаткові параметри, які "
+"недоступні у межах можливості кешування долучень. Після успішного "
+"перетворення над цією формою буде розміщено посилання на файл, у якому "
+"міститиметься видобутий текст."
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:25
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:26
 msgid "First page to convert"
-msgstr ""
+msgstr "Перша сторінка для перетворення"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:27
 msgid "Last page to convert"
-msgstr ""
+msgstr "Остання сторінка для перетворення"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:28
 msgid "Mode"
-msgstr ""
+msgstr "Режим"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:29
 msgid "Character pitch (in points)"
-msgstr ""
+msgstr "Розмір символів (у точках)"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:30
 msgid "Line spacing (in points)"
-msgstr ""
+msgstr "Інтервал між рядками (у точках)"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:31
 msgid "Divert clipped text after covered content"
-msgstr ""
+msgstr "Відкинути обрізаний текст після вибраних даних"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:32
 msgid "No diagonal text"
-msgstr ""
+msgstr "Без діагонального тексту"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:33
 msgid "Don’t insert page breaks"
-msgstr ""
+msgstr "Не вставляти розриви сторінок"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:34
 msgid "Margin left (in points)"
-msgstr ""
+msgstr "Ліве поле (у точках)"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:35
 msgid "Margin right (in points)"
-msgstr ""
+msgstr "Праве поле (у точках)"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:36
 msgid "Margin top (in points)"
-msgstr ""
+msgstr "Верхнє поле (у точках)"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:37
 msgid "Margin bottom (in points)"
-msgstr ""
+msgstr "Нижнє поле (у точках)"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:38
 msgid "Owner password"
-msgstr ""
+msgstr "Пароль власника"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:39
 msgid "User password"
-msgstr ""
+msgstr "Пароль користувача"
 
 #: components/plugins/xpdftotext/xpdftotextmessages.php:40
 msgid ""
 "Some binaries of XpdftoText plugin need the executable bit. Please add it "
 "with chmod. The following commands should do the trick:"
 msgstr ""
+"Для роботи деяких виконуваних файлів додатка XpdftoText слід встановити біт "
+"виконання. Будь ласка, додайте його за допомогою команди chmod. Досягти "
+"потрібного результату можна за допомогою таких команд:"

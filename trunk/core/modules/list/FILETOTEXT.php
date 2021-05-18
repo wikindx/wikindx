@@ -254,16 +254,10 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_TXT:
                 switch ($extension)
                 {
-                    case "csv":
-                    case "tsv":
-                    case "silk":
+                    // SYLK is a spreadsheet file format
+                    case "slk":
                         // Type not handled
                         $text = "";
-                    break;
-                    case "eml":
-                    case "mht":
-                    case "mhtml":
-                        $text = $this->readMht($filename);
                     break;
                     default:
                         $text = $this->readText($filename);

@@ -215,6 +215,7 @@ define('WIKINDX_CHARSET', 'UTF-8');
 // List of mime types used in the code base
 define('WIKINDX_MIMETYPE_ABW',     'application/x-abiword');
 define('WIKINDX_MIMETYPE_BIB',     'application/x-bibtex');
+define('WIKINDX_MIMETYPE_CSV',     'text/csv');
 define('WIKINDX_MIMETYPE_DOC',     'application/msword');
 define('WIKINDX_MIMETYPE_DOCM',    'application/vnd.ms-word.document.macroEnabled.12');
 define('WIKINDX_MIMETYPE_DOCX',    'application/vnd.openxmlformats-officedocument.wordprocessingml.document');

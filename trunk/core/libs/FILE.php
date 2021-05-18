@@ -1696,7 +1696,21 @@ namespace FILE
     function getMimeType($file)
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        return $finfo->file($file);
+        $mime = $finfo->file($file);
+        if ($mime == WIKINDX_MIMETYPE_TXT)
+        {
+            $extension = getExtension($file);
+            if (in_array($extension, ["eml", "mht", "mhtml"]))
+            {
+                $mime = WIKINDX_MIMETYPE_MHT_RFC;
+            }
+            elseif ($extension == "csv" || $extension == "tsv")
+            {
+                $mime = WIKINDX_MIMETYPE_CSV;
+            }
+        }
+        
+        return $mime;
     }
     /**
      * Return the extension of a file

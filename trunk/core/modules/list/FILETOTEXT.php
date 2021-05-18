@@ -67,7 +67,7 @@ class FILETOTEXT
             return;
         }
         
-        $db->limit(20, 0); // 20 * 100 ms imply a penality of 2 seconds
+        $db->limit(20, 0); // 20 * 100 ms implies a penality of 2 seconds
         $db->formatConditions(["resourceattachmentsText" => 'IS NULL']);
         $resultSet = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
         while ($row = $db->fetchRow($resultSet))

@@ -34,7 +34,7 @@ define('TAB', "\t");
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.4.8b');
+define('WIKINDX_PUBLIC_VERSION', '6.4.8');
 /**
  * WIKINDX internal version information
  *
@@ -112,7 +112,7 @@ define('WIKINDX_COPYRIGHT_YEAR', "2003-2021");
  *
  * @name WIKINDX_RELEASE_DATE
  */
-define('WIKINDX_RELEASE_DATE', "2021-05-17");
+define('WIKINDX_RELEASE_DATE', "2021-05-19");
 /**
  * WIKINDX release timestamp
  *

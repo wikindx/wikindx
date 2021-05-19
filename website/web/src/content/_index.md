@@ -30,7 +30,7 @@ Listed below are the core features available by default. Functionality can be ex
 ### User
 
 * 41 resource types.
-* Translations included for major languages (English, French, German, Spanish, Italian, Russian).
+* Translations included for major languages (English, French, German, Spanish, Italian, Russian, Ukrainian).
 * Multi-user mode – create and manage your own bibliographies drawn from the WIKINDX master bibliography and browse other users' bibliographies. (Must be enabled by the administrator.)
 * Create user groups and user group bibliographies. (Must be enabled by the administrator).
 * Save your own preferences.

@@ -58,7 +58,9 @@ class FILETOTEXT
         $db = FACTORY_DB::getInstance();
         $vars = GLOBALS::getVars();
         $session = FACTORY_SESSION::getInstance();
-        
+        $curl_version_infos = curl_version();
+        $curl_ms_timeout_available = version_compare($curl_version_infos["version"], '7.16.2', '>=');
+            
         // Don't launch a cache action when we are executing one 
         $action = $vars['action'] ?? "";
         $method = $vars['method'] ?? "";
@@ -67,7 +69,8 @@ class FILETOTEXT
             return;
         }
         
-        $db->limit(20, 0); // 20 * 100 ms implies a penality of 2 seconds
+        // 20 * 100 ms or 2 * 1 s implies a penality of 2 seconds
+        $db->limit($curl_ms_timeout_available ? 20 : 2, 0);
         $db->formatConditions(["resourceattachmentsText" => 'IS NULL']);
         $resultSet = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
         while ($row = $db->fetchRow($resultSet))
@@ -85,8 +88,19 @@ class FILETOTEXT
             curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, FALSE);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 100); // 100 ms
-            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 100); // 100 ms
+            if ($curl_ms_timeout_available)
+            {
+                // LkpPo(HACK): https://www.php.net/manual/fr/function.curl-setopt.php#104597
+                // For OSes that can't handle a timeout below 1 s, we disable signals to achieve queries in quasi async mode
+                curl_setopt($ch, CURLOPT_NOSIGNAL, TRUE);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 100); // 100 ms
+                curl_setopt($ch, CURLOPT_TIMEOUT_MS, 100); // 100 ms
+            }
+            else
+            {
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1); // 1 ms
+                curl_setopt($ch, CURLOPT_TIMEOUT, 1); // 1 ms
+            }
             curl_exec($ch);
         }
     }

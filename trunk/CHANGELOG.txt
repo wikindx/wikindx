@@ -25,7 +25,7 @@ BUG FIXES:
 8. Fix a crash during a fresh install (error on table counting).
 9. Fix a bug in search highlighting that remembered a previous search instead of removing it.
 10. Fix a bug in resource view for the delete icon for a user's own resource if they are not the superadmin.
-11. Fix bug #314 (warning if not enough creators available for creator grouping).
+11. Fix bug [#314] (warning if not enough creators available for creator grouping).
 12. Fix charset handling of BiBTeX import [#366].
 
 FEATURE ENHANCEMENTS:

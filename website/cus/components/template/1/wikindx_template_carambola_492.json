@@ -1,0 +1,40 @@
+{
+    "component_version": "492",
+    "component_sha256": "688b73d79d5a9cac3bbd4ed338824b00bc7ee445a86c060e172c29db76df03c6",
+    "component_description": "A colorful theme (horizontal menu)",
+    "component_name": "Carambola",
+    "component_licence": "ISC License",
+    "component_id": "carambola",
+    "component_builtin": "false",
+    "component_type": "template",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Rui Alão",
+            "author_role": "Developer",
+            "author_copyright": "2013",
+            "author_website": "https://ruialao.blogspot.com/"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2012-2013, 2016-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2012, 2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/template/1/wikindx_template_carambola_492.zip",
+            "package_sha256": "18838c9191b1899ac4388ed72737587a39434c90690c371d238479b34f48e8d1",
+            "package_size": 73723
+        }
+    ]
+}

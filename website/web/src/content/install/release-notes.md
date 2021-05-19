@@ -27,7 +27,8 @@ This allows:
 - Fix a crash during a fresh install (error on table counting).
 - Fix a bug in search highlighting that remembered a previous search instead of removing it.
 - Fix a bug in resource view for the delete icon for a user's own resource if they are not the superadmin.
-- Fix bug #314 (warning if not enough creators available for creator grouping).
+- Fix bug [#314] (warning if not enough creators available for creator grouping).
+- Fix charset handling of BiBTeX import [#366].
 
 ## Feature enhancements
 
@@ -56,6 +57,8 @@ This allows:
 - Transfer registered users' baskets and bookmarks to separate tables – these are maintained permanently regardless of what happens with FEATURE ENHANCEMENT 10 above.
 - Be more reliable when a component is removed by hand [#373].
 - Bump component compatibility version of plugins to 11.
+- Query PUBMED with curl [#364].
+- Improve mime-type detection of getMimeType() [#362].
 
 ## Security
 

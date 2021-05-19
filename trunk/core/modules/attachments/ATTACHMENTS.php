@@ -581,16 +581,6 @@ class ATTACHMENTS
     }
     
     /**
-     * Disables the generation of attachment cache files until the next SuperAmin connection
-     */
-    public function skipCaching()
-    {
-        $this->session->setVar("skipCachingAttachments", TRUE);
-        header("Location: " . WIKINDX_URL_BASE . "/index.php");
-        die();
-    }
-    
-    /**
      * Launch the update of one attachment cache file
      *
      * This function should only be called from an HTTP request that does not expect a return.

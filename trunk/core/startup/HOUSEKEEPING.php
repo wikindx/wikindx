@@ -40,36 +40,8 @@ class HOUSEKEEPING
     {
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "list", "FILETOTEXT.php"]));
         $f2t = new FILETOTEXT();
-        $f2t->checkCache2();
+        $f2t->checkCache();
         return;
-        
-        // superadmin logging on – caching requires the superadmin to click further
-        if ($this->session->getVar("setup_UserId") != WIKINDX_SUPERADMIN_ID || $this->session->getVar("skipCachingAttachments", FALSE)) {
-            return;
-        }
-        
-        $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "list", "FILETOTEXT.php"]));
-        $f2t = new FILETOTEXT();
-        list($nbMissingCacheFile, $nbFilesTotal) = $f2t->countMissingCacheAttachment();
-        
-        if ($nbMissingCacheFile > 0) {
-            $messages = FACTORY_MESSAGES::getInstance();
-            
-            $pString = \HTML\p($messages->text("misc", "attachmentCache1"));
-            $pString .= \HTML\p($messages->text("misc", "attachmentCache2", $nbMissingCacheFile));
-            $pString .= \HTML\p($messages->text("misc", "attachmentCache3", $nbFilesTotal - $nbMissingCacheFile));
-            $pString .= \FORM\formHeader("list_FILETOTEXT_CORE");
-            $pString .= \FORM\hidden("method", "checkCache");
-            
-            $value = $this->session->getVar("cache_Limit");
-            $pString .= \HTML\p($messages->text("misc", "attachmentCache5", \FORM\textInput(FALSE, "cacheLimit", $value, 3)));
-            $pString .= \HTML\p(\FORM\formSubmit($messages->text("submit", "Cache")) . \FORM\formEnd());
-            $pString .= \HTML\p(\HTML\a("skip", $messages->text("misc", "attachmentCache6"), htmlentities(WIKINDX_URL_BASE . "/index.php?action=attachments_ATTACHMENTS_CORE&method=skipCaching")));
-            GLOBALS::addTplVar('content', $pString);
-            FACTORY_CLOSENOMENU::getInstance(); // die
-        }
     }
     /**
      * Housekeeping: remove any rows in temp_storage older than 3 days

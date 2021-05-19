@@ -53,7 +53,7 @@ class FILETOTEXT
     /**
      * Extract every missing cached text of attachments
      */
-    public function checkCache2()
+    public function checkCache()
     {
         $db = FACTORY_DB::getInstance();
         $vars = GLOBALS::getVars();
@@ -84,8 +84,6 @@ class FILETOTEXT
             curl_setopt($ch, CURLOPT_URL, $curlTarget);
             curl_setopt($ch, CURLOPT_VERBOSE, FALSE);
             curl_setopt($ch, CURLOPT_HEADER, FALSE);
-            //curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
-            //curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, FALSE);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
             if ($curl_ms_timeout_available)
@@ -102,112 +100,6 @@ class FILETOTEXT
                 curl_setopt($ch, CURLOPT_TIMEOUT, 1); // 1 ms
             }
             curl_exec($ch);
-        }
-    }
-
-    /**
-     * Extract every missing cached text of attachments
-     */
-    public function checkCache()
-    {
-        $db = FACTORY_DB::getInstance();
-        $vars = GLOBALS::getVars();
-        $session = FACTORY_SESSION::getInstance();
-        
-        $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "attachments", "ATTACHMENTS.php"]));
-        $att = new ATTACHMENTS();
-        
-        $maxExecTime = min(ini_get('max_execution_time'), 60);
-        if ($maxExecTime > 60)
-        {
-            ini_set('max_execution_time', 60); // NB not always possible to set
-        }
-        
-        // Attempting to avoid timeouts if max execution time cannot be set. This is done on a trial and error basis.
-        $maxCount = FALSE;
-        $input = FALSE;
-        if (array_key_exists('cacheLimit', $vars))
-        {
-            $input = trim($vars['cacheLimit']);
-            if (is_numeric($input) && is_int($input + 0))
-            {
-                // include cast to number
-                $maxCount = $input;
-                $session->setVar("cache_Limit", $input);
-            }
-        }
-        if (!$input)
-        {
-            $session->delVar("cache_Limit");
-        }
-        
-        $count = 0;
-        
-        $ch = [];
-        $mh = curl_multi_init();
-        
-        $db->formatConditions(["resourceattachmentsText" => 'IS NULL']);
-        $resultSet = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
-        while ($row = $db->fetchRow($resultSet))
-        {
-            $file = $row['resourceattachmentsHashFilename'];
-            $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $file]);
-            
-            $curlTarget = WIKINDX_URL_BASE . '/index.php?' .
-            'action=attachments_ATTACHMENTS_CORE' .
-            '&method=curlRefreshCache' .
-            '&filename=' . urlencode($file);
-            $ch_x = curl_init($curlTarget);
-            $ch[$file] = $ch_x;
-            curl_setopt($ch_x, CURLOPT_RETURNTRANSFER, TRUE);
-            // Get the headers too
-            curl_setopt($ch_x, CURLOPT_HEADER, TRUE);
-            curl_setopt($ch_x, CURLOPT_TIMEOUT, $maxExecTime - 2); // Keep 2 s to unstack curl contexts and display the form
-            curl_multi_add_handle($mh, $ch_x);
-            
-            ++$count;
-            
-            if ($maxCount)
-            {
-                if ($count >= $maxCount)
-                {
-                    break;
-                }
-            }
-        }
-        
-        $running = NULL;
-        do
-        {
-            curl_multi_exec($mh, $running);
-        } while ($running);
-        foreach ($ch as $ch_x)
-        {
-            curl_multi_remove_handle($mh, $ch_x);
-
-            if (version_compare(PHP_VERSION, '8.0.0', '<'))
-            {
-                curl_close($ch_x);
-            }
-        }
-        if (version_compare(PHP_VERSION, '8.0.0', '<'))
-        {
-            curl_multi_close($mh);
-        }
-        
-        list($nbFilesMissing, $nbFilesTotal) = $this->countMissingCacheAttachment();
-        
-        if ($nbFilesMissing > 0)
-        {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "startup", "HOUSEKEEPING.php"]));
-            $hk = new HOUSEKEEPING(FALSE);
-        }
-        else
-        {
-            header("Location: index.php");
-            die();
         }
     }
 

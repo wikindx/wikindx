@@ -84,8 +84,8 @@ class FILETOTEXT
             curl_setopt($ch, CURLOPT_URL, $curlTarget);
             curl_setopt($ch, CURLOPT_VERBOSE, FALSE);
             curl_setopt($ch, CURLOPT_HEADER, FALSE);
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
-            curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE);
+            //curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
+            //curl_setopt($ch, CURLOPT_FORBID_REUSE, TRUE);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, FALSE);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
             if ($curl_ms_timeout_available)

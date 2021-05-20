@@ -18,6 +18,7 @@ MAINTENANCE:
 1. Better hints for the sitemap option.
 2. Set a higher limit to the RSS feed (50 resources displayed).
 3. Remove the custom style of RSS (use the global style now).
+4. Fix the type of the default SMTP port value.
 
 SECURITY
 ...

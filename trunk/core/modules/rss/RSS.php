@@ -30,8 +30,10 @@ class RSS
             header('HTTP/1.0 403 Forbidden');
             die("Access forbidden: this feature is disabled.");
         }
-
-        $baseURL = WIKINDX_URL_BASE;
+        
+        // The tag language of Atom use an hyphen
+        // cf. https://datatracker.ietf.org/doc/html/rfc3066
+        $lang = str_replace("_", "-", WIKINDX_LANGUAGE);
 
         // set up language
         $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
@@ -53,7 +55,7 @@ class RSS
         echo TAB . "<link>" . $this->escape_xml($baseURL) . "</link>" . LF;
         echo TAB . TAB . "<title>" . $this->escape_xml(WIKINDX_RSS_TITLE) . "</title>" . LF;
         echo TAB . TAB . "<description>" . $this->escape_xml(WIKINDX_RSS_DESCRIPTION) . "</description>" . LF;
-        echo TAB . TAB . "<language>" . $this->escape_xml(WIKINDX_LANGUAGE) . "</language>" . LF;
+        echo TAB . TAB . "<language>" . $this->escape_xml($lang) . "</language>" . LF;
 
         // Extract the date of the last updated resource or use the date of the current date
         // for the date of last build of the feed

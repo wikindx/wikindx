@@ -277,7 +277,6 @@ class MESSAGES
 				"rssAllow" => dgettext($domain, "Enable RSS"),
 				"rssDisplay" => dgettext($domain, "Display"),
 				"rssLanguage" => dgettext($domain, "Language"),
-				"rssBibstyle" => dgettext($domain, "Bibliographic style"),
 				"rssTitle" => dgettext($domain, "Title"),
 				"rssDescription" => dgettext($domain, "Description"),
 				"rssLimit" => dgettext($domain, "Display limit"),

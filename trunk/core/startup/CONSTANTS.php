@@ -534,7 +534,6 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configResourceUrlPrefix"         => ["constname" => "WIKINDX_RESOURCE_URL_PREFIX",           "type" => "configVarchar"],
     "configRestrictUserId"            => ["constname" => "WIKINDX_RESTRICT_USERID",               "type" => "configInt"],
     "configRssAllow"                  => ["constname" => "WIKINDX_RSS_ALLOW",                     "type" => "configBoolean"],
-    "configRssBibstyle"               => ["constname" => "WIKINDX_RSS_BIBSTYLE",                  "type" => "configVarchar"],
     "configRssDescription"            => ["constname" => "WIKINDX_RSS_DESCRIPTION",               "type" => "configVarchar"],
     "configRssDisplay"                => ["constname" => "WIKINDX_RSS_DISPLAY",                   "type" => "configBoolean"],
     "configRssLimit"                  => ["constname" => "WIKINDX_RSS_LIMIT",                     "type" => "configInt"],

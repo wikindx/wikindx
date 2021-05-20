@@ -34,7 +34,7 @@ class RSS
         // set up language
         $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
 
-        list($numResults, $item) = $this->queryDb($db, WIKINDX_RSS_LIMIT, WIKINDX_RSS_BIBSTYLE);
+        list($numResults, $item) = $this->queryDb($db, WIKINDX_RSS_LIMIT, WIKINDX_STYLE);
 
 
         /** declare RSS content type */

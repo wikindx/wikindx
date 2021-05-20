@@ -1100,18 +1100,15 @@ class CONFIGURE
         $input = array_key_exists("configRssDisplay", $this->formData) && ($this->formData['configRssDisplay']) ? "CHECKED" : WIKINDX_RSS_DISPLAY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "rssDisplay"), "configRssDisplay", $input) .
             BR . \HTML\span($hint, 'hint'));
-        // Display the global style but change the default selection of the list to the default style when no style is defined or a style not enabled is defined,
-        // this avoid a crash when this option is written without value selected.
-        $styles = \LOADSTYLE\loadDir();
-        array_key_exists("configRssBibstyle", $this->formData) ? $input = $this->formData["configRssBibstyle"] : $input = WIKINDX_STYLE_DEFAULT;
-        array_key_exists($input, $styles) ? $input = $input : $input = WIKINDX_STYLE_DEFAULT;
-        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
-            $this->messages->text("config", "rssBibstyle"),
-            "configRssBibstyle",
-            $styles,
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssLimit"));
+        array_key_exists("configRssLimit", $this->formData) ? $input = $this->formData["configRssLimit"] : $input = WIKINDX_RSS_LIMIT_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
+            $this->messages->text("config", "rssLimit"),
+            "configRssLimit",
             $input,
-            5
-        ));
+            10,
+            10
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');
@@ -1136,15 +1133,6 @@ class CONFIGURE
             50,
             255
         ));
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssLimit"));
-        array_key_exists("configRssLimit", $this->formData) ? $input = $this->formData["configRssLimit"] : $input = WIKINDX_RSS_LIMIT_DEFAULT;
-        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
-            $this->messages->text("config", "rssLimit"),
-            "configRssLimit",
-            $input,
-            10,
-            10
-        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -2000,7 +1988,6 @@ class CONFIGURE
             case 'rss': // RSS configuration
                 $array = [
                     "configRssAllow",
-                    "configRssBibstyle",
                     "configRssDescription",
                     "configRssDisplay",
                     "configRssLimit",
@@ -2252,7 +2239,7 @@ class CONFIGURE
             }
         }
         // Dependencies
-        $this->dependencies('configRssAllow', ['configRssBibstyle', 'configRssTitle', 'configRssDescription', 'configRssLimit']);
+        $this->dependencies('configRssAllow', ['configRssTitle', 'configRssDescription', 'configRssLimit']);
         $this->dependencies('configCmsAllow', ['configCmsBibstyle']);
         $this->dependencies('configCmsSql', ['configCmsDbUser', 'configCmsDbPassword']);
         $this->dependencies('configMailUse', ['configMailBackend']);

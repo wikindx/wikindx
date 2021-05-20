@@ -17,7 +17,7 @@
  *
  * Based upon work by Laure Endrizzi October 2005
  *
- * @package wikindx\core\modules\rss
+ * @package wikindx\core\modules\rss\rss
  */
 class RSS
 {
@@ -42,17 +42,19 @@ class RSS
 
 
         /** declare RSS content type */
-        header('Content-type: ' . WIKINDX_MIMETYPE_RSS . '; charset=' . WIKINDX_CHARSET);
+        //header('Content-type: ' . WIKINDX_MIMETYPE_RSS . '; charset=' . WIKINDX_CHARSET);
+        header('Content-type: ' . WIKINDX_MIMETYPE_XML_TEXT . '; charset=' . WIKINDX_CHARSET);
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: X-Requested-With");
 
         /** print the XML/RSS headers */
         echo '<?xml version="1.0" encoding="UTF-8" ?>' . LF;
-        echo '<rss version="2.0">' . LF;
+        echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' . LF;
 
         /** print channel data */
         echo TAB . "<channel>" . LF;
-        echo TAB . "<link>" . $this->escape_xml($baseURL) . "</link>" . LF;
+        echo TAB . TAB . "<link rel='self' type='" . WIKINDX_MIMETYPE_RSS . "' href='" . WIKINDX_URL_BASE . WIKINDX_RSS_PAGE . "' />" . LF;
+        echo TAB . TAB . "<link>" . $this->escape_xml(WIKINDX_URL_BASE) . "</link>" . LF;
         echo TAB . TAB . "<title>" . $this->escape_xml(WIKINDX_RSS_TITLE) . "</title>" . LF;
         echo TAB . TAB . "<description>" . $this->escape_xml(WIKINDX_RSS_DESCRIPTION) . "</description>" . LF;
         echo TAB . TAB . "<language>" . $this->escape_xml($lang) . "</language>" . LF;
@@ -65,9 +67,9 @@ class RSS
 
             for ($i = 0; $i < $numResults; $i++)
             {
-                if (mb_strlen($item['timestamp'][$i]) > 0)
+                if (mb_strlen($item['timestampUpdate'][$i]) > 0)
                 {
-                    $datetime2 = date_create($item['timestamp'][$i]);
+                    $datetime2 = date_create($item['timestampUpdate'][$i]);
                     if ($datetime2 > $DateMax)
                     {
                         $DateMax = $datetime2;
@@ -75,11 +77,11 @@ class RSS
                 }
             }
 
-            $channel['lastBuildDate'] = $DateMax->format(DateTime::RFC822);
+            $channel['lastBuildDate'] = $DateMax->format(DateTime::RSS);
         }
         else
         {
-            $channel['lastBuildDate'] = date(DateTime::RFC822);
+            $channel['lastBuildDate'] = date(DateTime::RSS);
         }
 
         echo TAB . TAB . "<lastBuildDate>" . $this->escape_xml($channel['lastBuildDate']) . "</lastBuildDate>" . LF;
@@ -100,20 +102,20 @@ class RSS
                     echo TAB . TAB . TAB . "<title>" . $this->escape_xml($item['title'][$i]) . "</title>" . LF;
                 }
 
-                if (mb_strlen($item['timestamp'][$i]) > 0)
+                if (mb_strlen($item['timestampUpdate'][$i]) > 0)
                 {
-                    echo TAB . TAB . TAB . "<pubDate>" . date(DateTime::RFC822, strtotime($item['timestamp'][$i])) . "</pubDate>" . LF;
+                    echo TAB . TAB . TAB . "<pubDate>" . date(DateTime::RSS, strtotime($item['timestampUpdate'][$i])) . "</pubDate>" . LF;
                 }
 
                 if (mb_strlen($item['link'][$i]) > 0)
                 {
                     if (WIKINDX_DENY_READONLY)
                     {
-                        $ItemUrl = $baseURL . "/?action=logout";
+                        $ItemUrl = WIKINDX_URL_BASE . "/?action=logout";
                     }
                     else
                     {
-                        $ItemUrl = $baseURL . "/?method=RSS&amp;action=resource_RESOURCEVIEW_CORE&amp;id=" . $item['link'][$i];
+                        $ItemUrl = WIKINDX_URL_BASE . "/?method=RSS&amp;action=resource_RESOURCEVIEW_CORE&amp;id=" . $item['link'][$i];
                     }
 
                     echo TAB . TAB . TAB . "<link>" . $ItemUrl . "</link>" . LF;
@@ -138,7 +140,7 @@ class RSS
             }
         }
 
-        echo TAB . TAB . "</channel>" . LF;
+        echo TAB . "</channel>" . LF;
         echo "</rss>" . LF;
 
         FACTORY_CLOSERAW::getInstance();
@@ -253,7 +255,9 @@ class RSS
             }
             $item['title'][$x] .= $list_results['resourceTitle'];
 
-            $item['timestamp'][$x] = $list_results['resourcetimestampTimestamp'];
+            $item['timestampUpdate'][$x] = $list_results['resourcetimestampTimestamp'];
+
+            $item['timestampCreate'][$x] = $list_results['resourcetimestampTimestampAdd'];
 
             list($item['addUser'][$x], $item['editUser'][$x]) =
                 $this->getUser($db, $list_results['resourcemiscAddUserIdResource'], $list_results['resourcemiscEditUserIdResource']);

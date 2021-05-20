@@ -42,8 +42,8 @@ class RSS
 
 
         /** declare RSS content type */
-        //header('Content-type: ' . WIKINDX_MIMETYPE_RSS . '; charset=' . WIKINDX_CHARSET);
-        header('Content-type: ' . WIKINDX_MIMETYPE_XML_TEXT . '; charset=' . WIKINDX_CHARSET);
+        header('Content-type: ' . WIKINDX_MIMETYPE_RSS . '; charset=' . WIKINDX_CHARSET);
+        //header('Content-type: ' . WIKINDX_MIMETYPE_XML_TEXT . '; charset=' . WIKINDX_CHARSET);
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: X-Requested-With");
 

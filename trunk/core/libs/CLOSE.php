@@ -97,6 +97,7 @@ class CLOSE
         }
         GLOBALS::addTplVar('rssTitle', WIKINDX_RSS_TITLE);
         GLOBALS::addTplVar('rssFeed', WIKINDX_URL_BASE . WIKINDX_RSS_PAGE);
+        GLOBALS::addTplVar('atomFeed', WIKINDX_URL_BASE . WIKINDX_ATOM_PAGE);
         
         // HEADERS
         GLOBALS::addTplVar('displayHeader', $displayHeader);
@@ -133,6 +134,7 @@ class CLOSE
         GLOBALS::addTplVar('wkx_link', WIKINDX_URL);
         GLOBALS::addTplVar('wkx_appname', 'WIKINDX');
         GLOBALS::addTplVar('wkx_mimetype_rss', WIKINDX_MIMETYPE_RSS);
+        GLOBALS::addTplVar('wkx_mimetype_atom', WIKINDX_MIMETYPE_ATOM);
         GLOBALS::addTplVar('impressum', WIKINDX_IMPRESSUM);
 
         // Get the time elapsed before template rendering

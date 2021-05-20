@@ -30,8 +30,10 @@
 	<link rel="stylesheet" href="{$tplPath}/../override.css?ver={$smarty.const.WIKINDX_PUBLIC_VERSION}" type="text/css">
 	<link rel="shortcut icon" type="image/png" href="{$tplPath}/images/favicon.png?ver={$smarty.const.WIKINDX_PUBLIC_VERSION}">
 
+    {* Displayed if the syndication is turned on in config. *}
 	{if $displayRss == true}
 	<link rel="alternate" type="{$wkx_mimetype_rss}" title="{$rssTitle}" href="{$rssFeed}">
+	<link rel="alternate" type="{$wkx_mimetype_atom}" title="{$rssTitle}" href="{$atomFeed}">
 	{/if}
 	
 	<!-- Required Javascript -->

@@ -214,6 +214,7 @@ define('WIKINDX_CHARSET', 'UTF-8');
 
 // List of mime types used in the code base
 define('WIKINDX_MIMETYPE_ABW',     'application/x-abiword');
+define('WIKINDX_MIMETYPE_ATOM',    'application/atom+xml');
 define('WIKINDX_MIMETYPE_BIB',     'application/x-bibtex');
 define('WIKINDX_MIMETYPE_CSV',     'text/csv');
 define('WIKINDX_MIMETYPE_DOC',     'application/msword');
@@ -405,8 +406,9 @@ define('WIKINDX_USER_PAGING_STYLE_DEFAULT', 'N');
 define('WIKINDX_USER_LANGUAGE_DEFAULT', 'auto');
 
 
-// RSS feed
-define('WIKINDX_RSS_PAGE', '/index.php?action=rss_RSS_CORE');
+// Syndication Feed (RSS/ATOM)
+define('WIKINDX_RSS_PAGE',  '/index.php?action=rss_RSS_CORE&amp;method=rss2_0');
+define('WIKINDX_ATOM_PAGE', '/index.php?action=rss_RSS_CORE&amp;method=atom1_0');
 
 
 // CMS API

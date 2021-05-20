@@ -11,49 +11,72 @@
 /**
  * RSS
  *
- * RSS feed
+ * Syndication feed (RSS 2.0/Atom 1.0)
  *
- * cf. https://validator.w3.org/feed/docs/rss2.html
- *
- * Based upon work by Laure Endrizzi October 2005
- *
- * @package wikindx\core\modules\rss\rss
+ * @package wikindx\core\modules\rss
  */
 class RSS
 {
-    // Constructor
-    public function init()
+    /**
+     * Constructor
+     */
+    public function __construct()
     {
-        $db = FACTORY_DB::getInstance();
+        // The syndication is disallowed on feature level (valid for all formats)
         if (WIKINDX_RSS_DISALLOW)
         {
             header('HTTP/1.0 403 Forbidden');
             die("Access forbidden: this feature is disabled.");
         }
+    }
+    
+    /**
+     * Default init method
+     *
+     * Catch the requests send by a client without a specific format or via an old URL
+     * Try to send a feed formatted with the best format accepted by the client
+     */
+    public function init()
+    {
+        $accept = $_SERVER["HTTP_ACCEPT"] ?? "";
+        if (stripos($accept, WIKINDX_MIMETYPE_ATOM) !== FALSE)
+            $this->atom1_0();
+        else
+            $this->rss2_0();
+    }
+    
+    /*
+     * Output the syndication feed in RSS 2.0 format
+     *
+     * cf. https://validator.w3.org/feed/docs/rss2.html
+     */
+    public function rss2_0()
+    {
+        $db = FACTORY_DB::getInstance();
         
-        // The tag language of Atom use an hyphen
+        // The tag language of RSS use an hyphen
         // cf. https://datatracker.ietf.org/doc/html/rfc3066
         $lang = str_replace("_", "-", WIKINDX_LANGUAGE);
 
-        // set up language
+        // setup the language
         $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
 
         list($numResults, $item) = $this->queryDb($db, WIKINDX_RSS_LIMIT, WIKINDX_STYLE);
 
-
         /** declare RSS content type */
         header('Content-type: ' . WIKINDX_MIMETYPE_RSS . '; charset=' . WIKINDX_CHARSET);
-        //header('Content-type: ' . WIKINDX_MIMETYPE_XML_TEXT . '; charset=' . WIKINDX_CHARSET);
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: X-Requested-With");
 
         /** print the XML/RSS headers */
-        echo '<?xml version="1.0" encoding="UTF-8" ?>' . LF;
+        echo '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>' . LF;
+        // xmlns:atom is a non standard extension recommended by the W3C RSS Validator <https://validator.w3.org/feed/>
         echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">' . LF;
 
         /** print channel data */
         echo TAB . "<channel>" . LF;
-        echo TAB . TAB . "<link rel='self' type='" . WIKINDX_MIMETYPE_RSS . "' href='" . WIKINDX_URL_BASE . WIKINDX_RSS_PAGE . "' />" . LF;
+        // <link rel='self' ... /> is a non standard extension recommended by the W3C RSS Validator <https://validator.w3.org/feed/>
+        echo TAB . TAB . "<link rel='self' type='" . WIKINDX_MIMETYPE_RSS . "' href='" . $this->escape_xml(WIKINDX_URL_BASE . ($_SERVER["REQUEST_URI"] ?? WIKINDX_RSS_PAGE)) . "' />" . LF;
         echo TAB . TAB . "<link>" . $this->escape_xml(WIKINDX_URL_BASE) . "</link>" . LF;
         echo TAB . TAB . "<title>" . $this->escape_xml(WIKINDX_RSS_TITLE) . "</title>" . LF;
         echo TAB . TAB . "<description>" . $this->escape_xml(WIKINDX_RSS_DESCRIPTION) . "</description>" . LF;
@@ -91,8 +114,8 @@ class RSS
             for ($i = 0; $i < $numResults; $i++)
             {
                 /**
-                 * loop thru the item array
-                 * print item data
+                 * loop through the array of resources
+                 * print resource data
                  */
                 $description = FALSE;
                 echo TAB . TAB . "<item>" . LF;
@@ -122,6 +145,7 @@ class RSS
                     echo TAB . TAB . TAB . "<guid isPermaLink=\"false\">" . $ItemUrl . "</guid>" . LF;
                 }
 
+                // NB: In RSS spec, the author MUST be an email and a name in parenthesis but we don't want to expose users emails
                 if (mb_strlen($item['editUser'][$i]) > 0)
                 {
                     echo TAB . TAB . TAB . "<author>" . $this->escape_xml($item['editUser'][$i]) . "</author>" . LF;
@@ -142,6 +166,133 @@ class RSS
 
         echo TAB . "</channel>" . LF;
         echo "</rss>" . LF;
+
+        FACTORY_CLOSERAW::getInstance();
+    }
+    
+    /*
+     * Output the syndication feed in Atom 1.0 format
+     *
+     * cf. https://datatracker.ietf.org/doc/html/rfc4287
+     */
+    public function atom1_0()
+    {
+        $db = FACTORY_DB::getInstance();
+        
+        // The tag language of Atom use an hyphen
+        // cf. https://datatracker.ietf.org/doc/html/rfc3066
+        $lang = str_replace("_", "-", WIKINDX_LANGUAGE);
+
+        // setup the language
+        $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
+
+        list($numResults, $item) = $this->queryDb($db, WIKINDX_RSS_LIMIT, WIKINDX_STYLE);
+
+        /** declare Atom content type */
+        header('Content-type: ' . WIKINDX_MIMETYPE_ATOM . '; charset=' . WIKINDX_CHARSET);
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: X-Requested-With");
+
+        /** print the XML/RSS headers */
+        echo '<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>' . LF;
+        echo '<feed xmlns="http://www.w3.org/2005/Atom">' . LF;
+
+        /** print feed metadata */
+        // The id is an artificial unique identifier (IRI) that MUST never change
+        echo TAB . "<id>" . $this->escape_xml(WIKINDX_URL_BASE) . "/general" . "</id>" . LF;
+        echo TAB . "<link rel='self' type='" . WIKINDX_MIMETYPE_ATOM . "' href='" . $this->escape_xml(WIKINDX_URL_BASE . ($_SERVER["REQUEST_URI"] ?? WIKINDX_ATOM_PAGE)) . "' />" . LF;
+        echo TAB . "<title type='text'>" . $this->escape_xml(WIKINDX_RSS_TITLE) . "</title>" . LF;
+        echo TAB . "<subtitle type='text'>" . $this->escape_xml(WIKINDX_RSS_DESCRIPTION) . "</subtitle>" . LF;
+        
+        // Extract the date of the last updated resource or use the date of the current date
+        // for the date of last build of the feed
+        if ($numResults > 0)
+        {
+            $DateMax = date_create('1854-12-08');
+
+            for ($i = 0; $i < $numResults; $i++)
+            {
+                if (mb_strlen($item['timestampUpdate'][$i]) > 0)
+                {
+                    $datetime2 = date_create($item['timestampUpdate'][$i]);
+                    if ($datetime2 > $DateMax)
+                    {
+                        $DateMax = $datetime2;
+                    }
+                }
+            }
+
+            $channel['lastBuildDate'] = $DateMax->format(DateTime::ATOM);
+        }
+        else
+        {
+            $channel['lastBuildDate'] = date(DateTime::ATOM);
+        }
+
+        echo TAB . "<updated>" . $this->escape_xml($channel['lastBuildDate']) . "</updated>" . LF;
+
+        if ($numResults > 0)
+        {
+            for ($i = 0; $i < $numResults; $i++)
+            {
+                /**
+                 * loop through the array of resources
+                 * print resource data
+                 */
+                $description = FALSE;
+                echo TAB . "<entry>" . LF;
+                
+
+                if (mb_strlen($item['title'][$i]) > 0)
+                {
+                    echo TAB . TAB . "<title type='html'>" . $this->escape_xml($item['title'][$i]) . "</title>" . LF;
+                }
+
+                if (mb_strlen($item['timestampUpdate'][$i]) > 0)
+                {
+                    echo TAB . TAB . "<updated>" . date(DateTime::ATOM, strtotime($item['timestampUpdate'][$i])) . "</updated>" . LF;
+                }
+
+                if (mb_strlen($item['timestampCreate'][$i]) > 0)
+                {
+                    echo TAB . TAB . "<published>" . date(DateTime::ATOM, strtotime($item['timestampCreate'][$i])) . "</published>" . LF;
+                }
+
+                if (mb_strlen($item['link'][$i]) > 0)
+                {
+                    if (WIKINDX_DENY_READONLY)
+                    {
+                        $ItemUrl = WIKINDX_URL_BASE . "/?action=logout";
+                    }
+                    else
+                    {
+                        $ItemUrl = WIKINDX_URL_BASE . "/?method=RSS&amp;action=resource_RESOURCEVIEW_CORE&amp;id=" . $item['link'][$i];
+                    }
+
+                    echo TAB . TAB . "<link rel='alternate' type='text/html' href='" . $ItemUrl . "' />" . LF;
+                    // The id is an artificial unique identifier (IRI) that MUST never change
+                    echo TAB . TAB . "<id>" . $this->escape_xml(WIKINDX_URL_BASE) . "/resource/" . $item['link'][$i] . "</id>" . LF;
+                }
+
+                if (mb_strlen($item['editUser'][$i]) > 0)
+                {
+                    echo TAB . TAB . "<author><name>" . $this->escape_xml($item['editUser'][$i]) . "</name></author>" . LF;
+                }
+                elseif (mb_strlen($item['addUser'][$i]) > 0)
+                {
+                    echo TAB . TAB . "<author><name>" . $this->escape_xml($item['addUser'][$i]) . "</name></author>" . LF;
+                }
+
+                if (mb_strlen($item['description'][$i]) > 0)
+                {
+                    echo TAB . TAB . "<content type='html' xml:lang='" . $lang . "'>" . $this->escape_xml($item['description'][$i]) . "</content>" . LF;
+                }
+
+                echo TAB . "</entry>" . LF;
+            }
+        }
+
+        echo "</feed>" . LF;
 
         FACTORY_CLOSERAW::getInstance();
     }

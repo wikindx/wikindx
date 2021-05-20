@@ -14,9 +14,10 @@
 	{/if}
 	{* $help is the help icon that is displayed if a help topic is available for the displayed page *}
 	<td><div class="helplink">{$help}</div></td>
-	{* Displayed if RSS turned on in config.php. Values are set in header.tpl *}
+	{* Displayed if the syndication is turned on in config. *}
 	{if $displayRss == true}
-	<td><div><a href="{$rssFeed}" title="Subscribe to RSS feed"><img src="{$tplPath}/images/rss.png" style="border:0;text-align:right;" alt="Subscribe to RSS feed"></a></div></td>
+	<td><div class="helplink"><a href="{$rssFeed}" title="Subscribe to RSS feed"><img src="{$tplPath}/images/rss.png" style="border:0;text-align:right;" alt="Subscribe to RSS feed"></a></div></td>
+	<td><div class="helplink"><a href="{$atomFeed}" title="Subscribe to Atom feed"><img src="{$tplPath}/images/atom.png" style="border:0;text-align:right;" alt="Subscribe to Atom feed"></a></div></td>
 	{/if}
 </tr>
 </tbody>

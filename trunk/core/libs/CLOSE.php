@@ -85,16 +85,19 @@ class CLOSE
         // Extract and fix url separator for HTML rendering
         GLOBALS::addTplVar('tplPath', $this->template->getUrl());
         GLOBALS::addTplVar('lang', \LOCALES\localetoBCP47(\LOCALES\determine_locale()));
-        if (defined('WIKINDX_RSS_ALLOW'))
-        {
-            GLOBALS::addTplVar('displayRss', WIKINDX_RSS_ALLOW);
-            GLOBALS::addTplVar('rssTitle', WIKINDX_RSS_TITLE);
-            GLOBALS::addTplVar('rssFeed', WIKINDX_URL_BASE . WIKINDX_RSS_PAGE);
-        }
-        else
+        
+        // RSS feed
+        if (!defined('WIKINDX_RSS_DISALLOW') || WIKINDX_RSS_DISALLOW)
         {
             GLOBALS::addTplVar('displayRss', FALSE);
         }
+        else
+        {
+            GLOBALS::addTplVar('displayRss', TRUE);
+        }
+        GLOBALS::addTplVar('rssTitle', WIKINDX_RSS_TITLE);
+        GLOBALS::addTplVar('rssFeed', WIKINDX_URL_BASE . WIKINDX_RSS_PAGE);
+        
         // HEADERS
         GLOBALS::addTplVar('displayHeader', $displayHeader);
 

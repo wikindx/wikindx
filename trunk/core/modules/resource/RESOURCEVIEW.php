@@ -616,7 +616,7 @@ class RESOURCEVIEW
         }
         GLOBALS::setTplVar('resourceSingle', $resourceSingle);
         unset($resourceSingle);
-        if (WIKINDX_GS_ALLOW)
+        if (!WIKINDX_GS_DISALLOW)
         {
             if ($gs = $this->gs->export($row, $this->bibStyle->coinsCreators))
             {

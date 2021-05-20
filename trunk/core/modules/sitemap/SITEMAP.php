@@ -30,7 +30,7 @@ class SITEMAP
     public function init()
     {
         $db = FACTORY_DB::getInstance();
-        if (!WIKINDX_SITEMAP_ALLOW)
+        if (WIKINDX_SITEMAP_DISALLOW)
         {
             header('HTTP/1.0 403 Forbidden');
             die("Access forbidden: this feature is disabled.");

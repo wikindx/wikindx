@@ -1092,9 +1092,9 @@ class CONFIGURE
         $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssAllow"));
-        $input = array_key_exists("configRssAllow", $this->formData) && ($this->formData['configRssAllow']) ? "CHECKED" : WIKINDX_RSS_ALLOW_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "rssAllow"), "configRssAllow", $input) .
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssDisallow"));
+        $input = array_key_exists("configRssDisallow", $this->formData) && ($this->formData['configRssDisallow']) ? "CHECKED" : WIKINDX_RSS_DISALLOW_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "rssDisallow"), "configRssDisallow", $input) .
             BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssDisplay"));
         $input = array_key_exists("configRssDisplay", $this->formData) && ($this->formData['configRssDisplay']) ? "CHECKED" : WIKINDX_RSS_DISPLAY_DEFAULT;
@@ -1207,9 +1207,9 @@ class CONFIGURE
         $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "gsAllow"));
-        $input = array_key_exists("configGsAllow", $this->formData) && ($this->formData['configGsAllow']) ? "CHECKED" : WIKINDX_GS_ALLOW_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "gsAllow"), "configGsAllow", $input) .
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "gsDisallow"));
+        $input = array_key_exists("configGsDisallow", $this->formData) && ($this->formData['configGsDisallow']) ? "CHECKED" : WIKINDX_GS_DISALLOW_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "gsDisallow"), "configGsDisallow", $input) .
             BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "gsAttachment"));
         $input = array_key_exists("configGsAttachment", $this->formData) && ($this->formData['configGsAttachment']) ? "CHECKED" : WIKINDX_GS_ATTACHMENT_DEFAULT;
@@ -1741,9 +1741,9 @@ class CONFIGURE
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "siteMapAllow"));
-        $input = array_key_exists("configSiteMapAllow", $this->formData) && ($this->formData['configSiteMapAllow']) ? "CHECKED" : WIKINDX_SITEMAP_ALLOW_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "siteMapAllow"), "configSiteMapAllow", $input) .
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "siteMapDisallow"));
+        $input = array_key_exists("configSiteMapDisallow", $this->formData) && ($this->formData['configSiteMapDisallow']) ? "CHECKED" : WIKINDX_SITEMAP_DISALLOW_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "siteMapDisallow"), "configSiteMapDisallow", $input) .
             BR . \HTML\span($hint, 'hint'));
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "browserTabID"));
@@ -1971,7 +1971,7 @@ class CONFIGURE
                 $array = [
                     "configMaxPaste",
                     "configRestrictUserId",
-                    "configSiteMapAllow",
+                    "configSiteMapDisallow",
                     "configResourceUrlPrefix",
                     "configBrowserTabID",
                     "configBibutilsPath",
@@ -1987,7 +1987,7 @@ class CONFIGURE
                 break;
             case 'rss': // RSS configuration
                 $array = [
-                    "configRssAllow",
+                    "configRssDisallow",
                     "configRssDescription",
                     "configRssDisplay",
                     "configRssLimit",
@@ -2007,7 +2007,7 @@ class CONFIGURE
                 break;
             case 'gs': // Google Scholar configuration
                 $array = [
-                    "configGsAllow",
+                    "configGsDisallow",
                     "configGsAttachment",
                 ];
 
@@ -2239,7 +2239,7 @@ class CONFIGURE
             }
         }
         // Dependencies
-        $this->dependencies('configRssAllow', ['configRssTitle', 'configRssDescription', 'configRssLimit']);
+        //$this->dependencies('configRssDisallow', ['configRssTitle', 'configRssDescription', 'configRssLimit']);
         $this->dependencies('configCmsAllow', ['configCmsBibstyle']);
         $this->dependencies('configCmsSql', ['configCmsDbUser', 'configCmsDbPassword']);
         $this->dependencies('configMailUse', ['configMailBackend']);

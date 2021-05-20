@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.9');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 64.0);
+define('WIKINDX_INTERNAL_VERSION', 65.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -475,8 +475,8 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configFileDeleteSeconds"         => ["constname" => "WIKINDX_FILE_DELETE_SECONDS",           "type" => "configInt"],
     "configFileViewLoggedOnOnly"      => ["constname" => "WIKINDX_FILE_VIEW_LOGGEDON_ONLY",       "type" => "configBoolean"],
     "configGlobalEdit"                => ["constname" => "WIKINDX_GLOBAL_EDIT",                   "type" => "configBoolean"],
-    "configGsAllow"                   => ["constname" => "WIKINDX_GS_ALLOW",                      "type" => "configBoolean"],
     "configGsAttachment"              => ["constname" => "WIKINDX_GS_ATTACHMENT",                 "type" => "configBoolean"],
+    "configGsDisallow"                => ["constname" => "WIKINDX_GS_DISALLOW",                   "type" => "configBoolean"],
     "configImgAllow"                  => ["constname" => "WIKINDX_IMG_ALLOW",                     "type" => "configBoolean"],
     "configImgHeightLimit"            => ["constname" => "WIKINDX_IMG_HEIGHT_LIMIT",              "type" => "configInt"],
     "configImgUploadMaxSize"          => ["constname" => "WIKINDX_IMG_UPLOAD_MAX_SIZE",           "type" => "configInt"],
@@ -533,8 +533,8 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configReadOnlyAccess"            => ["constname" => "WIKINDX_READ_ONLY_ACCESS",              "type" => "configBoolean"],
     "configResourceUrlPrefix"         => ["constname" => "WIKINDX_RESOURCE_URL_PREFIX",           "type" => "configVarchar"],
     "configRestrictUserId"            => ["constname" => "WIKINDX_RESTRICT_USERID",               "type" => "configInt"],
-    "configRssAllow"                  => ["constname" => "WIKINDX_RSS_ALLOW",                     "type" => "configBoolean"],
     "configRssDescription"            => ["constname" => "WIKINDX_RSS_DESCRIPTION",               "type" => "configVarchar"],
+    "configRssDisallow"               => ["constname" => "WIKINDX_RSS_DISALLOW",                  "type" => "configBoolean"],
     "configRssDisplay"                => ["constname" => "WIKINDX_RSS_DISPLAY",                   "type" => "configBoolean"],
     "configRssLimit"                  => ["constname" => "WIKINDX_RSS_LIMIT",                     "type" => "configInt"],
     "configRssTitle"                  => ["constname" => "WIKINDX_RSS_TITLE",                     "type" => "configVarchar"],
@@ -542,7 +542,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configSessionAuthMaxlifetime"    => ["constname" => "WIKINDX_SESSION_AUTH_MAXLIFETIME",      "type" => "configInt"],
     "configSessionGCLastExecTimestamp"=> ["constname" => "WIKINDX_SESSION_GC_LASTEXEC_TIMESTAMP", "type" => "configInt"],
     "configSessionNotAuthMaxlifetime" => ["constname" => "WIKINDX_SESSION_NOTAUTH_MAXLIFETIME",   "type" => "configInt"],
-    "configSiteMapAllow"              => ["constname" => "WIKINDX_SITEMAP_ALLOW",                 "type" => "configBoolean"],
+    "configSiteMapDisallow"           => ["constname" => "WIKINDX_SITEMAP_DISALLOW",              "type" => "configBoolean"],
     "configStatisticsCompiled"        => ["constname" => "WIKINDX_STATISTICS_COMPILED",           "type" => "configDatetime"],
     "configStringLimit"               => ["constname" => "WIKINDX_STRING_LIMIT",                  "type" => "configInt"],
     "configStyle"                     => ["constname" => "WIKINDX_STYLE",                         "type" => "configVarchar"],

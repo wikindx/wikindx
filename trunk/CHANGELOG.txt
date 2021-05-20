@@ -6,7 +6,7 @@ Focus: xxx
 
 
 BUG FIXES:
-...
+1. The default value configBrowserTabID option was wrong in the configuration screen.
 
 FEATURE ENHANCEMENTS:
 ...

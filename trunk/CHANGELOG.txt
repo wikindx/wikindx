@@ -7,6 +7,7 @@ Focus: xxx
 
 BUG FIXES:
 1. The default value configBrowserTabID option was wrong in the configuration screen.
+2. Restore the migration of config options of from 5.3.1 (this code should not change).
 
 FEATURE ENHANCEMENTS:
 1. Option to disable Google Scholar indexing (indexing is enabled by default now).

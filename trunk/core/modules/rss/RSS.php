@@ -13,6 +13,8 @@
  *
  * RSS feed
  *
+ * cf. https://validator.w3.org/feed/docs/rss2.html
+ *
  * Based upon work by Laure Endrizzi October 2005
  *
  * @package wikindx\core\modules\rss

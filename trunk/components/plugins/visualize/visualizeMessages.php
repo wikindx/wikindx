@@ -44,6 +44,9 @@ class visualizeMessages
             "scatterLine" => dgettext($domain, "Scatter plot with line"),
             "balloon" => dgettext($domain, "Balloon plot"),
             "visualize" => dgettext($domain, "Visualize"),
+            "order" => dgettext($domain, "Order"),
+            "oldestFirst" => dgettext($domain, "Oldest first"),
+            "latestFirst" => dgettext($domain, "Latest first"),
         ];
     }
 }

@@ -554,6 +554,11 @@ class visualize_MODULE
      */
     private function getXAxisMetadata()
     {
+        if (array_key_exists('order', $this->vars) && $this->vars['order']) {
+            $order = ' ' . $this->vars['order'];
+        } else {
+        	$order = '';
+        }
         return [
             'resourceyearYear1' => ['table' => 'resource_year',
                 'isNumeric' => TRUE,
@@ -635,7 +640,7 @@ class visualize_MODULE
                 'xScale' => 'text',
                 'yScale' => 'int',
                 'messagesArray' => FALSE,
-                'sql' => "SELECT SUM(`statisticsresourceviewsCount`) AS `count`, `statisticsresourceviewsMonth` FROM `statistics_resource_views` GROUP BY `statisticsresourceviewsMonth` ORDER BY `statisticsresourceviewsMonth`",
+                'sql' => "SELECT SUM(`statisticsresourceviewsCount`) AS `count`, `statisticsresourceviewsMonth` FROM `statistics_resource_views` GROUP BY `statisticsresourceviewsMonth` ORDER BY `statisticsresourceviewsMonth`$order",
                 'countField' => 'statisticsresourceviewsMonth',
                 'labelField' => FALSE,
             ],
@@ -647,7 +652,7 @@ class visualize_MODULE
                 'xScale' => 'text',
                 'yScale' => 'int',
                 'messagesArray' => FALSE,
-                'sql' => "SELECT SUM(`monthCount`) AS `count`, SUBSTRING(`statisticsresourceviewsMonth`, 1, 4) AS `year` FROM (SELECT SUM(`statisticsresourceviewsCount`) AS `monthCount`, `statisticsresourceviewsMonth` FROM `statistics_resource_views` GROUP BY `statisticsresourceviewsMonth`) AS temp GROUP BY `year` ORDER BY `year`",
+                'sql' => "SELECT SUM(`monthCount`) AS `count`, SUBSTRING(`statisticsresourceviewsMonth`, 1, 4) AS `year` FROM (SELECT SUM(`statisticsresourceviewsCount`) AS `monthCount`, `statisticsresourceviewsMonth` FROM `statistics_resource_views` GROUP BY `statisticsresourceviewsMonth`) AS temp GROUP BY `year` ORDER BY `year`$order",
                 'countField' => 'year',
                 'labelField' => FALSE,
             ],
@@ -719,19 +724,37 @@ class visualize_MODULE
             'resourceViewsMonths' => $this->pluginmessages->text('resourceViewsMonths'),
             'resourceViewsYears' => $this->pluginmessages->text('resourceViewsYears'),
         ];
+        $order = [
+            'ASC' => $this->pluginmessages->text('oldestFirst'),
+            'DESC' => $this->pluginmessages->text('latestFirst'),
+        ];
         reset($xAxisTypes);
+        reset($order);
         $firstKey = key($xAxisTypes);
-        $selected = $this->session->getVar("visualize_XAxis") ? $this->session->getVar("visualize_XAxis") : $firstKey;
-        if ($selected && !array_key_exists($selected, $xAxisTypes)) {
-        	$selected = $firstKey;
+        $selectedXAxis = $this->session->getVar("visualize_XAxis") ? $this->session->getVar("visualize_XAxis") : $firstKey;
+        if ($selectedXAxis && !array_key_exists($selectedXAxis, $xAxisTypes)) {
+        	$selectedXAxis = $firstKey;
+        }
+        $firstKey = key($order);
+        $selectedOrder = $this->session->getVar("visualize_Order") ? $this->session->getVar("visualize_Order") : $firstKey;
+        if ($selectedOrder && !array_key_exists($selectedOrder, $order)) {
+        	$selectedOrder = $firstKey;
         }
         return HTML\div("xAxis", FORM\selectedBoxValue(
             $this->pluginmessages->text("xAxis"),
             "xAxis",
             $xAxisTypes,
-            $selected,
+            $selectedXAxis,
             2
-        ));
+        	) . BR . BR . 
+        	FORM\selectedBoxValue(
+            $this->pluginmessages->text("order"),
+            "order",
+            $order,
+            $selectedOrder,
+            2
+        	)
+        );
     }
     /**
      * Validate input and store in session
@@ -740,6 +763,10 @@ class visualize_MODULE
      */
     private function validate()
     {
+        if (array_key_exists('order', $this->vars) && $this->vars['order'])
+        {
+            $this->session->setVar("visualize_Order", $this->vars['order']);
+        }
         if (array_key_exists('yAxis', $this->vars) && $this->vars['yAxis'])
         {
             $this->session->setVar("visualize_YAxis", $this->vars['yAxis']);

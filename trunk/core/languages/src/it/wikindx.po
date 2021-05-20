@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-05-19 22:09+0200\n"
+"POT-Creation-Date: 2021-05-20 14:35+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -5368,10 +5368,10 @@ msgstr ""
 
 #: core/messages/messages.php:820
 msgid ""
-"This is only required if you wish to run a Sitemap. Sitemaps are an easy way "
-"for webmasters to inform search engines about pages on their sites that are "
-"available for crawling. For details, see <a href='https://www.sitemaps."
-"org/'>sitemaps.org</a>."
+"This is only required if you wish to run a Sitemap. Sitemaps are essential "
+"for a good indexing of a website by search engines. WIKINDX indexes public "
+"resources and news in the sitemap. For details, see <a href='https://www."
+"sitemaps.org/'>sitemaps.org</a>."
 msgstr ""
 
 #: core/messages/messages.php:821
@@ -5383,10 +5383,10 @@ msgstr ""
 #: core/messages/messages.php:822
 msgid ""
 "This is only required if you wish to run a RSS news feed for the latest "
-"additions to your WIKINDX. See README_RSS. If you do do not check this, "
-"WIKINDX will block RSS access and will not display any RSS icon in the "
-"Firefox location bar. If checked, to allow RSS feed users to then click on "
-"the RSS link and access WIKINDX, you must also enable read only access"
+"additions to your WIKINDX. See README_RSS. If you do not check this, WIKINDX "
+"will block RSS access and will not display any RSS icon in the Firefox "
+"location bar. If checked, to allow RSS feed users to then click on the RSS "
+"link and access WIKINDX, you must also enable read only access"
 msgstr ""
 
 #: core/messages/messages.php:823
@@ -10118,9 +10118,6 @@ msgstr "Risorsa approvata con successo"
 #~ "$menus dovrebbe essere un raggruppamento di almeno uno dei seguenti "
 #~ "elementi di menu:"
 
-#~ msgid "Enabled Languages"
-#~ msgstr "Lingue Abilitate"
-
 #, fuzzy
 #~| msgid ""
 #~| "'admin' is only available when logged in as admin, 'text' will only show "
@@ -10135,3 +10132,6 @@ msgstr "Risorsa approvata con successo"
 #~ "amministratore, 'file' sarà visibile solamente se sono stati esportati "
 #~ "files, 'text' sarà visibile solamente se ci sono metadati (citazioni "
 #~ "ecc.), ed i tre alberi di menu 'pluginX' solamente se sono popolati."
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Lingue Abilitate"

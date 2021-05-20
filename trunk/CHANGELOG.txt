@@ -13,6 +13,7 @@ FEATURE ENHANCEMENTS:
 
 MAINTENANCE:
 1. Better hints for the sitemap option.
+2. Set a higher limit to the RSS feed (50 resources displayed).
 
 SECURITY
 ...

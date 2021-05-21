@@ -72,15 +72,20 @@ and WIKINDX limits its code to the
 |------------------|------|------|------
 |All versions      |   X  |   X  |   X
 
+The minimum version of the db engne is checked and you will be blocked if it is too low.
+In the case of a migration, if you really need to lower the minimum version,
+you can change the value of WIKINDX_MYSQL_VERSION_MIN and WIKINDX_MARIADB_VERSION_MIN constants.
+But be prepared to hack SQL code and replay the migration several times to avoid data and schema corruption ...
+
 
 ## PHP versions
 
 PHP support is tested for the core, components, and third party software
 included. For security purposes, we recommend the use of an
 [officially supported PHP version](https://www.php.net/supported-versions.php)
-from the PHP Team. mod_php, CGI, and and FastCGI are compliant with PHP and WIKINDX.
+from the PHP Team. mod_php, CGI, and FastCGI are compliant with PHP and WIKINDX.
 
-WIKINDX can support older versions to facilitate the migration
+WIKINDX can support older PHP versions to facilitate the migration
 of an installation but does not support a large number of PHP versions
 in its __trunk/head__ installation.
 
@@ -100,8 +105,13 @@ PHP version | Min WIKINDX Version | Max WIKINDX Version
 4.3         | 3.8.1               | ???
 
 PHP 8.0 is not recommended at this time because it has not been tested extensively.
-However, the major features work, sometimes with a few warinigs. If you try the experiment
-let us know the errors you encounter. 
+However, the major features work, sometimes with a few warnings. If you try the experiment
+let us know the errors you encounter. The maximum version of PHP is not controlled by the code.
+
+The minimum version of PHP is checked and you will be blocked if it is too low.
+In the case of a migration, if you really need to lower the minimum version,
+you can change the value of the constant WIKINDX_PHP_VERSION_MIN.
+But be prepared to hack code here and there to make it work ...
 
 
 ## PHP extensions

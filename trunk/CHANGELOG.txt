@@ -15,12 +15,14 @@ FEATURE ENHANCEMENTS:
 2. Option to disable the RSS Feed (the RSS Feed is enabled by default now).
 3. Option to disable the sitemap for search engines indexation (the sitemap is enabled by default now).
 4. Syndication Feed in Atom 1.0 and RSS 2.0 formats [#282].
+5. Better name and description of syndication options.
 
 MAINTENANCE:
 1. Better hints for the sitemap option.
 2. Set a higher limit to the RSS feed (50 resources displayed).
 3. Remove the custom style of RSS (use the global style now).
 4. Fix the type of the default SMTP port value.
+5. Rename option configRssDisplay to configRssDisplayEditedResources.
 
 SECURITY
 ...

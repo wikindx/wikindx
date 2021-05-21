@@ -52,16 +52,12 @@ class RSS
      */
     public function rss2_0()
     {
-        $db = FACTORY_DB::getInstance();
-        
+        $item = $this->queryDb();
+        $numResults = count($item);
+
         // The tag language of RSS use an hyphen
         // cf. https://datatracker.ietf.org/doc/html/rfc3066
         $lang = str_replace("_", "-", WIKINDX_LANGUAGE);
-
-        // setup the language
-        $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
-
-        list($numResults, $item) = $this->queryDb($db, WIKINDX_RSS_LIMIT, WIKINDX_STYLE);
 
         /** declare RSS content type */
         header('Content-type: ' . WIKINDX_MIMETYPE_RSS . '; charset=' . WIKINDX_CHARSET);
@@ -90,9 +86,9 @@ class RSS
 
             for ($i = 0; $i < $numResults; $i++)
             {
-                if (mb_strlen($item['timestampUpdate'][$i]) > 0)
+                if (mb_strlen($item['timestampEdit'][$i]) > 0)
                 {
-                    $datetime2 = date_create($item['timestampUpdate'][$i]);
+                    $datetime2 = date_create($item['timestampEdit'][$i]);
                     if ($datetime2 > $DateMax)
                     {
                         $DateMax = $datetime2;
@@ -125,9 +121,9 @@ class RSS
                     echo TAB . TAB . TAB . "<title>" . $this->escape_xml($item['title'][$i]) . "</title>" . LF;
                 }
 
-                if (mb_strlen($item['timestampUpdate'][$i]) > 0)
+                if (mb_strlen($item['timestampEdit'][$i]) > 0)
                 {
-                    echo TAB . TAB . TAB . "<pubDate>" . date(DateTime::RSS, strtotime($item['timestampUpdate'][$i])) . "</pubDate>" . LF;
+                    echo TAB . TAB . TAB . "<pubDate>" . date(DateTime::RSS, strtotime($item['timestampEdit'][$i])) . "</pubDate>" . LF;
                 }
 
                 if (mb_strlen($item['link'][$i]) > 0)
@@ -177,16 +173,12 @@ class RSS
      */
     public function atom1_0()
     {
-        $db = FACTORY_DB::getInstance();
-        
+        $item = $this->queryDb();
+        $numResults = count($item);
+
         // The tag language of Atom use an hyphen
         // cf. https://datatracker.ietf.org/doc/html/rfc3066
         $lang = str_replace("_", "-", WIKINDX_LANGUAGE);
-
-        // setup the language
-        $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
-
-        list($numResults, $item) = $this->queryDb($db, WIKINDX_RSS_LIMIT, WIKINDX_STYLE);
 
         /** declare Atom content type */
         header('Content-type: ' . WIKINDX_MIMETYPE_ATOM . '; charset=' . WIKINDX_CHARSET);
@@ -212,9 +204,9 @@ class RSS
 
             for ($i = 0; $i < $numResults; $i++)
             {
-                if (mb_strlen($item['timestampUpdate'][$i]) > 0)
+                if (mb_strlen($item['timestampEdit'][$i]) > 0)
                 {
-                    $datetime2 = date_create($item['timestampUpdate'][$i]);
+                    $datetime2 = date_create($item['timestampEdit'][$i]);
                     if ($datetime2 > $DateMax)
                     {
                         $DateMax = $datetime2;
@@ -248,14 +240,14 @@ class RSS
                     echo TAB . TAB . "<title type='html'>" . $this->escape_xml($item['title'][$i]) . "</title>" . LF;
                 }
 
-                if (mb_strlen($item['timestampUpdate'][$i]) > 0)
+                if (mb_strlen($item['timestampEdit'][$i]) > 0)
                 {
-                    echo TAB . TAB . "<updated>" . date(DateTime::ATOM, strtotime($item['timestampUpdate'][$i])) . "</updated>" . LF;
+                    echo TAB . TAB . "<updated>" . date(DateTime::ATOM, strtotime($item['timestampEdit'][$i])) . "</updated>" . LF;
                 }
 
-                if (mb_strlen($item['timestampCreate'][$i]) > 0)
+                if (mb_strlen($item['timestampAdd'][$i]) > 0)
                 {
-                    echo TAB . TAB . "<published>" . date(DateTime::ATOM, strtotime($item['timestampCreate'][$i])) . "</published>" . LF;
+                    echo TAB . TAB . "<published>" . date(DateTime::ATOM, strtotime($item['timestampAdd'][$i])) . "</published>" . LF;
                 }
 
                 if (mb_strlen($item['link'][$i]) > 0)
@@ -298,17 +290,17 @@ class RSS
     }
 
     /**
-     * Function to query the database and return formatted entries
+     * Function to query the database and return formatted resources
      *
-     * @param object $db
-     * @param int $WIKINDX_RSS_LIMIT
-     * @param string $bibstyle
-     * @param mixed $limit
-     *
-     * @return array ($numResults, $item)
+     * @return array
      */
-    private function queryDb($db, $limit, $bibstyle)
+    private function queryDb()
     {
+        $db = FACTORY_DB::getInstance();
+        $messages = FACTORY_MESSAGES::getInstance();
+        $session = FACTORY_SESSION::getInstance();
+        $bibStyle = FACTORY_BIBSTYLE::getInstance();
+        
         $listFields = ['resourceId', 'creatorSurname', 'resourceType', 'resourceTitle', 'resourceSubtitle', 'resourceShortTitle',
             'resourceTransTitle', 'resourceTransSubtitle', 'resourceTransShortTitle', 'resourceField1', 'resourceField2', 'resourceField3',
             'resourceField4', 'resourceField5', 'resourceField6', 'resourceField7', 'resourceField8', 'resourceField9', 'resourceNoSort',
@@ -321,19 +313,11 @@ class RSS
             'usersFullname', 'resourcemiscId', 'resourcemiscCollection', 'resourcemiscPublisher', 'resourcemiscField1', 'resourcemiscField2',
             'resourcemiscField3', 'resourcemiscField4', 'resourcemiscField5', 'resourcemiscField6', 'resourcemiscTag', 'resourcemiscMetadata', 'resourcemiscAddUserIdResource',
             'resourcemiscEditUserIdResource', 'resourcemiscMaturityIndex', 'resourcemiscPeerReviewed', 'resourcemiscQuarantine', ];
-        $messages = FACTORY_MESSAGES::getInstance();
-        $session = FACTORY_SESSION::getInstance();
-        $session->setVar("setup_Style", $bibstyle);
-        $bibStyle = FACTORY_BIBSTYLE::getInstance();
-        if (!WIKINDX_RSS_DISPLAY)
-        { // display only added resources
-            $db->formatConditions($db->formatFields('resourcetimestampTimestampAdd') .
-                $db->equal . $db->formatFields('resourcetimestampTimestamp'));
-        }
+        
         $db->ascDesc = $db->desc;
-        $db->limit($limit, 0);
+        $db->limit(WIKINDX_RSS_LIMIT, 0);
         $db->groupBy(['resourcetimestampId', 'resourcetimestampTimestamp']);
-        $db->orderBy('resourcetimestampTimestamp', TRUE, FALSE);
+        $db->orderBy(WIKINDX_RSS_DISPLAY_EDITED_RESOURCES ? 'resourcetimestampTimestamp' : 'resourcetimestampTimestampAdd', TRUE, FALSE);
         $subQuery = $db->subQuery($db->queryNoExecute($db->selectNoExecute(
             'resource_timestamp',
             [['resourcetimestampId' => 'rId']]
@@ -393,7 +377,6 @@ class RSS
         ));
 
 
-        $numResults = $db->numRows($resultSet);
         $x = 0;
         $item = [];
         while ($list_results = $db->fetchRow($resultSet))
@@ -406,9 +389,9 @@ class RSS
             }
             $item['title'][$x] .= $list_results['resourceTitle'];
 
-            $item['timestampUpdate'][$x] = $list_results['resourcetimestampTimestamp'];
+            $item['timestampEdit'][$x] = $list_results['resourcetimestampTimestamp'];
 
-            $item['timestampCreate'][$x] = $list_results['resourcetimestampTimestampAdd'];
+            $item['timestampAdd'][$x] = $list_results['resourcetimestampTimestampAdd'];
 
             list($item['addUser'][$x], $item['editUser'][$x]) =
                 $this->getUser($db, $list_results['resourcemiscAddUserIdResource'], $list_results['resourcemiscEditUserIdResource']);
@@ -419,7 +402,7 @@ class RSS
             $x++;
         }
 
-        return [$numResults, $item];
+        return $item;
     }
 
     /**

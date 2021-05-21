@@ -2367,6 +2367,16 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 66 (6.4.9)
+     *
+     * Rename option configRssDisplay to configRssDisplayEditedResources
+     */
+    private function upgradeTo66()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

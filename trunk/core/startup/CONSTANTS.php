@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.9');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 65.0);
+define('WIKINDX_INTERNAL_VERSION', 66.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -537,7 +537,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configRestrictUserId"            => ["constname" => "WIKINDX_RESTRICT_USERID",               "type" => "configInt"],
     "configRssDescription"            => ["constname" => "WIKINDX_RSS_DESCRIPTION",               "type" => "configVarchar"],
     "configRssDisallow"               => ["constname" => "WIKINDX_RSS_DISALLOW",                  "type" => "configBoolean"],
-    "configRssDisplay"                => ["constname" => "WIKINDX_RSS_DISPLAY",                   "type" => "configBoolean"],
+    "configRssDisplayEditedResources" => ["constname" => "WIKINDX_RSS_DISPLAY_EDITED_RESOURCES",  "type" => "configBoolean"],
     "configRssLimit"                  => ["constname" => "WIKINDX_RSS_LIMIT",                     "type" => "configInt"],
     "configRssTitle"                  => ["constname" => "WIKINDX_RSS_TITLE",                     "type" => "configVarchar"],
     "configSearchFilter"              => ["constname" => "WIKINDX_SEARCH_FILTER",                 "type" => "configText"],

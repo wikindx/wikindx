@@ -1096,9 +1096,9 @@ class CONFIGURE
         $input = array_key_exists("configRssDisallow", $this->formData) && ($this->formData['configRssDisallow']) ? "CHECKED" : WIKINDX_RSS_DISALLOW_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "rssDisallow"), "configRssDisallow", $input) .
             BR . \HTML\span($hint, 'hint'));
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssDisplay"));
-        $input = array_key_exists("configRssDisplay", $this->formData) && ($this->formData['configRssDisplay']) ? "CHECKED" : WIKINDX_RSS_DISPLAY_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "rssDisplay"), "configRssDisplay", $input) .
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssDisplayEditedResources"));
+        $input = array_key_exists("configRssDisplayEditedResources", $this->formData) && ($this->formData['configRssDisplayEditedResources']) ? "CHECKED" : WIKINDX_RSS_DISPLAY_EDITED_RESOURCES_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "rssDisplayEditedResources"), "configRssDisplayEditedResources", $input) .
             BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssLimit"));
         array_key_exists("configRssLimit", $this->formData) ? $input = $this->formData["configRssLimit"] : $input = WIKINDX_RSS_LIMIT_DEFAULT;
@@ -1989,7 +1989,7 @@ class CONFIGURE
                 $array = [
                     "configRssDisallow",
                     "configRssDescription",
-                    "configRssDisplay",
+                    "configRssDisplayEditedResources",
                     "configRssLimit",
                     "configRssTitle",
                 ];

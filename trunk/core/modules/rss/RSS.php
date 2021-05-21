@@ -40,9 +40,9 @@ class RSS
     {
         $accept = $_SERVER["HTTP_ACCEPT"] ?? "";
         if (stripos($accept, WIKINDX_MIMETYPE_ATOM) !== FALSE)
-            $this->atom1_0();
+            $this->atom10();
         else
-            $this->rss2_0();
+            $this->rss20();
     }
     
     /*
@@ -50,7 +50,7 @@ class RSS
      *
      * cf. https://validator.w3.org/feed/docs/rss2.html
      */
-    public function rss2_0()
+    public function rss20()
     {
         $item = $this->queryDb();
         $numResults = count($item);
@@ -171,7 +171,7 @@ class RSS
      *
      * cf. https://datatracker.ietf.org/doc/html/rfc4287
      */
-    public function atom1_0()
+    public function atom10()
     {
         $item = $this->queryDb();
         $numResults = count($item);

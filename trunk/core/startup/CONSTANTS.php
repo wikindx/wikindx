@@ -407,8 +407,8 @@ define('WIKINDX_USER_LANGUAGE_DEFAULT', 'auto');
 
 
 // Syndication Feed (RSS/ATOM)
-define('WIKINDX_RSS_PAGE',  '/index.php?action=rss_RSS_CORE&amp;method=rss2_0');
-define('WIKINDX_ATOM_PAGE', '/index.php?action=rss_RSS_CORE&amp;method=atom1_0');
+define('WIKINDX_RSS_PAGE',  '/index.php?action=rss_RSS_CORE&amp;method=rss20');
+define('WIKINDX_ATOM_PAGE', '/index.php?action=rss_RSS_CORE&amp;method=atom10');
 
 
 // CMS API

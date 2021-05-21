@@ -287,7 +287,7 @@ class MESSAGES
 				"cmsSql" => dgettext($domain, "Enable SQL queries"),
 				"cmsDbUser" => dgettext($domain, "Database username"),
 				"cmsDbPassword" => dgettext($domain, "Database password"),
-				"gsDisallow" => dgettext($domain, "Disable Google Scholar indexation"),
+				"gsDisallow" => dgettext($domain, "Disable Google Scholar indexing"),
 				"gsAttachment" => dgettext($domain, "Only attachments"),
 				"restrictUserId" => dgettext($domain, "Restricted user"),
 				"options" => dgettext($domain, "Configuration options"),

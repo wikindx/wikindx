@@ -70,16 +70,16 @@ to the chosen style and append the bibliography.
 |Format   |Import |Export | Note
 |---------|-------|-------|------
 |BiBTeX   | X     | X     |
-|COinS    |       | X     |
+|COinS    |       |       |
 |Copac    |       |       |
 |CSA      |       |       |
 |Endnote  | X     | X     |
 |HTML     |       | X     |
 |ISI      |       |       |
-|Medline  | X     |       |
-|MODS     | X     |       | With BibUtils
+|Medline  |       |       |
+|MODS     |       |       |
 |Ovid     |       |       |
-|PubMed   | X     |       |
+|PubMed   | X     |       | With BibUtils
 |Refer    |       |       |
 |RIS      |       | X     |
 |RTF      |       | X     |

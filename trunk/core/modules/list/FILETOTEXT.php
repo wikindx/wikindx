@@ -425,9 +425,20 @@ class FILETOTEXT
     
     
     /**
-     * readOdt
+     * readOdt, extract the text content of OpenDocument
      *
-     * cf. https://www.oasis-open.org/standards/#opendocumentv1.2
+     * All version of OpenDocument are supported with a single function
+     * because the specification has changed very little
+     * when we consider only its structure and text extraction. 
+     *
+     * Versions supported :
+     *
+     * - Open Document Format for Office Applications (OpenDocument) Specification v1.3
+     * - Open Document Format for Office Applications (OpenDocument) Specification v1.2
+     * - Open Document Format for Office Applications (OpenDocument) Specification v1.1
+     * - Open Document Format for Office Applications (OpenDocument) Specification v1.0
+     *
+     * cf OpenDocument in https://www.oasis-open.org/standards/
      *
      * @param string $filename
      *
@@ -435,66 +446,103 @@ class FILETOTEXT
      */
     private function readOdt($filename)
     {
-        $striped_content = "";
         $content = "";
         
-        // Extract the content file
+        // Open the container
         $za = new \ZipArchive();
         
+        // Like EPUB, ODT are packaged with OCF container,
+        // but since ODT also use fixed paths for XML files we open them directly
         if ($za->open($filename))
         {
-            $content = $za->getFromName("content.xml");
-            if ($content === FALSE) $content = "";
-        }
-        
-        // Extract the text part of the body and rudimentary formats major blocks with newlines
-        // We assume that the document is well formed and that the tags do not intersect
-        $pXML = new \XMLReader();
-        
-        if ($pXML->XML($content))
-        {
-            $bExtract = FALSE;
-            $bExtractElement = FALSE;
-            
-            while ($pXML->read())
+            // Extract metadata
+            $filedata = $za->getFromName("meta.xml");
+            if ($filedata !== FALSE)
             {
-                // Start extracting at the start of the text of the body
-                if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "office:text")
-                {
-                    $bExtract = TRUE;
-                }
-                // Stop extracting at the end of the text of the body
-                if ($pXML->nodeType == \XMLReader::END_ELEMENT && $pXML->name == "office:text")
-                {
-                    $bExtract = FALSE;
-                }
+                $pXML = new \XMLReader();
                 
-                // Start extracting at the start of the text of the body
-                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
+                if ($pXML->XML($filedata))
                 {
-                    $bExtractElement = TRUE;
-                }
-                // Stop extracting at the end of the text of the body
-                if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
-                {
-                    $bExtractElement = FALSE;
-                }
-                
-                // Extract all node and add new lines on blocks
-                if ($bExtract && $bExtractElement)
-                {
-                    $striped_content .= $pXML->value;
-                    if (in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
+                    while ($pXML->read())
                     {
-                        $striped_content .= LF.LF;
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["dc:title", "dc:subject", "dc:description", "meta:keyword", "meta:initial-creator", "meta:creation-date", "dc:creator", "dc:date"]))
+                        {
+                            $content .= $pXML->readInnerXml() . LF;
+                        }
                     }
                 }
+                
+                $content .= LF;
+                
+                unset($pXML);
+            }
+            
+            // Extract content
+            $filedata = $za->getFromName("content.xml");
+            if ($filedata !== FALSE)
+            {
+                // Extract the text part of the body and rudimentary formats major blocks with newlines
+                // We assume that the document is well formed and that the tags do not intersect
+                $pXML = new \XMLReader();
+                
+                if ($pXML->XML($filedata))
+                {
+                    $bExtract = FALSE;
+                    $bExtractElement = FALSE;
+                    
+                    while ($pXML->read())
+                    {
+                        // Start extracting at the start of the text of the body
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "office:text")
+                        {
+                            $bExtract = TRUE;
+                        }
+                        // Stop extracting at the end of the text of the body
+                        if ($pXML->nodeType == \XMLReader::END_ELEMENT && $pXML->name == "office:text")
+                        {
+                            $bExtract = FALSE;
+                        }
+                        
+                        // Transform spaces and tabs to spaces
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["text:s", "text:tab"]))
+                        {
+                            $content .= " ";
+                        }
+                        
+                        // Transform spaces and tabs to spaces
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["text:line-break"]))
+                        {
+                            $content .= LF;
+                        }
+                        
+                        // Start extracting at the start of the text of the body
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
+                        {
+                            $bExtractElement = TRUE;
+                        }
+                        // Stop extracting at the end of the text of the body
+                        if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
+                        {
+                            $bExtractElement = FALSE;
+                        }
+                        
+                        // Extract all node and add new lines on blocks
+                        if ($bExtract && $bExtractElement)
+                        {                            
+                            $content .= $pXML->value;
+                            if (in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
+                            {
+                                $content .= LF.LF;
+                            }
+                        }
+                    }
+                }
+                
+                unset($pXML);
             }
         }
         
-        unset($pXML);
-        
-        return $striped_content;
+        return $content;
     }
     
     

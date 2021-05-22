@@ -16,6 +16,7 @@ FEATURE ENHANCEMENTS:
 3. Option to disable the sitemap for search engines indexation (the sitemap is enabled by default now).
 4. Syndication Feed in Atom 1.0 and RSS 2.0 formats [#282].
 5. Better name and description of syndication options.
+6. Better parsing of ODT documents for attachment caching [#380].
 
 MAINTENANCE:
 1. Better hints for the sitemap option.

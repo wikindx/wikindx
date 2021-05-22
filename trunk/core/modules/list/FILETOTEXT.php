@@ -835,7 +835,7 @@ class FILETOTEXT
     {
         $content = "";
         
-        // Load an normalize the content
+        // Load and normalize the content
         $dom = new DOMDocument();
         libxml_use_internal_errors(true);
         $dom->loadHTMLFile($filename, LIBXML_NOWARNING | LIBXML_NOERROR);

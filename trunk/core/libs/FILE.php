@@ -1699,10 +1699,26 @@ namespace FILE
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($file);
         
+        // Is it an OCF container?
+        $za = new \ZipArchive();
+        $errcode = $za->open($file);
+        
+        // Like EPUB, ODT are packaged with OCF container,
+        // but since ODT also use fixed paths for XML files we open them directly
+        if ($errcode === TRUE)
+        {
+            // Extract mimetype
+            $mimetype = $za->getFromName("mimetype");
+            if ($filemime !== FALSE)
+            {
+                $mime = $mimetype;
+            }
+        }
+        
         if ($altfilename == "")
-            $extension = \FILE\getExtension($file);
+            $extension = getExtension($file);
         else
-            $extension = \FILE\getExtension($altfilename);
+            $extension = getExtension($altfilename);
         
         if ($mime == WIKINDX_MIMETYPE_TXT)
         {

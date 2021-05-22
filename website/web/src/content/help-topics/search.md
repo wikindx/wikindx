@@ -109,8 +109,8 @@ Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 |DOTM      |Word 2007-365 template+macro        |[application/vnd.ms-word.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.template.macroEnabled.12)
 |DOTX      |Word 2007-365 template              |[application/vnd.openxmlformats-officedocument.wordprocessingml.template](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.wordprocessingml.template)
 |EPUB      |Electronic publication              |[application/epub+zip](https://www.iana.org/assignments/media-types/application/epub+zip)
-|FODP      |ODF Presentation Flat               |
-|FODT      |ODF XML Text Document Flat          |
+|FODP      |ODF Presentation Flat               |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
+|FODT      |ODF XML Text Document Flat          |[application/vnd.oasis.opendocument.text](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text)
 |HTML, HTML|HyperText Markup Language           |[text/html](https://www.iana.org/assignments/media-types/text/html)
 |MHT, MHTML|Multipart HTML                      |[multipart/related](https://www.iana.org/assignments/media-types/multipart/related), multipart/alternative, multipart/x-mimearchive, multipart/mixed, message/rfc822
 |ODP       |ODF Presentation                    |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
@@ -119,6 +119,10 @@ Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 |OTT       |ODF Text Template                   |[application/vnd.oasis.opendocument.text-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text-template)
 |PDF       |Portable Document Format            |[application/pdf](https://www.iana.org/assignments/media-types/application/pdf)
 |RTF       |Rich Text Format 1.9.1              |[application/rtf](https://www.iana.org/assignments/media-types/application/rtf) or [text/rtf](https://www.iana.org/assignments/media-types/text/rtf)
+|STI       |OpenOffice.org 1.0 Presentation Template |application/vnd.sun.xml.impress.template
+|STW       |OpenOffice.org 1.0 Text Template    |application/vnd.sun.xml.writer.template
+|SXI       |OpenOffice.org 1.0 Presentation     |application/vnd.sun.xml.impress
+|SXW       |OpenOffice.org 1.0 Text Document    |application/vnd.sun.xml.writer
 |TXT, others|Plain text                         |text/plain
 |XHTML     |Extensible HyperText Markup Language|[application/xhtml+xml](https://www.iana.org/assignments/media-types/application/xhtml+xml)
 |XML       |Extensible Markup Language          |[application/xml](https://www.iana.org/assignments/media-types/application/xml) or [text/xml](https://www.iana.org/assignments/media-types/text/xml)
@@ -155,10 +159,6 @@ DRM protected ebooks and password protected documents are not supported.
 |SCD, SLA  |Scribus Document                    |[application/vnd.scribus](https://www.iana.org/assignments/media-types/application/vnd.scribus)
 |SDD       |StarOffice presentation             |
 |SDW       |StarOffice Document                 |
-|STI       |OpenOffice.org 1.0 Presentation Template |
-|STW       |OpenOffice.org 1.0 Text Template    |[application/vnd.oasis.opendocument.presentation-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation-template)
-|SXI       |OpenOffice.org 1.0 Presentation     |
-|SXW       |OpenOffice.org 1.0 Text Document    |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
 |TEI       |Text Encoding Initiative            |[application/tei+xml](https://www.iana.org/assignments/media-types/application/tei+xml)
 |TEX, LATEX|TeX, LaTeX                          |
 |TEXI      |TexInfo File                        |

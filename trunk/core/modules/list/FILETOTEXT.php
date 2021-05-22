@@ -145,6 +145,10 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_ODT:
             case WIKINDX_MIMETYPE_OTP:
             case WIKINDX_MIMETYPE_OTT:
+            case WIKINDX_MIMETYPE_STI:
+            case WIKINDX_MIMETYPE_SXI:
+            case WIKINDX_MIMETYPE_SXW:
+            case WIKINDX_MIMETYPE_STW:
                 $text = $this->readOpenDocument($filename);
             break;
             case WIKINDX_MIMETYPE_PDF:
@@ -530,9 +534,41 @@ class FILETOTEXT
                 $bExtract = FALSE;
                 $bExtractElement = FALSE;
                 
+                // OpenDocument v1.0
+                if (in_array($mimetype, [WIKINDX_MIMETYPE_STI, WIKINDX_MIMETYPE_STW, WIKINDX_MIMETYPE_SXI, WIKINDX_MIMETYPE_SXW]))
+                {
+                    $root_element = "office:body";
+                }
+                // OpenDocument Presentation v1.1, v1.2, and V1.3
+                elseif (in_array($mimetype, [WIKINDX_MIMETYPE_ODP, WIKINDX_MIMETYPE_OTP]))
+                {
+                    $root_element = "office:presentation";
+                }
+                // OpenDocument Document v1.1, v1.2, and V1.3
+                elseif (in_array($mimetype, [WIKINDX_MIMETYPE_ODT, WIKINDX_MIMETYPE_OTT]))
+                {
+                    $root_element = "office:text";
+                }
+                // Block the extraction if the mimetype is not supported
+                else
+                {
+                    $root_element = "office:zzz";
+                }
+                
                 while ($pXML->read())
                 {
                     // Start extracting at the start of the text of the body
+                    if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == $root_element)
+                    {
+                        $bExtract = TRUE;
+                    }
+                    // Stop extracting at the end of the text of the body
+                    if ($pXML->nodeType == \XMLReader::END_ELEMENT && $pXML->name == $root_element)
+                    {
+                        $bExtract = FALSE;
+                    }
+                    
+                    /*// Start extracting at the start of the text of the body
                     if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["office:presentation", "office:text"]))
                     {
                         $bExtract = TRUE;
@@ -541,7 +577,7 @@ class FILETOTEXT
                     if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["office:presentation", "office:text"]))
                     {
                         $bExtract = FALSE;
-                    }
+                    }*/
                     
                     // Transform spaces and tabs to spaces
                     if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["text:s", "text:tab"]))

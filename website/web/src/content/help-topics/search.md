@@ -157,8 +157,8 @@ DRM protected ebooks and password protected documents are not supported.
 |PPTX      |PowerPoint 2007-365                 |[application/vnd.openxmlformats-officedocument.presentationml.presentation](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.presentation)
 |PS, EPS, AI |PostScript                        |[application/postscript](https://www.iana.org/assignments/media-types/application/postscript)
 |SCD, SLA  |Scribus Document                    |[application/vnd.scribus](https://www.iana.org/assignments/media-types/application/vnd.scribus)
-|SDD       |StarOffice presentation             |
-|SDW       |StarOffice Document                 |
+|SDD       |StarOffice presentation             |application/vnd.stardivision.impress, application/x-starimpress
+|SDW       |StarOffice Document                 |application/vnd.stardivision.writer, application/x-starwriter
 |TEI       |Text Encoding Initiative            |[application/tei+xml](https://www.iana.org/assignments/media-types/application/tei+xml)
 |TEX, LATEX|TeX, LaTeX                          |
 |TEXI      |TexInfo File                        |

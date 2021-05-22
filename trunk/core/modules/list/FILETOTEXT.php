@@ -455,6 +455,7 @@ class FILETOTEXT
     private function readOpenDocument($filename)
     {
         $content = "";
+        $content = "";
         
         // Open the container
         $za = new \ZipArchive();
@@ -464,6 +465,9 @@ class FILETOTEXT
         // but since ODT also use fixed paths for XML files we open them directly
         if ($errcode === TRUE)
         {
+            // Extract mimetype
+            $mimetype = $za->getFromName("mimetype");
+            
             // Extract metadata
             $filedata = $za->getFromName("meta.xml");
             if ($filedata !== FALSE)

@@ -784,7 +784,7 @@ namespace FILE
             $success = TRUE;
             $zip = new \ZipArchive;
             
-            if ($zip->open($ComponentPackageFile))
+            if ($zip->open($ComponentPackageFile) === TRUE)
             {
                 // On macOS extractTo() doesn't work, so we emulate it
                 for ($k = 0; $k < $zip->numFiles; $k++)
@@ -1022,7 +1022,7 @@ namespace FILE
             $componentDef = [];
             $zip = new \ZipArchive;
             
-            if ($zip->open($ComponentPackageFile))
+            if ($zip->open($ComponentPackageFile) === TRUE)
             {
                 // Search for the component.json only in the root directory
                 for ($k = 0; $k < $zip->numFiles; $k++)

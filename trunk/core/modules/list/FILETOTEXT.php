@@ -359,7 +359,7 @@ class FILETOTEXT
             // Extract the content parts
             $za = new \ZipArchive();
             
-            if ($za->open($filename))
+            if ($za->open($filename) === TRUE)
             {
                 $content = $za->getFromName($f);
                 if ($content === FALSE) $content = "";
@@ -453,7 +453,7 @@ class FILETOTEXT
         
         // Like EPUB, ODT are packaged with OCF container,
         // but since ODT also use fixed paths for XML files we open them directly
-        if ($za->open($filename))
+        if ($za->open($filename) === TRUE)
         {
             // Extract metadata
             $filedata = $za->getFromName("meta.xml");
@@ -599,7 +599,7 @@ class FILETOTEXT
         // Open the container
         $za = new \ZipArchive();
         
-        if ($za->open($filename))
+        if ($za->open($filename) === TRUE)
         {
             $path_container = "META-INF/container.xml"; // Standard location of the top level entry file
             $file_container = $za->getFromName($path_container);

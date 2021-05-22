@@ -188,7 +188,9 @@ class FILETOTEXT
         
         // Clean up the text a bit to improve the search for exact strings
         
-        // Replace control, format and separator characters by a single space
+        // Replace by a single space:
+        // - Control and format characters (C)
+        // - Separator characters (Z)
         $text = preg_replace("/\p{C}|\p{Z}/u", " ", $text);
         // Replace series of spaces with a single space
         $text = preg_replace("/ {2,}/u", " ", $text);

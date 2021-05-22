@@ -10,6 +10,7 @@ BUG FIXES:
 2. Restore the migration of config options of from 5.3.1 (this code should not change).
 3. RSS language tag was not compliant with the spec when the country part is added.
 4. Don’t crash when opening a non Zip Archive.
+5. Fix the mimetype detection of attachments.
 
 FEATURE ENHANCEMENTS:
 1. Option to disable Google Scholar indexing (indexing is enabled by default now).

@@ -107,20 +107,16 @@ class FILETOTEXT
      * convertToText
      *
      * @param string $filename
-     * @param string $extension
+     * @param string $mimetype Default is "text/plain"
      *
      * @return string
      */
-    public function convertToText($filename, $extension = "")
+    public function convertToText($filename, $mimetype = "text/plain")
     {
-        // Retrieve the mime type and the extension of the original file
-        $mimeType = \FILE\getMimeType($filename);
-        if ($extension == "")
-        {
-            $extension = \FILE\getExtension($filename);
-        }
+        $extension = \FILE\getExtension($filename);
+        
         // Convert to text with a specific function by mimetype and return it
-        switch ($mimeType)
+        switch ($mimetype)
         {
             case WIKINDX_MIMETYPE_DOC:
                 $text = $this->readWord($filename);
@@ -786,7 +782,6 @@ class FILETOTEXT
                     {
                         // Extract only document files
                         $path = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "mht_" . \UTILS\uuid() . ".txt"]);
-                        $extension = \FILE\getExtension($path);
                         
                         // cf. https://tools.ietf.org/html/rfc2045#section-6
                         if ($cte == "quoted-printable")
@@ -821,7 +816,7 @@ class FILETOTEXT
                         if (file_put_contents($path, $file) !== FALSE)
                         {
                             // Go full circle!!!
-                            $text = $this->convertToText($path, $extension);
+                            $text = $this->convertToText($path, $mime);
                             $content .= $text . LF;
                             
                             @unlink($path);

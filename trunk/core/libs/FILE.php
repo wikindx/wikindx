@@ -510,7 +510,7 @@ namespace FILE
                     {
                         continue;
                     }
-                    $mimeType = getMimeType($fileArray['tmp_name'][$index]);
+                    $mimeType = getMimeType($fileArray['tmp_name'][$index], $fileName);
                     $array[] = [$fileName, sha1_file($fileArray['tmp_name'][$index]), $mimeType, $fileArray['size'][$index], $index];
                 }
 
@@ -530,7 +530,7 @@ namespace FILE
                 {
                     return [FALSE, FALSE, FALSE, FALSE];
                 }
-                $mimeType = getMimeType($_FILES['file']['tmp_name']);
+                $mimeType = getMimeType($_FILES['file']['tmp_name'], $fileName);
 
                 return [$fileName, sha1_file($_FILES['file']['tmp_name']),
                     $mimeType, $_FILES['file']['size'], ];
@@ -1690,16 +1690,22 @@ namespace FILE
      * Return the mime-type of a file
      *
      * @param string $file
+     * @param string $altfilename Default is ""
      *
      * @return string
      */
-    function getMimeType($file)
+    function getMimeType($file, $altfilename = "")
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($file);
+        
+        if ($altfilename == "")
+            $extension = \FILE\getExtension($file);
+        else
+            $extension = \FILE\getExtension($altfilename);
+        
         if ($mime == WIKINDX_MIMETYPE_TXT)
         {
-            $extension = getExtension($file);
             if (in_array($extension, ["eml", "mht", "mhtml"]))
             {
                 $mime = WIKINDX_MIMETYPE_MHT_RFC;
@@ -1709,7 +1715,17 @@ namespace FILE
                 $mime = WIKINDX_MIMETYPE_CSV;
             }
         }
-        
+        elseif ($mime == WIKINDX_MIMETYPE_XML_TEXT)
+        {
+            if ($extension == "fodt")
+            {
+                $mime = WIKINDX_MIMETYPE_ODT;
+            }
+            elseif ($extension == "fodp")
+            {
+                $mime = WIKINDX_MIMETYPE_ODP;
+            }
+        }
         return $mime;
     }
     /**

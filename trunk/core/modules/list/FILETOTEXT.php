@@ -141,9 +141,11 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_MHT_RFC:
                 $text = $this->readMht($filename);
             break;
+            case WIKINDX_MIMETYPE_ODP:
             case WIKINDX_MIMETYPE_ODT:
+            case WIKINDX_MIMETYPE_OTP:
             case WIKINDX_MIMETYPE_OTT:
-                $text = $this->readOdt($filename);
+                $text = $this->readOpenDocument($filename);
             break;
             case WIKINDX_MIMETYPE_PDF:
             case WIKINDX_MIMETYPE_XPDF:
@@ -421,7 +423,7 @@ class FILETOTEXT
     
     
     /**
-     * readOdt, extract the text content of OpenDocument
+     * readOpenDocument, extract the text content of OpenDocument
      *
      * All version of OpenDocument are supported with a single function
      * because the specification has changed very little
@@ -433,7 +435,12 @@ class FILETOTEXT
      * - Open Document Format for Office Applications (OpenDocument) Specification v1.2
      * - Open Document Format for Office Applications (OpenDocument) Specification v1.1
      * - Open Document Format for Office Applications (OpenDocument) Specification v1.0
-     * - Flat ODT (Open Document without container)
+     * - Flat Open Document (Open Document without container)
+     *
+     * Type supported:
+     *
+     * - Document
+     * - Presentation
      *
      * cf OpenDocument in https://www.oasis-open.org/standards/
      *
@@ -441,7 +448,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readOdt($filename)
+    private function readOpenDocument($filename)
     {
         $content = "";
         
@@ -495,12 +502,19 @@ class FILETOTEXT
             $dom->loadXML($filecontentdata, LIBXML_NOWARNING | LIBXML_NOERROR);
             
             $xsdpath = new DOMXPath($dom);
-            $ndlist = $xsdpath->query('//draw:frame');
             
-            foreach ($ndlist as $nd)
+            foreach([
+                "draw:image","draw:image-map",
+                "draw:object","draw:object-ole",
+                "draw:contour-path","draw:contour-polygon","draw:applet","draw:plugin",
+                "office:chart"
+            ] as $ndtpath)
             {
-                //echo $nd->nodeName . LF;
-                $nd->parentNode->removeChild($nd);
+                $ndlist = $xsdpath->query("//" . $ndtpath);
+                foreach ($ndlist as $nd)
+                {
+                    $nd->parentNode->removeChild($nd);
+                }
             }
             unset($xsdpath);
             
@@ -519,12 +533,12 @@ class FILETOTEXT
                 while ($pXML->read())
                 {
                     // Start extracting at the start of the text of the body
-                    if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "office:text")
+                    if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["office:presentation", "office:text"]))
                     {
                         $bExtract = TRUE;
                     }
                     // Stop extracting at the end of the text of the body
-                    if ($pXML->nodeType == \XMLReader::END_ELEMENT && $pXML->name == "office:text")
+                    if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["office:presentation", "office:text"]))
                     {
                         $bExtract = FALSE;
                     }

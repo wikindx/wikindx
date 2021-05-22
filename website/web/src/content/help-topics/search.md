@@ -109,10 +109,13 @@ Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 |DOTM      |Word 2007-365 template+macro        |[application/vnd.ms-word.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.template.macroEnabled.12)
 |DOTX      |Word 2007-365 template              |[application/vnd.openxmlformats-officedocument.wordprocessingml.template](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.wordprocessingml.template)
 |EPUB      |Electronic publication              |[application/epub+zip](https://www.iana.org/assignments/media-types/application/epub+zip)
+|FODP      |ODF Presentation Flat               |
 |FODT      |ODF XML Text Document Flat          |
 |HTML, HTML|HyperText Markup Language           |[text/html](https://www.iana.org/assignments/media-types/text/html)
 |MHT, MHTML|Multipart HTML                      |[multipart/related](https://www.iana.org/assignments/media-types/multipart/related), multipart/alternative, multipart/x-mimearchive, multipart/mixed, message/rfc822
+|ODP       |ODF Presentation                    |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
 |ODT       |ODF Text Document                   |[application/vnd.oasis.opendocument.text](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text)
+|OTP       |ODF Presentation Template           |[application/vnd.oasis.opendocument.presentation-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation-template)
 |OTT       |ODF Text Template                   |[application/vnd.oasis.opendocument.text-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text-template)
 |PDF       |Portable Document Format            |[application/pdf](https://www.iana.org/assignments/media-types/application/pdf)
 |RTF       |Rich Text Format 1.9.1              |[application/rtf](https://www.iana.org/assignments/media-types/application/rtf) or [text/rtf](https://www.iana.org/assignments/media-types/text/rtf)
@@ -132,7 +135,6 @@ DRM protected ebooks and password protected documents are not supported.
 |ABW, ZABW |AbiWord Document                    |application/x-abiword
 |CWK       |ClarisWorks/AppleWorks Document     |
 |FB2       |FictionBook 2.0                     |
-|FODP      |ODF Presentation Flat               |
 |HWP       |Hangul WP 97                        |
 |KWD       |KWord                               |[application/vnd.kde.kword](https://www.iana.org/assignments/media-types/application/vnd.kde.kword)
 |LRF       |BroadBand Ebook                     |
@@ -141,8 +143,6 @@ DRM protected ebooks and password protected documents are not supported.
 |MD        |Markdown                            |[text/markdown](https://www.iana.org/assignments/media-types/text/markdown)
 |MW, MCW   |MacWrite Document                   |
 |MWD       |Mariner Mac Write Classic           |
-|ODP       |ODF Presentation                    |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
-|OTP       |ODF Presentation Template           |[application/vnd.oasis.opendocument.presentation-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation-template)
 |PAGES     |Apple Pages                         |
 |PDB       |PalmDoc                             |
 |PDB       |Plucker eBook                       |

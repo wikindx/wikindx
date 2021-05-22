@@ -46,6 +46,7 @@ class ideagen_MODULE
     private $lastId = FALSE;
     private $formData = [];
     private $displayItem = FALSE;
+    private $gotFirst = FALSE;
 
     /**
      * Constructor
@@ -112,20 +113,240 @@ class ideagen_MODULE
      */
     public function init()
     {
-        return $this->display();
+        $pString = $this->display();
+        GLOBALS::addTplVar('content', $pString);
+        return; 
     }
     /**
      * display
      *
-     * @param mixed $message
+     * @param bool $again
+     * @return string
      */
-    public function display()
+    public function display($again = FALSE)
     {
         $pString = FORM\formHeader("ideagen_generate");
         $pString .= HTML\p($this->pluginmessages->text('description'));
-        $pString .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generate')));
+        $jScript = 'index.php?action=ideagen_ideagenOptions';
+    // Item 1
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'item1KWType',
+            'targetDiv' => 'item1KWs',
+        ];
+        $js = AJAX\jActionForm('onchange', $jsonArray);
+        $pString .= HTML\tableStart('generalTable borderStyleSolid');
+        $pString .= HTML\trStart();
+        $itemKWTypes = [
+            'item1ResourceKW' => $this->pluginmessages->text('itemResourceKW'),
+            'item1MetadataKW' => $this->pluginmessages->text('itemMetadataKW'),
+        	];
+        reset($itemKWTypes);
+        $selected = $this->session->getVar("ideagen_Item1KWType") ? $this->session->getVar("ideagen_Item1KWType") : key($itemKWTypes);
+        $td = FORM\selectedBoxValue(
+            $this->pluginmessages->text('item1'),
+            "item1KWType",
+            $itemKWTypes,
+            $selected,
+            2,
+            FALSE,
+            $js
+        	) . BR;
+        $td .= $this->itemKWs($selected, 'item1');
+        $pString .= HTML\td($td);
+        unset($jsonArray);
+    // Item 2
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'item2KWType',
+            'targetDiv' => 'item2KWs',
+        ];
+        $js = AJAX\jActionForm('onchange', $jsonArray);
+        $itemKWTypes = [
+            'item2ResourceKW' => $this->pluginmessages->text('itemResourceKW'),
+            'item2MetadataKW' => $this->pluginmessages->text('itemMetadataKW'),
+        	];
+        reset($itemKWTypes);
+        $selected = $this->session->getVar("ideagen_Item2KWType") ? $this->session->getVar("ideagen_Item2KWType") : key($itemKWTypes);
+        $td = FORM\selectedBoxValue(
+            $this->pluginmessages->text('item2'),
+            "item2KWType",
+            $itemKWTypes,
+            $selected,
+            2,
+            FALSE,
+            $js
+        	) . BR;
+        $td .= $this->itemKWs($selected, 'item2');
+        $pString .= HTML\td($td);
+        $pString .= HTML\trEnd();
+        $pString .= HTML\tableEnd();
+        if ($again) {
+	        $pString .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generateAgain')));
+    	} else {
+	        $pString .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generate')));
+	    }
         $pString .= FORM\formEnd();
-        GLOBALS::addTplVar('content', $pString);
+        return $pString;
+    }
+    /**
+     * ideagenOptions
+     * AJAX DIV handler
+     */
+    public function ideagenOptions()
+    {
+        if (($this->vars['ajaxReturn'] == 'item1ResourceKW') || ($this->vars['ajaxReturn'] == 'item1MetadataKW')) {
+        	$pString = $this->itemKWs($this->vars['ajaxReturn'], 'item1');
+        } else {
+        	$pString = $this->itemKWs($this->vars['ajaxReturn'], 'item2');
+        }
+        GLOBALS::addTplVar('content', AJAX\encode_jArray(['innerHTML' => $pString]));
+        FACTORY_CLOSERAW::getInstance();
+    }
+    /**
+     * Get keywords for item
+     *
+     * @param string $selected
+     * @param string $item
+     */
+    private function itemKWs($selected, $item)
+    {
+    	if ($item == 'item1') {
+    		$divTitle = 'item1KW';
+    		$selectTitle = 'item1KWs';
+    		if ($selected == 'item1ResourceKW') {
+	    		$session = 'ideagen_Item1ResourceKWs';
+	    	} else {
+	    		$session = 'ideagen_Item1MetadataKWs';
+	    	}
+    	} else {
+    		$divTitle = 'item2KW';
+    		$selectTitle = 'item2KWs';
+    		if ($selected == 'item2ResourceKW') {
+	    		$session = 'ideagen_Item2ResourceKWs';
+	    	} else {
+	    		$session = 'ideagen_Item2MetadataKWs';
+	    	}
+    	}
+	    $keywords[0] = $this->coremessages->text("misc", "ignore");
+        if (($selected == 'item1ResourceKW') || ($selected == 'item2ResourceKW')) {
+	        $rKeywords = $this->getKeywords();
+	        $keywords += $rKeywords;
+	    } else {
+	    	$mKeywords = $this->getKeywords(TRUE);
+	    	$keywords += $mKeywords;
+	    }
+	    $hint = \HTML\span(\HTML\aBrowse(
+			'green',
+			'',
+			$this->coremessages->text("hint", "hint"),
+			'#',
+			"",
+			$this->coremessages->text("hint", "multiples")), 'hint');
+        $select = unserialize($this->session->getVar($session));
+        if (($key = array_search(0, $select)) === 0) {
+    		unset($select[$key]);
+    	}
+        if (count($select)) {
+			return HTML\div($divTitle, FORM\selectedBoxValueMultiple(
+				FALSE,
+				$selectTitle,
+				$keywords,
+				$select,
+				10
+				) . BR . $hint
+			);
+        } else {
+        	return HTML\div($divTitle, FORM\selectFBoxValueMultiple(
+				FALSE,
+				$selectTitle,
+				$keywords,
+				10
+				) . BR . $hint
+			);
+        }
+    }
+    /**
+     * Get keywords
+     * Ensure the keyword lists represent viable metadata available to this user
+     *
+     * @param bool default FALSE. TRUE is metadata keywords
+     * @return array
+     */
+    private function getKeywords($meta = FALSE) 
+    {
+		$keywords = [];
+		$this->setPrivateConditions();
+		$this->db->leftJoin('resource_keyword', 'resourcekeywordKeywordId', 'keywordId');
+		if (!$meta) { // Resource keywords
+			$this->db->formatConditions(['resourcemetadataType' => 'i'], TRUE); // not ideas which are independent of resources
+			$this->db->leftJoin('resource_metadata', 'resourcemetadataResourceId', 'resourcekeywordResourceId');
+		} else { // Metadata keywords
+			$this->db->formatConditions(['resourcekeywordMetadataId' => 'IS NOT NULL'], TRUE); // not ideas which are independent of resources
+			$this->db->leftJoin('resource_metadata', 'resourcemetadataMetadataId', 'resourcekeywordMetadataId');
+		}
+		$this->db->orderBy('keywordKeyword');
+		$resultSet = $this->db->select('keyword', ['keywordId', 'keywordKeyword'], TRUE);
+		while ($row = $this->db->fetchRow($resultSet)) {
+			$keywords[$row['keywordId']] = $row['keywordKeyword'];
+		}
+		return $keywords;
+    }
+    /**
+     * Set database conditions where some entries might be private or available only to groups
+     */
+    private function setPrivateConditions()
+    {
+        if ($this->session->getVar("setup_ReadOnly"))
+        {
+            $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
+        }
+        elseif ($userId = $this->session->getVar("setup_UserId"))
+        {
+            $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
+            $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
+                $this->db->formatFields('resourcemetadataPrivate'));
+            $subSql = $this->db->selectNoExecute('user_groups_users', 'usergroupsusersId', FALSE, TRUE, TRUE);
+            $subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('N')
+                . $this->db->and .
+                $this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('Y');
+            $case1 = $this->db->caseWhen($subject, FALSE, $subSql, FALSE, FALSE);
+            $subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('Y');
+            $result = $this->db->formatFields('resourcemetadataAddUserId') . $this->db->equal . $this->db->tidyInput($userId);
+            $case2 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
+            $subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('N');
+            $result = $this->db->tidyInput(1);
+            $case3 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
+            $this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3);
+        }
+    }
+    /**
+     * Keyword Conditions
+     *
+     */
+    private function keywordConditions()
+    {
+    	if (!$this->gotFirst && array_key_exists('item1KWs', $this->vars)) {
+    		if (($key = array_search(0, $this->vars['item1KWs'])) === 0) {
+    			unset($this->vars['item1KWs'][$key]);
+    		}
+    		if (!count($this->vars['item1KWs'])) {
+    			return;
+    		}
+    		$this->db->formatConditionsOneField($this->vars['item1KWs'], 'resourcekeywordKeywordId');
+    		$this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
+    	} else if (array_key_exists('item2KWs', $this->vars)) {
+    		if (($key = array_search(0, $this->vars['item2KWs'])) === 0) {
+    			unset($this->vars['item2KWs'][$key]);
+    		}
+    		if (!count($this->vars['item2KWs'])) {
+    			return;
+    		}
+    		$this->db->formatConditionsOneField($this->vars['item2KWs'], 'resourcekeywordKeywordId');
+    		$this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
+    	}
     }
     /**
      * Select and display a metadata pair
@@ -136,16 +357,15 @@ class ideagen_MODULE
         {
             \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         }
-        $pString = FORM\formHeader("ideagen_generate");
+        $this->storeSession();
         $uuid = \TEMPSTORAGE\getUuid($this->db);
-        $pString .= \FORM\hidden('uuid', $uuid);
-        $pString .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generateAgain')));
-        $pString .= FORM\formEnd();
+        $pString = $this->display(TRUE);
         $pString .= HTML\tableStart('generalTable');
         while (($returnSF = $this->selectFunction()) === FALSE)
         { // try again
             $this->selectFunction();
         }
+        $this->gotFirst = TRUE;
         $return[] = $returnSF;
         $this->storedId = $this->lastId;
         do
@@ -345,6 +565,7 @@ class ideagen_MODULE
      */
     private function randomQuote()
     {
+        $this->keywordConditions();
         $this->db->formatConditions(['resourcemetadataType' => 'q']);
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
@@ -365,6 +586,8 @@ class ideagen_MODULE
      */
     private function randomQuoteComment()
     {
+        $this->setPrivateConditions();
+        $this->keywordConditions();
         $this->db->formatConditions(['resourcemetadataType' => 'qc']);
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
@@ -388,6 +611,7 @@ class ideagen_MODULE
      */
     private function randomParaphrase()
     {
+        $this->keywordConditions();
         $this->db->formatConditions(['resourcemetadataType' => 'p']);
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
@@ -408,6 +632,8 @@ class ideagen_MODULE
      */
     private function randomParaphraseComment()
     {
+        $this->setPrivateConditions();
+        $this->keywordConditions();
         $this->db->formatConditions(['resourcemetadataType' => 'pc']);
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
@@ -431,28 +657,8 @@ class ideagen_MODULE
      */
     private function randomMusing()
     {
-        if ($userId = $this->session->getVar("setup_UserId"))
-        {
-            $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
-            $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
-                $this->db->formatFields('resourcemetadataPrivate'));
-            $subSql = $this->db->selectNoExecute('user_groups_users', 'usergroupsusersId', FALSE, TRUE, TRUE);
-            $subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('N')
-                . $this->db->and .
-                $this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('Y');
-            $case1 = $this->db->caseWhen($subject, FALSE, $subSql, FALSE, FALSE);
-            $subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('Y');
-            $result = $this->db->formatFields('resourcemetadataAddUserId') . $this->db->equal . $this->db->tidyInput($userId);
-            $case2 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
-            $subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('N');
-            $result = $this->db->tidyInput(1);
-            $case3 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
-            $this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3);
-        }
-        elseif ($this->session->getVar("setup_ReadOnly"))
-        {
-            $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
-        }
+        $this->setPrivateConditions();
+        $this->keywordConditions();
         $this->db->formatConditions(['resourcemetadataType' => 'm']);
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
@@ -511,6 +717,7 @@ class ideagen_MODULE
         {
             $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
         }
+        $this->keywordConditions();
         $this->db->formatConditions(['resourcemetadataType' => 'i']);
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
@@ -560,6 +767,25 @@ class ideagen_MODULE
         }
 
         return TRUE;
+    }
+    /**
+     * Store session
+     */
+    private function storeSession() 
+    {
+		$array['Item1KWType'] = $this->vars['item1KWType'];
+		$array['Item2KWType'] = $this->vars['item2KWType'];
+        if ($this->vars['item1KWType'] == 'item1ResourceKW') {
+			$array['Item1ResourceKWs'] = serialize($this->vars['item1KWs']); 
+		} else if ($this->vars['item1KWType'] == 'item1MetadataKW') {
+			$array['Item1MetadataKWs'] = serialize($this->vars['item1KWs']); 
+		}
+		if ($this->vars['item2KWType'] == 'item2ResourceKW') {
+			$array['Item2ResourceKWs'] = serialize($this->vars['item2KWs']); 
+		} else if ($this->vars['item2KWType'] == 'item2MetadataKW') {
+			$array['Item2MetadataKWs'] = serialize($this->vars['item2KWs']); 
+		}
+		$this->session->writeArray($array, 'ideagen');
     }
     /**
      * Make the menus

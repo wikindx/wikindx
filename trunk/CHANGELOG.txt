@@ -18,7 +18,7 @@ FEATURE ENHANCEMENTS:
 4. Syndication Feed in Atom 1.0 and RSS 2.0 formats [#282].
 5. Better name and description of syndication options.
 6. Better parsing of ODT documents for attachment caching [#380].
-7. Support FODT (Flat ODT) text extraction (attachments) [#360].
+7. Support FODT (Flat ODT) text extraction (attachments) [#380].
 
 MAINTENANCE:
 1. Better hints for the sitemap option.

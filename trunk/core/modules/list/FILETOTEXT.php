@@ -1386,6 +1386,8 @@ class FILETOTEXT
     /*
      * readDjVu, extract the text content of DjVu files with djvutxt
      *
+     * cf. http://djvu.sourceforge.net
+     *
      * @param string $filename
      *
      * @return string

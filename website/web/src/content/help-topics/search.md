@@ -150,6 +150,7 @@ DRM protected ebooks and password protected documents are not supported.
 |----------|------------------------------------|----------------------------------------------------------------------------
 |ABW, ZABW |AbiWord Document                    |application/x-abiword
 |CWK       |ClarisWorks/AppleWorks Document     |
+|DVI       |DeVice Independent                  |
 |HWP       |Hangul WP 97                        |
 |KWD       |KWord                               |[application/vnd.kde.kword](https://www.iana.org/assignments/media-types/application/vnd.kde.kword)
 |LRF       |BroadBand Ebook                     |
@@ -163,6 +164,7 @@ DRM protected ebooks and password protected documents are not supported.
 |PDB       |Plucker eBook                       |
 |POT       |PowerPoint 97-2003 Template         |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
 |PPT       |PowerPoint 97-2003                  |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
+|RST, REST |reStructured text                   |
 |SDD       |StarOffice presentation             |application/vnd.stardivision.impress, application/x-starimpress
 |SDW       |StarOffice Document                 |application/vnd.stardivision.writer, application/x-starwriter
 |TEI       |Text Encoding Initiative            |[application/tei+xml](https://www.iana.org/assignments/media-types/application/tei+xml)

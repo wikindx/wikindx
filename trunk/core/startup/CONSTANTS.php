@@ -224,7 +224,7 @@ define('WIKINDX_MIMETYPE_DOTM',    'application/vnd.ms-word.template.macroEnable
 define('WIKINDX_MIMETYPE_DOTX',    'application/vnd.openxmlformats-officedocument.wordprocessingml.template');
 define('WIKINDX_MIMETYPE_ENDNOTE', 'application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml');
 define('WIKINDX_MIMETYPE_EPUB',    'application/epub+zip');
-define('WIKINDX_MIMETYPE_FB2',     'application/fictionbook2');
+define('WIKINDX_MIMETYPE_FB',      'application/x-fictionbook'); // Private mimetype
 define('WIKINDX_MIMETYPE_HTML',    'text/html');
 define('WIKINDX_MIMETYPE_JSON',    'application/json');
 define('WIKINDX_MIMETYPE_KWD',     'application/vnd.kde.kword');

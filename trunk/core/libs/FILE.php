@@ -1748,7 +1748,7 @@ namespace FILE
             }
             elseif ($extension == "fb1" || $extension == "fb2")
             {
-                $mime = WIKINDX_MIMETYPE_FB2;
+                $mime = WIKINDX_MIMETYPE_FB;
             }
         }
         return $mime;

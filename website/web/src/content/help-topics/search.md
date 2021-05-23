@@ -109,6 +109,7 @@ Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 |DOTM      |Word 2007-365 template+macro        |[application/vnd.ms-word.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.template.macroEnabled.12)
 |DOTX      |Word 2007-365 template              |[application/vnd.openxmlformats-officedocument.wordprocessingml.template](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.wordprocessingml.template)
 |EPUB      |Electronic publication              |[application/epub+zip](https://www.iana.org/assignments/media-types/application/epub+zip)
+|FB1, FB2  |FictionBook 1.0 and 2.0             |application/x-fictionbook (private mimetype)
 |FODP      |ODF Presentation Flat               |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
 |FODT      |ODF XML Text Document Flat          |[application/vnd.oasis.opendocument.text](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text)
 |HTML, HTML|HyperText Markup Language           |[text/html](https://www.iana.org/assignments/media-types/text/html)
@@ -142,7 +143,6 @@ DRM protected ebooks and password protected documents are not supported.
 |----------|------------------------------------|----------------------------------------------------------------------------
 |ABW, ZABW |AbiWord Document                    |application/x-abiword
 |CWK       |ClarisWorks/AppleWorks Document     |
-|FB2       |FictionBook 2.0                     |
 |HWP       |Hangul WP 97                        |
 |KWD       |KWord                               |[application/vnd.kde.kword](https://www.iana.org/assignments/media-types/application/vnd.kde.kword)
 |LRF       |BroadBand Ebook                     |

@@ -168,6 +168,9 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_RTF_TEXT:
                 $text = $this->readRtf($filename);
             break;
+            case WIKINDX_MIMETYPE_SCRIBUS:
+                $text = $this->readScribus($filename);
+            break;
             case WIKINDX_MIMETYPE_TXT:
                 switch ($extension)
                 {
@@ -1314,6 +1317,37 @@ class FILETOTEXT
         }
         
         unset($za);
+        
+        return $content;
+    }
+    
+    /*
+     * readScribus, extract the text content of Scribus files (SLA)
+     *
+     * cf. https://wiki.scribus.net/canvas/(FR)_Introdution_au_Format_de_fichier_SLA_pour_Scribus_1.4
+     * cf. https://github.com/scribusproject/scribus/tree/master/resources/tests
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    function readScribus($filename)
+    {
+        $content = "";
+        
+        $pXML = new \XMLReader();
+        
+        $filecontent = file_get_contents($filename);
+        if ($pXML->XML($filecontent))
+        {
+            while ($pXML->read())
+            {
+                if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "ITEXT")
+                {
+                    $content .= htmlspecialchars_decode($pXML->getAttribute("CH"), ENT_HTML5) . LF;
+                }
+            }
+        }
         
         return $content;
     }

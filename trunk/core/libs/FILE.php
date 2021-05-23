@@ -1755,6 +1755,10 @@ namespace FILE
             {
                 $mime = WIKINDX_MIMETYPE_FB;
             }
+            elseif ($extension == "sla")
+            {
+                $mime = WIKINDX_MIMETYPE_SCRIBUS;
+            }
         }
         return $mime;
     }

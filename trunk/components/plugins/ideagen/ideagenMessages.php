@@ -35,6 +35,7 @@ class ideagenMessages
             "item2" => dgettext($domain, "Item 2"),
             "itemResourceKW" => dgettext($domain, "Resource keywords"),
             "itemMetadataKW" => dgettext($domain, "Metadata keywords"),
+            "noPair" => dgettext($domain, "Unable to generate random pair. Please try again or change the item options."),
         ];
     }
 }

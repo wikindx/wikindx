@@ -181,17 +181,27 @@ class ideagen_MODULE
             $js
         	) . BR;
         $td .= $this->itemKWs($selected, 'item2');
+        if ($again) {
+	        $td .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generateAgain')));
+    	} else {
+	        $td .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generate')));
+	    }
+        $pString .= FORM\formEnd();
         $pString .= HTML\td($td);
         $pString .= HTML\td('&nbsp;');
+        $lastIdeaGen = $this->session->getArray('ideagen');
+        if (array_key_exists('id1Result', $lastIdeaGen)) {
+        	$result = HTML\tableStart('generalTable');
+        	$result .= $lastIdeaGen['id1Result'];
+			$result .= HTML\trStart();
+			$result .= HTML\td(HTML\hr(), '', 3);
+			$result .= HTML\trEnd();
+        	$result .= $lastIdeaGen['id2Result'];
+        	$result .= HTML\tableEnd();
+        }
         $pString .= HTML\td($result);
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
-        if ($again) {
-	        $pString .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generateAgain')));
-    	} else {
-	        $pString .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generate')));
-	    }
-        $pString .= FORM\formEnd();
         return $pString;
     }
     /**
@@ -342,7 +352,11 @@ class ideagen_MODULE
     			return;
     		}
     		$this->db->formatConditionsOneField($this->vars['item1KWs'], 'resourcekeywordKeywordId');
-    		$this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
+    		if ($this->vars['item1KWType'] == 'item1ResourceKW') {
+	    		$this->db->leftJoin('resource_keyword', 'resourcekeywordResourceId', 'resourcemetadataResourceId');
+	    	} else {
+	    		$this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
+	    	}
     	} else if (array_key_exists('item2KWs', $this->vars)) {
     		if (($key = array_search(0, $this->vars['item2KWs'])) === 0) {
     			unset($this->vars['item2KWs'][$key]);
@@ -351,7 +365,11 @@ class ideagen_MODULE
     			return;
     		}
     		$this->db->formatConditionsOneField($this->vars['item2KWs'], 'resourcekeywordKeywordId');
-    		$this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
+    		if ($this->vars['item2KWType'] == 'item2ResourceKW') {
+	    		$this->db->leftJoin('resource_keyword', 'resourcekeywordResourceId', 'resourcemetadataResourceId');
+	    	} else {
+	    		$this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
+	    	}
     	}
     }
     /**
@@ -373,6 +391,7 @@ class ideagen_MODULE
         $this->gotFirst = TRUE;
         $return[] = $returnSF;
         $this->storedId = $this->lastId;
+        $count = 0;
         do
         {
             $return[] = $this->selectFunction();
@@ -380,6 +399,15 @@ class ideagen_MODULE
             { // Is this metadataId the same as the last one?
                 array_pop($return); // Force another iteration . . .
             }
+            ++$count;
+            if ($count > 10) { // Guard against endless loops
+				$this->session->delVar('ideagen_id1Result');
+				$this->session->delVar('ideagen_id2Result');
+				$pString = HTML\p($this->pluginmessages->text('noPair'), 'error');
+				$pString .= $this->display(TRUE);
+				GLOBALS::addTplVar('content', $pString);
+				FACTORY_CLOSE::getInstance();
+			}
         } while (sizeof($return) < 2);
         $count = 0;
         foreach ($return as $string)
@@ -394,6 +422,8 @@ class ideagen_MODULE
             }
         }
         // Store the two metadata ideas in case there is an error when adding a new idea
+        $this->session->setVar('ideagen_id1Result', $return[0]);
+        $this->session->setVar('ideagen_id2Result', $return[1]);
         \TEMPSTORAGE\store($this->db, $uuid, ['id1' => $this->storedId, 'id2' => $this->lastId]);
         $pString .= HTML\tableEnd();
         $pString = $this->display(TRUE, $pString);
@@ -560,6 +590,14 @@ class ideagen_MODULE
         if (!$this->ideasExist)
         {
             unset($metadataArray[array_search('randomIdea', $metadataArray)]);
+        }
+        if (empty($metadataArray)) {
+        	$this->session->delVar('ideagen_id1Result');
+        	$this->session->delVar('ideagen_id2Result');
+        	$pString = HTML\p($this->pluginmessages->text('noPair'), 'error');
+			$pString .= $this->display(TRUE);
+			GLOBALS::addTplVar('content', $pString);
+			FACTORY_CLOSE::getInstance();
         }
         $function = $metadataArray[array_rand($metadataArray, 1)];
         $return = $this->{$function}();

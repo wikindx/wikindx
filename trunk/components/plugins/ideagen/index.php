@@ -246,6 +246,9 @@ class ideagen_MODULE
 			"",
 			$this->coremessages->text("hint", "multiples")), 'hint');
         $select = unserialize($this->session->getVar($session));
+        if (!is_array($select)) {
+        	$select = [];
+        }
         if (($key = array_search(0, $select)) === 0) {
     		unset($select[$key]);
     	}

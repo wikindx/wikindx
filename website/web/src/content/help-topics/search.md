@@ -131,6 +131,7 @@ Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 |TXT, others|Plain text                         |text/plain
 |XHTML     |Extensible HyperText Markup Language|[application/xhtml+xml](https://www.iana.org/assignments/media-types/application/xhtml+xml)
 |XML       |Extensible Markup Language          |[application/xml](https://www.iana.org/assignments/media-types/application/xml) or [text/xml](https://www.iana.org/assignments/media-types/text/xml)
+|XPS, OXPS |XML Paper Specification             |[application/vnd.ms-xpsdocument](https://www.iana.org/assignments/media-types/application/vnd.ms-xpsdocument)
 
 ### Formats unsupported by Full Text search
 
@@ -172,4 +173,3 @@ DRM protected ebooks and password protected documents are not supported.
 |WPD       |Wordperfect                         |[application/vnd.wordperfect](https://www.iana.org/assignments/media-types/application/vnd.wordperfect) or [application/wordperfect5.1](https://www.iana.org/assignments/media-types/application/wordperfect5.1)
 |WPS       |Microsoft Works                     |[application/vnd.ms-works](https://www.iana.org/assignments/media-types/application/vnd.ms-works)
 |WRI       |Microsoft Write                     |application/mswrite
-|XPS, OXPS |XML Paper Specification             |[application/vnd.ms-xpsdocument](https://www.iana.org/assignments/media-types/application/vnd.ms-xpsdocument)

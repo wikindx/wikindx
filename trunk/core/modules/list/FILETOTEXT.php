@@ -185,6 +185,9 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_XML_TEXT:
                 $text = $this->readHtml($filename);
             break;
+            case WIKINDX_MIMETYPE_XPS:
+                $text = $this->readXps($filename);
+            break;
             default:
                 // Type not handled
                 $text = "";
@@ -1150,6 +1153,167 @@ class FILETOTEXT
         }
         
         unset($pXML);
+        
+        return $content;
+    }
+    
+
+    
+    /*
+     * readXps, extract the text content of XPS files
+     *
+     * cf. https://www.ecma-international.org/publications-and-standards/standards/ecma-388/
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    private function readXps($filename)
+    {
+        $content = "";
+        $rootmap = [];
+        $map = [];
+        $structmap = [];
+        $string_catalog = [];
+        
+        // Extract the content parts
+        $za = new \ZipArchive();
+        
+        // Explore the root file of the structure
+        if ($za->open($filename) === TRUE)
+        {
+            $rootmapcontent = $za->getFromName("FixedDocSeq.fdseq");
+            if ($rootmapcontent !== FALSE && $rootmapcontent != "")
+            {
+                $pXML = new \XMLReader();
+                
+                if ($pXML->XML($rootmapcontent))
+                {
+                    while ($pXML->read())
+                    {
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "DocumentReference")
+                        {
+                            if ($pXML->getAttribute("Source") != NULL)
+                            {
+                                echo $pXML->getAttribute("Source") . LF;
+                                $rootmap[] = ltrim($pXML->getAttribute("Source"), "/");
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (count($rootmap) > 0)
+            {
+                foreach($rootmap as $doc)
+                {
+                    $doccontent = $za->getFromName($doc);
+                    if ($doccontent !== FALSE && $doccontent != "")
+                    {
+                        $pXML = new \XMLReader();
+                        
+                        if ($pXML->XML($doccontent))
+                        {
+                            while ($pXML->read())
+                            {
+                                if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "PageContent")
+                                {
+                                    if ($pXML->getAttribute("Source") != NULL)
+                                    {
+                                        $map[] = dirname($doc) . "/" . ltrim($pXML->getAttribute("Source"), "/");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (count($map) > 0)
+            {
+                natsort($map);
+                
+                foreach($map as $page)
+                {
+                    $pagecontent = $za->getFromName($page);
+                    if ($pagecontent !== FALSE && $pagecontent != "")
+                    {
+                        $pagecontent = mb_convert_encoding($pagecontent, "UTF-8", "UTF-16LE");
+                        $pXML = new \XMLReader();
+                        
+                        if ($pXML->XML($pagecontent))
+                        {
+                            while ($pXML->read())
+                            {
+                                if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "Glyphs")
+                                {
+                                    if ($pXML->getAttribute("Name") != NULL && $pXML->getAttribute("UnicodeString") != NULL)
+                                    {
+                                        $string_catalog[$pXML->getAttribute("Name")] = $pXML->getAttribute("UnicodeString");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (count($string_catalog) > 0)
+            {
+                // On macOS extractTo() doesn't work, so we emulate it
+                for ($k = 0; $k < $za->numFiles; $k++)
+                {
+                    // Get a stream from the original name
+                    $filename = $za->getNameIndex($k);
+                    
+                    // Skip non structure frag files
+                    if (!\UTILS\matchSuffix($filename, ".frag"))
+                    {
+                        continue;
+                    }
+                    
+                    $structmap[] = $filename;
+                }
+            }
+            
+            if (count($structmap) > 0)
+            {
+                natsort($structmap);
+                
+                foreach($structmap as $struct)
+                {
+                    $structcontent = $za->getFromName($struct);
+                    if ($structcontent !== FALSE && $structcontent != "")
+                    {
+                        $pXML = new \XMLReader();
+                        
+                        if ($pXML->XML($structcontent))
+                        {
+                            while ($pXML->read())
+                            {
+                                if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "NamedElement")
+                                {
+                                    $key = $pXML->getAttribute("NameReference");
+                                    if ($key != NULL)
+                                    {
+                                        if (array_key_exists($key, $string_catalog))
+                                        {
+                                            $content .= $string_catalog[$key];
+                                        }
+                                    }
+                                }
+                                if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "ParagraphStructure")
+                                {
+                                    $content .= LF;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        unset($za);
         
         return $content;
     }

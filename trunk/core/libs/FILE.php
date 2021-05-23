@@ -1718,6 +1718,11 @@ namespace FILE
             {
                 $mime = WIKINDX_MIMETYPE_PPTX;
             }
+            // XPS?
+            elseif ($za->getFromName("FixedDocSeq.fdseq") !== FALSE)
+            {
+                $mime = WIKINDX_MIMETYPE_XPS;
+            }
         }
         
         if ($altfilename == "")

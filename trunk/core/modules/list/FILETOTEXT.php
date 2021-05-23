@@ -312,21 +312,18 @@ class FILETOTEXT
     {
         $content = "";
         
-        $pdf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".pdf"]);
+        $pdffile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".pdf"]);
         
-        $cmd = 'ps2pdf "' . $filename . '" "' . $pdf . '"';
+        $cmd = 'ps2pdf "' . $filename . '" "' . $pdffile . '"';
         $execerrno = 0;
         $execoutput = [];
-            error_log($cmd);
         
         exec($cmd, $execoutput, $execerrno);
         
-        if (file_exists($pdf))
+        if (file_exists($pdffile))
         {
-            error_log($pdf);
-            $content = $this->readPdf($pdf);
-            
-            //@unlink($pdf);
+            $content = $this->readPdf($pdffile);
+            @unlink($pdf);
         }
         
         return $content;
@@ -1381,6 +1378,34 @@ class FILETOTEXT
                     $content .= htmlspecialchars_decode($pXML->getAttribute("CH"), ENT_HTML5) . LF;
                 }
             }
+        }
+        
+        return $content;
+    }
+    
+    /*
+     * readDjVu, extract the text content of DjVu files with djvutxt
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    function readDjVu($filename)
+    {
+        $content = "";
+        
+        $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".txt"]);
+        
+        $cmd = 'djvutxt "' . $filename . '" "' . $txtfile . '"';
+        $execerrno = 0;
+        $execoutput = [];
+        
+        exec($cmd, $execoutput, $execerrno);
+        
+        if (file_exists($txtfile))
+        {
+            $content = file_get_contents($txtfile);
+            @unlink($txtfile);
         }
         
         return $content;

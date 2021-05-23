@@ -105,6 +105,7 @@ Extracting PostScript files requires the ps2pdf converter included in Ghostscrip
 
 |Extension |Kind of document                    |MIME Type
 |----------|------------------------------------|----------------------------------------------------------------------------
+|DJV, DJVU |DjVu                                |[image/vnd.djvu](https://www.iana.org/assignments/media-types/image/vnd.djvu), image/x-djvu
 |DOC       |Word 97-2003 / DOS Word             |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
 |DOCM      |Word 2007-365 document+macro        |[application/vnd.ms-word.document.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.document.macroEnabled.12)
 |DOCX      |Word 2007-365 document              |[application/vnd.openxmlformats-officedocument.wordprocessingml.document](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.wordprocessingml.document)

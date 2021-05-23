@@ -1709,9 +1709,14 @@ namespace FILE
         {
             // Extract mimetype
             $mimetype = $za->getFromName("mimetype");
-            if ($filemime !== FALSE)
+            if ($mimetype !== FALSE)
             {
                 $mime = $mimetype;
+            }
+            // PPTX?
+            elseif ($za->getFromName("ppt/presentation.xml") !== FALSE)
+            {
+                $mime = WIKINDX_MIMETYPE_PPTX;
             }
         }
         
@@ -1740,6 +1745,10 @@ namespace FILE
             elseif ($extension == "fodp")
             {
                 $mime = WIKINDX_MIMETYPE_ODP;
+            }
+            elseif ($extension == "fb1" || $extension == "fb2")
+            {
+                $mime = WIKINDX_MIMETYPE_FB2;
             }
         }
         return $mime;

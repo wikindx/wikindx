@@ -130,6 +130,9 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_EPUB:
                 $text = $this->readEpub($filename);
             break;
+            case WIKINDX_MIMETYPE_FB2:
+                $text = $this->readFictionBook($filename);
+            break;
             case WIKINDX_MIMETYPE_HTML:
             case WIKINDX_MIMETYPE_XHTML:
                 $text = $this->readHtml($filename);
@@ -150,6 +153,12 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_SXW:
             case WIKINDX_MIMETYPE_STW:
                 $text = $this->readOpenDocument($filename);
+            break;
+            case WIKINDX_MIMETYPE_POTM:
+            case WIKINDX_MIMETYPE_POTX:
+            case WIKINDX_MIMETYPE_PPTM:
+            case WIKINDX_MIMETYPE_PPTX:
+                $text = $this->readPptx($filename);
             break;
             case WIKINDX_MIMETYPE_PDF:
             case WIKINDX_MIMETYPE_XPDF:
@@ -342,7 +351,7 @@ class FILETOTEXT
     }
     
     /**
-     * readDocx
+     * readDocx, extract the text content of Word 2007-365 files
      *
      * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
      *
@@ -423,6 +432,85 @@ class FILETOTEXT
         }
         
         return $striped_content;
+    }
+    
+    /**
+     * readPptx, extract the text content of PowerPoint 2007-365 files
+     *
+     * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    private function readPptx($filename)
+    {
+        $content = "";
+            
+        // Extract the content parts
+        $za = new \ZipArchive();
+        
+        if ($za->open($filename) === TRUE)
+        {
+            // On macOS extractTo() doesn't work, so we emulate it
+            for ($k = 0; $k < $za->numFiles; $k++)
+            {
+                // Get a stream from the original name
+                $filename = $za->getNameIndex($k);
+                
+                // Skip non slide and comment XML files
+                if (!((\UTILS\matchPrefix($filename, "ppt/slides/slide") || \UTILS\matchPrefix($filename, "ppt/comments/comment")) && \UTILS\matchSuffix($filename, ".xml")))
+                {
+                    continue;
+                }
+                
+                $filecontent = $za->getFromName($filename);
+
+                if ($filecontent !== FALSE && $filecontent != "")
+                {
+                    // Extract the text part of the body and rudimentary formats major blocks with newlines
+                    // We assume that the document is well formed and that the tags do not intersect
+                    $pXML = new \XMLReader();
+                    
+                    if ($pXML->XML($filecontent))
+                    {
+                        $bExtract = FALSE;
+                        
+                        while ($pXML->read())
+                        {
+                            // Start extracting at the start of the text of each major part
+                            if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["a:t", "p:text"]))
+                            {
+                                $bExtract = TRUE;
+                            }
+                            // Stop extracting at the end of the text of each major part
+                            if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["a:t", "p:text"]))
+                            {
+                                $bExtract = FALSE;
+                            }
+                            
+                            // Extract all node and add new lines on blocks
+                            if ($bExtract)
+                            {
+                                $content .= $pXML->value;
+                                if (in_array($pXML->name, ["a:t", "p:text"]))
+                                {
+                                    $content .= LF.LF;
+                                }
+                            }
+                        }
+                    }
+                    
+                    $content .= LF.LF;
+                    
+                    unset($pXML);
+                }
+            }
+        }
+        
+        unset($za);
+        
+        return $content;
     }
     
     
@@ -960,7 +1048,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    function readHtml($filename)
+    private function readHtml($filename)
     {
         $content = "";
         
@@ -997,6 +1085,71 @@ class FILETOTEXT
                 }
             }
         }
+        
+        return $content;
+    }
+    
+    /**
+     * readFictionBook, extract the text content of a FictionBook (v2)
+     *
+     * cf. http://www.gribuser.ru/xml/fictionbook/index.html.en
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    function readFictionBook($filename)
+    {
+        $content = "";
+
+        $pXML = new \XMLReader();
+        
+        $filecontent = file_get_contents($filename);
+        
+        if ($filecontent !== FALSE && $pXML->XML($filecontent))
+        {
+            $bExtract = FALSE;
+            
+            while ($pXML->read())
+            {
+                // Start extracting at the start of the description (headers)
+                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["description"]))
+                {
+                    $bExtract = TRUE;
+                }
+                // Stop extracting at the end of the description (headers)
+                if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["description"]))
+                {
+                    $bExtract = FALSE;
+                }
+                
+                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["body"]))
+                {
+                    $body = $pXML->readInnerXml();
+                    
+                    $path_html_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "fb2_" . \UTILS\uuid() . ".html"]);
+                    if (file_put_contents($path_html_cache, $body) !== FALSE)
+                    {
+                        $content .= $this->readHtml($path_html_cache) . LF;
+                        $content .= LF.LF;
+                        @unlink($path_html_cache);
+                    }
+                    
+                }
+                
+                // Extract all node and add new lines on blocks
+                if ($bExtract)
+                {
+                    $content .= $pXML->value;
+                    if (in_array($pXML->name, ["description"]))
+                    {
+                        $content .= LF.LF;
+                    }
+                }
+            }
+        }
+        
+        unset($pXML);
         
         return $content;
     }

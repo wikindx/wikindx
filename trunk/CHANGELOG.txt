@@ -23,6 +23,8 @@ FEATURE ENHANCEMENTS:
 8. Support ODP/OTP/FODP presentation extraction (attachments) [#383].
 9. Support STI/SXI presentation extraction (attachments) [#384].
 10. Support STW/SXW text extraction (attachments) [#385].
+10. Support POTM/POTX/PPTM/PPTX Powerpoint extraction (attachments) [#386].
+10. Support FB1/2 FictionBook extraction (attachments) [#387].
 
 MAINTENANCE:
 1. Better hints for the sitemap option.

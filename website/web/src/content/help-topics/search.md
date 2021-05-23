@@ -118,6 +118,10 @@ Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 |OTP       |ODF Presentation Template           |[application/vnd.oasis.opendocument.presentation-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation-template)
 |OTT       |ODF Text Template                   |[application/vnd.oasis.opendocument.text-template](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text-template)
 |PDF       |Portable Document Format            |[application/pdf](https://www.iana.org/assignments/media-types/application/pdf)
+|POTM      |PowerPoint 2007-365 Template+macro  |[application/vnd.ms-powerpoint.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.template.macroEnabled.12)
+|POTX      |PowerPoint 2007-365 Template        |[application/vnd.openxmlformats-officedocument.presentationml.template](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.template)
+|PPTM      |PowerPoint 2007-365 +macro          |[application/vnd.ms-powerpoint.presentation.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.presentation.macroEnabled.12)
+|PPTX      |PowerPoint 2007-365                 |[application/vnd.openxmlformats-officedocument.presentationml.presentation](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.presentation)
 |RTF       |Rich Text Format 1.9.1              |[application/rtf](https://www.iana.org/assignments/media-types/application/rtf) or [text/rtf](https://www.iana.org/assignments/media-types/text/rtf)
 |STI       |OpenOffice.org 1.0 Presentation Template |application/vnd.sun.xml.impress.template
 |STW       |OpenOffice.org 1.0 Text Template    |application/vnd.sun.xml.writer.template
@@ -150,11 +154,8 @@ DRM protected ebooks and password protected documents are not supported.
 |PAGES     |Apple Pages                         |
 |PDB       |PalmDoc                             |
 |PDB       |Plucker eBook                       |
-|POTM      |PowerPoint 2007-365 Template+macro  |[application/vnd.ms-powerpoint.template.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.template.macroEnabled.12)
-|POTX      |PowerPoint 2007-365 Template        |[application/vnd.openxmlformats-officedocument.presentationml.template](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.template)
+|POT       |PowerPoint 97-2003 Template         |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
 |PPT       |PowerPoint 97-2003                  |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
-|PPTM      |PowerPoint 2007-365 +macro          |[application/vnd.ms-powerpoint.presentation.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.presentation.macroEnabled.12)
-|PPTX      |PowerPoint 2007-365                 |[application/vnd.openxmlformats-officedocument.presentationml.presentation](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.presentation)
 |PS, EPS, AI |PostScript                        |[application/postscript](https://www.iana.org/assignments/media-types/application/postscript)
 |SCD, SLA  |Scribus Document                    |[application/vnd.scribus](https://www.iana.org/assignments/media-types/application/vnd.scribus)
 |SDD       |StarOffice presentation             |application/vnd.stardivision.impress, application/x-starimpress

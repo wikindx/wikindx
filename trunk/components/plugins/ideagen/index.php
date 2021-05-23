@@ -121,9 +121,10 @@ class ideagen_MODULE
      * display
      *
      * @param bool $again
+     * @param string $result 
      * @return string
      */
-    public function display($again = FALSE)
+    public function display($again = FALSE, $result = '&nbsp;')
     {
         $pString = FORM\formHeader("ideagen_generate");
         $pString .= HTML\p($this->pluginmessages->text('description'));
@@ -181,6 +182,8 @@ class ideagen_MODULE
         	) . BR;
         $td .= $this->itemKWs($selected, 'item2');
         $pString .= HTML\td($td);
+        $pString .= HTML\td('&nbsp;');
+        $pString .= HTML\td($result);
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
         if ($again) {
@@ -362,8 +365,7 @@ class ideagen_MODULE
         }
         $this->storeSession();
         $uuid = \TEMPSTORAGE\getUuid($this->db);
-        $pString = $this->display(TRUE);
-        $pString .= HTML\tableStart('generalTable');
+        $pString = HTML\tableStart('generalTable');
         while (($returnSF = $this->selectFunction()) === FALSE)
         { // try again
             $this->selectFunction();
@@ -394,8 +396,9 @@ class ideagen_MODULE
         // Store the two metadata ideas in case there is an error when adding a new idea
         \TEMPSTORAGE\store($this->db, $uuid, ['id1' => $this->storedId, 'id2' => $this->lastId]);
         $pString .= HTML\tableEnd();
+        $pString = $this->display(TRUE, $pString);
         GLOBALS::addTplVar('content', $pString);
-        GLOBALS::addTplVar('content', HTML\p(HTML\h($this->pluginmessages->text('addIdea'))));
+        GLOBALS::addTplVar('content', HTML\h($this->pluginmessages->text('addIdea')));
         $this->ideaAdd($uuid);
     }
     /**

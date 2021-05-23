@@ -98,6 +98,9 @@ Then encoding is assumed to be __UTF-8 only__, unless the format specification s
 
 Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 
+Extracting PostScript files requires the ps2pdf converter included in Ghostscript.
+
+
 ### Formats supported by Full Text search
 
 |Extension |Kind of document                    |MIME Type
@@ -123,6 +126,7 @@ Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 |POTX      |PowerPoint 2007-365 Template        |[application/vnd.openxmlformats-officedocument.presentationml.template](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.template)
 |PPTM      |PowerPoint 2007-365 +macro          |[application/vnd.ms-powerpoint.presentation.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.presentation.macroEnabled.12)
 |PPTX      |PowerPoint 2007-365                 |[application/vnd.openxmlformats-officedocument.presentationml.presentation](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.presentation)
+|PS, EPS   |PostScript                          |[application/postscript](https://www.iana.org/assignments/media-types/application/postscript)
 |RTF       |Rich Text Format 1.9.1              |[application/rtf](https://www.iana.org/assignments/media-types/application/rtf) or [text/rtf](https://www.iana.org/assignments/media-types/text/rtf)
 |SLA       |Scribus Document                    |[application/vnd.scribus](https://www.iana.org/assignments/media-types/application/vnd.scribus)
 |STI       |OpenOffice.org 1.0 Presentation Template |application/vnd.sun.xml.impress.template
@@ -158,7 +162,6 @@ DRM protected ebooks and password protected documents are not supported.
 |PDB       |Plucker eBook                       |
 |POT       |PowerPoint 97-2003 Template         |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
 |PPT       |PowerPoint 97-2003                  |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
-|PS, EPS, AI |PostScript                        |[application/postscript](https://www.iana.org/assignments/media-types/application/postscript)
 |SDD       |StarOffice presentation             |application/vnd.stardivision.impress, application/x-starimpress
 |SDW       |StarOffice Document                 |application/vnd.stardivision.writer, application/x-starwriter
 |TEI       |Text Encoding Initiative            |[application/tei+xml](https://www.iana.org/assignments/media-types/application/tei+xml)

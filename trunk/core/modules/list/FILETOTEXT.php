@@ -164,6 +164,9 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_XPDF:
                 $text = $this->readPdf($filename);
             break;
+            case WIKINDX_MIMETYPE_PS:
+                $text = $this->readPs($filename);
+            break;
             case WIKINDX_MIMETYPE_RTF_APP:
             case WIKINDX_MIMETYPE_RTF_TEXT:
                 $text = $this->readRtf($filename);
@@ -296,6 +299,37 @@ class FILETOTEXT
             ini_set('memory_limit', $mem);
         }
         return $text;
+    }
+    
+    /*
+     * readPs, extract the text content of PostScript files with GhostScript
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    function readPs($filename)
+    {
+        $content = "";
+        
+        $pdf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".pdf"]);
+        
+        $cmd = 'ps2pdf "' . $filename . '" "' . $pdf . '"';
+        $execerrno = 0;
+        $execoutput = [];
+            error_log($cmd);
+        
+        exec($cmd, $execoutput, $execerrno);
+        
+        if (file_exists($pdf))
+        {
+            error_log($pdf);
+            $content = $this->readPdf($pdf);
+            
+            //@unlink($pdf);
+        }
+        
+        return $content;
     }
     
     /**

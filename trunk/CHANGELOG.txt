@@ -27,6 +27,7 @@ FEATURE ENHANCEMENTS:
 12. Support FB1/2 FictionBook extraction (attachments) [#387].
 13. Support XPS text extraction (attachments) [#361].
 14. Support SLA Scribus text extraction (attachments) [#388].
+15. Support PostScript text extraction (attachments) [#367].
 
 MAINTENANCE:
 1. Better hints for the sitemap option.

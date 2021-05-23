@@ -865,7 +865,7 @@ class FILETOTEXT
                             $file_xhtml = $za->getFromName($path_xhtml);
                             if ($file_xhtml !== FALSE)
                             {
-                                $path_xhtml_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "epub_" . \UTILS\uuid() . ".xhtml"]);
+                                $path_xhtml_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "epub_" . \UTILS\uuid() . ".xhtml"]);
                                 if (file_put_contents($path_xhtml_cache, $file_xhtml) !== FALSE)
                                 {
                                     // The format is XHTML and not HTML according to the spec
@@ -929,7 +929,7 @@ class FILETOTEXT
                     if ($nBoundary > 0)
                     {
                         // Extract only document files
-                        $path = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "mht_" . \UTILS\uuid() . ".txt"]);
+                        $path = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "mht_" . \UTILS\uuid() . ".txt"]);
                         
                         // cf. https://tools.ietf.org/html/rfc2045#section-6
                         if ($cte == "quoted-printable")
@@ -1133,7 +1133,7 @@ class FILETOTEXT
                 {
                     $body = $pXML->readInnerXml();
                     
-                    $path_html_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "fb2_" . \UTILS\uuid() . ".html"]);
+                    $path_html_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "fb2_" . \UTILS\uuid() . ".html"]);
                     if (file_put_contents($path_html_cache, $body) !== FALSE)
                     {
                         $content .= $this->readHtml($path_html_cache) . LF;

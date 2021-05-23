@@ -135,7 +135,7 @@ Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 ### Formats unsupported by Full Text search
 
 Many old or rare office suite formats will not be directly supported. They are appointed to remove any ambiguity.
-Consider converting them to DOCX or ODF format before attaching them.
+Consider converting them to a supported format before attaching them. Many free converters are available only.
 
 DRM protected ebooks and password protected documents are not supported.
 

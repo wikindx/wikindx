@@ -130,7 +130,7 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_EPUB:
                 $text = $this->readEpub($filename);
             break;
-            case WIKINDX_MIMETYPE_FB2:
+            case WIKINDX_MIMETYPE_FB:
                 $text = $this->readFictionBook($filename);
             break;
             case WIKINDX_MIMETYPE_HTML:

@@ -222,6 +222,7 @@ define('WIKINDX_MIMETYPE_DOCM',    'application/vnd.ms-word.document.macroEnable
 define('WIKINDX_MIMETYPE_DOCX',    'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 define('WIKINDX_MIMETYPE_DOTM',    'application/vnd.ms-word.template.macroEnabled.12');
 define('WIKINDX_MIMETYPE_DOTX',    'application/vnd.openxmlformats-officedocument.wordprocessingml.template');
+define('WIKINDX_MIMETYPE_DVI',     'application/x-dvi');
 define('WIKINDX_MIMETYPE_ENDNOTE', 'application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml');
 define('WIKINDX_MIMETYPE_EPUB',    'application/epub+zip');
 define('WIKINDX_MIMETYPE_FB',      'application/x-fictionbook'); // Private mimetype

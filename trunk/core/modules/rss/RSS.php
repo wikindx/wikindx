@@ -397,7 +397,20 @@ class RSS
                 $this->getUser($db, $list_results['resourcemiscAddUserIdResource'], $list_results['resourcemiscEditUserIdResource']);
 
             $item['link'][$x] = $list_results['resourceId'];
-            $item['description'][$x] = $bibStyle->process($list_results);
+            $item['description'][$x] = "<p>" . $bibStyle->process($list_results) . "</p>";
+            
+            $list_results['resourcetextAbstract'] = trim($list_results['resourcetextAbstract']);
+            if ($list_results['resourcetextAbstract'] != "")
+            {
+                $item['description'][$x] .= LF.LF;
+                $item['description'][$x] .= "<p><strong>Abstract</strong></p>";
+                $item['description'][$x] .= LF.LF;
+                if (!\UTILS\matchPrefix($list_results['resourcetextAbstract'], "<p>"))
+                {
+                    $list_results['resourcetextAbstract'] = "<p>" . $list_results['resourcetextAbstract'] . "</p>";
+                }
+                $item['description'][$x] .= $list_results['resourcetextAbstract'];
+            }
 
             $x++;
         }

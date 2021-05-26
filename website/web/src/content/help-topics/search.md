@@ -105,6 +105,8 @@ Extracting PostScript files requires the ps2pdf converter included in Ghostscrip
 
 |Extension |Kind of document                    |MIME Type
 |----------|------------------------------------|----------------------------------------------------------------------------
+|ABW, ZABW |AbiWord Document                    |application/x-abiword
+|AWT       |AbiWord Document Template           |application/x-abiword
 |DJV, DJVU |DjVu                                |[image/vnd.djvu](https://www.iana.org/assignments/media-types/image/vnd.djvu), image/x-djvu
 |DOC       |Word 97-2003 / DOS Word             |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
 |DOCM      |Word 2007-365 document+macro        |[application/vnd.ms-word.document.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.document.macroEnabled.12)
@@ -151,7 +153,6 @@ DRM protected ebooks and password protected documents are not supported.
 
 |Extension |Kind of document                    |MIME Type
 |----------|------------------------------------|----------------------------------------------------------------------------
-|ABW, ZABW |AbiWord Document                    |application/x-abiword
 |CWK       |ClarisWorks/AppleWorks Document     |
 |HWP       |Hangul WP 97                        |
 |KWD       |KWord                               |[application/vnd.kde.kword](https://www.iana.org/assignments/media-types/application/vnd.kde.kword)

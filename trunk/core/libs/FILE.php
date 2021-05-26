@@ -1759,6 +1759,10 @@ namespace FILE
             {
                 $mime = WIKINDX_MIMETYPE_SCRIBUS;
             }
+            elseif ($extension == "awt" || $extension == "abw" || $extension == "zabw")
+            {
+                $mime = WIKINDX_MIMETYPE_ABW;
+            }
         }
         return $mime;
     }

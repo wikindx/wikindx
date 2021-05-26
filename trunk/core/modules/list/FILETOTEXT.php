@@ -1384,6 +1384,62 @@ class FILETOTEXT
         return $content;
     }
     
+    /**
+     * readAbw, extract the text content of AbiWord files
+     *
+     * cf. http://www.abisource.com/wiki/AbiWord
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    function readAbw($filename)
+    {
+        $content = "";
+        
+        $filecontent = file_get_contents($filename);
+        
+        if ($filecontent !== FALSE && $filecontent != "")
+        {
+            // Extract the text part of the body and rudimentary formats major blocks with newlines
+            // We assume that the document is well formed and that the tags do not intersect
+            $pXML = new \XMLReader();
+            
+            if ($pXML->XML($filecontent))
+            {
+                $bExtract = FALSE;
+                
+                while ($pXML->read())
+                {
+                    // Start extracting at the start of the text
+                    if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "p")
+                    {
+                        $bExtract = TRUE;
+                    }
+                    // Stop extracting at the end of the text
+                    if ($pXML->nodeType == \XMLReader::END_ELEMENT && $pXML->name == "p")
+                    {
+                        $bExtract = FALSE;
+                    }
+                    
+                    // Extract all node and add new lines on blocks
+                    if ($bExtract)
+                    {
+                        $content .= $pXML->value;
+                        if ($pXML->name == "p")
+                        {
+                            $content .= LF;
+                        }
+                    }
+                }
+            }
+            
+            unset($pXML);
+        }
+        
+        return $content;
+    }
+    
     /*
      * readDjVu, extract the text content of DjVu files with djvutxt
      *

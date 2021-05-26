@@ -30,6 +30,7 @@ FEATURE ENHANCEMENTS:
 15. Support SLA Scribus text extraction (attachments) [#388].
 16. Support PostScript text extraction (attachments) [#367].
 17. Support DjVu text extraction (attachments) [#389].
+18. Support DVI text extraction (attachments) [#390].
 
 MAINTENANCE:
 1. Better hints for the sitemap option.

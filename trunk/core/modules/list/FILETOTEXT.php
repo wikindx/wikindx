@@ -1412,4 +1412,34 @@ class FILETOTEXT
         
         return $content;
     }
+    
+    /*
+     * readDvi, extract the text content of DeVice Independent files with catdvi
+     *
+     * cf. http://catdvi.sourceforge.net/
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    function readDvi($filename)
+    {
+        $content = "";
+        
+        $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "dvi_" . \UTILS\uuid() . ".txt"]);
+        
+        $cmd = 'catdvi "' . $filename . '" "' . $txtfile . '"';
+        $execerrno = 0;
+        $execoutput = [];
+        
+        exec($cmd, $execoutput, $execerrno);
+        
+        if (file_exists($txtfile))
+        {
+            $content = file_get_contents($txtfile);
+            @unlink($txtfile);
+        }
+        
+        return $content;
+    }
 }

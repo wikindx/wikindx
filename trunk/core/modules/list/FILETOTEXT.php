@@ -1428,7 +1428,7 @@ class FILETOTEXT
         
         $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "dvi_" . \UTILS\uuid() . ".txt"]);
         
-        $cmd = 'catdvi "' . $filename . '" "' . $txtfile . '"';
+        $cmd = 'catdvi --output-encoding=UTF-8 --sequential "' . $filename . '" > "' . $txtfile . '"';
         $execerrno = 0;
         $execoutput = [];
         

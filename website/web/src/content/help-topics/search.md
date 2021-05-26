@@ -118,6 +118,7 @@ Extracting PostScript files requires the ps2pdf converter included in Ghostscrip
 |FODP      |ODF Presentation Flat               |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
 |FODT      |ODF XML Text Document Flat          |[application/vnd.oasis.opendocument.text](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text)
 |HTML, HTML|HyperText Markup Language           |[text/html](https://www.iana.org/assignments/media-types/text/html)
+|MD        |Markdown                            |[text/markdown](https://www.iana.org/assignments/media-types/text/markdown)
 |MHT, MHTML|Multipart HTML                      |[multipart/related](https://www.iana.org/assignments/media-types/multipart/related), multipart/alternative, multipart/x-mimearchive, multipart/mixed, message/rfc822
 |ODP       |ODF Presentation                    |[application/vnd.oasis.opendocument.presentation](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.presentation)
 |ODT       |ODF Text Document                   |[application/vnd.oasis.opendocument.text](https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.text)
@@ -129,6 +130,7 @@ Extracting PostScript files requires the ps2pdf converter included in Ghostscrip
 |PPTM      |PowerPoint 2007-365 +macro          |[application/vnd.ms-powerpoint.presentation.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint.presentation.macroEnabled.12)
 |PPTX      |PowerPoint 2007-365                 |[application/vnd.openxmlformats-officedocument.presentationml.presentation](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.presentation)
 |PS, EPS   |PostScript                          |[application/postscript](https://www.iana.org/assignments/media-types/application/postscript)
+|RST, REST |reStructured text                   |text/plain
 |RTF       |Rich Text Format 1.9.1              |[application/rtf](https://www.iana.org/assignments/media-types/application/rtf) or [text/rtf](https://www.iana.org/assignments/media-types/text/rtf)
 |SLA       |Scribus Document                    |[application/vnd.scribus](https://www.iana.org/assignments/media-types/application/vnd.scribus)
 |STI       |OpenOffice.org 1.0 Presentation Template |application/vnd.sun.xml.impress.template
@@ -156,7 +158,6 @@ DRM protected ebooks and password protected documents are not supported.
 |LRF       |BroadBand Ebook                     |
 |LWP       |Lotus WordPro                       |[application/vnd.lotus-wordpro](https://www.iana.org/assignments/media-types/application/vnd.lotus-wordpro)
 |MAN, MDOC |Manpage, mandoc                     |[text/troff](https://www.iana.org/assignments/media-types/text/troff)
-|MD        |Markdown                            |[text/markdown](https://www.iana.org/assignments/media-types/text/markdown)
 |MW, MCW   |MacWrite Document                   |
 |MWD       |Mariner Mac Write Classic           |
 |PAGES     |Apple Pages                         |
@@ -164,7 +165,6 @@ DRM protected ebooks and password protected documents are not supported.
 |PDB       |Plucker eBook                       |
 |POT       |PowerPoint 97-2003 Template         |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
 |PPT       |PowerPoint 97-2003                  |[application/vnd.ms-powerpoint](https://www.iana.org/assignments/media-types/application/vnd.ms-powerpoint)
-|RST, REST |reStructured text                   |
 |SDD       |StarOffice presentation             |application/vnd.stardivision.impress, application/x-starimpress
 |SDW       |StarOffice Document                 |application/vnd.stardivision.writer, application/x-starwriter
 |TEI       |Text Encoding Initiative            |[application/tei+xml](https://www.iana.org/assignments/media-types/application/tei+xml)

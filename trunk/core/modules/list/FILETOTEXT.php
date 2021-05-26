@@ -174,6 +174,7 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_SCRIBUS:
                 $text = $this->readScribus($filename);
             break;
+            case WIKINDX_MIMETYPE_MD:
             case WIKINDX_MIMETYPE_TXT:
                 switch ($extension)
                 {

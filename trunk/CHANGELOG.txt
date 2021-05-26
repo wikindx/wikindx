@@ -31,6 +31,8 @@ FEATURE ENHANCEMENTS:
 16. Support PostScript text extraction (attachments) [#367].
 17. Support DjVu text extraction (attachments) [#389].
 18. Support DVI text extraction (attachments) [#390].
+19. Support reStructured text extraction (attachment) [#391].
+20. Support markdown text extraction (attachments) [#356].
 
 MAINTENANCE:
 1. Better hints for the sitemap option.

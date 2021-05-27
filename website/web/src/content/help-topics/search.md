@@ -98,7 +98,11 @@ Then encoding is assumed to be __UTF-8 only__, unless the format specification s
 
 Better __PDF__ extraction quality requires the __xpdftotext__ plugin.
 
-Extracting PostScript files requires the ps2pdf converter included in Ghostscript.
+Extracting __PS (PostScript)__ files requires the [__ps2pdf__](http://web.mit.edu/ghostscript/www/Ps2pdf.htm) converter included in [Ghostscript](https://www.ghostscript.com/).
+
+Extracting __DVI (DeVice Independent)__ files requires the [__catdvi__](http://catdvi.sourceforge.net/) converter included in [TeX Live](https://tug.org/texlive/) and others TeX distributions.
+
+Extracting __DJV (DjVu)__ files requires the [__djvutxt__](http://djvu.sourceforge.net/doc/man/djvutxt.html) converter included in [DjVuLibre](http://djvu.sourceforge.net/).
 
 
 ### Formats supported by Full Text search
@@ -107,7 +111,7 @@ Extracting PostScript files requires the ps2pdf converter included in Ghostscrip
 |----------|------------------------------------|----------------------------------------------------------------------------
 |ABW, ZABW |AbiWord Document                    |application/x-abiword
 |AWT       |AbiWord Document Template           |application/x-abiword
-|DJV, DJVU |DjVu                                |[image/vnd.djvu](https://www.iana.org/assignments/media-types/image/vnd.djvu), image/x-djvu
+|DJV, DJVU |DjVu Document                       |[image/vnd.djvu](https://www.iana.org/assignments/media-types/image/vnd.djvu), image/x-djvu
 |DOC       |Word 97-2003 / DOS Word             |[application/msword](https://www.iana.org/assignments/media-types/application/msword)
 |DOCM      |Word 2007-365 document+macro        |[application/vnd.ms-word.document.macroEnabled.12](https://www.iana.org/assignments/media-types/application/vnd.ms-word.document.macroEnabled.12)
 |DOCX      |Word 2007-365 document              |[application/vnd.openxmlformats-officedocument.wordprocessingml.document](https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.wordprocessingml.document)

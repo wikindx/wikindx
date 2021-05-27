@@ -2186,8 +2186,6 @@ END;
             {
                 $tablesrc = $table;
                 $tabledst = $this->db->basicTable($table);
-                //echo $tablesrc . "<br>\n";
-                //echo $tabledst . "<br>\n";
                 $this->renameTable($tablesrc, $tabledst);
             }
         }
@@ -2374,6 +2372,34 @@ END;
     private function upgradeTo66()
     {
         $this->upgradeToTargetVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 67 (6.4.9)
+     *
+     * Fix the mimetype of attachments in db and rebuild the cache of attachments with a wrong mimetype
+     */
+    private function upgradeTo67()
+    {
+        $resultSet = $this->db->select("resource_attachments", ["resourceattachmentsId", "resourceattachmentsHashFilename", "resourceattachmentsFileName", "resourceattachmentsFileType"]);
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            $path = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $row["resourceattachmentsHashFilename"]]);
+            if (file_exists($path))
+            {
+                $newmime = \FILE\getMimeType($path, $row["resourceattachmentsFileName"]);
+                if ($newmime != $row["resourceattachmentsFileType"])
+                {
+                    $this->db->formatConditions(["resourceattachmentsId" => $row["resourceattachmentsId"]]);
+        	        $this->db->update("resource_attachments", ["resourceattachmentsFileType" => $newmime]);
+        	        
+                    $this->db->formatConditions(["resourceattachmentsId" => $row["resourceattachmentsId"]]);
+        	        $this->db->updateNull("resource_attachments", ["resourceattachmentsText"]);
+                }
+            }
+        }
+        
+        $this->updateCoreInternalVersion();
     }
     
     /**

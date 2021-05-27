@@ -34,6 +34,7 @@ FEATURE ENHANCEMENTS:
 19. Support reStructured text extraction (attachment) [#391].
 20. Support markdown text extraction (attachments) [#356].
 21. Support AbiWord documents text extraction (attachment) [#392].
+22. Fix the mimetype of attachments in db and rebuild the cache of attachments with a wrong mimetype [#394].
 
 MAINTENANCE:
 1. Better hints for the sitemap option.

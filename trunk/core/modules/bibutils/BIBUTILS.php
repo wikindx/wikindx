@@ -346,39 +346,21 @@ class BIBUTILS
     private function inputTypes()
     {
         $array = [];
-        if (FILE\command_exists($this->bibutilsPath . 'biblatex2xml'))
+        $array['mods'] = 'MODS';
+        
+        if (\FILE\command_exists($this->bibutilsPath . 'bib2xml'))
         {
             $array['bib2xml'] = 'BibTeX';
-        }
-        if (FILE\command_exists($this->bibutilsPath . 'bib2xml'))
-        {
             $array['biblatex2xml'] = 'BibTeX LaTeX';
-        }
-        if (FILE\command_exists($this->bibutilsPath . 'ris2xml'))
-        {
+            $array['copac2xml'] = 'COPAC';
+            $array['end2xml'] = 'Endnote (Refer Format)';
+            $array['endx2xml'] = 'Endnote XML';
+            $array['isi2xml'] = 'ISI';
+            $array['med2xml'] = 'PubMed';
             $array['ris2xml'] = 'RIS';
         }
-        if (FILE\command_exists($this->bibutilsPath . 'copac2xml'))
-        {
-            $array['copac2xml'] = 'COPAC';
-        }
-        if (FILE\command_exists($this->bibutilsPath . 'end2xml'))
-        {
-            $array['end2xml'] = 'Endnote (Refer Format)';
-        }
-        if (FILE\command_exists($this->bibutilsPath . 'endx2xml'))
-        {
-            $array['endx2xml'] = 'Endnote XML';
-        }
-        if (FILE\command_exists($this->bibutilsPath . 'isi2xml'))
-        {
-            $array['isi2xml'] = 'ISI';
-        }
-        if (FILE\command_exists($this->bibutilsPath . 'med2xml'))
-        {
-            $array['med2xml'] = 'PubMed';
-        }
-        $array['mods'] = 'MODS';
+        
+        asort($array, SORT_LOCALE_STRING);
 
         return $array;
     }
@@ -390,27 +372,19 @@ class BIBUTILS
     private function outputTypes()
     {
         $array = [];
-        if (file_exists($this->bibutilsPath . 'xml2bib'))
-        {
-            $array['xml2bib'] = 'BibTeX';
-        }
-        if (file_exists($this->bibutilsPath . 'xml2ris'))
-        {
-            $array['xml2ris'] = 'RIS';
-        }
-        if (file_exists($this->bibutilsPath . 'xml2end'))
-        {
-            $array['xml2end'] = 'Endnote (Refer Format)';
-        }
-        if (file_exists($this->bibutilsPath . 'xml2wordbib'))
-        {
-            $array['xml2wordbib'] = 'Word BIB';
-        }
-        if (file_exists($this->bibutilsPath . 'xml2ads'))
+        $array['mods'] = 'MODS';
+
+        if (\FILE\command_exists($this->bibutilsPath . 'xml2bib'))
         {
             $array['xml2ads'] = 'ADS';
+            $array['xml2bib'] = 'BibTeX';
+            $array['xml2end'] = 'Endnote (Refer Format)';
+            $array['xml2isi'] = 'ISI';
+            $array['xml2ris'] = 'RIS';
+            $array['xml2wordbib'] = 'Word BIB';
         }
-        $array['mods'] = 'MODS';
+        
+        asort($array, SORT_LOCALE_STRING);
 
         return $array;
     }

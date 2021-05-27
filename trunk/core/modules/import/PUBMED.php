@@ -36,9 +36,7 @@ class PUBMED
         $this->vars = GLOBALS::getVars();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_MESSAGES::getInstance();
-        if (!$this->bibutilsPath = WIKINDX_BIBUTILS_PATH) {
-            $this->bibutilsPath = WIKINDX_BIBUTILS_UNIXPATH_DEFAULT;
-        }
+        $this->bibutilsPath = WIKINDX_BIN_FOLDER_BIBUTILS . DIRECTORY_SEPARATOR;
         $this->session = FACTORY_SESSION::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IMPORTCOMMON.php"]));
         $this->import = new IMPORTCOMMON();

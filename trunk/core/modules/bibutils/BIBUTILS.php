@@ -25,9 +25,7 @@ class BIBUTILS
     public function __construct()
     {
         $this->messages = FACTORY_MESSAGES::getInstance();
-        if (!$this->bibutilsPath = WIKINDX_BIBUTILS_PATH) {
-            $this->bibutilsPath = WIKINDX_BIBUTILS_UNIXPATH_DEFAULT;
-        }
+        $this->bibutilsPath = WIKINDX_BIN_FOLDER_BIBUTILS . DIRECTORY_SEPARATOR;
         $this->filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]) . DIRECTORY_SEPARATOR;
         $this->filesUrl = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_FILES]) . "/";
         $this->vars = GLOBALS::getVars();

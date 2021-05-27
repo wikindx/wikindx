@@ -370,6 +370,9 @@ class MESSAGES
 				"globalEdit" => dgettext($domain, "Registered users can globally edit creators, collections, publishers and keywords"),
 				"impressum" => dgettext($domain, "Impressum"),
 				"bibUtils" => dgettext($domain, "Path to <a href='https://sourceforge.net/p/bibutils/home/Bibutils/' target='_blank'>bibutils</a>"),
+				"catdvi" => dgettext($domain, "Path to <a href='http://catdvi.sourceforge.net/' target='_blank'>catdvi</a>"),
+				"djvutxt" => dgettext($domain, "Path to <a href='http://djvu.sourceforge.net/doc/man/djvutxt.html' target='_blank'>djvutxt</a>"),
+				"ps2pdf" => dgettext($domain, "Path to <a href='http://web.mit.edu/ghostscript/www/Ps2pdf.htm' target='_blank'>ps2pdf</a>"),
 			),
 /// components_ Admin components
 		    "components" => array(
@@ -886,7 +889,10 @@ class MESSAGES
 				"keywordImport" => dgettext($domain, "Keywords are separated in the source bibliography by the chosen character(s)."),
 				"urlPrefix" => dgettext($domain, "A default URL prefix displayed when adding URLs to resources."),
 				"impressum" => dgettext($domain, "Append an impressum/legal notice to the footer of each page."),
-				"bibUtils" => dgettext($domain, "The Bibutils utility uses C binaries written by Chris Putnam at Bibutils. It allows for the format conversion of many different types of bibliographies so that there is usually a way to import your bibliography into WIKINDX. Most conversions use the MODS XML intermediate format. Enter here the path to bibUtils (e.g. '/usr/bin/' for *NIX or 'D:/wamp/www/wikindx/bibutils/' for windows). If this is empty, the utility's export function will assume *NIX and look by default in \$PATH. Needs the trailing '/'."),
+				"bibUtils" => dgettext($domain, "The Bibutils utility uses C binaries written by Chris Putnam at Bibutils. It allows for the format conversion of many different types of bibliographies so that there is usually a way to import your bibliography into WIKINDX. Most conversions use the MODS XML intermediate format. If you do not specify anything, the utility will be looked for in the PATH (default behavior of 'all' OS). If it is not accessible from the PATH, specify the absolute path of the folder containing the utility (e.g. '/usr/bin/' or 'C:\\\\Program Files\\\\example\\\\')."),
+				"catdvi" => dgettext($domain, "The catdvi utility is included in TeX distributions like TeX Live. It's used for caching the text of DVI attachments. If you do not specify anything, the utility will be looked for in the PATH (default behavior of 'all' OS). If it is not accessible from the PATH, specify the absolute path of the folder containing the utility (e.g. '/usr/bin/' or 'C:\\\\Program Files\\\\example\\\\')."),
+				"djvutxt" => dgettext($domain, "The djvutxt utility is part of the DjVuLibre. It's used for caching the text of DjVu attachments. If you do not specify anything, the utility will be looked for in the PATH (default behavior of 'all' OS). If it is not accessible from the PATH, specify the absolute path of the folder containing the utility (e.g. '/usr/bin/' or 'C:\\\\Program Files\\\\example\\\\')."),
+				"ps2pdf" => dgettext($domain, "The ps2pdf utility is a bash wrapper for GhostScript. It's used for caching the text of PostScript attachments. If you do not specify anything, the utility will be looked for in the PATH (default behavior of 'all' OS). If it is not accessible from the PATH, specify the absolute path of the folder containing the utility (e.g. '/usr/bin/' or 'C:\\\\Program Files\\\\example\\\\')."),
 			),
 /// menu_ Menu subsystem.  The trick here is to use short terms that don't cause problems with overflowing the CSS drop-down boxes - some browsers may happily handle this, others won't. Up to 15-16 characters (depending on character width) is a good guide - but check! NB!!!!!  For this array, the values should be unique where the keys form part of the same menu item.  For example, in the File menu, the 'file' key and the 'show' key should not have the same value of, for example, 'Files'.
 		    "menu" => array(

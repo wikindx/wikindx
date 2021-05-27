@@ -2403,6 +2403,16 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 68 (6.4.9)
+     *
+     * Replace configBibutilsPath by configBinFolderBibutils option
+     */
+    private function upgradeTo68()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

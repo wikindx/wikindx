@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.9');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 67.0);
+define('WIKINDX_INTERNAL_VERSION', 68.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -459,7 +459,10 @@ define('WIKINDX_POPULARITY_DOWNLOADS_WEIGHT', 0.75);
 define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configAuthGate"                  => ["constname" => "WIKINDX_AUTHGATE_USE",                  "type" => "configBoolean"],
     "configAuthGateMessage"           => ["constname" => "WIKINDX_AUTHGATE_MESSAGE",              "type" => "configVarchar"],
-    "configBibutilsPath"              => ["constname" => "WIKINDX_BIBUTILS_PATH",                 "type" => "configVarchar"],
+    "configBinFolderBibutils"         => ["constname" => "WIKINDX_BIN_FOLDER_BIBUTILS",           "type" => "configVarchar"],
+    "configBinFolderCatdvi"           => ["constname" => "WIKINDX_BIN_FOLDER_CATDVI",             "type" => "configVarchar"],
+    "configBinFolderDjvutxt"          => ["constname" => "WIKINDX_BIN_FOLDER_DJVUTXT",            "type" => "configVarchar"],
+    "configBinFolderPs2pdf"           => ["constname" => "WIKINDX_BIN_FOLDER_PS2PDF",             "type" => "configVarchar"],
     "configBrowserTabID"              => ["constname" => "WIKINDX_BROWSER_TAB_ID",                "type" => "configBoolean"],
     "configBypassSmartyCompile"       => ["constname" => "WIKINDX_BYPASS_SMARTY_COMPILATION",     "type" => "configBoolean"],
     "configCmsAllow"                  => ["constname" => "WIKINDX_CMS_ALLOW",                     "type" => "configBoolean"],

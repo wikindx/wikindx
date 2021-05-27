@@ -315,7 +315,9 @@ class FILETOTEXT
         
         $pdffile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".pdf"]);
         
-        $cmd = 'ps2pdf "' . $filename . '" "' . $pdffile . '"';
+        $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "ps2pdf"]);
+        
+        $cmd = '"' . $bin . '" "' . $filename . '" "' . $pdffile . '"';
         $execerrno = 0;
         $execoutput = [];
         
@@ -1455,7 +1457,9 @@ class FILETOTEXT
         
         $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".txt"]);
         
-        $cmd = 'djvutxt "' . $filename . '" "' . $txtfile . '"';
+        $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "djvutxt"]);
+        
+        $cmd = '"' . $bin . '" "' . $filename . '" "' . $txtfile . '"';
         $execerrno = 0;
         $execoutput = [];
         
@@ -1485,7 +1489,9 @@ class FILETOTEXT
         
         $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "dvi_" . \UTILS\uuid() . ".txt"]);
         
-        $cmd = 'catdvi --output-encoding=UTF-8 --sequential "' . $filename . '" > "' . $txtfile . '"';
+        $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "catdvi"]);
+        
+        $cmd = '"' . $bin . '" --output-encoding=UTF-8 --sequential "' . $filename . '" > "' . $txtfile . '"';
         $execerrno = 0;
         $execoutput = [];
         

@@ -1806,16 +1806,49 @@ class CONFIGURE
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
+        
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "bibUtils"));
-        array_key_exists("configBibutilsPath", $this->formData) ? $input = $this->formData["configBibutilsPath"] : WIKINDX_BIBUTILS_PATH_DEFAULT;
+        array_key_exists("configBinFolderBibutils", $this->formData) ? $input = $this->formData["configBinFolderBibutils"] : WIKINDX_BIN_FOLDER_BIBUTILS_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text('config', 'bibUtils'),
-            "configBibutilsPath",
+            "configBinFolderBibutils",
             $input,
             30,
             255
         ) . BR . \HTML\span($hint, 'hint'));
         
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "catdvi"));
+        array_key_exists("configBinFolderCatdvi", $this->formData) ? $input = $this->formData["configBinFolderCatdvi"] : WIKINDX_BIN_FOLDER_CATDVI_DEFAULT;
+        $pString .= \HTML\td(\FORM\textInput(
+            $this->messages->text('config', 'catdvi'),
+            "configBinFolderCatdvi",
+            $input,
+            30,
+            255
+        ) . BR . \HTML\span($hint, 'hint'));
+        
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "djvutxt"));
+        array_key_exists("configBinFolderDjvutxt", $this->formData) ? $input = $this->formData["configBinFolderDjvutxt"] : WIKINDX_BIN_FOLDER_DJVUTXT_DEFAULT;
+        $pString .= \HTML\td(\FORM\textInput(
+            $this->messages->text('config', 'djvutxt'),
+            "configBinFolderDjvutxt",
+            $input,
+            30,
+            255
+        ) . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\trEnd();
+        
+        $pString .= \HTML\trStart();
+        
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ps2pdf"));
+        array_key_exists("configBinFolderPs2pdf", $this->formData) ? $input = $this->formData["configBinFolderPs2pdf"] : WIKINDX_BIN_FOLDER_PS2PDF_DEFAULT;
+        $pString .= \HTML\td(\FORM\textInput(
+            $this->messages->text('config', 'ps2pdf'),
+            "configBinFolderPs2pdf",
+            $input,
+            30,
+            255
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
@@ -1974,7 +2007,10 @@ class CONFIGURE
                     "configSiteMapDisallow",
                     "configResourceUrlPrefix",
                     "configBrowserTabID",
-                    "configBibutilsPath",
+                    "configBinFolderBibutils",
+                    "configBinFolderCatdvi",
+                    "configBinFolderDjvutxt",
+                    "configBinFolderPs2pdf",
                 ];
 
                 break;

@@ -325,77 +325,74 @@ class FILETOTEXT
      */
     private function readWordXML($filepath)
     {
-        $striped_content = "";
+        $content = "";
         
-        foreach (["word/document.xml", "word/comments.xml", "word/endnotes.xml", "word/footnotes.xml"] as $f)
+        // Open the OCF container
+        $za = new \ZipArchive();
+        
+        if ($za->open($filepath) === TRUE)
         {
-            $content = "";
-            
-            // Extract the content parts
-            $za = new \ZipArchive();
-            
-            if ($za->open($filepath) === TRUE)
+            // There are in defined locations, so we don't need to parse the Package Document Map
+            foreach (["word/document.xml", "word/comments.xml", "word/endnotes.xml", "word/footnotes.xml"] as $f)
             {
-                $content = $za->getFromName($f);
-                if ($content === FALSE) $content = "";
-            }
-            
-            if ($content != "")
-            {
-                // Extract the text part of the body and rudimentary formats major blocks with newlines
-                // We assume that the document is well formed and that the tags do not intersect
-                $pXML = new \XMLReader();
-                
-                if ($pXML->XML($content))
+                $filecontent = $za->getFromName($f);
+                if ($filecontent !== FALSE && $filecontent != "")
                 {
-                    $bExtract = FALSE;
-                    $bExtractElement = FALSE;
+                    // Extract the text part of the body and rudimentary formats major blocks with newlines
+                    // We assume that the document is well formed and that the tags do not intersect
+                    $pXML = new \XMLReader();
                     
-                    while ($pXML->read())
+                    if ($pXML->XML($filecontent))
                     {
-                        // Start extracting at the start of the text of each major part
-                        if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
-                        {
-                            $bExtract = TRUE;
-                        }
-                        // Stop extracting at the end of the text of each major part
-                        if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
-                        {
-                            $bExtract = FALSE;
-                        }
+                        $bExtract = FALSE;
+                        $bExtractElement = FALSE;
                         
-                        // Start extracting at the start of the text of a paragraph
-                        if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:p"]))
+                        while ($pXML->read())
                         {
-                            $bExtractElement = TRUE;
-                        }
-                        // Stop extracting at the end of the text of a paragraph
-                        if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:p"]))
-                        {
-                            $bExtractElement = FALSE;
-                        }
-                        
-                        // Extract all node and add new lines on blocks
-                        if ($bExtract && $bExtractElement)
-                        {
-                            $striped_content .= $pXML->value;
-                            if (in_array($pXML->name, ["w:p"]))
+                            // Start extracting at the start of the text of each major part
+                            if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
                             {
-                                $striped_content .= LF.LF;
+                                $bExtract = TRUE;
+                            }
+                            // Stop extracting at the end of the text of each major part
+                            if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
+                            {
+                                $bExtract = FALSE;
+                            }
+                            
+                            // Start extracting at the start of the text of a paragraph
+                            if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:p"]))
+                            {
+                                $bExtractElement = TRUE;
+                            }
+                            // Stop extracting at the end of the text of a paragraph
+                            if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:p"]))
+                            {
+                                $bExtractElement = FALSE;
+                            }
+                            
+                            // Extract and add new lines on blocks
+                            if ($bExtract && $bExtractElement)
+                            {
+                                $content .= $pXML->value;
+                                if (in_array($pXML->name, ["w:p"]))
+                                {
+                                    $content .= LF.LF;
+                                }
                             }
                         }
                     }
+                    
+                    $content .= LF.LF;
+                    
+                    unset($pXML);
                 }
-                
-                $striped_content .= LF.LF;
-                
-                unset($pXML);
             }
-            
-            unset($za);
         }
         
-        return $striped_content;
+        unset($za);
+        
+        return $content;
     }
     
     /**

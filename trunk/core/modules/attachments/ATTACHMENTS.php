@@ -640,6 +640,59 @@ class ATTACHMENTS
         $this->db->update("resource_attachments", ["resourceattachmentsText" => $contentCache]);
         return TRUE;
     }
+
+    /**
+     * Caches all attachments that are not yet with cUrl
+     */
+    public function checkCache()
+    {
+        $db = FACTORY_DB::getInstance();
+        $vars = GLOBALS::getVars();
+        $session = FACTORY_SESSION::getInstance();
+        $curl_version_infos = curl_version();
+        $curl_ms_timeout_available = version_compare($curl_version_infos["version"], '7.16.2', '>=');
+            
+        // Don't launch a cache action when we are executing one 
+        $action = $vars['action'] ?? "";
+        $method = $vars['method'] ?? "";
+        if ($action == "attachments_ATTACHMENTS_CORE" && $method == "curlRefreshCache")
+        {
+            return;
+        }
+        
+        // 20 * 100 ms or 2 * 1 s implies a penality of 2 seconds
+        $db->limit($curl_ms_timeout_available ? 20 : 2, 0);
+        $db->formatConditions(["resourceattachmentsText" => 'IS NULL']);
+        $resultSet = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
+        while ($row = $db->fetchRow($resultSet))
+        {
+            $curlTarget = WIKINDX_URL_BASE . '/index.php' .
+            '?action=attachments_ATTACHMENTS_CORE' .
+            '&method=curlRefreshCache' .
+            '&filename=' . urlencode($row['resourceattachmentsHashFilename']);
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $curlTarget);
+            curl_setopt($ch, CURLOPT_VERBOSE, FALSE);
+            curl_setopt($ch, CURLOPT_HEADER, FALSE);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            if ($curl_ms_timeout_available)
+            {
+                // LkpPo(HACK): https://www.php.net/manual/fr/function.curl-setopt.php#104597
+                // For OSes that can't handle a timeout below 1 s, we disable signals to achieve queries in quasi async mode
+                curl_setopt($ch, CURLOPT_NOSIGNAL, TRUE);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 100); // 100 ms
+                curl_setopt($ch, CURLOPT_TIMEOUT_MS, 100); // 100 ms
+            }
+            else
+            {
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1); // 1 ms
+                curl_setopt($ch, CURLOPT_TIMEOUT, 1); // 1 ms
+            }
+            curl_exec($ch);
+        }
+    }
     
     /**
      * form for editing, deleting and adding (another) attachments

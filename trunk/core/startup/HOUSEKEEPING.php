@@ -38,9 +38,9 @@ class HOUSEKEEPING
      */
     public function cacheAttachments()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "list", "FILETOTEXT.php"]));
-        $f2t = new FILETOTEXT();
-        $f2t->checkCache();
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "attachments", "ATTACHMENTS.php"]));
+        $att = new ATTACHMENTS();
+        $att->checkCache();
         return;
     }
     /**

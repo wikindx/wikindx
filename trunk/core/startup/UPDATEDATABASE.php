@@ -1689,8 +1689,7 @@ END;
     /**
      * Upgrade database schema to version 32 (6.4.0)
      *
-     * Remove option WIKINDX_DB_TABLEPREFIX that is now hardcoded
-     * Clear missing attachments (moved to step 58)
+     * Clear missing attachments (code moved outside of the upgrade)
      */
     private function upgradeTo32()
     {
@@ -2196,14 +2195,10 @@ END;
     /**
      * Upgrade database schema to version 58 (6.4.7)
      *
-     * Clear missing attachments (replace step 32)
+     * Clear missing attachments (code moved outside of the upgrade)
      */
     private function upgradeTo58()
     {
-        // Clear attachments
-        //$attachment = FACTORY_ATTACHMENT::getInstance();
-        //$attachment->checkAttachmentRows();
-        
         $this->updateCoreInternalVersion();
     }
     
@@ -2390,11 +2385,9 @@ END;
                 $newmime = \FILE\getMimeType($path, $row["resourceattachmentsFileName"]);
                 if ($newmime != $row["resourceattachmentsFileType"])
                 {
+                    // Change the mime-type by don't rebuilt the attachment cache. It's done on step 69.
                     $this->db->formatConditions(["resourceattachmentsId" => $row["resourceattachmentsId"]]);
         	        $this->db->update("resource_attachments", ["resourceattachmentsFileType" => $newmime]);
-        	        
-                    $this->db->formatConditions(["resourceattachmentsId" => $row["resourceattachmentsId"]]);
-        	        $this->db->updateNull("resource_attachments", ["resourceattachmentsText"]);
                 }
             }
         }
@@ -2409,6 +2402,21 @@ END;
      */
     private function upgradeTo68()
     {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 69 (6.4.9)
+     *
+     * Force rebuild of attachment cache
+     */
+    private function upgradeTo69()
+    {
+        // Clear attachments
+        //$attachment = FACTORY_ATTACHMENT::getInstance();
+        //$attachment->checkAttachmentRows();
+        $this->db->updateNull("resource_attachments", ["resourceattachmentsText"]);
+        
         $this->upgradeToTargetVersion();
     }
     

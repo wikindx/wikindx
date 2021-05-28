@@ -281,6 +281,8 @@ class FILETOTEXT
      */
     private function readWordBinary($filepath)
     {
+        $content = "";
+
         if (($fh = fopen($filepath, 'r')) !== FALSE)
         {
             $headers = fread($fh, 0xA00);
@@ -299,19 +301,17 @@ class FILETOTEXT
 
             // Total length of text in the document
             $textLength = ($n1 + $n2 + $n3 + $n4);
-            if ($textLength <= 0)
+            if ($textLength > 0)
             {
-                return "";
+                $content = fread($fh, $textLength);
+                if ($content === FALSE) $content = "";
+                $content = utf8_encode($content);
             }
-            $extracted_plaintext = fread($fh, $textLength);
-            fclose($fh);
 
-            return utf8_encode($extracted_plaintext);
+            fclose($fh);
         }
-        else
-        {
-            return "";
-        }
+
+        return $content;
     }
     
     /**

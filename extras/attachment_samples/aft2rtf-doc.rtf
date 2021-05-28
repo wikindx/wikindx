@@ -1,0 +1,39 @@
+{\rtf1\ansi\ansicpg1252\deff0\deftab720 {\fonttbl{\f0\froman Times New Roman;}{\f1\fmodern Courier;}{\f2\fswiss Arial;}} {\info{\title Converting aft-files to rtf-files}{\author Eva Maria Krause}} {\colortbl ;\red0\green0\blue255;}
+\deflang1031
+\par\pard\qc {\fs48\b Converting aft-files to rtf-files}\par\pard
+\par\pard\qc {\fs36\b Eva Maria Krause}\par\pard\par\pard
+\pard\qc {Version 1.0}\par\pard 
+\pard\qc {{\fs16 revised 12/10/2001}}\par\pard 
+{\f0\fs36 {\par\pard\b Preliminaries\par}}
+\par\pard It would be very nice to have a dat-file for direct RTF-output from aft-files. In fact, there are converters from HTML to RTF or from LaTeX to RTF, but a direct way seems to be much more natural. When trying to write such a file there arise a lot of problems. The solutions proposed here are realized by some post-processing of the generated rtf-file, which is done by a little perl-script named "postrtf.pl". For this purpose the dat-file contains some commands, which can't be directly interpreted by an rtf-reader. They only serve as markup-commands needed in the perl-script afterwards.
+\par 
+{\f0\fs36 {\par\pard\b Problems and their solution\par}}
+{\f0\fs28 {\par\pard\b Missing spaces\par}}
+\par\pard First of all, lines in rtf-files are concatenated without intermediate spaces. Therefore the generated output must be modified by concatenating lines with additional spaces.
+\par 
+{\f0\fs28 {\par\pard\b Numbering of ordered lists\par}}
+\par\pard The second problem concerns ordered lists: RTF isn't a markup-language at all. Therefore no logical structure of documents exists. It must be substituted by paragraphs, indention and so on. Unlike HTML, Tex and Lout numbering of items isn't done automatically. It must be done by hand.
+\par 
+{\f0\fs28 {\par\pard\b Indention of nested lists\par}}
+\par\pard When nesting lists the indention of each item depends on the current indention level. Ordered and unordered lists can be mixed up arbitrarily. That's the reason, that unordered lists must also be handled by the postprocessing process.
+\par 
+{\f0\fs28 {\par\pard\b Verbatim paragraphs\par}}
+\par\pard Verbatim paragraphs should be displayed in the same manner as typed in. Especially line breaks should be kept. In RTF this means, that each line must be preceeded by something like {\f1\fs20\\par} or {\f1\fs20\\line\\li...} But in AFT-Dat-files there is no way of specifying some output code preceeding each line of a verbatim-block.
+\par 
+{\f0\fs28 {\par\pard\b Tables\par}}
+\par\pard In the definition of tables the width of each column has to be specified. But the number of columns varies from case to case, so one has to insert a different number of commands like {\f1\fs20\\cellx...}. This can only be done in the postprocessing process by evaluating the number of columns.
+\par 
+{\f0\fs36 {\par\pard\b Remarks\par}}
+{\f0\fs28 {\par\pard\b Images\par}}
+\par\pard Images won't be translated due to their very complicated presentation in RTF.
+\par 
+{\f0\fs28 {\par\pard\b Nesting of named lists\par}}
+\par\pard Nesting of named lists is not implemented yet.
+\par 
+{\f0\fs28 {\par\pard\b Tables\par}}
+\par\pard The presentation of tables only works, if the calculated number of columns by aft is correct. If the number of columns in a table varies from row to row aft calculates the number of columns only considering the first row. The generated table in rtf will then have not enough columns.
+\par 
+{\f0\fs36 {\par\pard\b Warning\par}}
+\par\pard Due to the described problem of missing spaces postprocessing is necessary in every case.
+\par 
+}

@@ -1382,7 +1382,11 @@ class FILETOTEXT
         
         // Utility config
         $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "djvu_" . \UTILS\uuid() . ".txt"]);
-        $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "djvutxt"]);
+        $bin = "djvutxt";
+        if (WIKINDX_BIN_FOLDER_DJVUTXT != "")
+        {
+            $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_DJVUTXT, $bin]);
+        }
         $cmd = '"' . $bin . '" "' . $filepath . '" "' . $txtfile . '"';
         
         // Extract
@@ -1421,7 +1425,11 @@ class FILETOTEXT
         
         // Utility config
         $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "dvi_" . \UTILS\uuid() . ".txt"]);
-        $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "catdvi"]);
+        $bin = "catdvi";
+        if (WIKINDX_BIN_FOLDER_CATDVI != "")
+        {
+            $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, $bin]);
+        }
         // "sequential" option allows to read a multicolumn document in human reading order
         $cmd = '"' . $bin . '" --output-encoding=UTF-8 --sequential "' . $filepath . '" > "' . $txtfile . '"';
         
@@ -1461,7 +1469,11 @@ class FILETOTEXT
         
         // Utility config
         $pdffile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".pdf"]);
-        $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "ps2pdf"]);
+        $bin = "ps2pdf";
+        if (WIKINDX_BIN_FOLDER_PS2PDF != "")
+        {
+            $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_PS2PDF, $bin]);
+        }
         $cmd = '"' . $bin . '" "' . $filepath . '" "' . $pdffile . '"';
         
         // Extract
@@ -1472,7 +1484,7 @@ class FILETOTEXT
         // Read and remove the result file
         if (file_exists($pdffile))
         {
-            $content = $this->readPdf($pdffile);
+            $content = $this->readPDF($pdffile);
             @unlink($pdf);
         }
         

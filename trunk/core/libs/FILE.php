@@ -543,6 +543,7 @@ namespace FILE
 
         return [FALSE, FALSE, FALSE, FALSE];
     }
+    
     /**
      * Rearrange the $_FILES array for multiple file uploads
      *
@@ -1002,6 +1003,7 @@ namespace FILE
             return FALSE;
         }
     }
+    
     /**
      * Extract the component.json file of a WIKINDX Component Package to an array
      *
@@ -1653,6 +1655,7 @@ namespace FILE
             return json_last_error();
         }
     }
+    
     /**
      * Format a file size in bytes to the greater multiple for display
      *
@@ -1686,22 +1689,30 @@ namespace FILE
 
         return round(($size / $factor), 2) . "&nbsp;" . $prefix;
     }
+    
     /**
      * Return the mime-type of a file
      *
-     * @param string $file
+     * The PHP finfo() function doesn't always return the right mime-type,
+     * so it tries to read it from OCF containers and to fallback on file extension
+     * when the mime-type is obviously too generic (e.g. text/plain, text/xml).
+     *
+     * You can provide an alternate filename to force the extension
+     * instead of taking the extension of filepath.
+     *
+     * @param string $filepath An absolute or relative file path
      * @param string $altfilename Default is ""
      *
-     * @return string
+     * @return string A mime-type
      */
-    function getMimeType($file, $altfilename = "")
+    function getMimeType($filepath, $altfilename = "")
     {
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $mime = $finfo->file($file);
+        $mime = $finfo->file($filepath);
         
         // Is it an OCF container?
         $za = new \ZipArchive();
-        $errcode = $za->open($file);
+        $errcode = $za->open($filepath);
         
         // Like EPUB, ODT are packaged with OCF container,
         // but since ODT also use fixed paths for XML files we open them directly
@@ -1726,7 +1737,7 @@ namespace FILE
         }
         
         if ($altfilename == "")
-            $extension = getExtension($file);
+            $extension = getExtension($filepath);
         else
             $extension = getExtension($altfilename);
         
@@ -1766,15 +1777,16 @@ namespace FILE
         }
         return $mime;
     }
+    
     /**
      * Return the extension of a file
      *
-     * @param string $file
+     * @param string $filepath An absolute or relative file path
      *
      * @return string
      */
-    function getExtension($file)
+    function getExtension($filepath)
     {
-        return mb_strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        return mb_strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
     }
 }

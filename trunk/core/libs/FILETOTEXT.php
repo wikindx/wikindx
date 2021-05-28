@@ -522,7 +522,7 @@ class FILETOTEXT
             
             // Extract metadata
             $filedata = $za->getFromName("meta.xml");
-            if ($filedata !== FALSE)
+            if ($filedata !== FALSE && $filedata != "")
             {
                 $pXML = new \XMLReader();
                 
@@ -554,7 +554,7 @@ class FILETOTEXT
             $filecontentdata = FALSE;
         }
         
-        if ($filecontentdata !== FALSE)
+        if ($filecontentdata !== FALSE && $filecontentdata != "")
         {
             // Load and normalize the content
             $dom = new DOMDocument();
@@ -683,6 +683,7 @@ class FILETOTEXT
         
         // Extract the content
         $content = file_get_contents($filepath);
+        if ($content === FALSE) $content = "";
         
         $texter = new RtfStringTexter($content);
         $striped_content = $texter->AsString();
@@ -724,7 +725,7 @@ class FILETOTEXT
         {
             $path_container = "META-INF/container.xml"; // Standard location of the top level entry file
             $file_container = $za->getFromName($path_container);
-            if ($file_container !== FALSE)
+            if ($file_container !== FALSE && $file_container != "")
             {
                 // Extract the default Package Document path from the OCF Container
                 // It's a manifest (map) of content files to render, and metadata
@@ -752,7 +753,7 @@ class FILETOTEXT
                 if ($path_opf !== NULL)
                 {
                     $file_opf = $za->getFromName($path_opf);
-                    if ($file_opf !== FALSE)
+                    if ($file_opf !== FALSE && $file_opf != "")
                     {
                         // Extract usefull metadata, the list of XHTML content files, and the spine
                         // There is no reuse of important tag names so we can simplify the parsing
@@ -810,7 +811,7 @@ class FILETOTEXT
                             }
                             
                             $file_xhtml = $za->getFromName($path_xhtml);
-                            if ($file_xhtml !== FALSE)
+                            if ($file_xhtml !== FALSE && $file_xhtml != "")
                             {
                                 $path_xhtml_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "epub_" . \UTILS\uuid() . ".xhtml"]);
                                 if (file_put_contents($path_xhtml_cache, $file_xhtml) !== FALSE)
@@ -1059,7 +1060,7 @@ class FILETOTEXT
         
         $filecontent = file_get_contents($filepath);
         
-        if ($filecontent !== FALSE && $pXML->XML($filecontent))
+        if ($filecontent !== FALSE && $filecontent != "" && $pXML->XML($filecontent))
         {
             $bExtract = FALSE;
             
@@ -1285,13 +1286,16 @@ class FILETOTEXT
         $pXML = new \XMLReader();
         
         $filecontent = file_get_contents($filepath);
-        if ($pXML->XML($filecontent))
+        if ($filecontent !== FALSE && $filecontent != "")
         {
-            while ($pXML->read())
+            if ($pXML->XML($filecontent))
             {
-                if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "ITEXT")
+                while ($pXML->read())
                 {
-                    $content .= htmlspecialchars_decode($pXML->getAttribute("CH"), ENT_HTML5) . LF;
+                    if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "ITEXT")
+                    {
+                        $content .= htmlspecialchars_decode($pXML->getAttribute("CH"), ENT_HTML5) . LF;
+                    }
                 }
             }
         }
@@ -1384,6 +1388,7 @@ class FILETOTEXT
         if (file_exists($txtfile))
         {
             $content = file_get_contents($txtfile);
+            if ($content === FALSE) $content = "";
             @unlink($txtfile);
         }
         
@@ -1416,6 +1421,7 @@ class FILETOTEXT
         if (file_exists($txtfile))
         {
             $content = file_get_contents($txtfile);
+            if ($content === FALSE) $content = "";
             @unlink($txtfile);
         }
         

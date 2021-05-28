@@ -204,7 +204,7 @@ class ADMINUSER
         $this->db->formatConditions(['usersId' => $this->session->getVar('addUserId')]);
 	    $this->db->update('users', ['usersLastInternalVersion' => WIKINDX_INTERNAL_VERSION]);
 	    $this->session->delVar('addUserId');
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerUserAdd(TRUE))
         { // Display password in email to new user
@@ -530,7 +530,7 @@ class ADMINUSER
     {
         $this->validateInput('register');
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerRequestManage($this->formData))
         {

@@ -70,7 +70,7 @@ class RESOURCEWRITE
             return;
         }
         $this->writeTables();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         $newResource = $this->edit === FALSE ? TRUE : FALSE;
         if ($newResource) {
@@ -805,7 +805,7 @@ class RESOURCEWRITE
         if ($newCollection && ($this->collectionMap->collectionTypes[$this->formData['resourceType']] != 'thesis'))
         {
             // Gather defaults for this new collection
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "collection", "COLLECTIONDEFAULTMAP.php"]));
             $defaultMap = new COLLECTIONDEFAULTMAP();
             $collectionType = $this->collectionMap->collectionTypes[$this->formData['resourceType']];
             $defaults = $collectionDefaults = [];

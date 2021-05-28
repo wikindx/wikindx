@@ -179,7 +179,7 @@ class FORGET
         {
             $this->badInput->close($error, $this, 'forgetInitStage2');
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         $password = time();
         if (!$emailClass->forgetProcess($usersUsername, $password))

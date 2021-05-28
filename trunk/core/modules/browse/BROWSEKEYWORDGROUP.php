@@ -35,7 +35,7 @@ class BROWSEKEYWORDGROUP
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "browse", "BROWSECOMMON.php"]));
         $this->common = new BROWSECOMMON();
 
         $this->messages = FACTORY_MESSAGES::getInstance();

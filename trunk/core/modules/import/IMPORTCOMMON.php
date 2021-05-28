@@ -289,7 +289,7 @@ class IMPORTCOMMON
             }
             if ($data['resourceAdded'])
             {
-                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+                include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
                 $email = new EMAIL();
                 $email->notify(FALSE, TRUE);
             }
@@ -1374,7 +1374,7 @@ class IMPORTCOMMON
      */
     public function collectionDefaults()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "collection", "COLLECTIONDEFAULTMAP.php"]));
         $defaultMap = new COLLECTIONDEFAULTMAP();
         $typesArray = array_unique(array_values($defaultMap->collectionTypes));
         $collectionArray = [];

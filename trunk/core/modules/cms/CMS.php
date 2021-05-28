@@ -541,7 +541,7 @@ class CMS
         }
         elseif ($_GET['type'] == 'getQuote')
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCEMETA.php"]));
             $meta = new RESOURCEMETA();
             $db->formatConditionsOneField($ids, 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
@@ -583,7 +583,7 @@ class CMS
         }
         elseif ($_GET['type'] == 'getParaphrase')
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCEMETA.php"]));
             $meta = new RESOURCEMETA();
             $db->formatConditionsOneField($ids, 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
@@ -625,7 +625,7 @@ class CMS
         }
         elseif ($_GET['type'] == 'getMusing')
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCEMETA.php"]));
             $meta = new RESOURCEMETA();
             $db->formatConditionsOneField($ids, 'resourceId');
             $resultset = $res->getResource(FALSE, $order);

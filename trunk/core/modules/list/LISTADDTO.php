@@ -101,7 +101,7 @@ class LISTADDTO
      */
     public function organize()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCECATEGORYEDIT.php"]));
         $catForm = new RESOURCECATEGORYEDIT();
         $catForm->storeData();
         if (!array_key_exists("displayCategory", $this->vars) && !array_key_exists("displaySubcategory", $this->vars) &&
@@ -554,7 +554,7 @@ class LISTADDTO
         {
             $ids = unserialize(base64_decode($string));
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "admin", "DELETERESOURCE.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "admin", "DELETERESOURCE.php"]));
         $deleteResource = new DELETERESOURCE();
         $deleteResource->resourceIds['resource_id'] = $ids;
         $deleteResource->navigate = 'list';
@@ -568,7 +568,7 @@ class LISTADDTO
      */
     public function organizeInit($message = FALSE)
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCECATEGORYEDIT.php"]));
         $catForm = new RESOURCECATEGORYEDIT();
         $pString = '';
         $uuid = FALSE;
@@ -813,7 +813,7 @@ class LISTADDTO
      */
     private function addToBasket()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "basket", "BASKET.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "basket", "BASKET.php"]));
         $basketObj = new BASKET();
         list($idFound, $string) = $this->checkIdInput();
         if (!$idFound)
@@ -865,7 +865,7 @@ class LISTADDTO
      */
     private function removeFromBasket()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "basket", "BASKET.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "basket", "BASKET.php"]));
         $basketObj = new BASKET();
         list($idFound, $string) = $this->checkIdInput();
         if (!$idFound)

@@ -149,7 +149,7 @@ class NEWS
         $this->session->setVar("setup_News", TRUE);
         if (WIKINDX_EMAIL_NEWS)
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
             $emailClass = new EMAIL();
             if (!$emailClass->news($title, $news))
             {
@@ -309,7 +309,7 @@ class NEWS
         $this->db->update('news', $updateArray);
         if (WIKINDX_EMAIL_NEWS)
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
             $emailClass = new EMAIL();
             if (!$emailClass->news($updateArray['newsTitle'], $updateArray['newsNews']))
             {

@@ -192,7 +192,7 @@ class BOOKMARK
 			}
             // send back to view this resource with success message
             GLOBALS::addTplVar('content', $this->success->text("bookmark"));
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCEVIEW.php"]));
             $resource = new RESOURCEVIEW();
             $resource->init($this->session->getVar("sql_LastSolo"));
         } else { // multi view

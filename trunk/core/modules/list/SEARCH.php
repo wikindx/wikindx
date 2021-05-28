@@ -76,7 +76,7 @@ class SEARCH
         $this->publisher = FACTORY_PUBLISHER::getInstance();
         $this->collection = FACTORY_COLLECTION::getInstance();
         $this->user = FACTORY_USER::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "miscellaneous", "TAG.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "miscellaneous", "TAG.php"]));
         $this->tag = new TAG();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();

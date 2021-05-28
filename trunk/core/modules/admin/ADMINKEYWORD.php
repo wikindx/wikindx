@@ -46,7 +46,7 @@ class ADMINKEYWORD
     {
         // Edit operations use functions from core/modules/edit/EDITKEYWORD.php
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" . $this->messages->text("resources", "keyword") . ")"));
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "edit", "EDITKEYWORD.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "edit", "EDITKEYWORD.php"]));
         $keyword = new EDITKEYWORD();
         $keyword->init();
     }

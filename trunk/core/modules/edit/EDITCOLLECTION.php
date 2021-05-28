@@ -104,7 +104,7 @@ class EDITCOLLECTION
         {
             $pString = '';
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "collection", "COLLECTIONMAP.php"]));
         $this->map = new COLLECTIONMAP();
         if ($this->vars['collectionType'])
         {
@@ -171,7 +171,7 @@ class EDITCOLLECTION
         {
             $short = FALSE;
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "collection", "COLLECTIONDEFAULTMAP.php"]));
         $this->defaultMap = new COLLECTIONDEFAULTMAP();
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $pString = $message;
@@ -335,7 +335,7 @@ class EDITCOLLECTION
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->validateInput();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "collection", "COLLECTIONDEFAULTMAP.php"]));
         $this->defaultMap = new COLLECTIONDEFAULTMAP();
         $this->db->formatConditions(['collectionId' => $this->formData['collectionId']]);
         $recordset = $this->db->select('collection', ['collectionType', 'collectionDefault']);

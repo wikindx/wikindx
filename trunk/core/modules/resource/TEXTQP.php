@@ -620,7 +620,7 @@ class TEXTQP
                 }
             }
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->notify($this->vars['resourceId']))
         {

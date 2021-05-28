@@ -113,7 +113,7 @@ class REGISTER
         }
         // time() should be unique enough
         $hashKey = md5(time());
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->register($hashKey, $email))
         {
@@ -248,7 +248,7 @@ class REGISTER
         $this->session->setVar("setup_Write", TRUE);
         // Write default preferences (TRUE == insert)
         $this->user->writePreferences($userId);
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerUserAdd())
         {
@@ -288,7 +288,7 @@ class REGISTER
         {
             $this->badInput->close($error, $this, 'initRegister');
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerRequest($email))
         {

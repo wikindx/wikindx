@@ -33,7 +33,7 @@ class RISEXPORT
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->common = FACTORY_EXPORTCOMMON::getInstance('ris');
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "importexport", "RISMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "RISMAP.php"]));
         $this->map = new RISMAP();
         $this->browserTabID = GLOBALS::getBrowserTabID();
     }

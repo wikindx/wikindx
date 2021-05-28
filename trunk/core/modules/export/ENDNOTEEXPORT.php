@@ -40,7 +40,7 @@ class ENDNOTEEXPORT
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "importexport", "ENDNOTEMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "ENDNOTEMAP.php"]));
         $this->map = new ENDNOTEMAP();
         $this->common = FACTORY_EXPORTCOMMON::getInstance('endnote');
         $this->browserTabID = GLOBALS::getBrowserTabID();

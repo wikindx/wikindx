@@ -36,7 +36,7 @@ class IDEAS
         $this->gatekeep->init();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "TEXTQP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "TEXTQP.php"]));
         $this->textqp = new TEXTQP();
         $this->textqp->type = 'idea';
         $this->metadata = FACTORY_METADATA::getInstance();

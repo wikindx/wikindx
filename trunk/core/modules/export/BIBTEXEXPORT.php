@@ -33,7 +33,7 @@ class BIBTEXEXPORT
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->common = FACTORY_EXPORTCOMMON::getInstance('bibtex');
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "VIEWBIBTEX.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "VIEWBIBTEX.php"]));
         $this->bibtex = new VIEWBIBTEX();
         $this->browserTabID = GLOBALS::getBrowserTabID();
     }

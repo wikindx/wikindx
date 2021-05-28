@@ -62,7 +62,7 @@ class INSERTCITATION
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->badInput->closeType = 'closePopup';
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "QUICKSEARCH.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "list", "QUICKSEARCH.php"]));
         $this->search = new QUICKSEARCH();
         $this->search->insertCitation = TRUE;
     }

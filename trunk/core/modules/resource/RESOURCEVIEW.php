@@ -57,7 +57,7 @@ class RESOURCEVIEW
         $this->user = FACTORY_USER::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "browse", "BROWSECOMMON.php"]));
         $this->commonBib = new BROWSECOMMON();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCEABSTRACT.php"]));
         $this->abstract = new RESOURCEABSTRACT();
@@ -161,7 +161,7 @@ class RESOURCEVIEW
     {
         $resourceMap = FACTORY_RESOURCEMAP::getInstance($row['resourceType']);
         $typeMaps = $resourceMap->getTypeMap();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bibcitation", "STYLEMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "STYLEMAP.php"]));
         $styleMap = new STYLEMAP();
         // Grab all creator IDs for this resource
         $creators = $tempArray = [];
@@ -1699,7 +1699,7 @@ class RESOURCEVIEW
      */
     private function displayBasket($row)
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "basket", "BASKET.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "basket", "BASKET.php"]));
         $basketObj = new BASKET();
         $basket = $basketObj->getBasket();
         if (is_array($basket) && !empty($basket))

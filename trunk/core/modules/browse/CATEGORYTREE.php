@@ -23,7 +23,7 @@ class CATEGORYTREE
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "browse", "BROWSECOMMON.php"]));
         $this->common = new BROWSECOMMON();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSECATEGORY.php"]));
         $this->categories = new BROWSECATEGORY();

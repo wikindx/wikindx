@@ -135,7 +135,7 @@ class EDITMETADATA
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstract") . $this->return);
         // Create citation link for this type
-        //		include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "cite", "CITE.php"]));
+        //		include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "cite", "CITE.php"]));
         //		$citeLink = CITE::makeCiteLink('abstract');
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "abstractEdit");
@@ -171,7 +171,7 @@ class EDITMETADATA
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "notes") . $this->return);
         // Create citation link for this type
-        //		include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "cite", "CITE.php"]));
+        //		include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "cite", "CITE.php"]));
         //		$citeLink = CITE::makeCiteLink('note');
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "noteEdit");
@@ -344,7 +344,7 @@ class EDITMETADATA
      */
     private function notify()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "email", "EMAIL.php"]));
         $email = new EMAIL();
         $email->notify($this->vars['id']);
     }

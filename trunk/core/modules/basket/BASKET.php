@@ -126,7 +126,7 @@ class BASKET
 			}
 		}
         // send back to view this resource with success message
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
         if (!$solo = GLOBALS::getTempStorage('sql_LastSolo')) {
         	$solo = $this->session->getVar("sql_LastSolo");
@@ -156,7 +156,7 @@ class BASKET
 			}
 		}
         // send back to view this resource with success message
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
         if (!$solo = GLOBALS::getTempStorage('sql_LastSolo')) {
         	$solo = $this->session->getVar("sql_LastSolo");
@@ -182,7 +182,7 @@ class BASKET
     {
         $basket = $this->getBasket();
         if (empty($basket)) {
-		    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
+		    include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "FRONT.php"]));
         	new FRONT(); // __construct() runs on autopilot
     		return;
     	}
@@ -305,7 +305,7 @@ class BASKET
     {
         $basket = $this->getBasket();
         if (empty($basket)) {
-		    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
+		    include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "FRONT.php"]));
         	new FRONT(); // __construct() runs on autopilot
     		return;
     	}
@@ -333,7 +333,7 @@ class BASKET
         	\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
         }
         $this->session->clearArray('basket');
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "FRONT.php"]));
         new FRONT($this->success->text("basketDelete")); // __construct() runs on autopilot
     }
     /**

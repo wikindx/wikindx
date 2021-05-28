@@ -43,7 +43,7 @@ class LISTSOMERESOURCES
         $this->common->listSomeResources = TRUE;
         $this->session = FACTORY_SESSION::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "browse", "BROWSECOMMON.php"]));
         $this->commonBrowse = new BROWSECOMMON();
         $this->browserTabID = GLOBALS::getBrowserTabID();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "list"));

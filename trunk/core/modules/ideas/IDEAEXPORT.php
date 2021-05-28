@@ -51,7 +51,7 @@ class IDEAEXPORT
         $this->common = FACTORY_EXPORTCOMMON::getInstance('rtf');
         $this->rtf = FACTORY_RICHTEXTFORMAT::getInstance();
         $this->userObj = FACTORY_USER::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "export", "FILES.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "export", "FILES.php"]));
         $this->files = new FILES();
         $this->fontSizes = [
             1 => 8, 2 => 10, 3 => 12, 4 => 14, 5 => 16, 6 => 18, 7 => 20, 8 => 22,

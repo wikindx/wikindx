@@ -183,7 +183,7 @@ class DELETERESOURCE
 
             return;
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "miscellaneous", "TAG.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "miscellaneous", "TAG.php"]));
         $tag = new TAG();
         $tags = $tag->grabAll();
         if (array_key_exists('success', $this->vars) && $this->vars['success']) {
@@ -474,7 +474,7 @@ class DELETERESOURCE
      */
      private function deleteBasket()
      {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "basket", "BASKET.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "basket", "BASKET.php"]));
         $basketObj = new BASKET();
 // Do this user and storage first . . .
         $basket = $basketObj->getBasket($this->session->getVar('setup_UserId'));
@@ -522,7 +522,7 @@ class DELETERESOURCE
      */
      private function deleteBookmark()
      {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bookmarks", "BOOKMARK.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "bookmarks", "BOOKMARK.php"]));
         $bookmarkObj = new BOOKMARK();
 // Do this user and storage first . . .
         $bookmarks = $bookmarkObj->getBookmarks($this->session->getVar('setup_UserId'));

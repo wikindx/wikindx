@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "backupmysql",
-    "component_version": "492",
+    "component_version": "502",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "MySQL Backup",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "23dceca5216db1648d92d4c70d200068cff10f57fdf4936d4744841ee8fb70b0"
+    "component_sha256": "d4c376d523c34ef2be9e21d1b81fad3694d077ea7953b7b900c4383336b8d530"
 }

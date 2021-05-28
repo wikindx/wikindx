@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ideagen\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-07-18 02:48+0200\n"
+"POT-Creation-Date: 2021-05-28 16:03+0200\n"
 "PO-Revision-Date: 2020-06-01 13:44+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -39,7 +39,8 @@ msgid ""
 "Idea Generator randomly selects and displays two items of metadata (quotes, "
 "paraphrases, musings, or ideas) in the hope that the chance juxtaposition "
 "might be serendipitous. The greater the number of metadata, the greater the "
-"variety of juxtaposition."
+"variety of juxtaposition. You can narrow the selection process down by "
+"selecting each item from within a range of resource or metadata keywords."
 msgstr ""
 
 #: components/plugins/ideagen/ideagenmessages.php:25
@@ -78,4 +79,25 @@ msgstr ""
 msgid ""
 "In order to work, Idea Generator needs at least 3 items of metadata available "
 "to you."
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:34
+msgid "Item 1"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:35
+msgid "Item 2"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:36
+msgid "Resource keywords"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:37
+msgid "Metadata keywords"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:38
+msgid ""
+"Unable to generate random pair. Please try again or change the item options."
 msgstr ""

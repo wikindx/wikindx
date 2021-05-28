@@ -41,7 +41,7 @@ class FILETOTEXT
         {
             case WIKINDX_MIMETYPE_ABW:
                 // AbiWord
-                $text = $this->readAbw($filepath);
+                $text = $this->readAbiWord($filepath);
             break;
             case WIKINDX_MIMETYPE_DJV:
                 // DjVu
@@ -49,22 +49,22 @@ class FILETOTEXT
             break;
             case WIKINDX_MIMETYPE_DOC:
                 // Microsoft Office Word (before 2007)
-                $text = $this->readWord($filepath);
+                $text = $this->readWordBinary($filepath);
             break;
             case WIKINDX_MIMETYPE_DOCM:
             case WIKINDX_MIMETYPE_DOCX:
             case WIKINDX_MIMETYPE_DOTM:
             case WIKINDX_MIMETYPE_DOTX:
                 // Microsoft Office Word (2007 and higher)
-                $text = $this->readDocx($filepath);
+                $text = $this->readWordXML($filepath);
             break;
             case WIKINDX_MIMETYPE_DVI:
                 // DVI
-                $text = $this->readDvi($filepath);
+                $text = $this->readDVI($filepath);
             break;
             case WIKINDX_MIMETYPE_EPUB:
                 // EPUB
-                $text = $this->readEpub($filepath);
+                $text = $this->readEPUB($filepath);
             break;
             case WIKINDX_MIMETYPE_FB:
                 // Fiction Book
@@ -73,7 +73,7 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_HTML:
             case WIKINDX_MIMETYPE_XHTML:
                 // (X)HTML
-                $text = $this->readHtml($filepath);
+                $text = $this->readHTML($filepath);
             break;
             case WIKINDX_MIMETYPE_MHT_ALT:
             case WIKINDX_MIMETYPE_MHT_APP:
@@ -81,7 +81,7 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_MHT_MUL:
             case WIKINDX_MIMETYPE_MHT_RFC:
                 // Multipart file (RFC2557)
-                $text = $this->readMht($filepath);
+                $text = $this->readMultipart($filepath);
             break;
             case WIKINDX_MIMETYPE_ODP:
             case WIKINDX_MIMETYPE_ODT:
@@ -99,21 +99,21 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_PPTM:
             case WIKINDX_MIMETYPE_PPTX:
                 // Microsoft Office PowerPoint (2007 and higher)
-                $text = $this->readPptx($filepath);
+                $text = $this->readPowerPointXML($filepath);
             break;
             case WIKINDX_MIMETYPE_PDF:
             case WIKINDX_MIMETYPE_XPDF:
                 // PDF
-                $text = $this->readPdf($filepath);
+                $text = $this->readPDF($filepath);
             break;
             case WIKINDX_MIMETYPE_PS:
                 // PostScript
-                $text = $this->readPs($filepath);
+                $text = $this->readPostScript($filepath);
             break;
             case WIKINDX_MIMETYPE_RTF_APP:
             case WIKINDX_MIMETYPE_RTF_TEXT:
                 // Rtf
-                $text = $this->readRtf($filepath);
+                $text = $this->readRTF($filepath);
             break;
             case WIKINDX_MIMETYPE_SCRIBUS:
                 // Scribus
@@ -137,11 +137,11 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_XML_APP:
             case WIKINDX_MIMETYPE_XML_TEXT:
                 // Untyped XML
-                $text = $this->readHtml($filepath);
+                $text = $this->readHTML($filepath);
             break;
             case WIKINDX_MIMETYPE_XPS:
                 // XPS
-                $text = $this->readXps($filepath);
+                $text = $this->readXPS($filepath);
             break;
             default:
                 // Type not handled
@@ -177,7 +177,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readPdf($filename)
+    private function readPDF($filename)
     {
         static $plugin_xpdftotext_exists = NULL;
         
@@ -278,7 +278,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readWord($filename)
+    private function readWordBinary($filename)
     {
         if (($fh = fopen($filename, 'r')) !== FALSE)
         {
@@ -322,7 +322,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readDocx($filename)
+    private function readWordXML($filename)
     {
         $striped_content = "";
         
@@ -406,7 +406,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readPptx($filename)
+    private function readPowerPointXML($filename)
     {
         $content = "";
             
@@ -675,7 +675,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readRtf($filename)
+    private function readRTF($filename)
     {
         $striped_content = "";
         $content = "";
@@ -712,7 +712,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readEpub($filename)
+    private function readEPUB($filename)
     {
         $content = "";
         
@@ -837,7 +837,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readMht($filename)
+    private function readMultipart($filename)
     {
         $content = "";
         $boundary = "";
@@ -1117,7 +1117,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readXps($filename)
+    private function readXPS($filename)
     {
         $content = "";
         $rootmap = [];
@@ -1307,7 +1307,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    function readAbw($filename)
+    function readAbiWord($filename)
     {
         $content = "";
         
@@ -1395,7 +1395,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    function readDvi($filename)
+    function readDVI($filename)
     {
         $content = "";
         
@@ -1425,7 +1425,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    function readPs($filename)
+    function readPostScript($filename)
     {
         $content = "";
         

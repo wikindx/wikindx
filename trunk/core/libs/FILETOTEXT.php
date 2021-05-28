@@ -91,7 +91,7 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_SXI:
             case WIKINDX_MIMETYPE_SXW:
             case WIKINDX_MIMETYPE_STW:
-                // OpenOffice/LibreOffice/SunOffice Document and Presentation
+                // LibreOffice/OpenDocument/SunOffice Document and Presentation
                 $text = $this->readOpenDocument($filepath);
             break;
             case WIKINDX_MIMETYPE_POTM:
@@ -167,15 +167,16 @@ class FILETOTEXT
         
         return $text;
     }
+    
     /**
-     * readPdf
+     * Extract the text content of PDF files (PDF)
      *
      * cf. https://www.xpdfreader.com/pdftotext-man.html
      * cf. https://www.xpdfreader.com/pdfinfo-man.html
      *
      * @param mixed $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readPDF($filename)
     {
@@ -254,11 +255,11 @@ class FILETOTEXT
     }
     
     /**
-     * readText
+     * Extract the text content of plain text files
      *
      * @param mixed $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readText($filename)
     {
@@ -270,13 +271,13 @@ class FILETOTEXT
     }
     
     /**
-     * readWord
+     * Extract the text content of Microsoft Office Word files (before 2007) (DOC, DOT)
      *
      * cf. https://coderwall.com/p/x_n4tq/how-to-read-doc-using-php
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readWordBinary($filename)
     {
@@ -314,13 +315,13 @@ class FILETOTEXT
     }
     
     /**
-     * readDocx, extract the text content of Word 2007-365 files
+     * Extract the text content of Microsoft office Word files (2007 and higher) (DOCX, DOCM...)
      *
      * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readWordXML($filename)
     {
@@ -398,13 +399,13 @@ class FILETOTEXT
     }
     
     /**
-     * readPptx, extract the text content of PowerPoint 2007-365 files
+     * Extract the text content of Microsoft Office PowerPoint files (2007 and higher)
      *
      * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readPowerPointXML($filename)
     {
@@ -478,7 +479,7 @@ class FILETOTEXT
     
     
     /**
-     * readOpenDocument, extract the text content of OpenDocument
+     * Extract the text content of LibreOffice/OpenDocument/SunOffice Document and Presentation files (ODP, ODT...)
      *
      * All version of OpenDocument are supported with a single function
      * because the specification has changed very little
@@ -501,7 +502,7 @@ class FILETOTEXT
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readOpenDocument($filename)
     {
@@ -667,13 +668,13 @@ class FILETOTEXT
     
     
     /**
-     * readRtf
+     * Extract the text content of Rich Text Format (RTF) files
      *
      * cf. https://interoperability.blob.core.windows.net/files/Archive_References/%5bMSFT-RTF%5d.pdf
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readRTF($filename)
     {
@@ -692,7 +693,7 @@ class FILETOTEXT
     }
 
     /**
-     * readEpub, extract the text content of EPUB ebooks
+     * Extract the text content of EPUB ebooks (EPUB)
      *
      * All version of EPUB are supported with a single function
      * because the specification has changed very little
@@ -710,7 +711,7 @@ class FILETOTEXT
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readEPUB($filename)
     {
@@ -829,13 +830,13 @@ class FILETOTEXT
     }
     
     /**
-     * readMht, extract the text content of an MHT multipart file (RFC2557)
+     * Extract the text content of multipart files (RFC2557) (EML, MHT)
      *
      * cf. https://tools.ietf.org/html/rfc2557
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readMultipart($filename)
     {
@@ -989,7 +990,7 @@ class FILETOTEXT
     }
 
     /**
-     * readHtml, extract the text content of an (X)HTML file loosly
+     * Extract the text content of (X)HTML files (loosly)
      *
      * Widely accepts elements of (X)HTML in all versions.
      * Remove items that are not textual or purely technical items.
@@ -998,7 +999,7 @@ class FILETOTEXT
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readHtml($filename)
     {
@@ -1042,13 +1043,13 @@ class FILETOTEXT
     }
     
     /**
-     * readFictionBook, extract the text content of a FictionBook (v2)
+     * Extract the text content of FictionBook ebooks (FB1, FB2)
      *
      * cf. http://www.gribuser.ru/xml/fictionbook/index.html.en
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     function readFictionBook($filename)
     {
@@ -1109,13 +1110,13 @@ class FILETOTEXT
 
     
     /*
-     * readXps, extract the text content of XPS files
+     * readXps, extract the text content of XPS files (XPS, OXPS)
      *
      * cf. https://www.ecma-international.org/publications-and-standards/standards/ecma-388/
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     private function readXPS($filename)
     {
@@ -1268,14 +1269,14 @@ class FILETOTEXT
     }
     
     /*
-     * readScribus, extract the text content of Scribus files (SLA)
+     * Extract the text content of Scribus files (SLA)
      *
      * cf. https://wiki.scribus.net/canvas/(FR)_Introdution_au_Format_de_fichier_SLA_pour_Scribus_1.4
      * cf. https://github.com/scribusproject/scribus/tree/master/resources/tests
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     function readScribus($filename)
     {
@@ -1299,13 +1300,13 @@ class FILETOTEXT
     }
     
     /**
-     * readAbw, extract the text content of AbiWord files
+     * Extract the text content of AbiWord files (ABW, AWT, ZABW)
      *
      * cf. http://www.abisource.com/wiki/AbiWord
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     function readAbiWord($filename)
     {
@@ -1355,13 +1356,13 @@ class FILETOTEXT
     }
     
     /*
-     * readDjVu, extract the text content of DjVu files with djvutxt
+     * Extract the text content of DjVu files (DJV, DJVU) with djvutxt utility
      *
      * cf. http://djvu.sourceforge.net
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     function readDjVu($filename)
     {
@@ -1387,13 +1388,13 @@ class FILETOTEXT
     }
     
     /*
-     * readDvi, extract the text content of DeVice Independent files with catdvi
+     * Extract the text content of DeVice Independent files (DVI) with catdvi utility
      *
      * cf. http://catdvi.sourceforge.net/
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     function readDVI($filename)
     {
@@ -1419,11 +1420,11 @@ class FILETOTEXT
     }
     
     /*
-     * readPs, extract the text content of PostScript files with GhostScript
+     * Extract the text content of PostScript files (PS, EPS) with ps2pdf utility
      *
      * @param string $filename
      *
-     * @return string
+     * @return string Text extracted
      */
     function readPostScript($filename)
     {

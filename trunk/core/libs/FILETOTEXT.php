@@ -174,11 +174,11 @@ class FILETOTEXT
      * cf. https://www.xpdfreader.com/pdftotext-man.html
      * cf. https://www.xpdfreader.com/pdfinfo-man.html
      *
-     * @param mixed $filename
+     * @param mixed $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readPDF($filename)
+    private function readPDF($filepath)
     {
         static $plugin_xpdftotext_exists = NULL;
         
@@ -197,10 +197,10 @@ class FILETOTEXT
             // 1. Use XpdfReader tools
             include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, "xpdftotext", "XPDFREADER.php"]));
 
-            $metadata = \XPDFREADER\pdfinfo($filename);
+            $metadata = \XPDFREADER\pdfinfo($filepath);
 
             $text = \XPDFREADER\pdftotext(
-                $filename, [
+                $filepath, [
                     "clip"    => "", // Get text hidden by clipping area
                     "nodiag"  => "", // Ignore text that is not on a right angle (remove watermarks)
                 ]
@@ -235,7 +235,7 @@ class FILETOTEXT
             try
             {
                 // Return the text extracted
-                $text = $importPDF->Load($filename);
+                $text = $importPDF->Load($filepath);
             } catch (
                 // or catch all PdfToText exceptions and return an empty string
                 PdfToTextException
@@ -257,13 +257,13 @@ class FILETOTEXT
     /**
      * Extract the text content of plain text files
      *
-     * @param mixed $filename
+     * @param mixed $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readText($filename)
+    private function readText($filepath)
     {
-        $content = file_get_contents($filename);
+        $content = file_get_contents($filepath);
         if ($content === FALSE)
             return "";
         else
@@ -275,13 +275,13 @@ class FILETOTEXT
      *
      * cf. https://coderwall.com/p/x_n4tq/how-to-read-doc-using-php
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readWordBinary($filename)
+    private function readWordBinary($filepath)
     {
-        if (($fh = fopen($filename, 'r')) !== FALSE)
+        if (($fh = fopen($filepath, 'r')) !== FALSE)
         {
             $headers = fread($fh, 0xA00);
 
@@ -319,11 +319,11 @@ class FILETOTEXT
      *
      * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readWordXML($filename)
+    private function readWordXML($filepath)
     {
         $striped_content = "";
         
@@ -334,7 +334,7 @@ class FILETOTEXT
             // Extract the content parts
             $za = new \ZipArchive();
             
-            if ($za->open($filename) === TRUE)
+            if ($za->open($filepath) === TRUE)
             {
                 $content = $za->getFromName($f);
                 if ($content === FALSE) $content = "";
@@ -403,32 +403,32 @@ class FILETOTEXT
      *
      * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readPowerPointXML($filename)
+    private function readPowerPointXML($filepath)
     {
         $content = "";
             
         // Extract the content parts
         $za = new \ZipArchive();
         
-        if ($za->open($filename) === TRUE)
+        if ($za->open($filepath) === TRUE)
         {
             // On macOS extractTo() doesn't work, so we emulate it
             for ($k = 0; $k < $za->numFiles; $k++)
             {
                 // Get a stream from the original name
-                $filename = $za->getNameIndex($k);
+                $filepath = $za->getNameIndex($k);
                 
                 // Skip non slide and comment XML files
-                if (!((\UTILS\matchPrefix($filename, "ppt/slides/slide") || \UTILS\matchPrefix($filename, "ppt/comments/comment")) && \UTILS\matchSuffix($filename, ".xml")))
+                if (!((\UTILS\matchPrefix($filepath, "ppt/slides/slide") || \UTILS\matchPrefix($filepath, "ppt/comments/comment")) && \UTILS\matchSuffix($filepath, ".xml")))
                 {
                     continue;
                 }
                 
-                $filecontent = $za->getFromName($filename);
+                $filecontent = $za->getFromName($filepath);
 
                 if ($filecontent !== FALSE && $filecontent != "")
                 {
@@ -500,18 +500,18 @@ class FILETOTEXT
      *
      * cf OpenDocument in https://www.oasis-open.org/standards/
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readOpenDocument($filename)
+    private function readOpenDocument($filepath)
     {
         $content = "";
         $content = "";
         
         // Open the container
         $za = new \ZipArchive();
-        $errcode = $za->open($filename);
+        $errcode = $za->open($filepath);
         
         // Like EPUB, ODT are packaged with OCF container,
         // but since ODT also use fixed paths for XML files we open them directly
@@ -547,7 +547,7 @@ class FILETOTEXT
         }
         elseif ($errcode == \ZipArchive::ER_NOZIP)
         {
-            $filecontentdata = file_get_contents($filename);
+            $filecontentdata = file_get_contents($filepath);
         }
         else
         {
@@ -672,17 +672,17 @@ class FILETOTEXT
      *
      * cf. https://interoperability.blob.core.windows.net/files/Archive_References/%5bMSFT-RTF%5d.pdf
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readRTF($filename)
+    private function readRTF($filepath)
     {
         $striped_content = "";
         $content = "";
         
         // Extract the content
-        $content = file_get_contents($filename);
+        $content = file_get_contents($filepath);
         
         $texter = new RtfStringTexter($content);
         $striped_content = $texter->AsString();
@@ -709,18 +709,18 @@ class FILETOTEXT
      * cf. EPUB 3.2 Spec., https://www.w3.org/publishing/epub3/epub-spec.html
      * cf. EPUB EPUB Specifications and Projects, http://idpf.org/epub/dir/
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readEPUB($filename)
+    private function readEPUB($filepath)
     {
         $content = "";
         
         // Open the container
         $za = new \ZipArchive();
         
-        if ($za->open($filename) === TRUE)
+        if ($za->open($filepath) === TRUE)
         {
             $path_container = "META-INF/container.xml"; // Standard location of the top level entry file
             $file_container = $za->getFromName($path_container);
@@ -834,11 +834,11 @@ class FILETOTEXT
      *
      * cf. https://tools.ietf.org/html/rfc2557
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readMultipart($filename)
+    private function readMultipart($filepath)
     {
         $content = "";
         $boundary = "";
@@ -851,7 +851,7 @@ class FILETOTEXT
         $cte = "";
         $charset = "";
         
-        $fh = fopen($filename, "rb");
+        $fh = fopen($filepath, "rb");
         if ($fh !== FALSE)
         {
             while (!feof($fh))
@@ -997,18 +997,18 @@ class FILETOTEXT
      *
      * We assume that the document is well formed and the order is right
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readHtml($filename)
+    private function readHtml($filepath)
     {
         $content = "";
         
         // Load and normalize the content
         $dom = new DOMDocument();
         libxml_use_internal_errors(true);
-        $dom->loadHTMLFile($filename, LIBXML_NOWARNING | LIBXML_NOERROR);
+        $dom->loadHTMLFile($filepath, LIBXML_NOWARNING | LIBXML_NOERROR);
         $dom->normalizeDocument();
         
         // Initalize the iterator
@@ -1047,17 +1047,17 @@ class FILETOTEXT
      *
      * cf. http://www.gribuser.ru/xml/fictionbook/index.html.en
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    function readFictionBook($filename)
+    function readFictionBook($filepath)
     {
         $content = "";
 
         $pXML = new \XMLReader();
         
-        $filecontent = file_get_contents($filename);
+        $filecontent = file_get_contents($filepath);
         
         if ($filecontent !== FALSE && $pXML->XML($filecontent))
         {
@@ -1114,11 +1114,11 @@ class FILETOTEXT
      *
      * cf. https://www.ecma-international.org/publications-and-standards/standards/ecma-388/
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    private function readXPS($filename)
+    private function readXPS($filepath)
     {
         $content = "";
         $rootmap = [];
@@ -1130,7 +1130,7 @@ class FILETOTEXT
         $za = new \ZipArchive();
         
         // Explore the root file of the structure
-        if ($za->open($filename) === TRUE)
+        if ($za->open($filepath) === TRUE)
         {
             $rootmapcontent = $za->getFromName("FixedDocSeq.fdseq");
             if ($rootmapcontent !== FALSE && $rootmapcontent != "")
@@ -1214,15 +1214,15 @@ class FILETOTEXT
                 for ($k = 0; $k < $za->numFiles; $k++)
                 {
                     // Get a stream from the original name
-                    $filename = $za->getNameIndex($k);
+                    $filepath = $za->getNameIndex($k);
                     
                     // Skip non structure frag files
-                    if (!\UTILS\matchSuffix($filename, ".frag"))
+                    if (!\UTILS\matchSuffix($filepath, ".frag"))
                     {
                         continue;
                     }
                     
-                    $structmap[] = $filename;
+                    $structmap[] = $filepath;
                 }
             }
             
@@ -1274,17 +1274,17 @@ class FILETOTEXT
      * cf. https://wiki.scribus.net/canvas/(FR)_Introdution_au_Format_de_fichier_SLA_pour_Scribus_1.4
      * cf. https://github.com/scribusproject/scribus/tree/master/resources/tests
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    function readScribus($filename)
+    function readScribus($filepath)
     {
         $content = "";
         
         $pXML = new \XMLReader();
         
-        $filecontent = file_get_contents($filename);
+        $filecontent = file_get_contents($filepath);
         if ($pXML->XML($filecontent))
         {
             while ($pXML->read())
@@ -1302,17 +1302,20 @@ class FILETOTEXT
     /**
      * Extract the text content of AbiWord files (ABW, AWT, ZABW)
      *
+     * This XML format is not documented but it seems the text
+     * is always enclosed inside "p" elements.
+     *
      * cf. http://www.abisource.com/wiki/AbiWord
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    function readAbiWord($filename)
+    function readAbiWord($filepath)
     {
         $content = "";
         
-        $filecontent = file_get_contents($filename);
+        $filecontent = file_get_contents($filepath);
         
         if ($filecontent !== FALSE && $filecontent != "")
         {
@@ -1360,11 +1363,11 @@ class FILETOTEXT
      *
      * cf. http://djvu.sourceforge.net
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    function readDjVu($filename)
+    function readDjVu($filepath)
     {
         $content = "";
         
@@ -1372,7 +1375,7 @@ class FILETOTEXT
         
         $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "djvutxt"]);
         
-        $cmd = '"' . $bin . '" "' . $filename . '" "' . $txtfile . '"';
+        $cmd = '"' . $bin . '" "' . $filepath . '" "' . $txtfile . '"';
         $execerrno = 0;
         $execoutput = [];
         
@@ -1392,11 +1395,11 @@ class FILETOTEXT
      *
      * cf. http://catdvi.sourceforge.net/
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    function readDVI($filename)
+    function readDVI($filepath)
     {
         $content = "";
         
@@ -1404,7 +1407,7 @@ class FILETOTEXT
         
         $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "catdvi"]);
         
-        $cmd = '"' . $bin . '" --output-encoding=UTF-8 --sequential "' . $filename . '" > "' . $txtfile . '"';
+        $cmd = '"' . $bin . '" --output-encoding=UTF-8 --sequential "' . $filepath . '" > "' . $txtfile . '"';
         $execerrno = 0;
         $execoutput = [];
         
@@ -1422,11 +1425,11 @@ class FILETOTEXT
     /*
      * Extract the text content of PostScript files (PS, EPS) with ps2pdf utility
      *
-     * @param string $filename
+     * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
      */
-    function readPostScript($filename)
+    function readPostScript($filepath)
     {
         $content = "";
         
@@ -1434,7 +1437,7 @@ class FILETOTEXT
         
         $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "ps2pdf"]);
         
-        $cmd = '"' . $bin . '" "' . $filename . '" "' . $pdffile . '"';
+        $cmd = '"' . $bin . '" "' . $filepath . '" "' . $pdffile . '"';
         $execerrno = 0;
         $execoutput = [];
         

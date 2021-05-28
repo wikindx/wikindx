@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: visualize\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-05-15 17:00+0200\n"
+"POT-Creation-Date: 2021-05-28 16:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,4 +114,16 @@ msgstr ""
 
 #: components/plugins/visualize/visualizemessages.php:45
 msgid "Balloon plot"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:47
+msgid "Order"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:48
+msgid "Oldest first"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:49
+msgid "Latest first"
 msgstr ""

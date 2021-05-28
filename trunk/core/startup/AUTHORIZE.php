@@ -132,7 +132,7 @@ class AUTHORIZE
             // User registration
             elseif (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && WIKINDX_MAIL_USE)
             {
-                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "usersgroups", "REGISTER.php"]));
+                include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "usersgroups", "REGISTER.php"]));
                 $obj = new REGISTER();
                 if ($this->vars["action"] == 'initRegisterUser')
                 {

@@ -47,7 +47,7 @@ class visualize_MODULE
      */
     public function __construct($menuInit = FALSE)
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "PLUGINMESSAGES.php"]));
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->pluginmessages = new PLUGINMESSAGES('visualize', 'visualizeMessages');
         $this->errors = FACTORY_ERRORS::getInstance();

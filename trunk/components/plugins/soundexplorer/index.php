@@ -49,7 +49,7 @@ class soundexplorer_MODULE
         $this->vars = GLOBALS::getVars();
         // plugin folder name and generic message filename
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('soundexplorer', 'soundexplorerMessages');
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $config = new soundexplorer_CONFIG();

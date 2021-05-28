@@ -115,7 +115,7 @@ class FRONT
         // Do we want the quick search form to be displayed?
         if (mb_substr_count($pString, '$QUICKSEARCH$'))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "QUICKSEARCH.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "list", "QUICKSEARCH.php"]));
             $qs = new QUICKSEARCH();
             $replace = $qs->init(FALSE, FALSE, TRUE);
             $pString = str_replace('$QUICKSEARCH$', $replace, $pString);

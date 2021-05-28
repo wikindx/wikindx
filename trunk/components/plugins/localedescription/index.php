@@ -41,7 +41,7 @@ class localedescription_MODULE
         $this->checkTables();
         $this->vars = GLOBALS::getVars();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('localedescription', 'localedescriptionMessages');
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new localedescription_CONFIG();

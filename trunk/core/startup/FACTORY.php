@@ -10,26 +10,26 @@
 
 // Include code of libraries bundled in static classes
 // UTF8 must be included before others namespace because they use it
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "UTF8.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "UTF8.php"]));
 
 // Include code of libraries bundled in namespaces
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "LOADSTYLE.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "HTML.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FORM.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "AJAX.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FILE.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "UTILS.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOCALES.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "URL.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "TEMPSTORAGE.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "LOADSTYLE.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "HTML.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "FORM.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "AJAX.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "FILE.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "UTILS.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "LOCALES.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "URL.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "TEMPSTORAGE.php"]));
 
 
 // Include code of libraries bundled in classes
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FRONT.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "images.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "SESSION.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "COOKIE.php"]));
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "MAIL.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "FRONT.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "images.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "SESSION.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "COOKIE.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "MAIL.php"]));
 
 
 /**
@@ -134,7 +134,7 @@ class FACTORY_PASSWORD
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "password", "PASSWORD.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "password", "PASSWORD.php"]));
             self::$instance = new PASSWORD;
         }
 
@@ -343,7 +343,7 @@ class FACTORY_MESSAGES
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "MESSAGES.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "MESSAGES.php"]));
             self::$instance = new MESSAGES();
         }
 
@@ -358,7 +358,7 @@ class FACTORY_MESSAGES
      */
     public static function getFreshInstance()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "MESSAGES.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "MESSAGES.php"]));
         self::$instance = new MESSAGES();
 
         return self::$instance;
@@ -393,7 +393,7 @@ class FACTORY_ERRORS
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "ERRORS.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "ERRORS.php"]));
             self::$instance = new ERRORS;
         }
 
@@ -408,7 +408,7 @@ class FACTORY_ERRORS
      */
     public static function getFreshInstance()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "ERRORS.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "ERRORS.php"]));
         self::$instance = new ERRORS;
 
         return self::$instance;
@@ -443,7 +443,7 @@ class FACTORY_SUCCESS
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "SUCCESS.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "SUCCESS.php"]));
             self::$instance = new SUCCESS;
         }
 
@@ -458,7 +458,7 @@ class FACTORY_SUCCESS
      */
     public static function getFreshInstance()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "SUCCESS.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "SUCCESS.php"]));
         self::$instance = new SUCCESS;
 
         return self::$instance;
@@ -493,7 +493,7 @@ class FACTORY_CONSTANTS
      */
     public static function getFreshInstance($force_english = FALSE)
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "CONSTANTS.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "CONSTANTS.php"]));
         self::$instance = new CONSTANTS($force_english);
 
         return self::$instance;
@@ -509,7 +509,7 @@ class FACTORY_CONSTANTS
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "CONSTANTS.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "messages", "CONSTANTS.php"]));
             self::$instance = new CONSTANTS;
         }
 
@@ -545,7 +545,7 @@ class FACTORY_DB
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "SQL.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "SQL.php"]));
             self::$instance = new SQL;
         }
 
@@ -581,7 +581,7 @@ class FACTORY_SQLSTATEMENTS
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "SQLSTATEMENTS.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "SQLSTATEMENTS.php"]));
             self::$instance = new SQLSTATEMENTS;
         }
 
@@ -617,7 +617,7 @@ class FACTORY_TEMPLATE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "TEMPLATE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "TEMPLATE.php"]));
             self::$instance = new TEMPLATE;
         }
 
@@ -653,7 +653,7 @@ class FACTORY_USER
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "usersgroups", "USER.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "usersgroups", "USER.php"]));
             self::$instance = new USER;
         }
 
@@ -689,7 +689,7 @@ class FACTORY_CLOSE
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSERAW::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "CLOSE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "CLOSE.php"]));
             self::$instance = new CLOSE;
         }
 
@@ -760,7 +760,7 @@ class FACTORY_QUARANTINE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "admin", "QUARANTINE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "admin", "QUARANTINE.php"]));
             self::$instance = new QUARANTINE;
         }
 
@@ -796,7 +796,7 @@ class FACTORY_CLOSENOMENU
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "CLOSE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "CLOSE.php"]));
             self::$instance = new CLOSENOMENU;
         }
 
@@ -832,7 +832,7 @@ class FACTORY_CLOSEPOPUP
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "CLOSE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "CLOSE.php"]));
             self::$instance = new CLOSEPOPUP;
         }
 
@@ -868,7 +868,7 @@ class FACTORY_CLOSERAW
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "CLOSE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "CLOSE.php"]));
             self::$instance = new CLOSERAW;
         }
 
@@ -904,7 +904,7 @@ class FACTORY_STATISTICS
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "STATISTICS.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "miscellaneous", "STATISTICS.php"]));
             self::$instance = new STATISTICS;
         }
 
@@ -940,7 +940,7 @@ class FACTORY_LOADICONS
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOADICONS.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "LOADICONS.php"]));
             self::$instance = new LOADICONS;
         }
 
@@ -977,7 +977,7 @@ class FACTORY_EXPORTCOMMON
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTCOMMON.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "EXPORTCOMMON.php"]));
             self::$instance = new EXPORTCOMMON($outputType);
         }
 
@@ -1013,7 +1013,7 @@ class FACTORY_EXPORTCOINS
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTCOINS.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "EXPORTCOINS.php"]));
             self::$instance = new EXPORTCOINS;
         }
 
@@ -1049,7 +1049,7 @@ class FACTORY_EXPORTGOOGLESCHOLAR
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTGOOGLESCHOLAR.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "EXPORTGOOGLESCHOLAR.php"]));
             self::$instance = new EXPORTGOOGLESCHOLAR;
         }
 
@@ -1085,7 +1085,7 @@ class FACTORY_BIBTEXPARSE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXPARSE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "BIBTEXPARSE.php"]));
             self::$instance = new BIBTEXPARSE;
         }
 
@@ -1123,7 +1123,7 @@ class FACTORY_RICHTEXTFORMAT
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "RICHTEXTFORMAT.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "RICHTEXTFORMAT.php"]));
             self::$instance = new RICHTEXTFORMAT($imgMagickPath);
         }
 
@@ -1159,7 +1159,7 @@ class FACTORY_COINSMAP
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "COINSMAP.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "COINSMAP.php"]));
             self::$instance = new COINSMAP;
         }
 
@@ -1195,7 +1195,7 @@ class FACTORY_BIBTEXCONFIG
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXCONFIG.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "BIBTEXCONFIG.php"]));
             self::$instance = new BIBTEXCONFIG;
         }
 
@@ -1231,7 +1231,7 @@ class FACTORY_BIBTEXMAP
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXMAP.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "BIBTEXMAP.php"]));
             self::$instance = new BIBTEXMAP;
         }
 
@@ -1267,7 +1267,7 @@ class FACTORY_BIBTEXCREATORPARSE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXCREATORPARSE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "BIBTEXCREATORPARSE.php"]));
             self::$instance = new BIBTEXCREATORPARSE;
         }
 
@@ -1303,7 +1303,7 @@ class FACTORY_BIBTEXMONTHPARSE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXMONTHPARSE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "BIBTEXMONTHPARSE.php"]));
             self::$instance = new BIBTEXMONTHPARSE;
         }
 
@@ -1339,7 +1339,7 @@ class FACTORY_BIBTEXPAGEPARSE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXPAGEPARSE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "BIBTEXPAGEPARSE.php"]));
             self::$instance = new BIBTEXPAGEPARSE;
         }
 
@@ -1375,7 +1375,7 @@ class FACTORY_EXPORTBIBTEX
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTBIBTEX.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "EXPORTBIBTEX.php"]));
             self::$instance = new EXPORTBIBTEX;
         }
 
@@ -1411,7 +1411,7 @@ class FACTORY_PARSEXML
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "PARSEXML.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "PARSEXML.php"]));
             self::$instance = new PARSEXML;
         }
 
@@ -1447,7 +1447,7 @@ class FACTORY_STYLEMAP
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "STYLEMAP.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "STYLEMAP.php"]));
             self::$instance = new STYLEMAP;
         }
 
@@ -1483,7 +1483,7 @@ class FACTORY_BROWSECOMMON
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "browse", "BROWSECOMMON.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "browse", "BROWSECOMMON.php"]));
             self::$instance = new BROWSECOMMON;
         }
 
@@ -1521,7 +1521,7 @@ class FACTORY_BIBSTYLE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "BIBSTYLE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "BIBSTYLE.php"]));
             self::$instance = new BIBSTYLE($output);
         }
 
@@ -1559,7 +1559,7 @@ class FACTORY_BIBFORMAT
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "BIBFORMAT.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "BIBFORMAT.php"]));
             self::$instance = new BIBFORMAT($output);
         }
 
@@ -1597,7 +1597,7 @@ class FACTORY_CITE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "CITE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "CITE.php"]));
             self::$instance = new CITE($output);
         }
 
@@ -1635,7 +1635,7 @@ class FACTORY_CITESTYLE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "CITESTYLE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "CITESTYLE.php"]));
             self::$instance = new CITESTYLE($output);
         }
 
@@ -1671,7 +1671,7 @@ class FACTORY_EXPORTFILTER
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "EXPORTFILTER.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "EXPORTFILTER.php"]));
             self::$instance = new EXPORTFILTER;
         }
 
@@ -1709,7 +1709,7 @@ class FACTORY_CITEFORMAT
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "CITEFORMAT.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "CITEFORMAT.php"]));
             self::$instance = new CITEFORMAT($output);
         }
 
@@ -1745,7 +1745,7 @@ class FACTORY_LISTCOMMON
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "lists", "LISTCOMMON.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "lists", "LISTCOMMON.php"]));
             self::$instance = new LISTCOMMON;
         }
 
@@ -1781,7 +1781,7 @@ class FACTORY_METADATA
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "metadata", "METADATA.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "metadata", "METADATA.php"]));
             self::$instance = new METADATA;
         }
 
@@ -1817,7 +1817,7 @@ class FACTORY_TYPE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "type", "TYPE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "type", "TYPE.php"]));
             self::$instance = new TYPE;
         }
 
@@ -1853,7 +1853,7 @@ class FACTORY_CATEGORY
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "category", "CATEGORY.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "category", "CATEGORY.php"]));
             self::$instance = new CATEGORY;
         }
 
@@ -1889,7 +1889,7 @@ class FACTORY_TAG
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "TAG.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "miscellaneous", "TAG.php"]));
             self::$instance = new TAG;
         }
 
@@ -1925,7 +1925,7 @@ class FACTORY_USERTAGS
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "usersgroups", "USERTAGS.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "usersgroups", "USERTAGS.php"]));
             self::$instance = new USERTAGS;
         }
 
@@ -1961,7 +1961,7 @@ class FACTORY_KEYWORD
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "keyword", "KEYWORD.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "keyword", "KEYWORD.php"]));
             self::$instance = new KEYWORD;
         }
 
@@ -1997,7 +1997,7 @@ class FACTORY_RESOURCEMAP
      */
     public static function getFreshInstance($exception = FALSE)
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resources", "RESOURCEMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "resources", "RESOURCEMAP.php"]));
         self::$instance = new RESOURCEMAP($exception);
 
         return self::$instance;
@@ -2014,7 +2014,7 @@ class FACTORY_RESOURCEMAP
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resources", "RESOURCEMAP.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "resources", "RESOURCEMAP.php"]));
             self::$instance = new RESOURCEMAP($exception);
         }
 
@@ -2050,7 +2050,7 @@ class FACTORY_CREATOR
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "creator", "CREATOR.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "creator", "CREATOR.php"]));
             self::$instance = new CREATOR;
         }
 
@@ -2086,7 +2086,7 @@ class FACTORY_PUBLISHER
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "publisher", "PUBLISHER.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "publisher", "PUBLISHER.php"]));
             self::$instance = new PUBLISHER;
         }
 
@@ -2122,7 +2122,7 @@ class FACTORY_PUBLISHERMAP
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "publisher", "PUBLISHERMAP.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "publisher", "PUBLISHERMAP.php"]));
             self::$instance = new PUBLISHERMAP;
         }
 
@@ -2158,7 +2158,7 @@ class FACTORY_COLLECTION
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "collection", "COLLECTION.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "collection", "COLLECTION.php"]));
             self::$instance = new COLLECTION;
         }
 
@@ -2194,7 +2194,7 @@ class FACTORY_COLLECTIONMAP
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "collection", "COLLECTIONMAP.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "collection", "COLLECTIONMAP.php"]));
             self::$instance = new COLLECTIONMAP;
         }
 
@@ -2230,7 +2230,7 @@ class FACTORY_MENU
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "navigation", "MENU.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "navigation", "MENU.php"]));
             self::$instance = new MENU;
         }
 
@@ -2266,7 +2266,7 @@ class FACTORY_BADINPUT
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "navigation", "BADINPUT.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "navigation", "BADINPUT.php"]));
             self::$instance = new BADINPUT;
         }
 
@@ -2302,7 +2302,7 @@ class FACTORY_NAVIGATE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "navigation", "NAVIGATE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "navigation", "NAVIGATE.php"]));
             self::$instance = new NAVIGATE;
         }
 
@@ -2338,7 +2338,7 @@ class FACTORY_BIBLIOGRAPHYCOMMON
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibliographies", "BIBLIOGRAPHYCOMMON.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibliographies", "BIBLIOGRAPHYCOMMON.php"]));
             self::$instance = new BIBLIOGRAPHYCOMMON;
         }
 
@@ -2374,7 +2374,7 @@ class FACTORY_GATEKEEP
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "GATEKEEP.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "miscellaneous", "GATEKEEP.php"]));
             self::$instance = new GATEKEEP;
         }
 
@@ -2410,7 +2410,7 @@ class FACTORY_RESOURCECOMMON
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resources", "RESOURCECOMMON.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "resources", "RESOURCECOMMON.php"]));
             self::$instance = new RESOURCECOMMON;
         }
 
@@ -2446,7 +2446,7 @@ class FACTORY_MAIL
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "MAIL.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "MAIL.php"]));
             self::$instance = new MAIL;
         }
 
@@ -2482,7 +2482,7 @@ class FACTORY_PAGING
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "lists", "PAGING.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "lists", "PAGING.php"]));
             self::$instance = new PAGING;
         }
 
@@ -2518,7 +2518,7 @@ class FACTORY_PAGINGALPHA
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "lists", "PAGINGALPHA.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "lists", "PAGINGALPHA.php"]));
             self::$instance = new PAGINGALPHA;
         }
 
@@ -2554,7 +2554,7 @@ class FACTORY_PARSESTYLE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "PARSESTYLE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "PARSESTYLE.php"]));
             self::$instance = new PARSESTYLE;
         }
 
@@ -2590,7 +2590,7 @@ class FACTORY_EXPORTER
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTER.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "EXPORTER.php"]));
             self::$instance = new EXPORTER;
         }
 
@@ -2626,7 +2626,7 @@ class FACTORY_LOADTINYMCE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "tiny_mce", "LOADTINYMCE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "tiny_mce", "LOADTINYMCE.php"]));
             self::$instance = new LOADTINYMCE;
         }
 
@@ -2662,7 +2662,7 @@ class FACTORY_LOADTINYMCE5
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "tinymce", "LOADTINYMCE5.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "tinymce", "LOADTINYMCE5.php"]));
             self::$instance = new LOADTINYMCE5;
         }
 
@@ -2698,7 +2698,7 @@ class FACTORY_PARSEPHRASE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "lists", "PARSEPHRASE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "lists", "PARSEPHRASE.php"]));
             self::$instance = new PARSEPHRASE;
         }
 
@@ -2734,7 +2734,7 @@ class FACTORY_ATTACHMENT
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "ATTACHMENT.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "miscellaneous", "ATTACHMENT.php"]));
             self::$instance = new ATTACHMENT;
         }
 
@@ -2770,7 +2770,7 @@ class FACTORY_DATE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "DATE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "miscellaneous", "DATE.php"]));
             self::$instance = new DATE;
         }
 

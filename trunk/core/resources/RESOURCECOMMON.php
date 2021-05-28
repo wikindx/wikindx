@@ -86,7 +86,7 @@ class RESOURCECOMMON
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "browse", "BROWSECOMMON.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "browse", "BROWSECOMMON.php"]));
         $this->commonBrowse = new BROWSECOMMON();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
     }

@@ -452,7 +452,7 @@ class UPDATEDATABASE
      */
     private function createSuperAdmin()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "usersgroups", "INITSUPERADMIN.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "usersgroups", "INITSUPERADMIN.php"]));
         $config = new INITSUPERADMIN(TRUE);
         
         $preamble = \HTML\p("
@@ -3230,7 +3230,7 @@ END;
             Equally, some settings are removed from config.php from v6.4.0.
             Once the upgrade has completed, you can then return the file permissions on config.php to read only.
         ");
-        $fic_config = implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]);
+        $fic_config = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, "config.php"]);
         if (!file_exists($fic_config))
         {
             $message .= HTML\p("Fatal error: {$fic_config} does not exist.");

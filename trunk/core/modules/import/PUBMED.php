@@ -169,7 +169,7 @@ class PUBMED
      */
     private function wikindxImportFields()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "import", "IMPORTCOMMON.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "IMPORTCOMMON.php"]));
         $importCommon = new IMPORTCOMMON();
         $coremessages = FACTORY_MESSAGES::getInstance();
         $tag = FACTORY_TAG::getInstance();
@@ -440,7 +440,7 @@ class PUBMED
         if (array_key_exists('importpubMed_Wikindx', $this->vars))
         {
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "import", "IMPORTBIBTEX.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "IMPORTBIBTEX.php"]));
             $obj = new IMPORTBIBTEX();
             $obj->importFile = $bibFile;
             $obj->type = 'file';

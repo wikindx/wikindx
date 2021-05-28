@@ -15,7 +15,7 @@
  */
 namespace UTILS
 {
-    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "LOADSTYLE.php"]));
+    include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "LOADSTYLE.php"]));
 
     /**
      * Return an array of mandatory PHP extensions used by the WIKINDX core
@@ -559,7 +559,7 @@ namespace UTILS
                     return 30;
                 }
                 
-                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "startup", "LOADPLUGINS.php"]));
+                include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "LOADPLUGINS.php"]));
                 $loadmodules = new \LOADPLUGINS();
                 if (!$loadmodules->checkVersion($componentMetadata["component_id"]))
                 {

@@ -189,7 +189,7 @@ class MENU
                 }
             }
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "bookmarks", "BOOKMARK.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "bookmarks", "BOOKMARK.php"]));
         $bookmark = new BOOKMARK();
         $this->bookmarkArray = $bookmark->getBookmarks();
         if ($this->session->getVar("bookmark_DisplayAdd"))
@@ -231,7 +231,7 @@ class MENU
         $stateArray[] = $this->lastMultiMeta = $this->session->getVar("sql_LastMultiMeta");
         $stateArray[] = $this->lastIdeaSearch = $this->session->getVar("sql_LastIdeaSearch");
         
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "basket", "BASKET.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "basket", "BASKET.php"]));
         $basket = new BASKET();
         $this->basketList = $basket->getBasket();
         $stateArray[] = $this->basketList;
@@ -868,7 +868,7 @@ class MENU
     {
         $menuHeadings = ["wikindx", "res", "search", "metadata", "admin", "plugin1", "plugin2", "plugin3"];
         
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "startup", "LOADPLUGINS.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "LOADPLUGINS.php"]));
         $loadmodules = new LOADPLUGINS();
         $moduleList = $loadmodules->readPluginsDirectory();
         

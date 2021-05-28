@@ -153,7 +153,7 @@ class FILETOTEXT
         // Check xpdftotext plugin availability
         if ($plugin_xpdftotext_exists === NULL)
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "startup", "LOADPLUGINS.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "LOADPLUGINS.php"]));
             $loadmodules = new \LOADPLUGINS();
             $moduleList = $loadmodules->readPluginsDirectory();
             $plugin_xpdftotext_exists = in_array("xpdftotext", $moduleList);

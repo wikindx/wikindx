@@ -205,7 +205,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             }
         }
         // Deal with citations
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "CITE.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "CITE.php"]));
 		$cite = new CITE('rtf');
         $text = $cite->parseCitations($text, 'rtf', FALSE, FALSE, TRUE);
         // handles section breaks

@@ -644,7 +644,7 @@ class LISTCOMMON
         {
             $this->displayListInfo($listType, FALSE);
         }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "ATTACHMENT.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "miscellaneous", "ATTACHMENT.php"]));
         $attachments = new ATTACHMENT();
         $files = [];
         $zip = $this->session->getVar($listType . '_DisplayAttachmentZip') ? TRUE : FALSE;

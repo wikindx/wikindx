@@ -145,7 +145,7 @@ EOM;
 
 
 // Check if mandatories extensions are enabled.
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "UTILS.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "UTILS.php"]));
 $MandatoryExtensions = \UTILS\listCoreMandatoryPHPExtensions();
 $InstalledExtensions = get_loaded_extensions();
 $MissingExtensions = array_diff($MandatoryExtensions, $InstalledExtensions);
@@ -195,7 +195,7 @@ if (PHP_SAPI === 'cli')
 }
 
 // Check for presence of config.php
-if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"])))
+if (!is_file(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, "config.php"])))
 {
     $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
@@ -231,7 +231,7 @@ EOM;
 }
 
 // Include the config file and check if the CONFIG class is in place
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, "config.php"]));
 
 if (!class_exists("CONFIG"))
 {
@@ -312,7 +312,7 @@ foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHME
 }
 
 // Create data and cache directories of plugins
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FILE.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "FILE.php"]));
 foreach (\FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS])) as $dir)
 {
     $plugencachedir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_PLUGINS, basename($dir)]);
@@ -399,7 +399,7 @@ FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
 FACTORY_LOADCONFIG::getInstance()->loadUserVars();
 
 // Locales setting needs to know the language preferred by the user which is now in GLOBALS
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOCALES.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "LOCALES.php"]));
 \LOCALES\load_locales();
 
 $vars = GLOBALS::getVars();

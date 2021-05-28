@@ -2990,7 +2990,7 @@ msgstr "Export d'idées"
 
 #: core/messages/messages.php:196 core/messages/messages.php:941
 msgid "Exported Files"
-msgstr "Fichiers exportées"
+msgstr "Fichiers exportés"
 
 #: core/messages/messages.php:197
 msgid "Bibutils Conversion"

@@ -14,5 +14,5 @@ class soundexplorer_CONFIG
     /** int */
     public $authorize = 1;
     /** float */
-    public $wikindxVersion = 11;
+    public $wikindxVersion = 12;
 }

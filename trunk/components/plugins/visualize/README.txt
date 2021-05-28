@@ -20,6 +20,7 @@ Thus, plugins/visualize/index.php etc.
 
 CHANGELOG:
 
+2021-05-28 : CHG : change of the compatibility version (12) (removal of userwritecategory plugin).
 2021-05-20 : CHG : add ordering to total resource views per month or year.
 2021-05-16 : CHG : change of the compatibility version (11) (removal of importexportbib plugin).
 2021-05-15 : FEA : add visualization of total resource views per month and per year.

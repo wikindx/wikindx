@@ -18,6 +18,7 @@ Thus, plugins/localDescription/index.php etc.
 
 CHANGELOG:
 
+2021-05-28 : CHG : change of the compatibility version (12) (removal of userwritecategory plugin).
 2021-05-16 : CHG : change of the compatibility version (11) (removal of importexportbib plugin).
 2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).
 2021-04-18 : CHG : remove the db table prefix [#346].

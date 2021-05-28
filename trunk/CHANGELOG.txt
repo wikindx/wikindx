@@ -43,6 +43,7 @@ MAINTENANCE:
 3. Remove the custom style of RSS (use the global style now).
 4. Fix the type of the default SMTP port value.
 5. Rename option configRssDisplay to configRssDisplayEditedResources.
+6. Bump component compatibility version of plugins to 12.
 
 SECURITY
 ...

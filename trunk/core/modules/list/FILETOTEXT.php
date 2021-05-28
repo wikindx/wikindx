@@ -24,31 +24,6 @@ class FILETOTEXT
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "rtftools", "RtfTexter.phpclass"]));
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "RecursiveDOMIterator.php"]));
     }
-    
-    /**
-     * Count the number of [missing] attachments cached
-     *
-     * @return array [nbMissing, nbTotal]
-     */
-    public function countMissingCacheAttachment()
-    {
-        $sql = "
-            SELECT COUNT(*) AS nbFilesTotal, COUNT(*) - COUNT(resourceattachmentsText) AS nbFilesMissing
-            FROM resource_attachments;
-        ";
-        
-        $db = FACTORY_DB::getInstance();
-        $resultSet = $db->query($sql);       
-        if (count($resultSet) > 0)
-        {
-            $row = $db->fetchRow($resultSet);
-            return array($row["nbFilesMissing"], $row["nbFilesTotal"]);
-        }
-        else
-        {
-            return array(0, 0);
-        }
-    }
 
     /**
      * Extract every missing cached text of attachments
@@ -699,17 +674,6 @@ class FILETOTEXT
                     {
                         $bExtract = FALSE;
                     }
-                    
-                    /*// Start extracting at the start of the text of the body
-                    if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["office:presentation", "office:text"]))
-                    {
-                        $bExtract = TRUE;
-                    }
-                    // Stop extracting at the end of the text of the body
-                    if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["office:presentation", "office:text"]))
-                    {
-                        $bExtract = FALSE;
-                    }*/
                     
                     // Transform spaces and tabs to spaces
                     if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["text:s", "text:tab"]))

@@ -174,7 +174,7 @@ class RESOURCEWRITE
             $this->db->replace($this->db->replace('resourceNoSort', '{', ''), '}', '', FALSE), TRUE, FALSE);
         if ($this->db->numRows($resultset))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCEFORM.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCEFORM.php"]));
             $rForm = new RESOURCEFORM();
             $res = FACTORY_RESOURCECOMMON::getInstance();
             $bibStyle = FACTORY_BIBSTYLE::getInstance();

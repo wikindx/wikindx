@@ -22,7 +22,7 @@ class BIBTEXFILE
     public function __construct()
     {
         $this->session = FACTORY_SESSION::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IMPORTCOMMON.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "IMPORTCOMMON.php"]));
         $this->import = new IMPORTCOMMON();
         $this->import->importType = 'bibtex';
     }

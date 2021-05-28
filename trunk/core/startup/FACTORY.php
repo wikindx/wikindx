@@ -61,7 +61,7 @@ class FACTORY_BROWSERTABID
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSERTABID.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "BROWSERTABID.php"]));
             self::$instance = new BROWSERTABID();
         }
 
@@ -98,7 +98,7 @@ class FACTORY_HOUSEKEEPING
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "HOUSEKEEPING.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "HOUSEKEEPING.php"]));
             self::$instance = new HOUSEKEEPING();
         }
 
@@ -168,7 +168,7 @@ class FACTORY_CONFIGDBSTRUCTURE
      */
     public static function getInstance()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "CONFIGDBSTRUCTURE.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "CONFIGDBSTRUCTURE.php"]));
         self::$instance = new CONFIGDBSTRUCTURE;
 
         return self::$instance;
@@ -201,7 +201,7 @@ class FACTORY_LOADCONFIG
      */
     public static function getInstance()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "LOADCONFIG.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "LOADCONFIG.php"]));
         self::$instance = new LOADCONFIG;
 
         return self::$instance;
@@ -306,7 +306,7 @@ class FACTORY_AUTHORIZE
     {
         if (empty(self::$instance))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "AUTHORIZE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "AUTHORIZE.php"]));
             self::$instance = new AUTHORIZE;
         }
 

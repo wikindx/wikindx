@@ -82,7 +82,7 @@ class ENDNOTEEXPORT
         }
         if ($error)
         {
-			include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEINIT.php"]));
+			include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "export", "ENDNOTEINIT.php"]));
 			$endnoteInit = new ENDNOTENIT();
             $this->badInput->close($this->errors->text("inputError", "duplicateCustomMap"), $endnoteInit, 'initEndnoteExport');
         }

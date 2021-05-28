@@ -25,11 +25,11 @@ class CATEGORYTREE
         $this->db = FACTORY_DB::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "browse", "BROWSECOMMON.php"]));
         $this->common = new BROWSECOMMON();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSECATEGORY.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "browse", "BROWSECATEGORY.php"]));
         $this->categories = new BROWSECATEGORY();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSEKEYWORD.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "browse", "BROWSEKEYWORD.php"]));
         $this->keywords = new BROWSEKEYWORD();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSESUBCATEGORY.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "browse", "BROWSESUBCATEGORY.php"]));
         $this->subcategories = new BROWSESUBCATEGORY();
 
         $this->messages = FACTORY_MESSAGES::getInstance();

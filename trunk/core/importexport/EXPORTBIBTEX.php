@@ -11,7 +11,7 @@
 /**
  * EXPORTBIBTEX
  */
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTER.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "EXPORTER.php"]));
 
 /**
  * Export BibTeX

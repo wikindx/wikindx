@@ -11,7 +11,7 @@
 /**
  *	RICHTEXTFORMAT extends TINYMCETEXTEXPORT
  */
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "TINYMCETEXTEXPORT.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "importexport", "TINYMCETEXTEXPORT.php"]));
 
 /**
  * RTF encoding

@@ -11,7 +11,7 @@
 /**
  *	EXPORTCOINS
  */
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTER.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "EXPORTER.php"]));
 
 /**
  * Export COINS
@@ -26,7 +26,7 @@ class EXPORTCOINS extends EXPORTER
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "COINSMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "COINSMAP.php"]));
         $this->map = new COINSMAP();
     }
     /**

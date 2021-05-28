@@ -70,12 +70,12 @@ class ENDNOTEIMPORT
         $this->errors = FACTORY_ERRORS::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "ENDNOTEMAP.php"]));
         $this->map = new ENDNOTEMAP();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEDATEPARSE.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "ENDNOTEDATEPARSE.php"]));
         $this->date = new ENDNOTEDATEPARSE();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTECREATORPARSE.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "ENDNOTECREATORPARSE.php"]));
         $this->parseCreator = new ENDNOTECREATORPARSE();
         $this->pages = FACTORY_BIBTEXPAGEPARSE::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IMPORTCOMMON.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "IMPORTCOMMON.php"]));
         $this->common = new IMPORTCOMMON();
         $this->common->importType = 'endnote';
         $this->creators = ['creator1', 'creator2', 'creator3', 'creator4', 'creator5'];
@@ -106,7 +106,7 @@ class ENDNOTEIMPORT
     public function process()
     {
         $this->fileName = $this->gatherStage1();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEPARSEXML.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "ENDNOTEPARSEXML.php"]));
         $parse = new ENDNOTEPARSEXML();
         $entries = $parse->extractEntries($this->fileName);
         if (!$parse->version8)

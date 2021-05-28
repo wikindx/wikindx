@@ -1125,7 +1125,7 @@ class RTFEXPORT
             !array_key_exists("exportRtf_paraphrases", $this->vars) &&
             !array_key_exists("exportRtf_musings", $this->vars))
         {
-			include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RTFINIT.php"]));
+			include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "export", "RTFINIT.php"]));
 			$rtfInit = new RTFINIT();
             $rtfInit->initRtfExport($this->errors->text("inputError", "missing"));
 

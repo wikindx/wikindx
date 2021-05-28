@@ -92,7 +92,7 @@ class IMPORTBIBTEX
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IMPORTCOMMON.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "IMPORTCOMMON.php"]));
         $this->import = new IMPORTCOMMON();
         $this->import->importType = 'bibtex';
         $this->messages = FACTORY_MESSAGES::getInstance();
@@ -118,14 +118,14 @@ class IMPORTBIBTEX
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'paste'))
         {
             $this->type = 'paste';
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "PASTEBIBTEX.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "PASTEBIBTEX.php"]));
             $this->badClass = new PASTEBIBTEX();
             $this->badFunction = 'init';
         }
         elseif (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'file'))
         {
             $this->type = 'file';
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBTEXFILE.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "import", "BIBTEXFILE.php"]));
             $this->badClass = new BIBTEXFILE();
             $this->badFunction = 'init';
         }

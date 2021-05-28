@@ -59,13 +59,13 @@ class RESOURCEVIEW
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "browse", "BROWSECOMMON.php"]));
         $this->commonBib = new BROWSECOMMON();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCEABSTRACT.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCEABSTRACT.php"]));
         $this->abstract = new RESOURCEABSTRACT();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCENOTE.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCENOTE.php"]));
         $this->note = new RESOURCENOTE();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCEMETA.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCEMETA.php"]));
         $this->meta = new RESOURCEMETA();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCECUSTOM.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "resource", "RESOURCECUSTOM.php"]));
         $this->custom = new RESOURCECUSTOM();
         $this->browserTabID = GLOBALS::getBrowserTabID();
         GLOBALS::setTplVar('help', \UTILS\createHelpTopicLink('resource'));

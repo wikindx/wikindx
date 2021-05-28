@@ -347,16 +347,16 @@ foreach (\FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, W
 ob_start();
 
 // Begin page execution timer and define globals for rendering by template
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "GLOBALS.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "GLOBALS.php"]));
 
 // Set up the FACTORY objects of commonly used classes and start the timer.
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FACTORY.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "FACTORY.php"]));
 
 // Initialize the static config read from config.php file
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "LOADSTATICCONFIG.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "LOADSTATICCONFIG.php"]));
 
 // Load the code of session storage handlers
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "SESSIONHANDLERS.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "SESSIONHANDLERS.php"]));
 
 // NB: the upgrade uses its own session stored inside a file by the native session handler
 // When the upgrade is bypassed, a db storage handler is used for sessions.
@@ -364,13 +364,13 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "SESSIONHANDLERS.php"]));
 // Attempt an upgrade only if we are on the main script
 if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE)
 {
-    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "UPDATE.php"]));
+    include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "UPDATE.php"]));
 
     // Do database upgrade check
     if (\UPDATE\needUpdate(FACTORY_DB::getInstance()))
     {
         // Upgrade database
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "UPDATEDATABASE.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "startup", "UPDATEDATABASE.php"]));
         $update = new UPDATEDATABASE(); // __construct() runs on autopilot
         // We should never reach this point because the uprgade process has its own display
         // and the only way to escape it is finishing all steps

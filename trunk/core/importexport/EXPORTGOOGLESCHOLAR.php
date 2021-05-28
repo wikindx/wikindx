@@ -11,7 +11,7 @@
 /**
  * Extends EXPORTER
  */
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTER.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "EXPORTER.php"]));
 
 /**
  * Make WIKINDX resources available to Google Scholar
@@ -36,7 +36,7 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
     {
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "GOOGLESCHOLARMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "importexport", "GOOGLESCHOLARMAP.php"]));
         $this->map = new GOOGLESCHOLARMAP();
     }
     /**

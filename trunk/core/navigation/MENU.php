@@ -593,7 +593,7 @@ class MENU
             // Disable menu items if there are not yet resources
             if ($this->resourcesExist)
             {
-                if (($this->write && WIKINDX_GLOBAL_EDIT) || $this->superAdmin)
+                if ((WIKINDX_GLOBAL_EDIT) || $this->superAdmin)
                 {
                     $this->res['editSub'] = [
                         $messages->text("menu", "editSub") => FALSE,
@@ -613,8 +613,14 @@ class MENU
                     }
                 }
             }
+			if (WIKINDX_CATEGORYEDIT_ALLOW || $this->superAdmin) {
+				if (!array_key_exists('editSub', $this->res)) {
+					$this->res['editSub'] = [$messages->text("menu", "editSub") => FALSE];
+				}
+				$this->res['editSub'][$messages->text("menu", "categories")] = 'index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit';
+				$this->res['editSub'][$messages->text("menu", "subcategories")] = 'index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit';
+			}
         }
-        
 // import sub first . . .
         if ($this->write)
         {

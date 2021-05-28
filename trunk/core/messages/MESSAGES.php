@@ -373,6 +373,7 @@ class MESSAGES
 				"catdvi" => dgettext($domain, "Path to <a href='http://catdvi.sourceforge.net/' target='_blank'>catdvi</a>"),
 				"djvutxt" => dgettext($domain, "Path to <a href='http://djvu.sourceforge.net/doc/man/djvutxt.html' target='_blank'>djvutxt</a>"),
 				"ps2pdf" => dgettext($domain, "Path to <a href='http://web.mit.edu/ghostscript/www/Ps2pdf.htm' target='_blank'>ps2pdf</a>"),
+				"categoryEditAllow" => dgettext($domain, "Registered users can edit categories and subcategories"),
 			),
 /// components_ Admin components
 		    "components" => array(

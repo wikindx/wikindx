@@ -40,8 +40,7 @@ class ADMINCATEGORIES
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
 
-        $this->gatekeep->requireSuper = TRUE;
-        $this->gatekeep->init();
+        $this->gatekeep->init(FALSE, FALSE, TRUE);
         $this->session->clearArray('edit');
         $this->categories = $this->category->grabAll();
         if (empty($this->categories))

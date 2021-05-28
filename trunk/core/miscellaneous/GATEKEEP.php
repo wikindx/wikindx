@@ -36,10 +36,11 @@ class GATEKEEP
      *
      * @param bool $globalEdit Default is FALSE
      * @param bool $originatorEditOnly Default is FALSE
+     * @param bool $categoryEdit Default is FALSE
      *
      * @return bool
      */
-    public function init($globalEdit = FALSE, $originatorEditOnly = FALSE)
+    public function init($globalEdit = FALSE, $originatorEditOnly = FALSE, $categoryEdit = FALSE)
     {
         if ($this->session->getVar("setup_Superadmin"))
         {
@@ -60,6 +61,12 @@ class GATEKEEP
                 FACTORY_CLOSENOMENU::getInstance(); // die
             }
             if ($originatorEditOnly && defined('WIKINDX_ORIGINATOR_EDIT_ONLY') && !WIKINDX_ORIGINATOR_EDIT_ONLY)
+            {
+                $authorize = FACTORY_AUTHORIZE::getInstance();
+                $authorize->initLogon();
+                FACTORY_CLOSENOMENU::getInstance(); // die
+            }
+            if ($globalEdit && defined('WIKINDX_CATEGORYEDIT_ALLOW') && !WIKINDX_CATEGORYEDIT_ALLOW)
             {
                 $authorize = FACTORY_AUTHORIZE::getInstance();
                 $authorize->initLogon();

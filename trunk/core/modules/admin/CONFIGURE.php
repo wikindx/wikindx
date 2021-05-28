@@ -716,8 +716,10 @@ class CONFIGURE
             $input,
             30
         ) . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
@@ -732,8 +734,11 @@ class CONFIGURE
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "originatorEditOnly"), "configOriginatorEditOnly", $input));
         $input = array_key_exists("configGlobalEdit", $this->formData) && ($this->formData['configGlobalEdit']) ? "CHECKED" : WIKINDX_GLOBAL_EDIT_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "globalEdit"), "configGlobalEdit", $input));
+        $input = array_key_exists("configCategoryEditAllow", $this->formData) && ($this->formData['configCategoryEditAllow']) ? "CHECKED" : WIKINDX_CATEGORYEDIT_ALLOW_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "categoryEditAllow"), "configCategoryEditAllow", $input));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
@@ -752,8 +757,10 @@ class CONFIGURE
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "metadataUserOnly"), "configMetadataUserOnly", $input));
         $input = array_key_exists("configQuarantine", $this->formData) && ($this->formData['configQuarantine']) ? "CHECKED" : WIKINDX_QUARANTINE_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "quarantine"), "configQuarantine", $input));
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
@@ -809,6 +816,7 @@ class CONFIGURE
             1
         ) . BR . \HTML\span($hint, 'hint'));
         
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1943,6 +1951,7 @@ class CONFIGURE
                     "configSessionNotAuthMaxlifetime",
                     "configUserRegistration",
                     "configUserRegistrationModerate",
+                    "configCategoryEditAllow",
                 ];
 
                 break;

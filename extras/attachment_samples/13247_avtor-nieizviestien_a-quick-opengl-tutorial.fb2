@@ -1,0 +1,427 @@
+<?xml version='1.0' encoding='utf-8'?>
+<FictionBook xmlns:xlink='http://www.w3.org/1999/xlink'>
+<description>
+<title-info>
+<genre>Computers</genre>
+<author>
+<first-name>неизвестен</first-name>
+<middle-name></middle-name>
+<last-name>Автор</last-name>
+</author>
+<book-title>A Quick OpenGL Tutorial</book-title>
+<from>Converted by esokrat.com</from>
+</title-info>
+</description><body xmlns:xlink='http://www.w3.org/1999/xlink'>
+		<section><p>A Quick OpenGL Tutorial <br />
+Platform: Multi-platform<br />
+<br />Welcome to my OpenGL tutorial! Recently, with the appearance of high-performance 3D graphics cards on the PC, 3D applications are no longer delegated to the realm of the expensive custom workstation. For a C programmer, this means more than games – 3D is already being used in hundreds of application areas which previously were somewhat… flat.<br />
+The de-facto standard for a 3D api for many years was OpenGL, originally made by SGI. Unfortunetly, when it came time to port OGL over to the PC platform to take advantage of the new accelerated graphics cards, Microsoft was hard at work at it's own 3D standard-Direct3D. The result was that MS dragged its feet somewhat and released a somewhat shoddy software-only port of OpenGL on Windows 95. SGI also released a software-only version which takes advantage of acceleration techniques such as the MMX instruction set, and many card manufactures (such as those that use the 3Dfx chipset) provide their own drivers for interfacing with their boards. Unfortunetly, Microsoft has made it clear by their actions that Direct3D will be the only api they will support for Windows 95 (and the upcoming Windows 98).<br />
+So where does that leave us, the development community? Well, you could learn Direct3D…the process of which has several drawbacks: Firstly, Direct3D is by far the most horridly designed 3D api that has ever existed. Also, since it is built on top of DirectDraw, you must also learn that library before you can even begin D3D work. In addition, if you don't know how to interface to COM libraries (which in itself is no joy from C), that's another learning curveball thrown your way. Finally, there is the obvious fact that Direct3D only works for Win95, so cross-platform development is out of the question. If you want the full story on the horrors of Direct3D, you can check out a D3D tutorial at http://www.wksoftware.com/publications/d3dim.html.<br />
+Anyway, this tutorial is intended for C (or C++) programmers who have a moderate to strong grasp of the language. There is no 3D experience required to learn OpenGL, although it could help make some of the concepts clearer. One of the nice things about OpenGL is that it's easy to use – the interface is straightforward with no excess baggage. Likewise rather than use COM to provide an object-oriented paradigm in both C and C++, OpenGL is implemented as C functions which can be organized in any manner you see fit. There are good C++ encapsulations of OpenGL availible, but in this tutorial I'm just going over the basics, so I won't hide the interface. Now on that note, lets get started.<br />
+<br />
+I. Introduction To OpenGL<br />
+OK, I assume if you're still here then you're hyped up to begin learning OpenGL. First off, you have to get the libraries…<br />
+OpenGL should be availible on whatever platform you happen to be on. The libraries and headers for Microsoft's version comes with Visual C++, or you can download them from Microsoft's site. Alternativly, you can hunt around for SGI's drivers at http://www.sgi.com/. If you're running Linux, I'd suggest getting Mesa. It's availible for free at sunsite (ftp://sunsite.unc.edu/pub/packages/development/graphics/mesa/). Whichever OGL library you get, you're also going to need some sort of windowing system to support it. For these examples I'm going to be using the GLUT, or OpenGL Utility Toolkit (ftp://sunsite.unc.edu/pub/packages/development/graphics/glut/). GLUT's main job is to provide a window to draw your OpenGL code into. GLUT is also portable, which means you can compile the same code for both Win95 and X-Windows.<br />
+Now that that's out of the way, lets go on to:<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+Lets go through this step by step:<br />
+First, I called the glutInit function, which provides general initialization for the GLUT library:<br />
+<br />
+<br />
+Next I initialize the display mode:<br />
+<br />
+This tells OpenGL that I want a double buffered window, with RGB color.<br />
+The next few lines create the window:<br />
+<br />
+<br />
+<br />
+As you can see, with GLUT this is fairly straightforward.<br />
+Now it's time to initialize OpenGL. Here's the code:<br />
+void init(void) {<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+In OpenGL, matrices are used to manage the view. There are two matrix modes, projection and modelview. Projection is used to set up the viewport and clipping boundry, while modelview is used to rotate, translate and scale objects quickly.<br />
+Lets take a look at these two lines:<br />
+<br />
+<br />
+glLoadIdentity() loads the identity matrix into the current matrix state (in this case the projection matrix). You can consider this the resetting matrix…it resets everything back to zero. Next comes the call to glOrtho. This function sets up a clipping volume. You can think of a clipping volume as a box in which your drawing commands are rendered. As the viewer, we are positioned outside the box, looking in the front. What we see is whatever is inside the box, projected onto the flat surface that is the side. Anything outside the box is invisible. The glOrtho function creates an orthographic view-that is, one with no perspective. We'll get to perspective drawing later in the tutorial.<br />
+The arguments for glOrtho are as follows: <br />
+<br />
+Now, lets continue with the application:<br />
+<br />
+<br />
+The first function sets the function that GLUT will use whenever it needs to update the view. We then call glutMainLoop() which actually runs the program. From this point on our work is done; GLUT will handle the details of managing the window and calling our painting function to display it.<br />
+Here is the display function again:<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+The first thing we do is call glClear with GL_COLOR_BUFFER_BIT parameter. This will clear the window with the color we specified earlier using glClearColor. Next, we actually draw our rectangle, using the glRectf function.<br />
+Now's the time I should bring up something about OpenGL function calls – they often come in different forms. For example, take glColor, which sets the current foreground color. This function has several prototypes, for example: <br />
+<br />
+<br />
+<br />
+<br />
+etc, etc, etc.<br />
+As you can see, OpenGL functions are usually formatted like this:<br />
+gl Color 3 f<br />
+However, even though most OpenGL functions can accept any type, it's usually best to pass floats. OpenGL uses floating point values for all its internal calculations, so passing any other type is a waste of time since OGL will just convert it back to floating point anyway.<br />
+The next function, glutSwapBuffers(), swaps the back buffer to the screen buffer. In double-buffered mode, the drawing commands do not draw to the screen. Rather, they draw to an offscreen buffer. Once you are done drawing, you copy the entire back buffer to the screen at once, thus producing smooth animation. Of course, in this simple example there is no animation, but without a double buffer even moving the window around the screen will cause the rectangle to flicker. Besides, it's good to get into the habit of producing smooth graphics!<br />
+OK, now feel free to copy this program into an editor, compile it, and run it. Note you will have to link with whatever libs your version of OpenGL has provided, as well as the GLUT library. Under linux you will also probably have to link the X Window libraries such as libX11.a.<br />
+Congratulations! You are now an OpenGL Programmer! But I know what you're<br />
+saying…&quot;Where are the 3D graphics? You think I'm reading this junk to learn<br />
+how to draw a stupid square?&quot; Well, since you're so impatient, lets move on to creating 3D worlds with OpenGL…<br />
+<br />
+II. Points, Lines, and Polygons<br />
+Before we start drawing 3D objects, lets quickly go over some fundamentals.  You will find drawing to a 3D canvas is in fact very similar to plain old 2D applications.  This is because OpenGL uses a coodinate system called the Cartesian plane.  The difference here is that instead of having two axis which stretch horizontally and vertically, we add a third axis, the z (or depth) axis.  You can think of this as a line which runs through the origin (0,0 on a Cartesian coordinate system), going in the direction from away from you to straight towards you (in OpenGL, the positive z-axis always points towards you, while the negative points away).  Using this system, we can represent a point in 3D space, called a &quot;vertex&quot;, with three coordinites, representing x, y, and z.  For example:<br />
+(0,0,0) ← The origin, the center of our defined space.<br />
+(2,0,4) ← 2 units to the right, 4 units towards us, on the center of the y-axis.<br />
+(3,-4,-2) ← 3 units to the right, 4 units down, and 2 units away from us.<br />
+Got the hang of it? Then lets plot some points with OpenGL. We can use the function glVertex to specifiy vertices, flanked by calls to glBegin and glEnd: <br />
+<br />
+<br />
+<br />
+<br />
+As you can see, glBegin tells OpenGL we want to start drawing (as well as WHAT we want to start drawing), and glEnd tells it to stop. The great thing about OGL's method of 3D drawing is it's flexibility – lets say we want to draw some lines:<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+Note that we now have one line for every two vertices. If you specify an odd number, the last vertex is ignored.<br />
+Now lets do some shapes. OpenGL specifies 6 different polygon primitives: GL_TRIANGLES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_QUADS, GL_QUAD_STRIP, and GL_POLYGON. Triangle and quad strips are shortcuts for building polygons next to each other, and likewise a triangle fan is a group of triangles that share a center point. GL_POLYGON can specify a general polygon with any number of vertices. The one you should use most often is GL_TRIANGLES, since most graphic accelerators are optimized for triangle operations. Here's an example of a generic triangle:<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+See? Nothing to it!<br />
+Now, lets take what we've learned so far and draw some 3D using OpenGL. As you can see, the following program bears more than a passing resemblence to the previous one (GLUT is so nice that way), with some changes to the display() function. One thing you will notice is that I change the current color with glColor before specifiying some of the vertices. When OpenGL sees a polygon with vertices that have different colors, it draws the figure by smoothly shading from one color to the next. In this example I've created an abstract shape made out of one square surrounded by four triangles. One point of the triangles is red, while the other two are blue. This creates a smoothing purple effect across the face of the triangle.<br />
+I'm also using this example to demonstrate some of the UI routines that GLUT uses. In this case we are going to be using the function glutKeyboardFunc(). This function defines a callback handler that will be called whenever a key is pressed while our window has focus.<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />Note that I use the glRotate function to rotate the view when the u, d, l, or r keys are pressed; don't worry, we haven't gone over this yet. I'll cover it in the next section, for now I put it in to illustrate the 3D nature of our shape. You may want to play around with this demo before continuing on to the next section. What else can you draw? What happens to the shading in the demo if you call glShadeModel(GL_FLAT)? Once you feel comfortable working with 3D space, we can move on to the next section…<br />
+<br />
+III. Perspective, Animation, and Depth Testing<br />
+OK, enough teasing! Now that you know how to draw polygons in OpenGL, you can do anything! Lets move on to some more advanced tricks to make really impressive graphical applications.<br />
+First off, a while back I promised you perspective…well, here it is. In case you're wondering, perspective means that objects recede, or get smaller with distance. In OpenGL the only thing required to use perspective is to set up the clipping volume for that operation. This can sometimes be tricky, since instead of a cube, a perspective clipping volume is actually sort of a truncated pyramid, called a frustum. The typical OGL function to do this is glFrustum, shown here:<br />
+<br />
+In this case, near and far are the distances to the front and back clipping planes. This function may look simple at first, but it gets tricky once you start dealing with windows that can be resized, etc. A far better solution is gluPerspective:<br />
+<br />
+The last two arguments remain the same as above, but what are aspect and fovy? FOVY is the Field Of View, and it specifies the angle which represents how much the viewer can see…somewhat like changing to a wide-angle lens in photography. Aspect is the aspect ratio of width/height in the window. Now I know what you're thinking: &quot;Are you nuts? Fovy? Aspect? I'm supposed to understand this?&quot; But don't worry; you'll see in the example program in this section why gluPerspective sets up a viewing volume so easily. Also note that the function's name begins with glu, not gl. This is an indicator that gluPerspective is not a part of the regular OpenGL library, but rather an extension which remains a part of the GL standard. Just remember that when using any function beginning with glu, you must #include &lt;gl\glu.h&gt;, and link with the appropriate library.<br />
+Well, if you followed that, you now have a nice perspective view to draw into. Now lets make the renderings themselves more interesting by adding motion. If you've ever seen any kind of documentary on cartoons and so forth, you're familiar with the concept of animation. You just take many slightly different static drawings and switch them very fast in front of the viewer to produce a motion effect. This is the easy part; we're already drawing several frames a second into our window. The hard part is moving our pictures so they make sense in relation to each other. In practice this involves a little math. For example, if you have an object at point x, you can move said object over 4 units if you add 4 to all the x coordinates of the vertices that make up the object (whew!). Likewise, if you know how to rotate each individual vertex around a circle (using the cosine and sine to determine the x and y coordinites), you can rotate the entire object in this manner. The problem with these types of operations is they're slow…it's easier to compute all the coordinate positions at once using a matrix. Matrices are kind of like tables that can encapsulate these types of operations. I'm not going to go into detail about it here, since OpenGL contains built in support for handling matrices. The problem is they don't always do what you want; a transformation matrix, when applied, will transform the *entire* scene, not just the object you wanted to move! There are some neat tricks you can use involving the matrix stack to put any combination of transforms into a matrix, but space will not permit me to discuss that here :(. In the meantime we can use matrices to move our objects at times when we want the entire scene to move as a unit.<br />
+Here are the functions in OpenGL which deal with matrices:<br />
+<br />
+You've seen this one before…this function loads the &quot;identity&quot; matrix into the current matrix. This has the effect of resetting everything back to its original position, i.e. an object drawn centered at (0,0,0) will appear in the center of the screen.<br />
+<br />
+This function translates (moves) the entire scene forward, left and up the specified amounts. Use negative values to translate in the other direction.<br />
+<br />
+Again, this function rotates the entire scene. The way this is called might be a little confusing; the amount of rotation is determined by angle (0-359), and the scene is rotated around the vector specified by x, y, and z.<br />
+<br />
+This is a more rarely-used function; it scales (makes larger or smaller) the scene by the specified factor. For example, scaling by a factor of 2.0 makes the scene appear twice as large, whereas a factor of 1.0 does nothing and a factor of 0.5 will halve the size. You can scale each axis independantly to produce a squishing or stretching effect.<br />
+OK, so now you (hopefully) know how to move stuff around using OpenGL, lets do one more thing: depth testing. This is the process of determining what falls in front of what…in other words, is the house in front of the dog or is the dog in front of the house? This may sound trivial at first, but in order to get realistic looking scenes we usually use something called a z-buffer, which tests each pixel to see if it should is unhidden and should therefore be drawn. This would normally be a big to-do, but OpenGL is nice enough to handle all the details for us. Be warned though: unless you have a video accelerator with a lot of video memory, z-buffering will slow down rendering immensely. Z-buffers can make for really cool effects (such as objects passing through other objects), but watch out for the performance hit. That being said, applying a z-buffer to your scene is easy; first, put a call to glEnable in your initialization, like so:<br />
+<br />
+Then, clear your z-buffer at the end of every frame. You can do this at the same time you clear your drawing window, like so:<br />
+<br />
+Simple, eh? Well now we have depth-cued perspective motion… in other words, your resume is stacked and you're rearing to go! Lets continue on to the final example:<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+If you know anything about 3D graphics, you'll probably notice this program is horrendously inefficient. This can easily be changed with OpenGL, but I don't have time to explain how…I leave it as an exercise to the reader (that's what us tutorial people say when we don't feel like doing something :P).<br />
+Go ahead and compile this and play around with it…you'll notice there's no collision detection and no way to turn around. This is only the tip of the iceburg as far as OpenGL goes; in fact it's almost embarrassing how much I left out! If you want to find out more about projection, texture mapping, colors, lighting, tesselation, nurbs, fog, stenciling, quadrics, and more, I'd reccomend the following books:<br />
+<br />
+The OpenGL Superbible <br />
+The Complete Guide to OpenGL Programming for Windows NT and Windows 95 <br />
+By Richard S. Wright Jr. and Michael Sweet <br />
+Waite Group Press <br />
+ISBN 1-57169-073-5<br />
+<br />A great book for beginners, which also covers native Win32 graphics with OpenGL… highly reccomended!<br />
+<br />
+The OpenGL Programming Guide, Second Edition <br />
+The Official Guide to Learning OpenGL, Version 1.1 <br />
+By Mason Woo, Jackie Neider and Tom Davis <br />
+Addison-Wesley Developers Press <br />
+ISBN 0-201-46138-2<br />
+<br />Contains *everything* you ever wanted to know about OpenGL 1.1, although it may be a little &quot;thick.&quot; Perhaps better used as a reference, but contains invaluable info about the GLUT.<br />
+Also check out http://www.opengl.org for the latest OGL info &amp; software.<br />
+Lastly, if you ever want to contact me, I'm availible at kased811@ix.netcom.com. I'm afraid I can't offer freelance OpenGL guidance, but if you want to talk about the contemplation of your navel, I'm all ears :P. In the meantime, happy coding and good luck with OpenGL!</p></section></body></FictionBook>

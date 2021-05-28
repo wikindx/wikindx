@@ -3777,8 +3777,6 @@ class SEARCH
      */
     private function searchAttachments()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
-        $ftt = new FILETOTEXT();
         $excludeIds = $matchIds = [];
         foreach ($this->attachmentSearches as $key => $array)
         {

@@ -171,6 +171,12 @@ class FILETOTEXT
     /**
      * Extract the text content of PDF files (PDF)
      *
+     * Adobe Portable Document Format extracted with PdfToText. PHP class of Christian Vigh or XPdf utilities.
+     *
+     * The supported extensions of the format are not well defined.
+     * In the case of xpdf the support is supposed to be cutting edge. 
+     *
+     * cf. https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/pdf_reference_archives/PDFReference.pdf
      * cf. https://www.xpdfreader.com/pdftotext-man.html
      * cf. https://www.xpdfreader.com/pdfinfo-man.html
      *
@@ -231,7 +237,6 @@ class FILETOTEXT
             // Will consume all available runtime except 2 seconds (if this point is reached in less than 2 seconds)
             //$importPDF->MaxExecutionTime = ini_get('max_execution_time') - GLOBALS::getPageElapsedTime() - 3;
             
-            
             try
             {
                 // Return the text extracted
@@ -257,6 +262,8 @@ class FILETOTEXT
     /**
      * Extract the text content of plain text files
      *
+     * Markdown, reStructured text are supported as plain text.
+     *
      * @param mixed $filepath An absolute or relative file path
      *
      * @return string Text extracted
@@ -272,6 +279,9 @@ class FILETOTEXT
     
     /**
      * Extract the text content of Microsoft Office Word files (before 2007) (DOC, DOT)
+     *
+     * Binary format of Microsoft office Suite. Templates and plain documents are supported,
+     * with and without macros. All versions before Word 2007 are supported.
      *
      * cf. https://coderwall.com/p/x_n4tq/how-to-read-doc-using-php
      *
@@ -316,6 +326,9 @@ class FILETOTEXT
     
     /**
      * Extract the text content of Microsoft office Word files (2007 and higher) (DOCX, DOCM...)
+     *
+     * XML format of Microsoft office Suite. Templates and plain documents are supported,
+     * with and without macros. All versions starting with Word 2007 are supported.
      *
      * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
      *
@@ -398,6 +411,9 @@ class FILETOTEXT
     /**
      * Extract the text content of Microsoft Office PowerPoint files (2007 and higher)
      *
+     * XML format of Microsoft office Suite. Templates and plain documents are supported,
+     * with and without macros. All versions starting with PowerPoint 2007 are supported.
+     *
      * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
      *
      * @param string $filepath An absolute or relative file path
@@ -408,7 +424,7 @@ class FILETOTEXT
     {
         $content = "";
             
-        // Extract the content parts
+        // Open the OCF container
         $za = new \ZipArchive();
         
         if ($za->open($filepath) === TRUE)
@@ -419,7 +435,8 @@ class FILETOTEXT
                 // Get a stream from the original name
                 $filepath = $za->getNameIndex($k);
                 
-                // Skip non slide and comment XML files
+                // Keep only the content of slide and comment XML files
+                // They are in defined locations, so we don't need to parse the Package Document Map
                 if (!((\UTILS\matchPrefix($filepath, "ppt/slides/slide") || \UTILS\matchPrefix($filepath, "ppt/comments/comment")) && \UTILS\matchSuffix($filepath, ".xml")))
                 {
                     continue;
@@ -506,12 +523,12 @@ class FILETOTEXT
         $content = "";
         $content = "";
         
-        // Open the container
+        // Open the OCF container
         $za = new \ZipArchive();
         $errcode = $za->open($filepath);
         
         // Like EPUB, ODT are packaged with OCF container,
-        // but since ODT also use fixed paths for XML files we open them directly
+        // but since ODT also use fixed paths for XML files we open them without loading the Package Document Map
         if ($errcode === TRUE)
         {
             // Extract mimetype
@@ -560,6 +577,7 @@ class FILETOTEXT
             
             $xsdpath = new DOMXPath($dom);
             
+            // Remove base64 encoded content before parsing
             foreach([
                 "draw:image","draw:image-map",
                 "draw:object","draw:object-ole",
@@ -636,12 +654,12 @@ class FILETOTEXT
                 
                 while ($pXML->read())
                 {
-                    // Start extracting at the start of the text of the body
+                    // Start extracting at the start of the root element of the current format
                     if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == $root_element)
                     {
                         $bExtract = TRUE;
                     }
-                    // Stop extracting at the end of the text of the body
+                    // Stop extracting at the end of the root element of the current format
                     if ($pXML->nodeType == \XMLReader::END_ELEMENT && $pXML->name == $root_element)
                     {
                         $bExtract = FALSE;
@@ -653,25 +671,25 @@ class FILETOTEXT
                         $content .= "\t";
                     }
                     
-                    // Transform spaces and tabs to spaces
+                    // Extract new lines
                     if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["text:line-break"]))
                     {
                         $content .= LF;
                     }
                     
-                    // Start extracting at the start of the text of the body
+                    // Start extracting at the start of text elements (ruby is for asian languages)
                     if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
                     {
                         $bExtractElement = TRUE;
                     }
                     
-                    // Stop extracting at the end of the text of the body
+                    // Stop extracting at the end of text elements
                     if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
                     {
                         $bExtractElement = FALSE;
                     }
                     
-                    // Extract all node and add new lines on blocks
+                    // Extract and add new lines on blocks
                     if ($bExtract && $bExtractElement)
                     {
                         $content .= $pXML->value;
@@ -692,6 +710,8 @@ class FILETOTEXT
     
     /**
      * Extract the text content of Rich Text Format (RTF) files
+     *
+     * Extracted with RTF classes of Christian Vigh. All version of RTF are supported.
      *
      * cf. https://interoperability.blob.core.windows.net/files/Archive_References/%5bMSFT-RTF%5d.pdf
      *
@@ -721,7 +741,7 @@ class FILETOTEXT
      *
      * All version of EPUB are supported with a single function
      * because the specification has changed very little
-     * when we consider only its structure and text extraction. 
+     * when we consider only its structure and text extraction.
      *
      * Versions supported :
      *
@@ -741,7 +761,7 @@ class FILETOTEXT
     {
         $content = "";
         
-        // Open the container
+        // Open the OCF container
         $za = new \ZipArchive();
         
         if ($za->open($filepath) === TRUE)
@@ -752,7 +772,7 @@ class FILETOTEXT
             {
                 // Extract the default Package Document path from the OCF Container
                 // It's a manifest (map) of content files to render, and metadata
-                // Alternatives manifest can be ignored safely (explained in the spec )
+                // Alternatives manifest can be ignored safely (explained in the spec)
                 // cf. https://www.w3.org/publishing/epub3/epub-ocf.html#sec-container-abstract
                 $pXML = new \XMLReader();
                 
@@ -760,6 +780,7 @@ class FILETOTEXT
                 {
                     while ($pXML->read())
                     {
+                        // The Package Document path is stored on the full-path attribut of the rootfile node
                         if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "rootfile")
                         {
                             $path_opf = $pXML->getAttribute("full-path");
@@ -770,7 +791,7 @@ class FILETOTEXT
                 
                 unset($pXML);
                 
-                // Package Document found
+                // Package Document parsing
                 $opf = [];   // List of content files
                 $spine = []; // Rendering order of content files
                 if ($path_opf !== NULL)
@@ -826,7 +847,7 @@ class FILETOTEXT
                     {
                         if (array_key_exists($idref, $opf))
                         {
-                            // The path can be absolute or relative to the OPF file directory
+                            // The path can be absolute or relative to the OCF file directory
                             $path_xhtml = $opf[$idref];
                             if (basename($path_xhtml) == $path_xhtml)
                             {
@@ -855,6 +876,11 @@ class FILETOTEXT
     
     /**
      * Extract the text content of multipart files (RFC2557) (EML, MHT)
+     *
+     * This format is a container for any number of files of arbitrary mime-type,
+     * separated by text boundaries. It's is used for packed HTML and email storage.
+     *
+     * Each file is extracted, reencoded in UTF-8 (with transliteration) if possible, and parsed with convertToText().
      *
      * cf. https://tools.ietf.org/html/rfc2557
      *
@@ -1019,7 +1045,8 @@ class FILETOTEXT
      * Widely accepts elements of (X)HTML in all versions.
      * Remove items that are not textual or purely technical items.
      *
-     * We assume that the document is well formed and the order is right
+     * We assume that the document is malformed (normalization is performed)
+     * and can be parsed in reading order.
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1035,7 +1062,7 @@ class FILETOTEXT
         $dom->loadHTMLFile($filepath, LIBXML_NOWARNING | LIBXML_NOERROR);
         $dom->normalizeDocument();
         
-        // Initalize the iterator
+        // Initalize the recursive iterator
         $dit = new RecursiveIteratorIterator(
             new RecursiveDOMIterator($dom),
             RecursiveIteratorIterator::SELF_FIRST
@@ -1069,6 +1096,13 @@ class FILETOTEXT
     /**
      * Extract the text content of FictionBook ebooks (FB1, FB2)
      *
+     * Russian XML ebook format.
+     *
+     * Versions supported :
+     *
+     * - v1 (no documentation found but that should word)
+     * - v2
+     *
      * cf. http://www.gribuser.ru/xml/fictionbook/index.html.en
      *
      * @param string $filepath An absolute or relative file path
@@ -1089,22 +1123,33 @@ class FILETOTEXT
             
             while ($pXML->read())
             {
-                // Start extracting at the start of the description (headers)
+                // Start extracting at the start of description elements (metadata)
                 if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["description"]))
                 {
                     $bExtract = TRUE;
                 }
-                // Stop extracting at the end of the description (headers)
+                // Stop extracting at the end of description elements (metadata)
                 if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["description"]))
                 {
                     $bExtract = FALSE;
                 }
                 
-                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["body"]))
+                // Extract metadata
+                if ($bExtract)
+                {
+                    $content .= $pXML->value;
+                    if ($pXML->name == "description")
+                    {
+                        $content .= LF.LF;
+                    }
+                }
+                
+                // Extract the body part (HTML document without headers inside the body element only)
+                if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "body")
                 {
                     $body = $pXML->readInnerXml();
                     
-                    $path_html_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "fb2_" . \UTILS\uuid() . ".html"]);
+                    $path_html_cache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "fb_" . \UTILS\uuid() . ".html"]);
                     if (file_put_contents($path_html_cache, $body) !== FALSE)
                     {
                         $content .= $this->readHtml($path_html_cache) . LF;
@@ -1112,16 +1157,6 @@ class FILETOTEXT
                         @unlink($path_html_cache);
                     }
                     
-                }
-                
-                // Extract all node and add new lines on blocks
-                if ($bExtract)
-                {
-                    $content .= $pXML->value;
-                    if (in_array($pXML->name, ["description"]))
-                    {
-                        $content .= LF.LF;
-                    }
                 }
             }
         }
@@ -1134,7 +1169,9 @@ class FILETOTEXT
 
     
     /*
-     * readXps, extract the text content of XPS files (XPS, OXPS)
+     * Extract the text content of Open XML Paper Specification files (XPS, OXPS)
+     *
+     * All versions are supported.
      *
      * cf. https://www.ecma-international.org/publications-and-standards/standards/ecma-388/
      *
@@ -1150,12 +1187,12 @@ class FILETOTEXT
         $structmap = [];
         $string_catalog = [];
         
-        // Extract the content parts
+        // Open the OCF container
         $za = new \ZipArchive();
         
-        // Explore the root file of the structure
         if ($za->open($filepath) === TRUE)
         {
+            // Explode the root file of the structure and find the map file of the page source files
             $rootmapcontent = $za->getFromName("FixedDocSeq.fdseq");
             if ($rootmapcontent !== FALSE && $rootmapcontent != "")
             {
@@ -1165,11 +1202,12 @@ class FILETOTEXT
                 {
                     while ($pXML->read())
                     {
+                        // "Source" attribut of "DocumentReference" elements
                         if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "DocumentReference")
                         {
                             if ($pXML->getAttribute("Source") != NULL)
                             {
-                                echo $pXML->getAttribute("Source") . LF;
+                                // Remove "/" from the beginning because getFromName() dislikes it
                                 $rootmap[] = ltrim($pXML->getAttribute("Source"), "/");
                             }
                         }
@@ -1177,6 +1215,7 @@ class FILETOTEXT
                 }
             }
             
+            // Extract the list of all page source files form the map file
             if (count($rootmap) > 0)
             {
                 foreach($rootmap as $doc)
@@ -1190,10 +1229,13 @@ class FILETOTEXT
                         {
                             while ($pXML->read())
                             {
+                                // "Source" attribut of "PageContent" elements
                                 if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "PageContent")
                                 {
                                     if ($pXML->getAttribute("Source") != NULL)
                                     {
+                                        // Remove "/" from the beginning because getFromName() dislikes it
+                                        // Build a relative path from the container folder
                                         $map[] = dirname($doc) . "/" . ltrim($pXML->getAttribute("Source"), "/");
                                     }
                                 }
@@ -1203,6 +1245,7 @@ class FILETOTEXT
                 }
             }
             
+            // Extract the text content of page source files and reencode it to UTF-8 (from UTF-16 LE)
             if (count($map) > 0)
             {
                 natsort($map);
@@ -1219,6 +1262,8 @@ class FILETOTEXT
                         {
                             while ($pXML->read())
                             {
+                                // "Name" attribut of "Glyphs" elements = ID of the content
+                                // "UnicodeString" attribut of "Glyphs" elements = CONTENT
                                 if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "Glyphs")
                                 {
                                     if ($pXML->getAttribute("Name") != NULL && $pXML->getAttribute("UnicodeString") != NULL)
@@ -1232,6 +1277,7 @@ class FILETOTEXT
                 }
             }
             
+            // Extract the list of all frag structure files for each page source file
             if (count($string_catalog) > 0)
             {
                 // On macOS extractTo() doesn't work, so we emulate it
@@ -1250,6 +1296,7 @@ class FILETOTEXT
                 }
             }
             
+            // Build the XPS content but concatenating the content of each page source following the order described in the frag structures files
             if (count($structmap) > 0)
             {
                 natsort($structmap);
@@ -1265,6 +1312,7 @@ class FILETOTEXT
                         {
                             while ($pXML->read())
                             {
+                                // Concat "NameReference" attribut of "NamedElement" elements
                                 if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "NamedElement")
                                 {
                                     $key = $pXML->getAttribute("NameReference");
@@ -1276,6 +1324,7 @@ class FILETOTEXT
                                         }
                                     }
                                 }
+                                // Add a new line at the beginning of each paragraph
                                 if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "ParagraphStructure")
                                 {
                                     $content .= LF;
@@ -1294,6 +1343,9 @@ class FILETOTEXT
     
     /*
      * Extract the text content of Scribus files (SLA)
+     *
+     * This XML format is not documented but it seems the text
+     * is always enclosed inside the "CH" attribut of "ITEXT" elements.
      *
      * cf. https://wiki.scribus.net/canvas/(FR)_Introdution_au_Format_de_fichier_SLA_pour_Scribus_1.4
      * cf. https://github.com/scribusproject/scribus/tree/master/resources/tests

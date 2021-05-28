@@ -1333,18 +1333,18 @@ class FILETOTEXT
                 
                 while ($pXML->read())
                 {
-                    // Start extracting at the start of the text
+                    // Start extracting at the start of the p element
                     if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "p")
                     {
                         $bExtract = TRUE;
                     }
-                    // Stop extracting at the end of the text
+                    // Stop extracting at the end of the p element
                     if ($pXML->nodeType == \XMLReader::END_ELEMENT && $pXML->name == "p")
                     {
                         $bExtract = FALSE;
                     }
                     
-                    // Extract all node and add new lines on blocks
+                    // Extract and add new lines before each "p" element
                     if ($bExtract)
                     {
                         $content .= $pXML->value;
@@ -1365,6 +1365,11 @@ class FILETOTEXT
     /*
      * Extract the text content of DjVu files (DJV, DJVU) with djvutxt utility
      *
+     * This format is used for archiving and contains text if an OCR have been used.
+     *
+     * djvutxt utility is included in DjVuLibre toolbox.
+     *
+     * cf. http://djvu.sourceforge.net/doc/man/djvutxt.html
      * cf. http://djvu.sourceforge.net
      *
      * @param string $filepath An absolute or relative file path
@@ -1375,16 +1380,17 @@ class FILETOTEXT
     {
         $content = "";
         
-        $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".txt"]);
-        
+        // Utility config
+        $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "djvu_" . \UTILS\uuid() . ".txt"]);
         $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "djvutxt"]);
-        
         $cmd = '"' . $bin . '" "' . $filepath . '" "' . $txtfile . '"';
+        
+        // Extract
         $execerrno = 0;
         $execoutput = [];
-        
         exec($cmd, $execoutput, $execerrno);
         
+        // Read and remove the result file
         if (file_exists($txtfile))
         {
             $content = file_get_contents($txtfile);
@@ -1398,7 +1404,12 @@ class FILETOTEXT
     /*
      * Extract the text content of DeVice Independent files (DVI) with catdvi utility
      *
+     * This format is a byproduct of a TeX compilation.
+     *
+     * catdvi utility is included in most TeX distributions like TeX Live.
+     *
      * cf. http://catdvi.sourceforge.net/
+     * cf. https://tug.org/texlive/
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1408,16 +1419,18 @@ class FILETOTEXT
     {
         $content = "";
         
+        // Utility config
         $txtfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "dvi_" . \UTILS\uuid() . ".txt"]);
-        
         $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "catdvi"]);
-        
+        // "sequential" option allows to read a multicolumn document in human reading order
         $cmd = '"' . $bin . '" --output-encoding=UTF-8 --sequential "' . $filepath . '" > "' . $txtfile . '"';
+        
+        // Extract
         $execerrno = 0;
         $execoutput = [];
-        
         exec($cmd, $execoutput, $execerrno);
         
+        // Read and remove the result file
         if (file_exists($txtfile))
         {
             $content = file_get_contents($txtfile);
@@ -1431,6 +1444,13 @@ class FILETOTEXT
     /*
      * Extract the text content of PostScript files (PS, EPS) with ps2pdf utility
      *
+     * This Adobe format is a scripted document that need GhostScript to be interpreted.
+     *
+     * ps2pdf utility is included in GhostScript.
+     *
+     * cf. http://web.mit.edu/ghostscript/www/Ps2pdf.htm
+     * cf. https://www.ghostscript.com/
+     *
      * @param string $filepath An absolute or relative file path
      *
      * @return string Text extracted
@@ -1439,16 +1459,17 @@ class FILETOTEXT
     {
         $content = "";
         
+        // Utility config
         $pdffile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".pdf"]);
-        
         $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "ps2pdf"]);
-        
         $cmd = '"' . $bin . '" "' . $filepath . '" "' . $pdffile . '"';
+        
+        // Extract
         $execerrno = 0;
         $execoutput = [];
-        
         exec($cmd, $execoutput, $execerrno);
         
+        // Read and remove the result file
         if (file_exists($pdffile))
         {
             $content = $this->readPdf($pdffile);

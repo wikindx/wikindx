@@ -9147,9 +9147,6 @@ msgstr "La palabra clave ha sido editada correctamente"
 msgid "Successfully approved resource(s)"
 msgstr "Recurso eliminado correctamente del cesto"
 
-#~ msgid "Upgrade the database"
-#~ msgstr "Actualizar la base de datos"
-
 #, fuzzy
 #~| msgid "Unable to write to database."
 #~ msgid "Unable to write temporary form data to the database."
@@ -9310,6 +9307,17 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ msgid "<h3>Components</h3>"
 #~ msgstr "<h3>Preferencias</h3>"
 
+#~ msgid "Upgrade the database"
+#~ msgstr "Actualizar la base de datos"
+
+#~ msgid "<h3>My Wikindx</h3>"
+#~ msgstr "<h3>Mi Wikindx</h3>"
+
+#, fuzzy
+#~| msgid "<h3>Category Tree</h3>"
+#~ msgid "<h3>Keyword Groups</h3>"
+#~ msgstr "<h3>Árbol de categorías</h3>"
+
 #~ msgid ""
 #~ "<p>If you have a BibTeX bibliography, you can import selected entries, "
 #~ "including @string values, by copying and pasting the entries from your "
@@ -9328,11 +9336,3 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ "custom fields before pasting.  An administrator can post unlimited numbers "
 #~ "of entries in one go, other users can post <strong>#pasteBibtex#</strong> "
 #~ "entries at a time.</p>"
-
-#~ msgid "<h3>My Wikindx</h3>"
-#~ msgstr "<h3>Mi Wikindx</h3>"
-
-#, fuzzy
-#~| msgid "<h3>Category Tree</h3>"
-#~ msgid "<h3>Keyword Groups</h3>"
-#~ msgstr "<h3>Árbol de categorías</h3>"

@@ -9253,9 +9253,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "<h3>Configure WIKINDX</h3>"
-#~ msgstr "<h3>Configura WIKINDX</h3>"
-
 #~ msgid ""
 #~ "<p>Positioning plugins and granting authorization is accomplished by "
 #~ "editing the plugin's config.php file (typically only $menus and $authorize "
@@ -10187,6 +10184,9 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "Enabled Languages"
 #~ msgstr "Lingue Abilitate"
+
+#~ msgid "<h3>Configure WIKINDX</h3>"
+#~ msgstr "<h3>Configura WIKINDX</h3>"
 
 #~ msgid ""
 #~ "<p>Most of the configuration options are self-explanatory but bear the "

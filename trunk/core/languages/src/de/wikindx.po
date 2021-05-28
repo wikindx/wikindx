@@ -9338,9 +9338,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Enabled Styles"
-#~ msgstr "Aktivierte Stile"
-
 #~ msgid ""
 #~ "<p>At least one template, one bibliographic style and one language must "
 #~ "remain enabled. WIKINDX expects that the English language pack is "
@@ -10291,6 +10288,9 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Disabled Plugins"
 #~ msgstr "Plugins deaktivieren"
+
+#~ msgid "Enabled Styles"
+#~ msgstr "Aktivierte Stile"
 
 #~ msgid "Ungroup"
 #~ msgstr "Gruppierung aufheben"

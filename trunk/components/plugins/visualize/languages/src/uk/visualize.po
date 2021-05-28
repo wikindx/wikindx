@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: visualize\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-05-15 17:00+0200\n"
+"POT-Creation-Date: 2021-05-28 16:03+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/saulery/teams/103557/"
@@ -123,3 +123,15 @@ msgstr "Графік розсіяння із лінією"
 #: components/plugins/visualize/visualizemessages.php:45
 msgid "Balloon plot"
 msgstr "Бульбашкова діаграма"
+
+#: components/plugins/visualize/visualizemessages.php:47
+msgid "Order"
+msgstr "Порядок"
+
+#: components/plugins/visualize/visualizemessages.php:48
+msgid "Oldest first"
+msgstr "Найстаріші спочатку"
+
+#: components/plugins/visualize/visualizemessages.php:49
+msgid "Latest first"
+msgstr "Найновіші спочатку"

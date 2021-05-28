@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ideagen\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-07-18 02:48+0200\n"
+"POT-Creation-Date: 2021-05-28 16:03+0200\n"
 "PO-Revision-Date: 2020-06-12 11:43+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/saulery/teams/103557/"
@@ -46,11 +46,14 @@ msgid ""
 "Idea Generator randomly selects and displays two items of metadata (quotes, "
 "paraphrases, musings, or ideas) in the hope that the chance juxtaposition "
 "might be serendipitous. The greater the number of metadata, the greater the "
-"variety of juxtaposition."
+"variety of juxtaposition. You can narrow the selection process down by "
+"selecting each item from within a range of resource or metadata keywords."
 msgstr ""
 "«Генератор ідей» випадковим чином вибирає і показує два записи метаданих "
 "(цитат, переказів, думок або ідей) у сподіванні, що їхнє поєднання буде "
-"вдалим. Чим більше записів метаданих, тим більшою є варіативність поєднання."
+"вдалим. Чим більше записів метаданих, тим більшою є варіативність поєднання. "
+"Ви можете звузити вибір, позначивши пункт у діапазоні ключових слів ресурсу "
+"або метаданих."
 
 #: components/plugins/ideagen/ideagenmessages.php:25
 msgid "Create new idea"
@@ -91,3 +94,26 @@ msgid ""
 msgstr ""
 "Щоб «Генератор ідей» зміг працювати, потрібно принаймні 3 доступних вам "
 "записи метаданих."
+
+#: components/plugins/ideagen/ideagenmessages.php:34
+msgid "Item 1"
+msgstr "Запис 1"
+
+#: components/plugins/ideagen/ideagenmessages.php:35
+msgid "Item 2"
+msgstr "Запис 2"
+
+#: components/plugins/ideagen/ideagenmessages.php:36
+msgid "Resource keywords"
+msgstr "Ключові слова ресурсу"
+
+#: components/plugins/ideagen/ideagenmessages.php:37
+msgid "Metadata keywords"
+msgstr "Ключові слова метаданих"
+
+#: components/plugins/ideagen/ideagenmessages.php:38
+msgid ""
+"Unable to generate random pair. Please try again or change the item options."
+msgstr ""
+"Не вдалося створити випадкову пару. Будь ласка, повторіть спробу або змініть "
+"параметри запису."

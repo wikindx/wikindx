@@ -21,45 +21,67 @@ class FILETOTEXT
     }
 
     /**
-     * convertToText
+     * Convert files of various types to text ready for searching and return it
      *
-     * @param string $filename
-     * @param string $mimetype Default is "text/plain"
+     * This function dispatches the conversion to functions specialized by mime-type.
      *
-     * @return string
+     * The dispatching is done according to the mime-type AND file extension.
+     * So you MUST pass a file with an appropriate extension.
+     *
+     * @param string $filepath An absolute or relative file path
+     * @param string $mimetype A mime-type. Default is "text/plain"
+     *
+     * @return string Text extracted
      */
-    public function convertToText($filename, $mimetype = "text/plain")
+    public function convertToText($filepath, $mimetype = "text/plain")
     {
-        $extension = \FILE\getExtension($filename);
+        $extension = \FILE\getExtension($filepath);
         
-        // Convert to text with a specific function by mimetype and return it
         switch ($mimetype)
         {
+            case WIKINDX_MIMETYPE_ABW:
+                // AbiWord
+                $text = $this->readAbw($filepath);
+            break;
+            case WIKINDX_MIMETYPE_DJV:
+                // DjVu
+                $text = $this->readDjVu($filepath);
+            break;
             case WIKINDX_MIMETYPE_DOC:
-                $text = $this->readWord($filename);
+                // Microsoft Office Word (before 2007)
+                $text = $this->readWord($filepath);
             break;
             case WIKINDX_MIMETYPE_DOCM:
             case WIKINDX_MIMETYPE_DOCX:
             case WIKINDX_MIMETYPE_DOTM:
             case WIKINDX_MIMETYPE_DOTX:
-                $text = $this->readDocx($filename);
+                // Microsoft Office Word (2007 and higher)
+                $text = $this->readDocx($filepath);
+            break;
+            case WIKINDX_MIMETYPE_DVI:
+                // DVI
+                $text = $this->readDvi($filepath);
             break;
             case WIKINDX_MIMETYPE_EPUB:
-                $text = $this->readEpub($filename);
+                // EPUB
+                $text = $this->readEpub($filepath);
             break;
             case WIKINDX_MIMETYPE_FB:
-                $text = $this->readFictionBook($filename);
+                // Fiction Book
+                $text = $this->readFictionBook($filepath);
             break;
             case WIKINDX_MIMETYPE_HTML:
             case WIKINDX_MIMETYPE_XHTML:
-                $text = $this->readHtml($filename);
+                // (X)HTML
+                $text = $this->readHtml($filepath);
             break;
             case WIKINDX_MIMETYPE_MHT_ALT:
             case WIKINDX_MIMETYPE_MHT_APP:
             case WIKINDX_MIMETYPE_MHT_MIX:
             case WIKINDX_MIMETYPE_MHT_MUL:
             case WIKINDX_MIMETYPE_MHT_RFC:
-                $text = $this->readMht($filename);
+                // Multipart file (RFC2557)
+                $text = $this->readMht($filepath);
             break;
             case WIKINDX_MIMETYPE_ODP:
             case WIKINDX_MIMETYPE_ODT:
@@ -69,30 +91,37 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_SXI:
             case WIKINDX_MIMETYPE_SXW:
             case WIKINDX_MIMETYPE_STW:
-                $text = $this->readOpenDocument($filename);
+                // OpenOffice/LibreOffice/SunOffice Document and Presentation
+                $text = $this->readOpenDocument($filepath);
             break;
             case WIKINDX_MIMETYPE_POTM:
             case WIKINDX_MIMETYPE_POTX:
             case WIKINDX_MIMETYPE_PPTM:
             case WIKINDX_MIMETYPE_PPTX:
-                $text = $this->readPptx($filename);
+                // Microsoft Office PowerPoint (2007 and higher)
+                $text = $this->readPptx($filepath);
             break;
             case WIKINDX_MIMETYPE_PDF:
             case WIKINDX_MIMETYPE_XPDF:
-                $text = $this->readPdf($filename);
+                // PDF
+                $text = $this->readPdf($filepath);
             break;
             case WIKINDX_MIMETYPE_PS:
-                $text = $this->readPs($filename);
+                // PostScript
+                $text = $this->readPs($filepath);
             break;
             case WIKINDX_MIMETYPE_RTF_APP:
             case WIKINDX_MIMETYPE_RTF_TEXT:
-                $text = $this->readRtf($filename);
+                // Rtf
+                $text = $this->readRtf($filepath);
             break;
             case WIKINDX_MIMETYPE_SCRIBUS:
-                $text = $this->readScribus($filename);
+                // Scribus
+                $text = $this->readScribus($filepath);
             break;
             case WIKINDX_MIMETYPE_MD:
             case WIKINDX_MIMETYPE_TXT:
+                // Various texts
                 switch ($extension)
                 {
                     // SYLK is a spreadsheet file format
@@ -101,16 +130,18 @@ class FILETOTEXT
                         $text = "";
                     break;
                     default:
-                        $text = $this->readText($filename);
+                        $text = $this->readText($filepath);
                     break;
                 }
             break;
             case WIKINDX_MIMETYPE_XML_APP:
             case WIKINDX_MIMETYPE_XML_TEXT:
-                $text = $this->readHtml($filename);
+                // Untyped XML
+                $text = $this->readHtml($filepath);
             break;
             case WIKINDX_MIMETYPE_XPS:
-                $text = $this->readXps($filename);
+                // XPS
+                $text = $this->readXps($filepath);
             break;
             default:
                 // Type not handled

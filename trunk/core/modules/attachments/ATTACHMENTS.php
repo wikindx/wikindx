@@ -628,7 +628,7 @@ class ATTACHMENTS
         }
         
         // Extract the text
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "libs", "FILETOTEXT.php"]));
         $ftt = new FILETOTEXT();
         
         // Save the text

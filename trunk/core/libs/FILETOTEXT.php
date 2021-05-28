@@ -576,7 +576,33 @@ class FILETOTEXT
             unset($xsdpath);
             
             $filecontentdata = $dom->saveXML();
-            echo $filecontentdata;
+            
+            // Sniff the mime-type of flat OpenDocument documents
+            $mimetype = $mimetype ?? "";
+            if ($mimetype == "")
+            {
+                // Extract the text part of the body and rudimentary formats major blocks with newlines
+                // We assume that the document is well formed and that the tags do not intersect
+                $pXML = new \XMLReader();
+                
+                if ($pXML->XML($filecontentdata))
+                {
+                    while ($pXML->read())
+                    {
+                        // "office:mimetype" attribut of "office:document" elements
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "office:document")
+                        {
+                            if ($pXML->getAttribute("office:mimetype") != NULL)
+                            {
+                                $mimetype = $pXML->getAttribute("office:mimetype");
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                unset($pXML);
+            }
         
             // Extract the text part of the body and rudimentary formats major blocks with newlines
             // We assume that the document is well formed and that the tags do not intersect

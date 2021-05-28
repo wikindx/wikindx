@@ -9,12 +9,7 @@
  */
 
 /**
- * Convert DOC, DOCX and PDF files to plain text ready for searching.
- *
- *	Code adapted from:
- *		PHP DOC DOCX PDF to Text by Aditya Sarkar at www.phpclasses.org/package/8908-PHP-Convert-DOCX-DOC-PDF-to-plain-text.html
- *		and
- *		https://coderwall.com/p/x_n4tq/how-to-read-doc-using-php
+ * Convert files of various types to text ready for searching.
  */
 class FILETOTEXT
 {
@@ -197,6 +192,9 @@ class FILETOTEXT
     /**
      * readPdf
      *
+     * cf. https://www.xpdfreader.com/pdftotext-man.html
+     * cf. https://www.xpdfreader.com/pdfinfo-man.html
+     *
      * @param mixed $filename
      *
      * @return string
@@ -277,36 +275,6 @@ class FILETOTEXT
         return $text;
     }
     
-    /*
-     * readPs, extract the text content of PostScript files with GhostScript
-     *
-     * @param string $filename
-     *
-     * @return string
-     */
-    function readPs($filename)
-    {
-        $content = "";
-        
-        $pdffile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".pdf"]);
-        
-        $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "ps2pdf"]);
-        
-        $cmd = '"' . $bin . '" "' . $filename . '" "' . $pdffile . '"';
-        $execerrno = 0;
-        $execoutput = [];
-        
-        exec($cmd, $execoutput, $execerrno);
-        
-        if (file_exists($pdffile))
-        {
-            $content = $this->readPdf($pdffile);
-            @unlink($pdf);
-        }
-        
-        return $content;
-    }
-    
     /**
      * readText
      *
@@ -325,6 +293,8 @@ class FILETOTEXT
     
     /**
      * readWord
+     *
+     * cf. https://coderwall.com/p/x_n4tq/how-to-read-doc-using-php
      *
      * @param string $filename
      *
@@ -1465,6 +1435,36 @@ class FILETOTEXT
         {
             $content = file_get_contents($txtfile);
             @unlink($txtfile);
+        }
+        
+        return $content;
+    }
+    
+    /*
+     * readPs, extract the text content of PostScript files with GhostScript
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    function readPs($filename)
+    {
+        $content = "";
+        
+        $pdffile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "ps_" . \UTILS\uuid() . ".pdf"]);
+        
+        $bin = implode(DIRECTORY_SEPARATOR, [WIKINDX_BIN_FOLDER_CATDVI, "ps2pdf"]);
+        
+        $cmd = '"' . $bin . '" "' . $filename . '" "' . $pdffile . '"';
+        $execerrno = 0;
+        $execoutput = [];
+        
+        exec($cmd, $execoutput, $execerrno);
+        
+        if (file_exists($pdffile))
+        {
+            $content = $this->readPdf($pdffile);
+            @unlink($pdf);
         }
         
         return $content;

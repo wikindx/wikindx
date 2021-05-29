@@ -1220,7 +1220,7 @@
 <singular></singular>
 <plural></plural>
 <pre></pre>
-<post></post>
+<post>. </post>
 </title>
 <accessDate><dependentPre></dependentPre>
 <dependentPost></dependentPost>
@@ -1228,7 +1228,7 @@
 <dependentPostAlternative></dependentPostAlternative>
 <singular></singular>
 <plural></plural>
-<pre>. Retrieved </pre>
+<pre>Retrieved </pre>
 <post>, </post>
 </accessDate>
 <accessYear><dependentPre></dependentPre>
@@ -1269,7 +1269,7 @@
 <singular></singular>
 <plural></plural>
 <pre>(</pre>
-<post>) </post>
+<post>). </post>
 </publicationYear>
 <title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
@@ -1305,7 +1305,7 @@
 <singular></singular>
 <plural></plural>
 <pre>(</pre>
-<post>) </post>
+<post>). </post>
 </issue>
 <accessDate><dependentPre></dependentPre>
 <dependentPost></dependentPost>
@@ -1313,7 +1313,7 @@
 <dependentPostAlternative></dependentPostAlternative>
 <singular></singular>
 <plural></plural>
-<pre>. Retrieved </pre>
+<pre>Retrieved </pre>
 <post>, </post>
 </accessDate>
 <accessYear><dependentPre></dependentPre>
@@ -1331,7 +1331,7 @@
 <dependentPostAlternative></dependentPostAlternative>
 <singular></singular>
 <plural></plural>
-<pre> </pre>
+<pre>from </pre>
 <post></post>
 </URL>
 <fallbackstyle>genericMisc</fallbackstyle>

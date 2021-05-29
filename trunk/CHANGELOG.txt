@@ -4,6 +4,10 @@ RELEASES:
 v6.4.9
 Focus: bug fixes, maintenance, feature enhancements
 
+IMPORTANT INFORMATION:
+
+The attachment cache is completely rebuilt to take advantage of new supported formats and fixes.
+
 
 BUG FIXES:
 1. The default value configBrowserTabID option was wrong in the configuration screen.
@@ -44,9 +48,6 @@ MAINTENANCE:
 4. Fix the type of the default SMTP port value.
 5. Rename option configRssDisplay to configRssDisplayEditedResources.
 6. Bump component compatibility version of plugins to 12.
-
-SECURITY
-...
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

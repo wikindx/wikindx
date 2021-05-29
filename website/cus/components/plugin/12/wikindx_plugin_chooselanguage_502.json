@@ -1,0 +1,34 @@
+{
+    "component_sha256": "29a02f0bff8a23379b8166b518dd5609d63ce4f7a492cb3359658a88aca62bc5",
+    "component_version": "502",
+    "component_name": "Choose Language",
+    "component_description": "Display a drop-down menu on all pages to choose the language of the interface. This is useful if your website is hosted on the web and on public access.",
+    "component_licence": "ISC License",
+    "component_id": "chooselanguage",
+    "component_builtin": "false",
+    "component_type": "plugin",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2005-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2021",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/12/wikindx_plugin_chooselanguage_502.zip",
+            "package_sha256": "4b6673727d71849ad6283507fbdee299424dc674f0c93c90685ba05abbf89a6b",
+            "package_size": 7056
+        }
+    ]
+}

@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "bryophyta",
-    "component_version": "502",
+    "component_version": "503",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Bryophyta",
@@ -11,17 +11,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2012-2013, 2016-2020",
+            "author_copyright": "2012-2013, 2016-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2012, 2016-2020",
+            "author_copyright": "2012, 2016-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "d80830ddbaac979d105060c523d7aa4def8e2890963f69c18773526046d0a7d0"
+    "component_sha256": "3a0b0d244716930dddb8f217a76ccb402fbc8a99db5074afecd0f358239cfaf8"
 }

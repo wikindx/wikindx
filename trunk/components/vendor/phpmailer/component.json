@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "phpmailer",
-    "component_version": "489",
+    "component_version": "503",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "PHPMailer",
@@ -40,17 +40,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Packager",
-            "author_copyright": "2019-2020",
+            "author_copyright": "2019-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Packager",
-            "author_copyright": "2019-2020",
+            "author_copyright": "2019-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "6343bad9b21c62fbe3d72589aedf02bd2bb15557ae91b5f2e5fce0e0aaf0d603"
+    "component_sha256": "a89d339bb0b137a158437d304331db65bcf0617996b7c51da821c5a7f58b05a0"
 }

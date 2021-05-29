@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "smarty",
-    "component_version": "402",
+    "component_version": "503",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "PHP Template Engine Smarty",
@@ -17,17 +17,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Packager",
-            "author_copyright": "2012-2016",
+            "author_copyright": "2012-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Packager",
-            "author_copyright": "2017-2020",
+            "author_copyright": "2017-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "47ccb946e37b0cbaa84baac35eea1f07ef2e18b135ed51be51a0dc000e70be09"
+    "component_sha256": "6b952c7465f62ab8f23caaaddabbc0a1f8aca2cbbb4057adbfffed12d3f8e4d3"
 }

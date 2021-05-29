@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "piaf",
-    "component_version": "502",
+    "component_version": "503",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "PIAF",
@@ -17,17 +17,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2012-2013, 2016-2020",
+            "author_copyright": "2012-2013, 2016-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2016-2020",
+            "author_copyright": "2016-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "710240b13585b82cc0cc0814d9ff2ed2750ac33e06d0e62c3bc189df628d00d5"
+    "component_sha256": "8109a240ab018c356d16177161a5cf4506526a7a44d249777ecf741dd4d3ce69"
 }

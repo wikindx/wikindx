@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "carambola",
-    "component_version": "502",
+    "component_version": "503",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Carambola",
@@ -17,17 +17,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2012-2013, 2016-2020",
+            "author_copyright": "2012-2013, 2016-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2012, 2016-2020",
+            "author_copyright": "2012, 2016-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "eccc0cc204a3cdcb44c87505c325d9fd229b47363c90714db4113d9ca2700222"
+    "component_sha256": "1e0af89875140632e54a9bd380a4aba0065705973cffe7c59f12a20d2e22d68b"
 }

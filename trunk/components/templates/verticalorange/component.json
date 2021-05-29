@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "verticalorange",
-    "component_version": "502",
+    "component_version": "503",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Vertical Orange",
@@ -11,17 +11,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2012-2013, 2016-2020",
+            "author_copyright": "2012-2013, 2016-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2012, 2016-2020",
+            "author_copyright": "2012, 2016-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "2e05d963f6a6e1bce6ba5ca3b827bdef8c1c8e104a9d926be45f1a83b0cf72c8"
+    "component_sha256": "c07c411a73c46443930302cbc49da6bcc327adc503e28e9823c43dadfe8d1875"
 }

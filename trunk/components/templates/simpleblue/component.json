@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "simpleblue",
-    "component_version": "502",
+    "component_version": "503",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Simple Blue",
@@ -11,17 +11,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2012-2013, 2016-2020",
+            "author_copyright": "2012-2013, 2016-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2012, 2016-2020",
+            "author_copyright": "2012, 2016-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "01dbc48cafcab328e19766e3f8e85ae1203adeb42acfe672bbaa5fde69dffc52"
+    "component_sha256": "aad0e0a51523e137f8c1c4a3b5591401a5832b0141cf26a9b6975d95a509c098"
 }

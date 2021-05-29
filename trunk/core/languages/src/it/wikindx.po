@@ -9253,16 +9253,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid ""
-#~ "<p>Positioning plugins and granting authorization is accomplished by "
-#~ "editing the plugin's config.php file (typically only $menus and $authorize "
-#~ "need be edited) -- be sure you know what you are doing:</p>"
-#~ msgstr ""
-#~ "Posizionamento dei plugin e la concessione dell'autorizzazione è "
-#~ "accompagnata dalla modifica del file config.php del plugin (in genere solo "
-#~ "$menus e $authorize necessitano di essere modificati) -- sii sicuro di "
-#~ "sapere quel che stai facendo:"
-
 #~ msgid "Select the creators you wish to remove from the group"
 #~ msgstr "Seleziona i creatori che desideri rimuovere dal gruppo."
 
@@ -10187,6 +10177,16 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "<h3>Configure WIKINDX</h3>"
 #~ msgstr "<h3>Configura WIKINDX</h3>"
+
+#~ msgid ""
+#~ "<p>Positioning plugins and granting authorization is accomplished by "
+#~ "editing the plugin's config.php file (typically only $menus and $authorize "
+#~ "need be edited) -- be sure you know what you are doing:</p>"
+#~ msgstr ""
+#~ "Posizionamento dei plugin e la concessione dell'autorizzazione è "
+#~ "accompagnata dalla modifica del file config.php del plugin (in genere solo "
+#~ "$menus e $authorize necessitano di essere modificati) -- sii sicuro di "
+#~ "sapere quel che stai facendo:"
 
 #~ msgid ""
 #~ "<p>Most of the configuration options are self-explanatory but bear the "

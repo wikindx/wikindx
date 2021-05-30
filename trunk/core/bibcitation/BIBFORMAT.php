@@ -1605,7 +1605,7 @@ class BIBFORMAT
         {
             if (!array_key_exists($startMonth, $monthArray))
             {
-                $startMonth = 'UnknownMonth';
+                $startMonth = '';
             }
             else
             {
@@ -1616,7 +1616,7 @@ class BIBFORMAT
         {
             if (!array_key_exists($endMonth, $monthArray))
             {
-                $endMonth = 'UnknownMonth';
+                $endMonth = '';
             }
             else
             {

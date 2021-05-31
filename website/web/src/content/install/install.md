@@ -61,6 +61,7 @@ or locally but the principles are the same. Assume we are running
 a <http://wikindx.test> website installed in a `/var/www/wikindx` folder
 of the web server.
 
+__The password is deliberately simple for the example. You MUST NOT use it because it offers no security. Generate a strong and random password of at least 16-20 characters with a password generator such as <https://www.motdepasse.xyz/>. NEVER use special characters. They are a source of problems for some programs like backup tools.__
 
 1. Download the source code of the core from the [SourceForge Files](https://sourceforge.net/projects/wikindx/files/) section.
 

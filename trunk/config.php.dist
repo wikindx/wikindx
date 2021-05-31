@@ -39,6 +39,8 @@ class CONFIG
  */
 
 /*
+ * Name of the MariaDB/MySQL host server (case-insensitive)
+ *
  * Host on which the MariaDB/MySQL Relational Database management system (RDBMS) is running.
  * Usually localhost if the web server and the DBMS are hosted on the same server.
  *
@@ -48,9 +50,7 @@ class CONFIG
  * WIKINDX use only the first four parameters of the mysqli class constructor.
  * See https://www.php.net/manual/en/mysqli.construct.php
  *
- * Name of the MariaDB/MySQL host server (case-insensitive)
- *
- * @name WIKINDX_DB_HOST Default is "localhost"
+ * @var string WIKINDX_DB_HOST Default is "localhost"
  */
 public $WIKINDX_DB_HOST = %%WIKINDX_DB_HOST%%;
 
@@ -58,24 +58,33 @@ public $WIKINDX_DB_HOST = %%WIKINDX_DB_HOST%%;
  * Name of the MariaDB/MySQL database (case-sensitive)
  *
  * MUST be a lowercase word of 64 characters max.
+ * SHOULD be in ASCII only without special characters.
  *
  * cf. https://dev.mysql.com/doc/mysql-reslimits-excerpt/5.6/en/identifier-length.html
  *
- * @name WIKINDX_DB Default is "wikindx"
+ * @var string WIKINDX_DB Default is "wikindx"
  */
 public $WIKINDX_DB = %%WIKINDX_DB%%;
 
 /**
  * Username required to connect to and open the database (case-sensitive)
  *
- * @name WIKINDX_DB_USER Default is "wikindx"
+ * SHOULD be in ASCII only without special characters.
+ *
+ * @var string WIKINDX_DB_USER Default is "wikindx"
  */
 public $WIKINDX_DB_USER = %%WIKINDX_DB_USER%%;
 
 /**
  * Password of the user required to connect to and open the database (case-sensitive)
  *
- * @name WIKINDX_DB_PASSWORD Default is "wikindx"
+ * You SHOULD use a strong and random password of at least 16-20 characters generated with tool like:
+ *
+ * https://www.motdepasse.xyz/
+ *
+ * NEVER use special characters. They are a source of problems for some programs like backup tools.
+ *
+ * @var string WIKINDX_DB_PASSWORD Default is "wikindx"
  */
 public $WIKINDX_DB_PASSWORD = %%WIKINDX_DB_PASSWORD%%;
 
@@ -88,17 +97,21 @@ public $WIKINDX_DB_PASSWORD = %%WIKINDX_DB_PASSWORD%%;
  */
 
 /*
+ * Path auto-detection feature (for Virtual Host Apache config) (boolean)
+ *
  * The auto-detection of the path installation and the base url is an experimental feature
  * which you can disable by changing this parameter to FALSE.
  *
  * If you deactivate auto-detection you must fill in the option WIKINDX_URL_BASE.
  * If you don't define this option, auto-detection is enabled by default.
  *
- * @name WIKINDX_PATH_AUTO_DETECTION Default is TRUE
+ * @var bool WIKINDX_PATH_AUTO_DETECTION Default is TRUE
  */
 public $WIKINDX_PATH_AUTO_DETECTION = %%WIKINDX_PATH_AUTO_DETECTION%%;
 
 /*
+ * Base URL of WIKINDX (string, or FALSE)
+ *
  * If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
  *
  * You have to indicate the protocol HTTP / HTTPS and remove the terminal /.
@@ -107,7 +120,7 @@ public $WIKINDX_PATH_AUTO_DETECTION = %%WIKINDX_PATH_AUTO_DETECTION%%;
  * folder on the www.myserver.com, then set the variable to http://www.myserver.com/wikindx
  * Otherwise, leave as "".
  *
- * @name WIKINDX_URL_BASE Default is ""
+ * @var bool|string WIKINDX_URL_BASE Default is FALSE
  */
 public $WIKINDX_URL_BASE = %%WIKINDX_URL_BASE%%;
 
@@ -120,7 +133,9 @@ public $WIKINDX_URL_BASE = %%WIKINDX_URL_BASE%%;
  */
 
 /*
- * WIKINDX usually runs fine with the standard PHP memory limit (memory_limit).
+ * Custom value for PHP memory_limit option (interger, string, or FALSE)
+ *
+ * WIKINDX usually runs fine with the standard PHP memory limit value.
  *
  * If this is FALSE, the value set in php.ini is used (typically 128M),
  * Otherwise the value is a positive integer number of bytes, -1, or a positive string number with a unit.
@@ -132,11 +147,13 @@ public $WIKINDX_URL_BASE = %%WIKINDX_URL_BASE%%;
  * If you are unable to update php.ini's memory_limit yourself,
  * WIKINDX_MEMORY_LIMIT may be set (an integer such as 128 or 256 followed by 'M').
  *
- * @name WIKINDX_MEMORY_LIMIT Default is FALSE
+ * @var bool|int WIKINDX_MEMORY_LIMIT Default is FALSE
  */
 public $WIKINDX_MEMORY_LIMIT = %%WIKINDX_MEMORY_LIMIT%%;
 
 /*
+ * Max execution time of a script/page (in seconds, or FALSE)
+ *
  * WIKINDX usually run fine with the PHP standard execution timeouts (max_execution_time).
  *
  * If this is FALSE, the value set in php.ini is used (typically 30 seconds),
@@ -146,11 +163,13 @@ public $WIKINDX_MEMORY_LIMIT = %%WIKINDX_MEMORY_LIMIT%%;
  *
  * In some cases such as database upgrading of a large database on a slow server, you will need to increase the timeout figure.
  *
- * @name WIKINDX_MAX_EXECUTION_TIMEOUT Default is FALSE
+ * @var bool|int WIKINDX_MAX_EXECUTION_TIMEOUT Default is FALSE
  */
 public $WIKINDX_MAX_EXECUTION_TIMEOUT = %%WIKINDX_MAX_EXECUTION_TIMEOUT%%;
 
 /*
+ * Number of resources processed during a file operation (positive integer)
+ *
  * WIKINDX_MAX_WRITECHUNK concerns how many resources are exported and written to file in one go.
  *
  * If this is FALSE, the value is set to 10,000.
@@ -166,7 +185,7 @@ public $WIKINDX_MAX_EXECUTION_TIMEOUT = %%WIKINDX_MAX_EXECUTION_TIMEOUT%%;
  * As a rough guide, with a WIKINDX_MEMORY_LIMIT of 64MB, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
  * This can be a tricky figure to set as setting the figure too low increases SQL and PHP execution times significantly.
  *
- * @name WIKINDX_MAX_WRITECHUNK Default is FALSE
+ * @var int WIKINDX_MAX_WRITECHUNK Default is 10000
  */
 public $WIKINDX_MAX_WRITECHUNK = %%WIKINDX_MAX_WRITECHUNK%%;
 

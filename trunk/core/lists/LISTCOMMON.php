@@ -804,7 +804,15 @@ class LISTCOMMON
                     $musings[$row['resourcemetadataResourceId']] = TRUE;
                 }
             }
-
+            // Check if these resources have attachments and display view icons accordingly
+            $this->db->formatConditionsOneField(array_keys($resources), 'resourceattachmentsResourceId');
+            $this->db->formatConditions(['resourceattachmentsEmbargo' => 'N']);
+            $this->db->formatConditions(['resourceattachmentsText' => 'IS NOT NULL']);
+            $this->db->groupBy('resourceattachmentsResourceId');
+            $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsText', 'resourceattachmentsResourceId']);
+            while ($row = $this->db->fetchRow($resultSet)) {
+            	$attachments[$row['resourceattachmentsResourceId']] = TRUE;
+            }
             $isHyperlinked = (GLOBALS::getUserVar('ListLink'));
 
             foreach ($resources as $resourceId => $resourceArray)

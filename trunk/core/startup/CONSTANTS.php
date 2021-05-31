@@ -35,7 +35,7 @@ define('TAB', "\t");
  *
  * It can be of the form X, X.Y, or X.Y.Z (with X, Y, Z positive integers).
  *
- * @name WIKINDX_PUBLIC_VERSION
+ * @global string WIKINDX_PUBLIC_VERSION
  */
 define('WIKINDX_PUBLIC_VERSION', '6.4.10');
 /**
@@ -45,7 +45,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.10');
  * incremented by one each time an upgrade need to be triggered. Before the value 6,
  * this number was a float corresponding (or not) to part X.Y of the public version number.
  *
- * @name WIKINDX_INTERNAL_VERSION
+ * @global float WIKINDX_INTERNAL_VERSION
  */
 define('WIKINDX_INTERNAL_VERSION', 69.0);
 /**
@@ -55,7 +55,7 @@ define('WIKINDX_INTERNAL_VERSION', 69.0);
  *
  * A database with a lower version number cannot be upgraded.
  *
- * @name WIKINDX_INTERNAL_VERSION_UPGRADE_MIN
+ * @global float WIKINDX_INTERNAL_VERSION_UPGRADE_MIN
  */
 define('WIKINDX_INTERNAL_VERSION_UPGRADE_MIN', 5.1);
 /**
@@ -67,7 +67,7 @@ define('WIKINDX_INTERNAL_VERSION_UPGRADE_MIN', 5.1);
  * Each type of component has its own compatibility version
  * because they do not have the same lifecycle.
  *
- * @name WIKINDX_COMPONENTS_COMPATIBLE_VERSION
+ * @global int[] WIKINDX_COMPONENTS_COMPATIBLE_VERSION
  */
 define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
     'plugin'    => 12, // Must be an integer
@@ -78,42 +78,42 @@ define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
 /**
  * Integer. For office add-ins. In each add-in (Word, Google Docs, LibreOffice etc.) the compatibility variable must equal this.
  *
- * @name WIKINDX_OFFICE_VERSION */
+ * @global int WIKINDX_OFFICE_VERSION */
 define('WIKINDX_OFFICE_VERSION', 2);
 /**
  * Minimum required PHP version
  *
- * @name WIKINDX_PHP_VERSION_MIN
+ * @global string WIKINDX_PHP_VERSION_MIN
  */
 define('WIKINDX_PHP_VERSION_MIN', '7.3.0');
 /**
  * Maximum required PHP version
  *
- * @name WIKINDX_PHP_VERSION_MAX
+ * @global string WIKINDX_PHP_VERSION_MAX
  */
 define('WIKINDX_PHP_VERSION_MAX', '7.4.99');
 /**
  * Minimum required PHP version
  *
- * @name WIKINDX_MYSQL_VERSION_MIN
+ * @global string WIKINDX_MYSQL_VERSION_MIN
  */
 define('WIKINDX_MYSQL_VERSION_MIN', '5.7.5');
 /**
  * Minimum required PHP version
  *
- * @name WIKINDX_MARIADB_VERSION_MIN
+ * @global string WIKINDX_MARIADB_VERSION_MIN
  */
 define('WIKINDX_MARIADB_VERSION_MIN', '10.2');
 /**
  * WIKINDX copyright
  *
- * @name WIKINDX_COPYRIGHT_YEAR
+ * @global string WIKINDX_COPYRIGHT_YEAR
  */
 define('WIKINDX_COPYRIGHT_YEAR', "2003-2021");
 /**
  * WIKINDX release date
  *
- * @name WIKINDX_RELEASE_DATE
+ * @global string WIKINDX_RELEASE_DATE
  */
 define('WIKINDX_RELEASE_DATE', "2021-05-29");
 /**
@@ -121,32 +121,32 @@ define('WIKINDX_RELEASE_DATE', "2021-05-29");
  *
  * The release script use it to change the date of files and make archives reproducible.
  *
- * @name WIKINDX_RELEASE_TIMESTAMP
+ * @global int WIKINDX_RELEASE_TIMESTAMP
  */
 define('WIKINDX_RELEASE_TIMESTAMP', (new DateTime(WIKINDX_RELEASE_DATE))->getTimestamp());
 /**
  * WIKINDX SF url
  *
- * @name WIKINDX_URL
+ * @global WIKINDX_URL
  */
 define('WIKINDX_URL', 'https://wikindx.sourceforge.io');
 /**
  * URL of the components update server
  *
- * @name WIKINDX_COMPONENTS_UPDATE_SERVER
+ * @global string WIKINDX_COMPONENTS_UPDATE_SERVER
  */
 define('WIKINDX_COMPONENTS_UPDATE_SERVER', 'https://wikindx.sourceforge.io/cus/index.php');
 
 /**
  * URL of the Help Topics on the website
  *
- * @name WIKINDX_URL_HELP_TOPICS
+ * @global string WIKINDX_URL_HELP_TOPICS
  */
 define('WIKINDX_URL_HELP_TOPICS', 'https://wikindx.sourceforge.io/web/' . WIKINDX_PUBLIC_VERSION . '/help-topics');
 /**
  * Algo used for hashing the packages released by the project
  *
- * @name WIKINDX_COMPONENTS_UPDATE_SERVER
+ * @global string WIKINDX_COMPONENTS_UPDATE_SERVER
  */
 define('WIKINDX_PACKAGE_HASH_ALGO', 'sha256');
 
@@ -211,7 +211,7 @@ define('WIKINDX_FILE_REPAIRKIT_DB_SCHEMA', implode(DIRECTORY_SEPARATOR, [WIKINDX
 /**
  * Default charset
  *
- * @name WIKINDX_CHARSET
+ * @global string WIKINDX_CHARSET
  */
 define('WIKINDX_CHARSET', 'UTF-8');
 
@@ -346,9 +346,9 @@ define('WIKINDX_SESSION_MAXLIFETIME_UPPER_LIMIT', 86400); // 24h = 60 * 60 * 24 
  * max_allowed_packet need to be as large as the largest type of column stored
  * and we use LONGTEXT so we need the maximum value allowed 1G (in the absence of 4G).
  *
- * cf. https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
+ * @see https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
  *
- * @name WIKINDX_DB_MAX_ALLOWED_PACKET
+ * @global int WIKINDX_DB_MAX_ALLOWED_PACKET
  */
 define('WIKINDX_DB_MAX_ALLOWED_PACKET', 1073741824);
 
@@ -360,9 +360,9 @@ define('WIKINDX_DB_MAX_ALLOWED_PACKET', 1073741824);
  * According to https://dev.mysql.com/doc/refman/8.0/en/aggregate-functions.html#function_group-concat,
  * group_concat_max_len is constrained by the value of max_allowed_packet.
  *
- * cf. https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
+ * @see https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
  *
- * @name WIKINDX_DB_GROUP_CONCAT_MAX_LEN
+ * @global int WIKINDX_DB_GROUP_CONCAT_MAX_LEN
  */
 define('WIKINDX_DB_GROUP_CONCAT_MAX_LEN', WIKINDX_DB_MAX_ALLOWED_PACKET);
 
@@ -371,9 +371,9 @@ define('WIKINDX_DB_GROUP_CONCAT_MAX_LEN', WIKINDX_DB_MAX_ALLOWED_PACKET);
  *
  * Set the strictest SQL mode to avoid errors
  *
- * cf. https://mariadb.com/kb/en/sql-mode/#traditional
+ * @see https://mariadb.com/kb/en/sql-mode/#traditional
  *
- * @name WIKINDX_DB_SQL_MODE
+ * @global string WIKINDX_DB_SQL_MODE
  */
 define('WIKINDX_DB_SQL_MODE', 'TRADITIONAL');
 
@@ -382,9 +382,9 @@ define('WIKINDX_DB_SQL_MODE', 'TRADITIONAL');
  *
  * Default storage engine
  *
- * cf. https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
+ * @see https://dev.mysql.com/doc/refman/8.0/en/innodb-introduction.html
  *
- * @name WIKINDX_DB_ENGINE
+ * @global string WIKINDX_DB_ENGINE
  */
 define('WIKINDX_DB_ENGINE', 'InnoDB');
 
@@ -393,9 +393,9 @@ define('WIKINDX_DB_ENGINE', 'InnoDB');
  *
  * Full UTF-8 support (4 bytes)
  *
- * cf. https://mariadb.com/kb/en/supported-character-sets-and-collations/
+ * @see https://mariadb.com/kb/en/supported-character-sets-and-collations/
  *
- * @name WIKINDX_DB_CHARSET
+ * @global string WIKINDX_DB_CHARSET
  */
 define('WIKINDX_DB_CHARSET', 'utf8mb4');
 
@@ -404,9 +404,9 @@ define('WIKINDX_DB_CHARSET', 'utf8mb4');
  *
  * Set the strictest SQL mode to avoid errors
  *
- * cf. https://mariadb.com/kb/en/setting-character-sets-and-collations/
+ * @see https://mariadb.com/kb/en/setting-character-sets-and-collations/
  *
- * @name WIKINDX_DB_COLLATION
+ * @global string WIKINDX_DB_COLLATION
  */
 define('WIKINDX_DB_COLLATION', 'utf8mb4_unicode_520_ci');
 
@@ -428,7 +428,7 @@ define('WIKINDX_CMS_PAGE', '/index.php?action=cms_CMS_CORE');
 /**
  * URL of the website sitemap
  *
- * @name WIKINDX_SITEMAP_PAGE
+ * @global string WIKINDX_SITEMAP_PAGE
  */
 define('WIKINDX_SITEMAP_PAGE', '/index.php?action=sitemap_SITEMAP_CORE');
 /**
@@ -436,7 +436,7 @@ define('WIKINDX_SITEMAP_PAGE', '/index.php?action=sitemap_SITEMAP_CORE');
  *
  * For a response time and analysis of the response 500 links per page seems reasonable, ie below the second, as the search engines expect..
  *
- * @name WIKINDX_SITEMAP_MAX_SIZE
+ * @global int WIKINDX_SITEMAP_MAX_SIZE
  */
 define('WIKINDX_SITEMAP_MAX_SIZE', 500);
 

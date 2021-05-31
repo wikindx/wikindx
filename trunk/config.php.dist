@@ -50,7 +50,7 @@ class CONFIG
  * WIKINDX use only the first four parameters of the mysqli class constructor.
  * See https://www.php.net/manual/en/mysqli.construct.php
  *
- * @var string WIKINDX_DB_HOST Default is "localhost"
+ * @global string WIKINDX_DB_HOST Default is "localhost"
  */
 public $WIKINDX_DB_HOST = %%WIKINDX_DB_HOST%%;
 
@@ -62,7 +62,7 @@ public $WIKINDX_DB_HOST = %%WIKINDX_DB_HOST%%;
  *
  * cf. https://dev.mysql.com/doc/mysql-reslimits-excerpt/5.6/en/identifier-length.html
  *
- * @var string WIKINDX_DB Default is "wikindx"
+ * @global string WIKINDX_DB Default is "wikindx"
  */
 public $WIKINDX_DB = %%WIKINDX_DB%%;
 
@@ -71,7 +71,7 @@ public $WIKINDX_DB = %%WIKINDX_DB%%;
  *
  * SHOULD be in ASCII only without special characters.
  *
- * @var string WIKINDX_DB_USER Default is "wikindx"
+ * @global string WIKINDX_DB_USER Default is "wikindx"
  */
 public $WIKINDX_DB_USER = %%WIKINDX_DB_USER%%;
 
@@ -84,7 +84,7 @@ public $WIKINDX_DB_USER = %%WIKINDX_DB_USER%%;
  *
  * NEVER use special characters. They are a source of problems for some programs like backup tools.
  *
- * @var string WIKINDX_DB_PASSWORD Default is "wikindx"
+ * @global string WIKINDX_DB_PASSWORD Default is "wikindx"
  */
 public $WIKINDX_DB_PASSWORD = %%WIKINDX_DB_PASSWORD%%;
 
@@ -105,7 +105,7 @@ public $WIKINDX_DB_PASSWORD = %%WIKINDX_DB_PASSWORD%%;
  * If you deactivate auto-detection you must fill in the option WIKINDX_URL_BASE.
  * If you don't define this option, auto-detection is enabled by default.
  *
- * @var bool WIKINDX_PATH_AUTO_DETECTION Default is TRUE
+ * @global bool WIKINDX_PATH_AUTO_DETECTION Default is TRUE
  */
 public $WIKINDX_PATH_AUTO_DETECTION = %%WIKINDX_PATH_AUTO_DETECTION%%;
 
@@ -120,7 +120,7 @@ public $WIKINDX_PATH_AUTO_DETECTION = %%WIKINDX_PATH_AUTO_DETECTION%%;
  * folder on the www.myserver.com, then set the variable to http://www.myserver.com/wikindx
  * Otherwise, leave as "".
  *
- * @var bool|string WIKINDX_URL_BASE Default is FALSE
+ * @global bool|string WIKINDX_URL_BASE Default is FALSE
  */
 public $WIKINDX_URL_BASE = %%WIKINDX_URL_BASE%%;
 
@@ -147,7 +147,7 @@ public $WIKINDX_URL_BASE = %%WIKINDX_URL_BASE%%;
  * If you are unable to update php.ini's memory_limit yourself,
  * WIKINDX_MEMORY_LIMIT may be set (an integer such as 128 or 256 followed by 'M').
  *
- * @var bool|int WIKINDX_MEMORY_LIMIT Default is FALSE
+ * @global bool|int WIKINDX_MEMORY_LIMIT Default is FALSE
  */
 public $WIKINDX_MEMORY_LIMIT = %%WIKINDX_MEMORY_LIMIT%%;
 
@@ -163,7 +163,7 @@ public $WIKINDX_MEMORY_LIMIT = %%WIKINDX_MEMORY_LIMIT%%;
  *
  * In some cases such as database upgrading of a large database on a slow server, you will need to increase the timeout figure.
  *
- * @var bool|int WIKINDX_MAX_EXECUTION_TIMEOUT Default is FALSE
+ * @global bool|int WIKINDX_MAX_EXECUTION_TIMEOUT Default is FALSE
  */
 public $WIKINDX_MAX_EXECUTION_TIMEOUT = %%WIKINDX_MAX_EXECUTION_TIMEOUT%%;
 
@@ -185,7 +185,7 @@ public $WIKINDX_MAX_EXECUTION_TIMEOUT = %%WIKINDX_MAX_EXECUTION_TIMEOUT%%;
  * As a rough guide, with a WIKINDX_MEMORY_LIMIT of 64MB, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
  * This can be a tricky figure to set as setting the figure too low increases SQL and PHP execution times significantly.
  *
- * @var int WIKINDX_MAX_WRITECHUNK Default is 10000
+ * @global int WIKINDX_MAX_WRITECHUNK Default is 10000
  */
 public $WIKINDX_MAX_WRITECHUNK = %%WIKINDX_MAX_WRITECHUNK%%;
 

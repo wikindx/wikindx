@@ -22,7 +22,7 @@
  *  - configText
  *  - configVarchar
  *
- * @name WIKINDX_LIST_CONFIG_OPTIONS
+ * @global array WIKINDX_LIST_CONFIG_OPTIONS
  *
  * @package wikindx\core\startup
  */

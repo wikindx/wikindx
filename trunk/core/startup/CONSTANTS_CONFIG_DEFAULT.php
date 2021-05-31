@@ -13,9 +13,10 @@
  *
  * Declare the default values of global config options.
  *
+ * Each default value is a constant where the name is the name of the corresponding constant and the suffix "_DEFAULT".
+ *
  * @package wikindx\core\startup
  */
-
 
 // Database
 define('WIKINDX_DB_DEFAULT', 'wikindx5');

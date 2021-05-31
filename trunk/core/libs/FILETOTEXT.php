@@ -176,9 +176,9 @@ class FILETOTEXT
      * The supported extensions of the format are not well defined.
      * In the case of xpdf the support is supposed to be cutting edge. 
      *
-     * @see https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/pdf_reference_archives/PDFReference.pdf
-     * @see https://www.xpdfreader.com/pdftotext-man.html
-     * @see https://www.xpdfreader.com/pdfinfo-man.html
+     * @see https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/pdf_reference_archives/PDFReference.pdf Adobe Portable Document Format v1.4 
+     * @see https://www.xpdfreader.com/pdftotext-man.html pdftotext manpage
+     * @see https://www.xpdfreader.com/pdfinfo-man.html pdfinfo manpage
      *
      * @param mixed $filepath An absolute or relative file path
      *
@@ -283,7 +283,7 @@ class FILETOTEXT
      * Binary format of Microsoft office Suite. Templates and plain documents are supported,
      * with and without macros. All versions before Word 2007 are supported.
      *
-     * @see https://coderwall.com/p/x_n4tq/how-to-read-doc-using-php
+     * @see https://coderwall.com/p/x_n4tq/how-to-read-doc-using-php How to read .doc using PHP
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -330,7 +330,7 @@ class FILETOTEXT
      * XML format of Microsoft office Suite. Templates and plain documents are supported,
      * with and without macros. All versions starting with Word 2007 are supported.
      *
-     * @see https://www.ecma-international.org/publications/standards/Ecma-376.htm
+     * @see https://www.ecma-international.org/publications/standards/Ecma-376.htm ECMA-376 - Office Open XML file formats
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -414,7 +414,7 @@ class FILETOTEXT
      * XML format of Microsoft office Suite. Templates and plain documents are supported,
      * with and without macros. All versions starting with PowerPoint 2007 are supported.
      *
-     * @see https://www.ecma-international.org/publications/standards/Ecma-376.htm
+     * @see https://www.ecma-international.org/publications/standards/Ecma-376.htm ECMA-376 - Office Open XML file formats
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -512,7 +512,7 @@ class FILETOTEXT
      * - Document
      * - Presentation
      *
-     * cf OpenDocument in https://www.oasis-open.org/standards/
+     * @see https://www.oasis-open.org/standards/ Open Document Format for Office Applications (OpenDocument) Version 1.X
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -713,7 +713,7 @@ class FILETOTEXT
      *
      * Extracted with RTF classes of Christian Vigh. All version of RTF are supported.
      *
-     * @see https://interoperability.blob.core.windows.net/files/Archive_References/%5bMSFT-RTF%5d.pdf
+     * @see https://interoperability.blob.core.windows.net/files/Archive_References/%5bMSFT-RTF%5d.pdf Rich Text Format Specification
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -750,8 +750,8 @@ class FILETOTEXT
      * - EPUB 3.0
      * - EPUB 2.0.1
      *
-     * @see EPUB 3.2 Spec., https://www.w3.org/publishing/epub3/epub-spec.html
-     * @see EPUB EPUB Specifications and Projects, http://idpf.org/epub/dir/
+     * @see https://www.w3.org/publishing/epub3/epub-spec.html EPUB 3.2 Spec.
+     * @see http://idpf.org/epub/dir/ EPUB Specifications and Projects
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -882,7 +882,7 @@ class FILETOTEXT
      *
      * Each file is extracted, reencoded in UTF-8 (with transliteration) if possible, and parsed with convertToText().
      *
-     * @see https://tools.ietf.org/html/rfc2557
+     * @see https://tools.ietf.org/html/rfc2557 RFC2557 - MIME Encapsulation of Aggregate Documents, such as HTML (MHTML)
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1103,7 +1103,7 @@ class FILETOTEXT
      * - v1 (no documentation found but that should word)
      * - v2
      *
-     * @see http://www.gribuser.ru/xml/fictionbook/index.html.en
+     * @see http://www.gribuser.ru/xml/fictionbook/index.html.en FictionBook 2.0 Specification
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1173,7 +1173,7 @@ class FILETOTEXT
      *
      * All versions are supported.
      *
-     * @see https://www.ecma-international.org/publications-and-standards/standards/ecma-388/
+     * @see https://www.ecma-international.org/publications-and-standards/standards/ecma-388/ ECMA-388 - Open XML paper specification (OpenXPS)
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1347,8 +1347,8 @@ class FILETOTEXT
      * This XML format is not documented but it seems the text
      * is always enclosed inside the "CH" attribut of "ITEXT" elements.
      *
-     * @see https://wiki.scribus.net/canvas/(FR)_Introdution_au_Format_de_fichier_SLA_pour_Scribus_1.4
-     * @see https://github.com/scribusproject/scribus/tree/master/resources/tests
+     * @see https://wiki.scribus.net/canvas/(FR)_Introdution_au_Format_de_fichier_SLA_pour_Scribus_1.4 Scribus File Format
+     * @see https://github.com/scribusproject/scribus/tree/master/resources/tests Scribus file samples
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1384,7 +1384,7 @@ class FILETOTEXT
      * This XML format is not documented but it seems the text
      * is always enclosed inside "p" elements.
      *
-     * @see http://www.abisource.com/wiki/AbiWord
+     * @see http://www.abisource.com/wiki/AbiWord AbiWord Format
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1444,8 +1444,8 @@ class FILETOTEXT
      *
      * djvutxt utility is included in DjVuLibre toolbox.
      *
-     * @see http://djvu.sourceforge.net/doc/man/djvutxt.html
-     * @see http://djvu.sourceforge.net
+     * @see http://djvu.sourceforge.net/doc/man/djvutxt.html djvutxt manpage
+     * @see http://djvu.sourceforge.net DjVuLibre website
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1487,8 +1487,8 @@ class FILETOTEXT
      *
      * catdvi utility is included in most TeX distributions like TeX Live.
      *
-     * @see http://catdvi.sourceforge.net/
-     * @see https://tug.org/texlive/
+     * @see http://catdvi.sourceforge.net/ catdvi website
+     * @see https://tug.org/texlive/ Tex Live website
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1531,8 +1531,8 @@ class FILETOTEXT
      *
      * ps2pdf utility is included in GhostScript.
      *
-     * @see http://web.mit.edu/ghostscript/www/Ps2pdf.htm
-     * @see https://www.ghostscript.com/
+     * @see http://web.mit.edu/ghostscript/www/Ps2pdf.htm ps2pdf manpage
+     * @see https://www.ghostscript.com/ Ghostscript website
      *
      * @param string $filepath An absolute or relative file path
      *

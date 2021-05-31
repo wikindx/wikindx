@@ -483,7 +483,7 @@ class wordprocessor_MODULE
         die;
     }
     /**
-     * For file exports saved outside web server directory (i.e. not in wikindx4/files/) as set in config.php
+     * For file exports saved outside web server directory (i.e. not in wikindx/data/files/)
      */
     public function wpExportDownload()
     {

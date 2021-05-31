@@ -307,7 +307,7 @@ class CMS
     /**
      * Create SQL statement from querystring
      *
-     * The following functions deal with external calls to http://..../wikindx4/cmsprint.php.  They are NOT called from within WIKINDX
+     * The following functions deal with external calls to http://..../wikindx/cmsprint.php.  They are NOT called from within WIKINDX
      */
     public function queryDb()
     {

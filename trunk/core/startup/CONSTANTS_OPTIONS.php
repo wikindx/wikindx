@@ -9,7 +9,7 @@
  */
 
 /**
- * CONSTANTS_CONFIG
+ * CONSTANTS_OPTIONS
  *
  * Define a mapping between the name of global options in db and their PHP constant counterpart.
  *

@@ -15,8 +15,9 @@
  *
  * @package wikindx\core\startup
  */
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "CONSTANTS_CONFIG.php"]));
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "CONSTANTS_CONFIG_DEFAULT.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "CONSTANTS_OPTIONS.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "CONSTANTS_OPTIONS_DEFAULT.php"]));
 
 /**
  * CONSTANTS
@@ -446,3 +447,15 @@ define('WIKINDX_SITEMAP_MAX_SIZE', 500);
  */
 define('WIKINDX_POPULARITY_VIEWS_WEIGHT', 0.25);
 define('WIKINDX_POPULARITY_DOWNLOADS_WEIGHT', 0.75);
+
+
+// Bug(LkpPo), 2021-04-19, The hard upper limit is 1G due to a bug on Windows
+// cf. https://bugs.php.net/bug.php?id=79423
+// Fixed in PHP 7.3.24 and 7.4.12
+define('WIKINDX_FILE_ATTACH_SIZE_UPPER_LIMIT', 1024); // 1G = 1024M
+
+
+// Bug(LkpPo), 2021-04-19, The hard upper limit is 1G due to a bug on Windows
+// cf. https://bugs.php.net/bug.php?id=79423
+// Fixed in PHP 7.3.24 and 7.4.12
+define('WIKINDX_IMG_SIZE_UPPER_LIMIT', 200); // 200M, max file size of an 8K 24 bits colors bmp image

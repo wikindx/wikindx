@@ -1,0 +1,183 @@
+<?php
+/**
+ * WIKINDX : Bibliographic Management system.
+ *
+ * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
+ * @author The WIKINDX Team
+ * @license https://www.isc.org/licenses/ ISC License
+ */
+
+/**
+ * CONSTANTS_OPTIONS_DEFAULT
+ *
+ * Declare the default values of global config options.
+ *
+ * Each default value is a constant where the name is the name of the corresponding constant and the suffix "_DEFAULT".
+ *
+ * @package wikindx\core\startup
+ */
+
+// Utilities
+define('WIKINDX_BIN_FOLDER_BIBUTILS_DEFAULT', ''); // For writing to the DB
+define('WIKINDX_BIN_FOLDER_CATDVI_DEFAULT', ''); // For writing to the DB
+define('WIKINDX_BIN_FOLDER_DJVUTXT_DEFAULT', ''); // For writing to the DB
+define('WIKINDX_BIN_FOLDER_PS2PDF_DEFAULT', ''); // For writing to the DB
+
+
+// Front page
+define('WIKINDX_CONTACT_EMAIL_DEFAULT', '');
+define('WIKINDX_DESCRIPTION_DEFAULT', 'My WIKINDX');
+define('WIKINDX_LAST_CHANGES_DAY_LIMIT_DEFAULT', 10);
+define('WIKINDX_LAST_CHANGES_DEFAULT', 10);
+define('WIKINDX_LAST_CHANGES_TYPE_DEFAULT', 'number');
+
+
+// Resource lists
+define('WIKINDX_LIST_LINK_DEFAULT', 0);
+define('WIKINDX_NO_SORT_DEFAULT', serialize(['an', 'a', 'the', 'der', 'die', 'das', 'ein', 'eine', 'einer', 'eines', 'le', 'la', 'las', 'il', 'les', 'une', 'un', 'una', 'uno', 'lo', 'los', 'i', 'gli', 'de', 'het', 'um', 'uma', 'o', 'os', 'as', 'den', 'det', 'en', 'et', ]));
+define('WIKINDX_PAGING_DEFAULT', 20);
+define('WIKINDX_PAGING_MAXLINKS_DEFAULT', 11);
+define('WIKINDX_PAGING_TAG_CLOUD_DEFAULT', 100);
+define('WIKINDX_SEARCH_FILTER_DEFAULT', serialize(['an', 'a', 'the', 'and', 'to']));
+
+
+// Images
+define('WIKINDX_IMG_ALLOW_DEFAULT', FALSE);
+define('WIKINDX_IMG_HEIGHT_LIMIT_DEFAULT', 400);
+define('WIKINDX_IMG_UPLOAD_MAX_SIZE_DEFAULT', 5);
+define('WIKINDX_IMG_WIDTH_LIMIT_DEFAULT', 400);
+
+
+/** Default language */
+define('WIKINDX_LANGUAGE_DEFAULT', 'en_GB');
+define('WIKINDX_STRING_LIMIT_DEFAULT', 40);
+define('WIKINDX_STYLE_DEFAULT', 'apa');
+define('WIKINDX_TAG_HIGH_COLOUR_DEFAULT', 'ff0000');
+define('WIKINDX_TAG_HIGH_FACTOR_DEFAULT', 200);
+define('WIKINDX_TAG_LOW_COLOUR_DEFAULT', 'a0a0a0');
+define('WIKINDX_TAG_LOW_FACTOR_DEFAULT', 100);
+define('WIKINDX_TEMPLATE_DEFAULT', 'default');
+
+
+/** Default time zone (UTC) */
+define('WIKINDX_TIMEZONE_DEFAULT', 'UTC');
+define('WIKINDX_TITLE_DEFAULT', 'WIKINDX');
+
+
+// References
+define('WIKINDX_DEACTIVATE_RESOURCE_TYPES_DEFAULT', serialize([]));
+
+
+// Users
+define('WIKINDX_DENY_READONLY_DEFAULT', FALSE);
+define('WIKINDX_DISPLAY_STATISTICS_DEFAULT', FALSE);
+define('WIKINDX_DISPLAY_USER_STATISTICS_DEFAULT', FALSE);
+define('WIKINDX_EMAIL_NEW_REGISTRATIONS_DEFAULT', '');
+define('WIKINDX_GLOBAL_EDIT_DEFAULT', FALSE);
+define('WIKINDX_IMPORT_BIB_DEFAULT', FALSE);
+define('WIKINDX_METADATA_ALLOW_DEFAULT', TRUE);
+define('WIKINDX_METADATA_USERONLY_DEFAULT', FALSE);
+define('WIKINDX_MULTIUSER_DEFAULT', FALSE);
+define('WIKINDX_ORIGINATOR_EDIT_ONLY_DEFAULT', FALSE);
+define('WIKINDX_QUARANTINE_DEFAULT', FALSE);
+define('WIKINDX_READ_ONLY_ACCESS_DEFAULT', TRUE);
+define('WIKINDX_USER_REGISTRATION_DEFAULT', FALSE);
+define('WIKINDX_USER_REGISTRATION_MODERATE_DEFAULT', FALSE);
+define('WIKINDX_CATEGORYEDIT_ALLOW_DEFAULT', FALSE);
+
+
+// Builtin Auth
+define('WIKINDX_AUTHGATE_MESSAGE_DEFAULT', '');
+define('WIKINDX_AUTHGATE_RESET_DEFAULT', FALSE);
+define('WIKINDX_AUTHGATE_USE_DEFAULT', FALSE);
+define('WIKINDX_PASSWORD_SIZE_DEFAULT', 6);
+define('WIKINDX_PASSWORD_STRENGTH_DEFAULT', 'strong');
+
+
+// LDAP Auth
+define('WIKINDX_LDAP_GROUP_DN_DEFAULT', '');
+define('WIKINDX_LDAP_PORT_DEFAULT', 389);
+define('WIKINDX_LDAP_SEARCH_METHOD_DEFAULT', 'tree');
+define('WIKINDX_LDAP_SEARCH_OPERATOR_DEFAULT', 'and');
+define('WIKINDX_LDAP_SERVER_BIND_DOMAIN_DEFAULT', '');
+define('WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_DEFAULT', 'upn');
+define('WIKINDX_LDAP_SERVER_BIND_LOGIN_DEFAULT', '');
+define('WIKINDX_LDAP_SERVER_BIND_PASSWORD_DEFAULT', '');
+define('WIKINDX_LDAP_SERVER_BIND_TYPE_DEFAULT', 'anonymous');
+define('WIKINDX_LDAP_SERVER_DEFAULT', 'localhost');
+define('WIKINDX_LDAP_SERVER_ENCRYPTION_DEFAULT', 'none');
+define('WIKINDX_LDAP_USE_DEFAULT', FALSE);
+define('WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN_DEFAULT', 'sAMAccountName');
+define('WIKINDX_LDAP_USER_CREATE_DEFAULT', TRUE);
+define('WIKINDX_LDAP_USER_OU_DEFAULT', '');
+
+
+// Mail system
+define('WIKINDX_EMAIL_NEWS_DEFAULT', FALSE);
+define('WIKINDX_EMAIL_STATISTICS_DEFAULT', FALSE);
+define('WIKINDX_MAIL_BACKEND_DEFAULT', 'sendmail');
+define('WIKINDX_MAIL_FROM_DEFAULT', '');
+define('WIKINDX_MAIL_REPLYTO_DEFAULT', 'noreply@noreply.org');
+define('WIKINDX_MAIL_RETURN_PATH_DEFAULT', '');
+define('WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT', '/usr/sbin/sendmail');
+define('WIKINDX_MAIL_SMTP_AUTH_DEFAULT', FALSE);
+define('WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT', 'none');
+define('WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT', '');
+define('WIKINDX_MAIL_SMTP_PERSIST_DEFAULT', FALSE);
+define('WIKINDX_MAIL_SMTP_PORT_DEFAULT', 25);
+define('WIKINDX_MAIL_SMTP_SERVER_DEFAULT', 'localhost');
+define('WIKINDX_MAIL_SMTP_USERNAME_DEFAULT', '');
+define('WIKINDX_MAIL_USE_DEFAULT', FALSE);
+define('WIKINDX_NOTIFY_DEFAULT', FALSE);
+
+
+// Files
+define('WIKINDX_FILE_ATTACH_UPLOAD_MAX_SIZE_DEFAULT', 5);
+define('WIKINDX_FILE_DELETE_SECONDS_DEFAULT', 3600);
+define('WIKINDX_FILE_ATTACH_ALLOW_DEFAULT', FALSE);
+define('WIKINDX_FILE_VIEW_LOGGEDON_ONLY_DEFAULT', FALSE);
+
+
+// RSS feed
+define('WIKINDX_RSS_DISALLOW_DEFAULT', FALSE);
+define('WIKINDX_RSS_DESCRIPTION_DEFAULT', WIKINDX_DESCRIPTION_DEFAULT);
+define('WIKINDX_RSS_DISPLAY_EDITED_RESOURCES_DEFAULT', FALSE);
+define('WIKINDX_RSS_LIMIT_DEFAULT', 50);
+define('WIKINDX_RSS_TITLE_DEFAULT', WIKINDX_TITLE_DEFAULT);
+
+
+// CMS API
+define('WIKINDX_CMS_ALLOW_DEFAULT', FALSE);
+define('WIKINDX_CMS_BIBSTYLE_DEFAULT', WIKINDX_STYLE_DEFAULT);
+define('WIKINDX_CMS_DB_PASSWORD_DEFAULT', '');
+define('WIKINDX_CMS_DB_USER_DEFAULT', '');
+define('WIKINDX_CMS_SQL_DEFAULT', FALSE);
+
+
+// Google Scholar
+define('WIKINDX_GS_DISALLOW_DEFAULT', FALSE);
+define('WIKINDX_GS_ATTACHMENT_DEFAULT', FALSE);
+
+
+// Divers
+define('WIKINDX_SITEMAP_DISALLOW_DEFAULT', FALSE);
+define('WIKINDX_RESTRICT_USERID_DEFAULT', 0);
+define('WIKINDX_MAX_PASTE_DEFAULT', 10);
+define('WIKINDX_RESOURCE_URL_PREFIX_DEFAULT', '');
+define('WIKINDX_BROWSER_TAB_ID_DEFAULT', FALSE);
+define('WIKINDX_IMPRESSUM_DEFAULT', '');
+define('WIKINDX_SESSION_GC_LASTEXEC_TIMESTAMP_DEFAULT', time()); // Now in UTC
+define('WIKINDX_SESSION_AUTH_MAXLIFETIME_DEFAULT', 86400); // 24h = 60 * 60 * 24 s, for a reasonable lifetime of a session that spans two working days.
+define('WIKINDX_SESSION_NOTAUTH_MAXLIFETIME_DEFAULT', 3600); // 1h = 60 * 60 s, that seems a lot of idle time for reading and searching resources.
+
+
+// Debugging
+define('WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT', FALSE);
+define('WIKINDX_DEBUG_ERRORS_DEFAULT', FALSE);
+define('WIKINDX_DEBUG_SQL_DEFAULT', FALSE);
+define('WIKINDX_IS_TRUNK_DEFAULT', FALSE);
+
+
+// Others
+define('WIKINDX_STATISTICS_COMPILED_DEFAULT', '2018-01-01 01:01:01');

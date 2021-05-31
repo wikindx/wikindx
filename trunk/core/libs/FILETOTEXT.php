@@ -176,9 +176,9 @@ class FILETOTEXT
      * The supported extensions of the format are not well defined.
      * In the case of xpdf the support is supposed to be cutting edge. 
      *
-     * cf. https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/pdf_reference_archives/PDFReference.pdf
-     * cf. https://www.xpdfreader.com/pdftotext-man.html
-     * cf. https://www.xpdfreader.com/pdfinfo-man.html
+     * @see https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/pdf_reference_archives/PDFReference.pdf
+     * @see https://www.xpdfreader.com/pdftotext-man.html
+     * @see https://www.xpdfreader.com/pdfinfo-man.html
      *
      * @param mixed $filepath An absolute or relative file path
      *
@@ -283,7 +283,7 @@ class FILETOTEXT
      * Binary format of Microsoft office Suite. Templates and plain documents are supported,
      * with and without macros. All versions before Word 2007 are supported.
      *
-     * cf. https://coderwall.com/p/x_n4tq/how-to-read-doc-using-php
+     * @see https://coderwall.com/p/x_n4tq/how-to-read-doc-using-php
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -330,7 +330,7 @@ class FILETOTEXT
      * XML format of Microsoft office Suite. Templates and plain documents are supported,
      * with and without macros. All versions starting with Word 2007 are supported.
      *
-     * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
+     * @see https://www.ecma-international.org/publications/standards/Ecma-376.htm
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -414,7 +414,7 @@ class FILETOTEXT
      * XML format of Microsoft office Suite. Templates and plain documents are supported,
      * with and without macros. All versions starting with PowerPoint 2007 are supported.
      *
-     * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
+     * @see https://www.ecma-international.org/publications/standards/Ecma-376.htm
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -713,7 +713,7 @@ class FILETOTEXT
      *
      * Extracted with RTF classes of Christian Vigh. All version of RTF are supported.
      *
-     * cf. https://interoperability.blob.core.windows.net/files/Archive_References/%5bMSFT-RTF%5d.pdf
+     * @see https://interoperability.blob.core.windows.net/files/Archive_References/%5bMSFT-RTF%5d.pdf
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -750,8 +750,8 @@ class FILETOTEXT
      * - EPUB 3.0
      * - EPUB 2.0.1
      *
-     * cf. EPUB 3.2 Spec., https://www.w3.org/publishing/epub3/epub-spec.html
-     * cf. EPUB EPUB Specifications and Projects, http://idpf.org/epub/dir/
+     * @see EPUB 3.2 Spec., https://www.w3.org/publishing/epub3/epub-spec.html
+     * @see EPUB EPUB Specifications and Projects, http://idpf.org/epub/dir/
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -882,7 +882,7 @@ class FILETOTEXT
      *
      * Each file is extracted, reencoded in UTF-8 (with transliteration) if possible, and parsed with convertToText().
      *
-     * cf. https://tools.ietf.org/html/rfc2557
+     * @see https://tools.ietf.org/html/rfc2557
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1103,7 +1103,7 @@ class FILETOTEXT
      * - v1 (no documentation found but that should word)
      * - v2
      *
-     * cf. http://www.gribuser.ru/xml/fictionbook/index.html.en
+     * @see http://www.gribuser.ru/xml/fictionbook/index.html.en
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1173,7 +1173,7 @@ class FILETOTEXT
      *
      * All versions are supported.
      *
-     * cf. https://www.ecma-international.org/publications-and-standards/standards/ecma-388/
+     * @see https://www.ecma-international.org/publications-and-standards/standards/ecma-388/
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1347,8 +1347,8 @@ class FILETOTEXT
      * This XML format is not documented but it seems the text
      * is always enclosed inside the "CH" attribut of "ITEXT" elements.
      *
-     * cf. https://wiki.scribus.net/canvas/(FR)_Introdution_au_Format_de_fichier_SLA_pour_Scribus_1.4
-     * cf. https://github.com/scribusproject/scribus/tree/master/resources/tests
+     * @see https://wiki.scribus.net/canvas/(FR)_Introdution_au_Format_de_fichier_SLA_pour_Scribus_1.4
+     * @see https://github.com/scribusproject/scribus/tree/master/resources/tests
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1384,7 +1384,7 @@ class FILETOTEXT
      * This XML format is not documented but it seems the text
      * is always enclosed inside "p" elements.
      *
-     * cf. http://www.abisource.com/wiki/AbiWord
+     * @see http://www.abisource.com/wiki/AbiWord
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1444,8 +1444,8 @@ class FILETOTEXT
      *
      * djvutxt utility is included in DjVuLibre toolbox.
      *
-     * cf. http://djvu.sourceforge.net/doc/man/djvutxt.html
-     * cf. http://djvu.sourceforge.net
+     * @see http://djvu.sourceforge.net/doc/man/djvutxt.html
+     * @see http://djvu.sourceforge.net
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1487,8 +1487,8 @@ class FILETOTEXT
      *
      * catdvi utility is included in most TeX distributions like TeX Live.
      *
-     * cf. http://catdvi.sourceforge.net/
-     * cf. https://tug.org/texlive/
+     * @see http://catdvi.sourceforge.net/
+     * @see https://tug.org/texlive/
      *
      * @param string $filepath An absolute or relative file path
      *
@@ -1531,8 +1531,8 @@ class FILETOTEXT
      *
      * ps2pdf utility is included in GhostScript.
      *
-     * cf. http://web.mit.edu/ghostscript/www/Ps2pdf.htm
-     * cf. https://www.ghostscript.com/
+     * @see http://web.mit.edu/ghostscript/www/Ps2pdf.htm
+     * @see https://www.ghostscript.com/
      *
      * @param string $filepath An absolute or relative file path
      *

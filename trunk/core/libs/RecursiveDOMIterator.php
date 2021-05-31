@@ -12,7 +12,7 @@
  * Recursive Iterator class for the DOM class
  *
  * Taken from https://github.com/salathe/spl-examples/wiki/RecursiveDOMIterator
- * cf. https://stackoverflow.com/questions/6356115/traverse-the-dom-tree
+ * @see https://stackoverflow.com/questions/6356115/traverse-the-dom-tree
  *
  * @package wikindx\core\RecursiveDOMIterator
  */

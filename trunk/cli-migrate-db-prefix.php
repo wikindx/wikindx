@@ -13,7 +13,7 @@
  *
  * Script to migrate a custom db prefix to the db default prefix 'wkx_'
  *
- * For details, see https://wikindx.sourceforge.io/web/6.4.6/install/release-notes/
+ * @see https://wikindx.sourceforge.io/web/6.4.6/install/release-notes/
  *
  * @package wikindx\release\repairkit
  */

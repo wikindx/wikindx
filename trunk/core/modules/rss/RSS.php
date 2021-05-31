@@ -48,7 +48,7 @@ class RSS
     /*
      * Output the syndication feed in RSS 2.0 format
      *
-     * cf. https://validator.w3.org/feed/docs/rss2.html
+     * @see https://validator.w3.org/feed/docs/rss2.html
      */
     public function rss20()
     {
@@ -169,7 +169,7 @@ class RSS
     /*
      * Output the syndication feed in Atom 1.0 format
      *
-     * cf. https://datatracker.ietf.org/doc/html/rfc4287
+     * @see https://datatracker.ietf.org/doc/html/rfc4287
      */
     public function atom10()
     {

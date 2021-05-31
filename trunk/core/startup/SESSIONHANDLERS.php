@@ -13,7 +13,7 @@
  *
  * The creation of the identifiers is left to PHP.
  *
- * cf. https://www.php.net/manual/en/function.session-set-save-handler.php
+ * @see https://www.php.net/manual/en/function.session-set-save-handler.php
  *
  * @package wikindx\core\sessiondbhandler
  */

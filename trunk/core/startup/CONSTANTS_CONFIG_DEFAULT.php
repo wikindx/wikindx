@@ -21,7 +21,7 @@
 /**
  * Default name of the MariaDB/MySQL database (case-sensitive)
  *
- * cf. https://dev.mysql.com/doc/mysql-reslimits-excerpt/5.6/en/identifier-length.html
+ * @see https://dev.mysql.com/doc/mysql-reslimits-excerpt/5.6/en/identifier-length.html
  *
  * @global string WIKINDX_DB_DEFAULT
  */

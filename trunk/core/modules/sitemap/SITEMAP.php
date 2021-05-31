@@ -13,8 +13,9 @@
  * Sitemap
  *
  * Sitemap XML for indexation robots
- * (See http://www.sitemaps.org)
- * (See https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt?hl=en)
+ *
+ * @see http://www.sitemaps.org
+ * @see https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt?hl=en
  *
  * This is a standard technique to facilitate the indexing of public content
  * by indexation robots visiting the website

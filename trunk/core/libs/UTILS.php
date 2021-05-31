@@ -934,7 +934,7 @@ namespace UTILS
      * Verify that a password matches a password hash of a user
      *
      * It hides the implementation changes linked to the evolution of cryptographic techniques.
-     * cf. https://www.php.net/manual/en/function.password-hash.php#124138
+     * @see https://www.php.net/manual/en/function.password-hash.php#124138
      *
      * A goof hash renewal strategy is explained on this page:
      * https://www.michalspacek.com/upgrading-existing-password-hashes

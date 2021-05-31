@@ -3258,7 +3258,7 @@ END;
     /**
      * Escape a string that should be used as a double quoted string value in PHP code
      *
-     * cf. https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.double
+     * @see https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.double
      */
     private function escapePHPDoubleQuotedString($str)
     {

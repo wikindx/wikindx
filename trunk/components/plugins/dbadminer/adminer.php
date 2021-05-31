@@ -2,12 +2,14 @@
 
 /**
  * This class is a wrappper of Adminer main class.
- * cf. https://www.adminer.org/en/plugins/#use
+ *
+ * @see https://www.adminer.org/en/plugins/#use
  *
  * Its purpose is preloding the connection params of the WIKINDX db except the password and adding some useful plugins.
  *
  * The class FillLoginForm is also overloaded because the original plugin is unfinished (only GET request).
- * cf. https://github.com/arxeiss/Adminer-FillLoginForm/blob/master/fill-login-form.php
+ *
+ * @see https://github.com/arxeiss/Adminer-FillLoginForm/blob/master/fill-login-form.php
  */
 define('WIKINDX_ADMINER_CALLER', 1);
 

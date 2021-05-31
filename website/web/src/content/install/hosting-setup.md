@@ -545,7 +545,7 @@ top-level `config.php` (`$WIKINDX_DB`, `$WIKINDX_DB_USER`, `$WIKINDX_DB_PASSWORD
    if running locally, try <http://localhost/phpmyadmin/>
    in the web browser address bar.
 
-2. Open the _Databases_ tab. Type in __wikindx6__
+2. Open the _Databases_ tab. Type in __wikindx__
    as the name of a new database, set **utf8mb4_unicode_520_ci**
    as the collation, and click _Create_ button.
 
@@ -555,7 +555,7 @@ top-level `config.php` (`$WIKINDX_DB`, `$WIKINDX_DB_USER`, `$WIKINDX_DB_PASSWORD
 4. In _User name_ field type in __wikindx__
    and in _password_ field type __wikindx__.
    If running WIKINDX locally, select __local__ for host.
-   Check the checkbox for _Grant all privileges on database wikindx6_
+   Check the checkbox for _Grant all privileges on database wikindx_
    then click on the _Go_ button.
 
 
@@ -566,7 +566,7 @@ top-level `config.php` (`$WIKINDX_DB`, `$WIKINDX_DB_USER`, `$WIKINDX_DB_PASSWORD
    if running locally, try <http://localhost/adminer/> in the web browser address bar.
 
 2. Click on *Create database* top link.
-   Type in __wikindx6__ as the name of a new database,
+   Type in __wikindx__ as the name of a new database,
    set **utf8mb4_unicode_520_ci** as the collation,
    and click _Save_ button.
 
@@ -593,19 +593,19 @@ or
 shell> mysql --user=admin_user_name --password admin_user_pwd
 ~~~~
 
-2. In mysql prompt, execute this SQL query to create the __wikindx6__ database:
+2. In mysql prompt, execute this SQL query to create the __wikindx__ database:
 
 ~~~~sql
-mysql> CREATE DATABASE wikindx6 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+mysql> CREATE DATABASE wikindx CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ~~~~
 
 3. Add a __wikindx__ user with a __wikindx__ password,
-   with privileges on __wikindx6__ database
+   with privileges on __wikindx__ database
    when it accesses it
    from __localhost__ hostname server.
 
 ~~~~sql
-mysql> GRANT ALL PRIVILEGES ON wikindx6.* TO 'wikindx'@'localhost' IDENTIFIED BY 'wikindx';
+mysql> GRANT ALL PRIVILEGES ON wikindx.* TO 'wikindx'@'localhost' IDENTIFIED BY 'wikindx';
 ~~~~
 
 

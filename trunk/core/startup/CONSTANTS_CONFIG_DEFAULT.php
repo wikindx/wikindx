@@ -18,7 +18,16 @@
  * @package wikindx\core\startup
  */
 
-define('WIKINDX_DB_DEFAULT', 'wikindx5');
+/**
+ * Default name of the MariaDB/MySQL database (case-sensitive)
+ *
+ * MUST be a lowercase word of 64 characters max.
+ *
+ * cf. https://dev.mysql.com/doc/mysql-reslimits-excerpt/5.6/en/identifier-length.html
+ *
+ * @name WIKINDX_DB_DEFAULT
+ */
+define('WIKINDX_DB_DEFAULT', 'wikindx');
 define('WIKINDX_DB_HOST_DEFAULT', 'localhost');
 define('WIKINDX_DB_PASSWORD_DEFAULT', 'wikindx');
 define('WIKINDX_DB_USER_DEFAULT', 'wikindx');

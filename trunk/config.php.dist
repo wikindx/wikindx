@@ -57,7 +57,11 @@ public $WIKINDX_DB_HOST = %%WIKINDX_DB_HOST%%;
 /**
  * Name of the MariaDB/MySQL database (case-sensitive)
  *
- * @name WIKINDX_DB Default is "wikindx6"
+ * MUST be a lowercase word of 64 characters max.
+ *
+ * cf. https://dev.mysql.com/doc/mysql-reslimits-excerpt/5.6/en/identifier-length.html
+ *
+ * @name WIKINDX_DB Default is "wikindx"
  */
 public $WIKINDX_DB = %%WIKINDX_DB%%;
 

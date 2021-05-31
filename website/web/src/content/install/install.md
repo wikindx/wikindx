@@ -77,7 +77,7 @@ of the web server.
 ```php
 // See https://www.php.net/manual/en/mysqli.construct.php
 public $WIKINDX_DB_HOST = "localhost";
-public $WIKINDX_DB = "wikindx6";
+public $WIKINDX_DB = "wikindx";
 public $WIKINDX_DB_USER = "wikindx";
 public $WIKINDX_DB_PASSWORD = "wikindx";
 ```

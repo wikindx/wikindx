@@ -378,9 +378,10 @@ class AUTHORIZE
             $recordset = $this->db->select('users', 'usersGDPR');
             if ($this->db->fetchOne($recordset) == 'N')
             {
+        		$messages = FACTORY_MESSAGES::getFreshInstance();
                 $pString = \HTML\p(WIKINDX_AUTHGATE_MESSAGE);
                 $pString .= \FORM\formHeader("authGate");
-                $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "OK")));
+                $pString .= \HTML\td(\FORM\formSubmit($messages->text("submit", "OK")));
                 $pString .= \FORM\formEnd();
                 GLOBALS::addTplVar('content', $pString);
                 FACTORY_CLOSENOMENU::getInstance();

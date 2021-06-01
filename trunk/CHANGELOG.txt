@@ -9,7 +9,6 @@ IMPORTANT INFORMATION:
 
 BUG FIXES:
 1. Correct display of resource icons in list view – 4 possibilities: resource only, resource with metadata, resource with attachment, resource with metadata and attachment. Update the latter icon.
-2. Fix missing message when authGate is enabled.
 
 FEATURE ENHANCEMENTS:
 ...

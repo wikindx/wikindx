@@ -27,9 +27,8 @@
  * @package wikindx\core\startup
  */
 define('WIKINDX_LIST_CONFIG_OPTIONS', [
-    "configAuthGate"                  => ["constname" => "WIKINDX_AUTHGATE_RESET",                "type" => "configBoolean"],
+    "configAuthGate"                  => ["constname" => "WIKINDX_AUTHGATE_USE",                  "type" => "configBoolean"],
     "configAuthGateMessage"           => ["constname" => "WIKINDX_AUTHGATE_MESSAGE",              "type" => "configVarchar"],
-    "configAuthGateReset"             => ["constname" => "WIKINDX_AUTHGATE_USE",                  "type" => "configBoolean"],
     "configBinFolderBibutils"         => ["constname" => "WIKINDX_BIN_FOLDER_BIBUTILS",           "type" => "configVarchar"],
     "configBinFolderCatdvi"           => ["constname" => "WIKINDX_BIN_FOLDER_CATDVI",             "type" => "configVarchar"],
     "configBinFolderDjvutxt"          => ["constname" => "WIKINDX_BIN_FOLDER_DJVUTXT",            "type" => "configVarchar"],

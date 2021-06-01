@@ -1454,6 +1454,7 @@ class CONFIGURE
         array_key_exists("configAuthGateMessage", $this->formData) ? $input = $this->formData["configAuthGateMessage"] :
             $input = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
         $pString .= \HTML\td(\FORM\textareaInputmceNoEditor($this->messages->text("config", "authGateMessage"), "configAuthGateMessage", $input, 80));
+        // NB configAuthGateReset is not an option but a command to reset the usersGDPR option of users
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", WIKINDX_AUTHGATE_RESET_DEFAULT));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();

@@ -420,13 +420,16 @@ class visualize_MODULE
     private function links($size)
     {
         $previous = $next = FALSE;
-        if ($this->vars['maxXAxis'] == -1)
-        {
+        if ($this->vars['maxXAxis'] == -1) {
             $this->vars['maxXAxis'] = $size;
+        }
+        if (array_key_exists('order', $this->vars)) {
+        	$order = $this->vars['order'];
         }
         $links = htmlentities("&yAxis=" . $this->vars['yAxis']) .
                 htmlentities("&xAxis=" . $this->vars['xAxis']) .
                 htmlentities("&maxXAxis=" . $this->vars['maxXAxis']) .
+                htmlentities("&order=" . $order) .
                 htmlentities("&plot=" . $this->vars['plot']);
         $icons = FACTORY_LOADICONS::getInstance();
         if (array_key_exists('start', $this->vars) && $this->vars['start'])

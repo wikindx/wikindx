@@ -132,7 +132,7 @@ class adminstyle_MODULE
         \UTILS\createComponentMetadataFile("style", mb_strtolower(trim($this->vars['styleShortName'])));
         \UTILS\enableComponent("style", mb_strtolower(trim($this->vars['styleShortName'])));
         
-        $pString = $this->pluginmessages->text('successAdd');
+        $pString = \HTML\p($this->pluginmessages->text('successAdd'), 'success');
         // Reload styles list after adding a new
         $this->styles = \LOADSTYLE\loadDir();
 
@@ -197,11 +197,11 @@ class adminstyle_MODULE
             $this->badInput->close($error, $this, 'editDisplay');
         }
         $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, mb_strtolower(trim($this->vars['styleShortName']))]);
-        $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, mb_strtoupper(trim($this->vars['styleShortName'])) . ".xml"]);
+        $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, mb_strtolower(trim($this->vars['styleShortName'])) . ".xml"]);
         $this->writeFile($fileName);
         // Delete cache file
         @unlink($dirName);
-        $pString = $this->pluginmessages->text('successEdit');
+        $pString = \HTML\p($this->pluginmessages->text('successEdit'), 'success');
 
         return $this->editInit($pString);
     }
@@ -257,7 +257,7 @@ class adminstyle_MODULE
         \UTILS\createComponentMetadataFile("style", mb_strtolower(trim($this->vars['styleShortName'])));
         \UTILS\enableComponent("style", mb_strtolower(trim($this->vars['styleShortName'])));
         
-        $pString = $this->pluginmessages->text('successAdd');
+        $pString = \HTML\p($this->pluginmessages->text('successAdd'), 'success');
         // Reload styles list after a duplication
         $this->styles = LOADSTYLE\loadDir();
 
@@ -2492,16 +2492,16 @@ class adminstyle_MODULE
         $fileString = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" . LF;
         $fileString .= "<style xml:lang=\"en\">" . LF;
         // Main style information
-        $fileString .= "<info>";
-        $fileString .= "<name>" . trim(stripslashes($this->vars['styleShortName'])) . "</name>" . LF;
-        $fileString .= "<description>" . htmlspecialchars(trim(stripslashes($this->vars['styleLongName'])))
+        $fileString .= TAB . "<info>" . LF;
+        $fileString .= TAB . TAB . "<name>" . trim(stripslashes($this->vars['styleShortName'])) . "</name>" . LF;
+        $fileString .= TAB . TAB . "<description>" . htmlspecialchars(trim(stripslashes($this->vars['styleLongName'])))
              . "</description>" . LF;
         // Temporary place holder
-        $fileString .= "<language>en_GB</language>" . LF;
-        $fileString .= "<osbibVersion>$this->osbibVersion</osbibVersion>" . LF;
-        $fileString .= "</info>" . LF;
+        $fileString .= TAB . TAB . "<language>en_GB</language>" . LF;
+        $fileString .= TAB . TAB . "<osbibVersion>$this->osbibVersion</osbibVersion>" . LF;
+        $fileString .= TAB . "</info>" . LF;
         // Start citation definition
-        $fileString .= "<citation>";
+        $fileString .= TAB . "<citation>" . LF;
         $inputArray = [
             "cite_creatorStyle", "cite_creatorOtherStyle", "cite_creatorInitials",
             "cite_creatorFirstName", "cite_twoCreatorsSep", "cite_creatorSepFirstBetween",
@@ -2529,7 +2529,7 @@ class adminstyle_MODULE
             {
                 $split = \UTF8\mb_explode("_", $input, 2);
                 $elementName = $split[1];
-                $fileString .= "<$elementName>" .
+                $fileString .= TAB . TAB . "<$elementName>" .
                     htmlspecialchars(stripslashes($this->vars[$input])) . "</$elementName>" . LF;
             }
         }
@@ -2540,19 +2540,19 @@ class adminstyle_MODULE
             if (array_key_exists($citationStringName, $this->vars) &&
             ($string = $this->vars[$citationStringName]))
             {
-                $fileString .= "<" . $key . "Template>" . htmlspecialchars(stripslashes($string)) .
+                $fileString .= TAB . TAB . "<" . $key . "Template>" . htmlspecialchars(stripslashes($string)) .
                 "</" . $key . "Template>" . LF;
             }
             $field = "cite_" . $key . "_notInBibliography";
             $element = $key . "_notInBibliography";
             if (isset($this->vars[$field]))
             {
-                $fileString .= "<$element>" . $this->vars[$field] . "</$element>" . LF;
+                $fileString .= TAB . TAB . "<$element>" . $this->vars[$field] . "</$element>" . LF;
             }
         }
-        $fileString .= "</citation>" . LF;
+        $fileString .= TAB . "</citation>" . LF;
         // Footnote creator formatting
-        $fileString .= "<footnote>";
+        $fileString .= TAB . "<footnote>" . LF;
         $inputArray = [
             // foot note creator formatting
             "footnote_primaryCreatorFirstStyle", "footnote_primaryCreatorOtherStyle",
@@ -2577,7 +2577,7 @@ class adminstyle_MODULE
             {
                 $split = \UTF8\mb_explode("_", $input, 2);
                 $elementName = $split[1];
-                $fileString .= "<$elementName>" .
+                $fileString .= TAB . TAB . "<$elementName>" .
                     htmlspecialchars(stripslashes($this->vars[$input])) . "</$elementName>" . LF;
             }
         }
@@ -2590,16 +2590,16 @@ class adminstyle_MODULE
             $input = trim(stripslashes($this->vars[$type]));
             // remove newlines etc.
             $input = preg_replace("/\\R/u", "", $input);
-            $fileString .= "<resource name=\"$key\">";
+            $fileString .= TAB . TAB . "<resource name=\"$key\">";
             $fileString .= $this->arrayToXML($this->parseStringToArray($key, $input), $name, TRUE);
-            $fileString .= "</resource>" . LF;
+            $fileString .= LF . TAB . TAB . "</resource>" . LF;
         }
-        $fileString .= "</footnote>" . LF;
+        $fileString .= TAB . "</footnote>" . LF;
         $this->footnotePages = FALSE;
         // Start bibliography
-        $fileString .= "<bibliography>";
+        $fileString .= TAB . "<bibliography>" . LF;
         // Common section defining how authors, titles etc. are formatted
-        $fileString .= "<common>";
+        $fileString .= TAB . TAB . "<common>" . LF;
         $inputArray = [
             // style
             "style_titleCapitalization", "style_monthFormat", "style_editionFormat", "style_dateFormat",
@@ -2633,11 +2633,11 @@ class adminstyle_MODULE
             {
                 $split = \UTF8\mb_explode("_", $input, 2);
                 $elementName = $split[1];
-                $fileString .= "<$elementName>" .
+                $fileString .= TAB . TAB . TAB . "<$elementName>" .
                     htmlspecialchars(stripslashes($this->vars[$input])) . "</$elementName>" . LF;
             }
         }
-        $fileString .= "</common>" . LF;
+        $fileString .= TAB . TAB . "</common>" . LF;
         // Resource types
         foreach ($types as $key)
         {
@@ -2647,7 +2647,7 @@ class adminstyle_MODULE
             $input = preg_replace("/\\R/u", "", $input);
             // Rewrite creator strings
             $attributes = $this->creatorXMLAttributes($type);
-            $fileString .= "<resource name=\"$key\" $attributes>";
+            $fileString .= TAB . TAB . "<resource name=\"$key\" $attributes>";
             $fileString .= $this->arrayToXML($this->parseStringToArray($key, $input), $type);
             if (($key != 'genericBook') && ($key != 'genericArticle') && ($key != 'genericMisc'))
             {
@@ -2660,17 +2660,17 @@ class adminstyle_MODULE
                 {
                     $name = $this->vars[$name];
                 }
-                $fileString .= "<fallbackstyle>$name</fallbackstyle>" . LF;
+                $fileString .= LF . TAB . TAB . TAB . "<fallbackstyle>$name</fallbackstyle>";
             }
             // Partial templates for each resource type
-            $fileString .= "<partial>";
+            $fileString .= LF . TAB . TAB . TAB . "<partial>";
             $type = 'partial_' . $key . 'Template';
             $input = stripslashes($this->vars[$type]);
             // remove newlines etc.
             $fileString .= preg_replace("/\\R/u", "", $input);
             $fileString .= "</partial>" . LF;
             $type = 'partial_' . $key . 'Replace';
-            $fileString .= "<partialReplace>";
+            $fileString .= TAB . TAB . TAB . "<partialReplace>";
             if (array_key_exists($type, $this->vars))
             {
                 $fileString .= 1;
@@ -2681,9 +2681,9 @@ class adminstyle_MODULE
             }
             $fileString .= "</partialReplace>" . LF;
             // close resource node
-            $fileString .= "</resource>" . LF;
+            $fileString .= TAB . TAB . "</resource>" . LF;
         }
-        $fileString .= "</bibliography>" . LF;
+        $fileString .= TAB . "</bibliography>" . LF;
         $fileString .= "</style>" . LF;
         if (!$fileName)
         { // called from add()
@@ -2697,7 +2697,7 @@ class adminstyle_MODULE
                     $this->badInput->close($error = $this->errors->text("file", "folder"), $this, 'display');
                 }
             }
-            $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, trim($this->vars['styleShortName']) . ".xml"]);
+            $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, mb_strtolower(trim($this->vars['styleShortName'])) . ".xml"]);
         }
         if (!$fp = fopen("$fileName", "w"))
         {
@@ -2765,24 +2765,37 @@ class adminstyle_MODULE
      *
      * @param array $array
      * @param array $type
+     * @parm bool $loop – default FALSE
      *
      * @return string
      */
-    private function arrayToXML($array, $type)
+    private function arrayToXML($array, $type, $loop = FALSE)
     {
         $fileString = '';
         foreach ($array as $key => $value)
         {
-            $fileString .= "<$key>";
+        	if ($loop) {
+	            $fileString .= LF . TAB . TAB . TAB . TAB . "<$key>";
+	        } else {
+	            $fileString .= LF . TAB . TAB . TAB . "<$key>";
+	        }
             if (is_array($value))
             {
-                $fileString .= $this->arrayToXML($value, $type);
+                $fileString .= $this->arrayToXML($value, $type, TRUE);
             }
             else
             {
                 $fileString .= htmlspecialchars($value);
             }
-            $fileString .= "</$key>" . LF;
+            if (!$loop) {
+            	if ($key != 'ultimate') {
+		            $fileString .= LF . TAB . TAB . TAB . "</$key>";
+            	} else {
+		            $fileString .= "</$key>";
+		        }
+	        } else {
+	            $fileString .= "</$key>";
+	        }
         }
 
         return $fileString;

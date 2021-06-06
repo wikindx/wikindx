@@ -372,11 +372,11 @@ class adminstyle_MODULE
             if (!$copy)
             {
                 $this->session->setVar("style_shortName", $this->vars['editStyleFile']);
-                $this->session->setVar("style_longName", base64_encode($info['description']));
+                $this->session->setVar("style_longName", ($info['description']));
             }
             foreach ($citation as $key => $value)
             {
-                $this->session->setVar("cite_" . $key, base64_encode(htmlspecialchars($value)));
+                $this->session->setVar("cite_" . $key, htmlspecialchars($value));
             }
             $this->arrayToTemplate($footnote, TRUE);
             foreach ($resourceTypes as $type)
@@ -385,13 +385,13 @@ class adminstyle_MODULE
                 $sessionKey = $type . 'Template';
                 if (!empty($this->$type))
                 {
-                    $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($this->$type)));
+                    $this->session->setVar($sessionKey, htmlspecialchars($this->$type));
                 }
                 unset($this->$type);
             }
             foreach ($common as $key => $value)
             {
-                $this->session->setVar("style_" . $key, base64_encode(htmlspecialchars($value)));
+                $this->session->setVar("style_" . $key, htmlspecialchars($value));
             }
             $this->arrayToTemplate($types);
             foreach ($resourceTypes as $type)
@@ -399,24 +399,24 @@ class adminstyle_MODULE
                 $sessionKey = 'style_' . $type;
                 if (!empty($this->$type))
                 {
-                    $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($this->$type)));
+                    $this->session->setVar($sessionKey, htmlspecialchars($this->$type));
                 }
                 if (array_key_exists($type, $this->fallback))
                 {
                     $sessionKey .= "_generic";
-                    $this->session->setVar($sessionKey, base64_encode($this->fallback[$type]));
+                    $this->session->setVar($sessionKey, $this->fallback[$type]);
                 }
                 $partialName = 'partial_' . $type . 'Template';
                 if (isset($this->$partialName) && $this->$partialName)
                 {
-                    $this->session->setVar($partialName, base64_encode(htmlspecialchars($this->$partialName)));
+                    $this->session->setVar($partialName, htmlspecialchars($this->$partialName));
                 }
                 $partialReplace = 'partial_' . $type . 'Replace';
                 if (isset($this->$partialReplace) && $this->$partialReplace)
                 {
                     $this->session->setVar(
                         $partialReplace,
-                        base64_encode(htmlspecialchars($this->$partialReplace))
+                        htmlspecialchars($this->$partialReplace)
                     );
                 }
                 else
@@ -692,31 +692,31 @@ class adminstyle_MODULE
             if (array_key_exists($name, $array))
             {
                 $sessionKey = 'style_' . $type . "_" . $name;
-                $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
+                $this->session->setVar($sessionKey, htmlspecialchars($array[$name]));
             }
             $name = $creatorField . "_firstString_before";
             if (array_key_exists($name, $array))
             {
                 $sessionKey = 'style_' . $type . "_" . $name;
-                $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
+                $this->session->setVar($sessionKey, htmlspecialchars($array[$name]));
             }
             $name = $creatorField . "_remainderString";
             if (array_key_exists($name, $array))
             {
                 $sessionKey = 'style_' . $type . "_" . $name;
-                $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
+                $this->session->setVar($sessionKey, htmlspecialchars($array[$name]));
             }
             $name = $creatorField . "_remainderString_before";
             if (array_key_exists($name, $array))
             {
                 $sessionKey = 'style_' . $type . "_" . $name;
-                $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
+                $this->session->setVar($sessionKey, htmlspecialchars($array[$name]));
             }
             $name = $creatorField . "_remainderString_each";
             if (array_key_exists($name, $array))
             {
                 $sessionKey = 'style_' . $type . "_" . $name;
-                $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
+                $this->session->setVar($sessionKey, htmlspecialchars($array[$name]));
             }
         }
     }
@@ -739,11 +739,11 @@ class adminstyle_MODULE
         $exampleInitials = ["T. U. ", "T.U.", "T U ", "TU"];
         $example = [$this->pluginmessages->text('creatorFirstNameFull'),
             $this->pluginmessages->text('creatorFirstNameInitials'), ];
-        $firstStyle = base64_decode($this->session->getVar("cite_creatorStyle"));
-        $otherStyle = base64_decode($this->session->getVar("cite_creatorOtherStyle"));
-        $initials = base64_decode($this->session->getVar("cite_creatorInitials"));
-        $firstName = base64_decode($this->session->getVar("cite_creatorFirstName"));
-        $useInitials = base64_decode($this->session->getVar("cite_useInitials")) ? TRUE : FALSE;
+        $firstStyle = $this->session->getVar("cite_creatorStyle");
+        $otherStyle = $this->session->getVar("cite_creatorOtherStyle");
+        $initials = $this->session->getVar("cite_creatorInitials");
+        $firstName = $this->session->getVar("cite_creatorFirstName");
+        $useInitials = $this->session->getVar("cite_useInitials") ? TRUE : FALSE;
         $td = HTML\strong($this->pluginmessages->text('creatorStyle')) . BR .
             FORM\selectedBoxValue(
                 $this->pluginmessages->text('creatorFirstStyle'),
@@ -782,7 +782,7 @@ class adminstyle_MODULE
             $firstName,
             2
         );
-        $uppercase = base64_decode($this->session->getVar("cite_creatorUppercase")) ?
+        $uppercase = $this->session->getVar("cite_creatorUppercase") ?
             TRUE : FALSE;
         $td .= HTML\P(FORM\checkbox(
             $this->pluginmessages->text('uppercaseCreator'),
@@ -791,10 +791,10 @@ class adminstyle_MODULE
         ));
         $pString .= HTML\td($td, 'padding5px');
         // Delimiters
-        $twoCreatorsSep = stripslashes(base64_decode($this->session->getVar("cite_twoCreatorsSep")));
-        $betweenFirst = stripslashes(base64_decode($this->session->getVar("cite_creatorSepFirstBetween")));
-        $betweenNext = stripslashes(base64_decode($this->session->getVar("cite_creatorSepNextBetween")));
-        $last = stripslashes(base64_decode($this->session->getVar("cite_creatorSepNextLast")));
+        $twoCreatorsSep = stripslashes($this->session->getVar("cite_twoCreatorsSep"));
+        $betweenFirst = stripslashes($this->session->getVar("cite_creatorSepFirstBetween"));
+        $betweenNext = stripslashes($this->session->getVar("cite_creatorSepNextBetween"));
+        $last = stripslashes($this->session->getVar("cite_creatorSepNextLast"));
         $td = HTML\strong($this->pluginmessages->text('creatorSep')) .
             HTML\p($this->pluginmessages->text('ifOnlyTwoCreators') . "&nbsp;" .
             FORM\textInput(FALSE, "cite_twoCreatorsSep", $twoCreatorsSep, 7, 255)) .
@@ -813,13 +813,12 @@ class adminstyle_MODULE
             FORM\textInput(FALSE, "cite_creatorSepNextLast", $last, 7, 255));
         $td .= BR . "&nbsp;" . BR;
         // List abbreviation
-        $example = [$this->pluginmessages->text('creatorListFull'),
-            $this->pluginmessages->text('creatorListLimit'), ];
-        $list = base64_decode($this->session->getVar("cite_creatorList"));
-        $listMore = stripslashes(base64_decode($this->session->getVar("cite_creatorListMore")));
-        $listLimit = stripslashes(base64_decode($this->session->getVar("cite_creatorListLimit")));
-        $listAbbreviation = stripslashes(base64_decode($this->session->getVar("cite_creatorListAbbreviation")));
-        $italic = base64_decode($this->session->getVar("cite_creatorListAbbreviationItalic")) ?
+        $example = [$this->pluginmessages->text('creatorListFull'), $this->pluginmessages->text('creatorListLimit')];
+        $list = $this->session->getVar("cite_creatorList");
+        $listMore = stripslashes($this->session->getVar("cite_creatorListMore"));
+        $listLimit = stripslashes($this->session->getVar("cite_creatorListLimit"));
+        $listAbbreviation = stripslashes($this->session->getVar("cite_creatorListAbbreviation"));
+        $italic = $this->session->getVar("cite_creatorListAbbreviationItalic") ?
             TRUE : FALSE;
         $td .= HTML\strong($this->pluginmessages->text('creatorList')) .
             HTML\p(FORM\selectedBoxValue(
@@ -837,13 +836,11 @@ class adminstyle_MODULE
             FORM\textInput(FALSE, "cite_creatorListAbbreviation", $listAbbreviation, 15) . ' ' .
             FORM\checkbox(FALSE, "cite_creatorListAbbreviationItalic", $italic) . ' ' .
             $this->pluginmessages->text('italics'));
-        $list = base64_decode($this->session->getVar("cite_creatorListSubsequent"));
-        $listMore = stripslashes(base64_decode($this->session->getVar("cite_creatorListSubsequentMore")));
-        $listLimit = stripslashes(base64_decode($this->session->getVar("cite_creatorListSubsequentLimit")));
-        $listAbbreviation = stripslashes(base64_decode(
-            $this->session->getVar("cite_creatorListSubsequentAbbreviation")
-        ));
-        $italic = base64_decode($this->session->getVar("cite_creatorListSubsequentAbbreviationItalic")) ?
+        $list = $this->session->getVar("cite_creatorListSubsequent");
+        $listMore = stripslashes($this->session->getVar("cite_creatorListSubsequentMore"));
+        $listLimit = stripslashes($this->session->getVar("cite_creatorListSubsequentLimit"));
+        $listAbbreviation = stripslashes($this->session->getVar("cite_creatorListSubsequentAbbreviation"));
+        $italic = $this->session->getVar("cite_creatorListSubsequentAbbreviationItalic") ?
             TRUE : FALSE;
         $td .= BR . "&nbsp;" . BR;
         $td .= HTML\strong($this->pluginmessages->text('creatorListSubsequent')) .
@@ -870,9 +867,9 @@ class adminstyle_MODULE
         $pString .= HTML\tableStart('styleTable borderStyleSolid');
         $pString .= HTML\trStart();
 
-        $firstChars = stripslashes(base64_decode($this->session->getVar("cite_firstChars")));
-        $template = stripslashes(base64_decode($this->session->getVar("cite_template")));
-        $lastChars = stripslashes(base64_decode($this->session->getVar("cite_lastChars")));
+        $firstChars = stripslashes($this->session->getVar("cite_firstChars"));
+        $template = stripslashes($this->session->getVar("cite_template"));
+        $lastChars = stripslashes($this->session->getVar("cite_lastChars"));
         $td = $this->pluginmessages->text('enclosingCharacters') . BR .
             FORM\textInput(FALSE, "cite_firstChars", $firstChars, 3, 255) . ' ... ' .
             FORM\textInput(FALSE, "cite_lastChars", $lastChars, 3, 255);
@@ -885,7 +882,7 @@ class adminstyle_MODULE
             HTML\p(HTML\em($this->pluginmessages->text('availableFields')) .
             BR . $availableFields, "small");
 
-        $replaceYear = stripslashes(base64_decode($this->session->getVar("cite_replaceYear")));
+        $replaceYear = stripslashes($this->session->getVar("cite_replaceYear"));
         $td .= HTML\p(FORM\textInput(
             $this->pluginmessages->text('replaceYear'),
             "cite_replaceYear",
@@ -895,24 +892,23 @@ class adminstyle_MODULE
         ));
 
         $td .= $this->pluginmessages->text('followCreatorTemplate');
-        $template = stripslashes(base64_decode($this->session->getVar("cite_followCreatorTemplate")));
+        $template = stripslashes($this->session->getVar("cite_followCreatorTemplate"));
         $td .= HTML\p($this->pluginmessages->text('template') . ' ' .
             FORM\textInput(FALSE, "cite_followCreatorTemplate", $template, 40, 255)) .
             HTML\p(HTML\em($this->pluginmessages->text('availableFields')) .
             BR . $availableFields, "small");
 
-        $pageSplit = base64_decode($this->session->getVar("cite_followCreatorPageSplit")) ?
-            TRUE : FALSE;
+        $pageSplit = $this->session->getVar("cite_followCreatorPageSplit") ? TRUE : FALSE;
         $td .= HTML\P($this->pluginmessages->text('followCreatorPageSplit') . "&nbsp;&nbsp;" .
             FORM\checkbox(FALSE, "cite_followCreatorPageSplit", $pageSplit));
 
-        $consecutiveSep = stripslashes(base64_decode($this->session->getVar("cite_consecutiveCitationSep")));
+        $consecutiveSep = stripslashes($this->session->getVar("cite_consecutiveCitationSep"));
         $td .= HTML\p($this->pluginmessages->text('consecutiveCitationSep') . ' ' .
             FORM\textInput(FALSE, "cite_consecutiveCitationSep", $consecutiveSep, 7));
 
         // Consecutive citations by same author(s)
-        $consecutiveSep = stripslashes(base64_decode($this->session->getVar("cite_consecutiveCreatorSep")));
-        $template = stripslashes(base64_decode($this->session->getVar("cite_consecutiveCreatorTemplate")));
+        $consecutiveSep = stripslashes($this->session->getVar("cite_consecutiveCreatorSep"));
+        $template = stripslashes($this->session->getVar("cite_consecutiveCreatorTemplate"));
         $availableFields = implode(', ', $this->styleMap->citation);
         $td .= HTML\p($this->pluginmessages->text('consecutiveCreator'));
         $td .= $this->pluginmessages->text('template') . ' ' .
@@ -923,14 +919,14 @@ class adminstyle_MODULE
             FORM\textInput(FALSE, "cite_consecutiveCreatorSep", $consecutiveSep, 7);
 
         // Subsequent citations by same author(s)
-        $template = stripslashes(base64_decode($this->session->getVar("cite_subsequentCreatorTemplate")));
+        $template = stripslashes($this->session->getVar("cite_subsequentCreatorTemplate"));
         $td .= HTML\p($this->pluginmessages->text('subsequentCreator'));
         $td .= $this->pluginmessages->text('template') . ' ' .
             FORM\textInput(FALSE, "cite_subsequentCreatorTemplate", $template, 40, 255) .
             HTML\p(HTML\em($this->pluginmessages->text('availableFields')) .
             BR . $availableFields, "small");
 
-        $fields = base64_decode($this->session->getVar("cite_subsequentFields")) ?
+        $fields = $this->session->getVar("cite_subsequentFields") ?
             TRUE : FALSE;
         $td .= HTML\P($this->pluginmessages->text('subsequentFields') . "&nbsp;&nbsp;" .
             FORM\checkbox(FALSE, "cite_subsequentFields", $fields));
@@ -938,7 +934,7 @@ class adminstyle_MODULE
         $example = [$this->pluginmessages->text('subsequentCreatorRange1'),
             $this->pluginmessages->text('subsequentCreatorRange2'),
             $this->pluginmessages->text('subsequentCreatorRange3'), ];
-        $input = base64_decode($this->session->getVar("cite_subsequentCreatorRange"));
+        $input = $this->session->getVar("cite_subsequentCreatorRange");
         $td .= FORM\selectedBoxValue(
             $this->pluginmessages->text('subsequentCreatorRange'),
             "cite_subsequentCreatorRange",
@@ -949,7 +945,7 @@ class adminstyle_MODULE
         $pString .= HTML\td($td, 'padding5px top');
 
         $example = ["132-9", "132-39", "132-139"];
-        $input = base64_decode($this->session->getVar("cite_pageFormat"));
+        $input = $this->session->getVar("cite_pageFormat");
         $td = FORM\selectedBoxValue(
             $this->pluginmessages->text('pageFormat'),
             "cite_pageFormat",
@@ -959,7 +955,7 @@ class adminstyle_MODULE
         );
         $td .= BR . "&nbsp;" . BR;
         $example = ["1998", "'98", "98"];
-        $year = base64_decode($this->session->getVar("cite_yearFormat"));
+        $year = $this->session->getVar("cite_yearFormat");
         $td .= FORM\selectedBoxValue(
             $this->pluginmessages->text('yearFormat'),
             "cite_yearFormat",
@@ -970,18 +966,18 @@ class adminstyle_MODULE
         $td .= BR . "&nbsp;" . BR;
         $example = [$this->pluginmessages->text('titleAsEntered'),
             "WIKINDX bibliographic management system", ];
-        $titleCapitalization = base64_decode($this->session->getVar("cite_titleCapitalization"));
+        $titleCapitalization = $this->session->getVar("cite_titleCapitalization");
         $td .= HTML\p($this->pluginmessages->text('titleCapitalization') . BR .
             FORM\selectedBoxValue(FALSE, "cite_titleCapitalization", $example, $titleCapitalization, 2));
-        $separator = base64_decode($this->session->getVar("cite_titleSubtitleSeparator"));
+        $separator = $this->session->getVar("cite_titleSubtitleSeparator");
         $td .= HTML\p($this->pluginmessages->text('titleSubtitleSeparator') . ":&nbsp;&nbsp;" .
             FORM\textInput(FALSE, "cite_titleSubtitleSeparator", $separator, 4));
 
         // Ambiguous citations
-        $ambiguous = base64_decode($this->session->getVar("cite_ambiguous"));
+        $ambiguous = $this->session->getVar("cite_ambiguous");
         $example = [$this->pluginmessages->text('ambiguousUnchanged'),
             $this->pluginmessages->text('ambiguousYear'), $this->pluginmessages->text('ambiguousTitle'), ];
-        $template = stripslashes(base64_decode($this->session->getVar("cite_ambiguousTemplate")));
+        $template = stripslashes($this->session->getVar("cite_ambiguousTemplate"));
         $td .= HTML\p(FORM\selectedBoxValue(
             HTML\strong($this->pluginmessages->text('ambiguous')),
             "cite_ambiguous",
@@ -995,7 +991,7 @@ class adminstyle_MODULE
             HTML\p(HTML\em($this->pluginmessages->text('availableFields')) .
             BR . $availableFields, "small");
 
-        $removeTitle = base64_decode($this->session->getVar("cite_removeTitle")) ?
+        $removeTitle = $this->session->getVar("cite_removeTitle") ?
             TRUE : FALSE;
         $td .= HTML\p($this->pluginmessages->text('removeTitle') . "&nbsp;&nbsp;" .
             FORM\checkbox(FALSE, "cite_removeTitle", $removeTitle));
@@ -1022,14 +1018,14 @@ class adminstyle_MODULE
         $pString .= HTML\tableStart('styleTable borderStyleSolid');
         $pString .= HTML\trStart();
         $td = HTML\p(HTML\strong($this->pluginmessages->text('endnoteFormat1')));
-        $firstChars = stripslashes(base64_decode($this->session->getVar("cite_firstCharsEndnoteInText")));
-        $lastChars = stripslashes(base64_decode($this->session->getVar("cite_lastCharsEndnoteInText")));
+        $firstChars = stripslashes($this->session->getVar("cite_firstCharsEndnoteInText"));
+        $lastChars = stripslashes($this->session->getVar("cite_lastCharsEndnoteInText"));
         $td .= $this->pluginmessages->text('enclosingCharacters') . BR .
             FORM\textInput(FALSE, "cite_firstCharsEndnoteInText", $firstChars, 3, 255) . ' ... ' .
             FORM\textInput(FALSE, "cite_lastCharsEndnoteInText", $lastChars, 3, 255);
         $td .= BR . "&nbsp;" . BR;
 
-        $template = stripslashes(base64_decode($this->session->getVar("cite_templateEndnoteInText")));
+        $template = stripslashes($this->session->getVar("cite_templateEndnoteInText"));
         $availableFields = implode(', ', $this->styleMap->citationEndnoteInText);
         $td .= $this->pluginmessages->text('template') . ' ' .
             FORM\textInput(FALSE, "cite_templateEndnoteInText", $template, 40, 255) .
@@ -1039,18 +1035,16 @@ class adminstyle_MODULE
 
         $citeFormat = [$this->pluginmessages->text('normal'),
             $this->pluginmessages->text('superscript'), $this->pluginmessages->text('subscript'), ];
-        $input = base64_decode($this->session->getVar("cite_formatEndnoteInText"));
+        $input = $this->session->getVar("cite_formatEndnoteInText");
         $td .= HTML\p(FORM\selectedBoxValue(FALSE, "cite_formatEndnoteInText", $citeFormat, $input, 3));
 
-        $consecutiveSep = stripslashes(base64_decode(
-            $this->session->getVar("cite_consecutiveCitationEndnoteInTextSep")
-        ));
+        $consecutiveSep = stripslashes($this->session->getVar("cite_consecutiveCitationEndnoteInTextSep"));
         $td .= HTML\p($this->pluginmessages->text('consecutiveCitationSep') . ' ' .
             FORM\textInput(FALSE, "cite_consecutiveCitationEndnoteInTextSep", $consecutiveSep, 7));
 
         $endnoteStyleArray = [$this->pluginmessages->text('endnoteStyle1'),
             $this->pluginmessages->text('endnoteStyle2'), $this->pluginmessages->text('endnoteStyle3'), ];
-        $endnoteStyle = base64_decode($this->session->getVar("cite_endnoteStyle"));
+        $endnoteStyle = $this->session->getVar("cite_endnoteStyle");
         $td .= HTML\p(FORM\selectedBoxValue(
             $this->pluginmessages->text('endnoteStyle'),
             "cite_endnoteStyle",
@@ -1063,7 +1057,7 @@ class adminstyle_MODULE
 
         $td = HTML\p(HTML\strong($this->pluginmessages->text('endnoteFormat2')));
         $td .= HTML\p($this->pluginmessages->text('endnoteFieldFormat'), "small");
-        $template = stripslashes(base64_decode($this->session->getVar("cite_templateEndnote")));
+        $template = stripslashes($this->session->getVar("cite_templateEndnote"));
         $availableFields = implode(', ', $this->styleMap->citationEndnote);
         $td .= $this->pluginmessages->text('template') . ' ' .
             FORM\textInput(FALSE, "cite_templateEndnote", $template, 40, 255) . " " .
@@ -1072,24 +1066,24 @@ class adminstyle_MODULE
             BR . $availableFields, "small");
 
         $availableFields = implode(', ', $this->styleMap->citationEndnote);
-        $ibid = stripslashes(base64_decode($this->session->getVar("cite_ibid")));
+        $ibid = stripslashes($this->session->getVar("cite_ibid"));
         $td .= FORM\textInput($this->pluginmessages->text('ibid'), "cite_ibid", $ibid, 40, 255);
         $td .= BR . "&nbsp;" . BR;
-        $idem = stripslashes(base64_decode($this->session->getVar("cite_idem")));
+        $idem = stripslashes($this->session->getVar("cite_idem"));
         $td .= FORM\textInput($this->pluginmessages->text('idem'), "cite_idem", $idem, 40, 255);
         $td .= BR . "&nbsp;" . BR;
-        $opCit = stripslashes(base64_decode($this->session->getVar("cite_opCit")));
+        $opCit = stripslashes($this->session->getVar("cite_opCit"));
         $td .= FORM\textInput($this->pluginmessages->text('opCit'), "cite_opCit", $opCit, 40, 255) .
             HTML\p(HTML\em($this->pluginmessages->text('availableFields')) .
             BR . $availableFields, "small");
 
-        $firstChars = stripslashes(base64_decode($this->session->getVar("cite_firstCharsEndnoteID")));
-        $lastChars = stripslashes(base64_decode($this->session->getVar("cite_lastCharsEndnoteID")));
+        $firstChars = stripslashes($this->session->getVar("cite_firstCharsEndnoteID"));
+        $lastChars = stripslashes($this->session->getVar("cite_lastCharsEndnoteID"));
         $td .= HTML\p($this->pluginmessages->text('endnoteIDEnclose') . BR .
             FORM\textInput(FALSE, "cite_firstCharsEndnoteID", $firstChars, 3, 255) . ' ... ' .
             FORM\textInput(FALSE, "cite_lastCharsEndnoteID", $lastChars, 3, 255));
 
-        $input = base64_decode($this->session->getVar("cite_formatEndnoteID"));
+        $input = $this->session->getVar("cite_formatEndnoteID");
         $td .= HTML\p(FORM\selectedBoxValue(FALSE, "cite_formatEndnoteID", $citeFormat, $input, 3));
 
         $pString .= HTML\td($td, 'padding5px');
@@ -1106,7 +1100,7 @@ class adminstyle_MODULE
         $pString .= HTML\tableStart('styleTable borderStyleSolid');
         $pString .= HTML\trStart();
         $heading = HTML\p($this->pluginmessages->text('orderBib2'));
-        $sameIdOrderBib = base64_decode($this->session->getVar("cite_sameIdOrderBib")) ? TRUE : FALSE;
+        $sameIdOrderBib = $this->session->getVar("cite_sameIdOrderBib") ? TRUE : FALSE;
         $heading .= HTML\p($this->pluginmessages->text('orderBib3') . "&nbsp;&nbsp;" .
             FORM\checkbox(FALSE, "cite_sameIdOrderBib", $sameIdOrderBib));
         $pString .= HTML\td($heading);
@@ -1115,10 +1109,10 @@ class adminstyle_MODULE
         $pString .= HTML\tdStart();
         $pString .= HTML\tableStart();
         $pString .= HTML\trStart();
-        $order1 = base64_decode($this->session->getVar("cite_order1"));
-        $order2 = base64_decode($this->session->getVar("cite_order2"));
-        $order3 = base64_decode($this->session->getVar("cite_order3"));
-        $radio = !base64_decode($this->session->getVar("cite_order1desc")) ?
+        $order1 = $this->session->getVar("cite_order1");
+        $order2 = $this->session->getVar("cite_order2");
+        $order3 = $this->session->getVar("cite_order3");
+        $radio = !$this->session->getVar("cite_order1desc") ?
             $this->pluginmessages->text('ascending') . "&nbsp;&nbsp;" .
             FORM\radioButton(FALSE, "cite_order1desc", 0, TRUE) . BR .
             $this->pluginmessages->text('descending') . "&nbsp;&nbsp;" .
@@ -1136,7 +1130,7 @@ class adminstyle_MODULE
             $order1,
             3
         ) . HTML\p($radio), 'padding5px bottom');
-        $radio = !base64_decode($this->session->getVar("cite_order2desc")) ?
+        $radio = !$this->session->getVar("cite_order2desc") ?
             $this->pluginmessages->text('ascending') . "&nbsp;&nbsp;" .
             FORM\radioButton(FALSE, "cite_order2desc", 0, TRUE) . BR .
             $this->pluginmessages->text('descending') . "&nbsp;&nbsp;" .
@@ -1152,7 +1146,7 @@ class adminstyle_MODULE
             $order2,
             3
         ) . HTML\p($radio), 'padding5px bottom');
-        $radio = !base64_decode($this->session->getVar("cite_order3desc")) ?
+        $radio = !$this->session->getVar("cite_order3desc") ?
             $this->pluginmessages->text('ascending') . "&nbsp;&nbsp;" .
             FORM\radioButton(FALSE, "cite_order3desc", 0, TRUE) . BR .
             $this->pluginmessages->text('descending') . "&nbsp;&nbsp;" .
@@ -1233,7 +1227,7 @@ class adminstyle_MODULE
             ) . " " . HTML\span('*', 'required') .
                 BR . $this->pluginmessages->text('hint_styleShortName'));
         }
-        $input = stripslashes(base64_decode($this->session->getVar("style_longName")));
+        $input = stripslashes($this->session->getVar("style_longName"));
         $pString .= HTML\td(FORM\textInput(
             $this->pluginmessages->text('longName'),
             "styleLongName",
@@ -1242,7 +1236,7 @@ class adminstyle_MODULE
             255
         ) . " " . HTML\span('*', 'required'));
 
-        $language = base64_decode($this->session->getVar("style_localisation"));
+        $language = $this->session->getVar("style_localisation");
         if (!$language) {
             $language = WIKINDX_LANGUAGE_DEFAULT;
         }
@@ -1256,7 +1250,7 @@ class adminstyle_MODULE
             $language
         ) . " " . HTML\span('*', 'required'));
 
-        $input = base64_decode($this->session->getVar("cite_citationStyle"));
+        $input = $this->session->getVar("cite_citationStyle");
         $example = [$this->pluginmessages->text('citationFormatInText'), $this->pluginmessages->text('citationFormatEndnote')];
         $pString .= HTML\td(FORM\selectedBoxValue(
             $this->pluginmessages->text('citationFormat'),
@@ -1278,8 +1272,8 @@ class adminstyle_MODULE
         // Editor replacements
         $pString .= HTML\tableStart('styleTable borderStyleSolid');
         $pString .= HTML\trStart();
-        $switch = base64_decode($this->session->getVar("style_editorSwitch"));
-        $editorSwitchIfYes = stripslashes(base64_decode($this->session->getVar("style_editorSwitchIfYes")));
+        $switch = $this->session->getVar("style_editorSwitch");
+        $editorSwitchIfYes = stripslashes($this->session->getVar("style_editorSwitchIfYes"));
         $example = [$this->pluginmessages->text('no'), $this->pluginmessages->text('yes')];
         $pString .= HTML\td(HTML\strong($this->pluginmessages->text('editorSwitchHead')) . BR .
             FORM\selectedBoxValue(
@@ -1309,19 +1303,19 @@ class adminstyle_MODULE
         $pString .= HTML\tableStart('styleTable borderStyleSolid');
         $pString .= HTML\trStart();
         $example = [$this->pluginmessages->text('titleAsEntered'), "WIKINDX bibliographic management system"];
-        $input = base64_decode($this->session->getVar("style_titleCapitalization"));
+        $input = $this->session->getVar("style_titleCapitalization");
         $td = HTML\strong($this->pluginmessages->text('titleCapitalization')) . BR .
             FORM\selectedBoxValue(FALSE, "style_titleCapitalization", $example, $input, 2);
-        $input = base64_decode($this->session->getVar("style_titleSubtitleSeparator"));
+        $input = $this->session->getVar("style_titleSubtitleSeparator");
         $td .= HTML\p($this->pluginmessages->text('titleSubtitleSeparator') . ":&nbsp;&nbsp;" .
             FORM\textInput(FALSE, "style_titleSubtitleSeparator", $input, 4));
         $pString .= HTML\td($td, 'padding5px');
         $example = ["3", "3.", "3rd"];
-        $input = base64_decode($this->session->getVar("style_editionFormat"));
+        $input = $this->session->getVar("style_editionFormat");
         $pString .= HTML\td(HTML\strong($this->pluginmessages->text('editionFormat')) . BR .
             FORM\selectedBoxValue(FALSE, "style_editionFormat", $example, $input, 3), 'padding5px');
         $example = ["132-9", "132-39", "132-139"];
-        $input = base64_decode($this->session->getVar("style_pageFormat"));
+        $input = $this->session->getVar("style_pageFormat");
         $pString .= HTML\td(HTML\strong($this->pluginmessages->text('pageFormat')) . BR .
             FORM\selectedBoxValue(FALSE, "style_pageFormat", $example, $input, 3), 'padding5px');
         $pString .= HTML\trEnd();
@@ -1330,8 +1324,8 @@ class adminstyle_MODULE
         $pString .= HTML\tableStart('styleTable borderStyleSolid');
         $pString .= HTML\trStart();
         $example = ["10", "10.", "10th"];
-        $input = base64_decode($this->session->getVar("style_dayFormat"));
-        $leadingZero = base64_decode($this->session->getVar("style_dayLeadingZero")) ?
+        $input = $this->session->getVar("style_dayFormat");
+        $leadingZero = $this->session->getVar("style_dayLeadingZero") ?
             TRUE : FALSE;
         $pString .= HTML\td(HTML\strong($this->pluginmessages->text('dayFormat')) . BR .
             FORM\selectedBoxValue(FALSE, "style_dayFormat", $example, $input, 3) .
@@ -1342,16 +1336,16 @@ class adminstyle_MODULE
             )), 'padding5px');
 
         $example = ["Feb", "February", $this->pluginmessages->text('userMonthSelect')];
-        $input = base64_decode($this->session->getVar("style_monthFormat"));
+        $input = $this->session->getVar("style_monthFormat");
         $pString .= HTML\td(HTML\strong($this->pluginmessages->text('monthFormat')) . BR .
             FORM\selectedBoxValue(FALSE, "style_monthFormat", $example, $input, 3), 'padding5px');
         $example = ["Day Month", "Month Day"];
-        $input = base64_decode($this->session->getVar("style_dateFormat"));
+        $input = $this->session->getVar("style_dateFormat");
         $pString .= HTML\td(HTML\strong($this->pluginmessages->text('dateFormat')) . BR .
             FORM\selectedBoxValue(FALSE, "style_dateFormat", $example, $input, 2), 'padding5px');
 
-        $input = base64_decode($this->session->getVar("style_dateMonthNoDay"));
-        $inputString = stripslashes(base64_decode($this->session->getVar("style_dateMonthNoDayString")));
+        $input = $this->session->getVar("style_dateMonthNoDay");
+        $inputString = stripslashes($this->session->getVar("style_dateMonthNoDayString"));
         $example = [$this->pluginmessages->text('dateMonthNoDay1'),
             $this->pluginmessages->text('dateMonthNoDay2'), ];
         $pString .= HTML\td(FORM\selectedBoxValue(
@@ -1369,7 +1363,7 @@ class adminstyle_MODULE
         $monthString = '';
         for ($i = 1; $i <= 16; $i++)
         {
-            $input = stripslashes(base64_decode($this->session->getVar("style_userMonth_$i")));
+            $input = stripslashes($this->session->getVar("style_userMonth_$i"));
             if ($i == 7)
             {
                 $monthString .= BR . "$i:&nbsp;&nbsp;" .
@@ -1412,8 +1406,8 @@ class adminstyle_MODULE
         $pString .= HTML\strong($this->pluginmessages->text('dateRange')) . BR;
         $pString .= HTML\tableStart('styleTable borderStyleSolid');
         $pString .= HTML\trStart();
-        $input = stripslashes(base64_decode($this->session->getVar("style_dateRangeDelimit1")));
-        $input = stripslashes(base64_decode($this->session->getVar("style_dateRangeDelimit1")));
+        $input = stripslashes($this->session->getVar("style_dateRangeDelimit1"));
+        $input = stripslashes($this->session->getVar("style_dateRangeDelimit1"));
         $pString .= HTML\td(FORM\textInput(
             $this->pluginmessages->text('dateRangeDelimit1'),
             "style_dateRangeDelimit1",
@@ -1421,7 +1415,7 @@ class adminstyle_MODULE
             6,
             255
         ), 'padding5px');
-        $input = base64_decode($this->session->getVar("style_dateRangeDelimit2"));
+        $input = $this->session->getVar("style_dateRangeDelimit2");
         $pString .= HTML\td(FORM\textInput(
             $this->pluginmessages->text('dateRangeDelimit2'),
             "style_dateRangeDelimit2",
@@ -1431,7 +1425,7 @@ class adminstyle_MODULE
         ), 'padding5px');
         $pString .= HTML\trEnd();
         $pString .= HTML\trStart();
-        $input = base64_decode($this->session->getVar("style_dateRangeSameMonth"));
+        $input = $this->session->getVar("style_dateRangeSameMonth");
         $example = [$this->pluginmessages->text('dateRangeSameMonth1'),
             $this->pluginmessages->text('dateRangeSameMonth2'), ];
         $pString .= HTML\td(FORM\selectedBoxValue(
@@ -1448,7 +1442,7 @@ class adminstyle_MODULE
         $pString .= HTML\tableStart('styleTable borderStyleSolid');
         $pString .= HTML\trStart();
         $example = ["2'45\"", "2:45", "2,45", "2 hours, 45 minutes", "2 hours and 45 minutes", "165 minutes", "165 mins"];
-        $input = base64_decode($this->session->getVar("style_runningTimeFormat"));
+        $input = $this->session->getVar("style_runningTimeFormat");
         $pString .= HTML\td(HTML\strong($this->pluginmessages->text('runningTimeFormat')) . BR .
             FORM\selectedBoxValue(FALSE, "style_runningTimeFormat", $example, $input, 5), 'padding5px');
         $pString .= HTML\trEnd();
@@ -1494,8 +1488,7 @@ class adminstyle_MODULE
             {
                 $required = FALSE;
                 $formElementName = "style_" . $key . "_generic";
-                $input = $this->session->issetVar($formElementName) ?
-                    base64_decode($this->session->getVar($formElementName)) : "genericMisc";
+                $input = $this->session->issetVar($formElementName) ? $this->session->getVar($formElementName) : "genericMisc";
                 $fallback = FORM\selectedBoxValue(
                     $this->pluginmessages->text('fallback'),
                     $formElementName,
@@ -1506,8 +1499,8 @@ class adminstyle_MODULE
                 // Replacement citation template for in-text citation for this type
                 $citationStringName = "cite_" . $key . "Template";
                 $citationNotInBibliography = "cite_" . $key . "_notInBibliography";
-                $input = stripslashes(base64_decode($this->session->getVar($citationStringName)));
-                $notAdd = base64_decode($this->session->getVar($citationNotInBibliography)) ? TRUE : FALSE;
+                $input = stripslashes($this->session->getVar($citationStringName));
+                $notAdd = $this->session->getVar($citationNotInBibliography) ? TRUE : FALSE;
                 $checkBox = ' ' . $this->pluginmessages->text('notInBibliography') .
                 "&nbsp;" . FORM\checkbox(FALSE, $citationNotInBibliography, $notAdd);
                 $citationString = HTML\p(FORM\textInput(
@@ -1523,10 +1516,10 @@ class adminstyle_MODULE
             $keyName = 'style_' . $key;
             $partialTemplateName = "partial_" . $key . "Template";
             $partialReplaceName = "partial_" . $key . "Replace";
-            $partialReplace = base64_decode($this->session->getVar($partialReplaceName)) ? TRUE : FALSE;
+            $partialReplace = $this->session->getVar($partialReplaceName) ? TRUE : FALSE;
             $partialReplaceString = $this->pluginmessages->text('partialReplace') . ":&nbsp;&nbsp;" .
                 FORM\checkbox(FALSE, $partialReplaceName, $partialReplace);
-            $input = stripslashes(base64_decode($this->session->getVar($partialTemplateName)));
+            $input = stripslashes($this->session->getVar($partialTemplateName));
             $partialTemplate = HTML\p(FORM\textInput(
                 $this->pluginmessages->text('partialTemplate'),
                 $partialTemplateName,
@@ -1536,7 +1529,7 @@ class adminstyle_MODULE
             ) . BR . $partialReplaceString);
             // Footnote template
             $footnoteTemplateName = "footnote_" . $key . "Template";
-            $input = stripslashes(base64_decode($this->session->getVar($footnoteTemplateName)));
+            $input = stripslashes($this->session->getVar($footnoteTemplateName));
             $footnoteTemplate = BR . FORM\textareaInput(
                 $this->pluginmessages->text('footnoteTemplate'),
                 $footnoteTemplateName,
@@ -1548,7 +1541,7 @@ class adminstyle_MODULE
             $pString .= BR . HTML\hr() . BR;
             $pString .= HTML\tableStart();
             $pString .= HTML\trStart();
-            $input = stripslashes(base64_decode($this->session->getVar($keyName)));
+            $input = stripslashes($this->session->getVar($keyName));
             $heading = HTML\strong($this->coremessages->text("resourceType", $key)) . BR .
                 $this->pluginmessages->text('bibTemplate') . $required;
             $pString .= HTML\td(FORM\textareaInput(
@@ -1703,10 +1696,10 @@ class adminstyle_MODULE
         $exampleInitials = ["T. U. ", "T.U.", "T U ", "TU"];
         $example = [$this->pluginmessages->text('creatorFirstNameFull'),
             $this->pluginmessages->text('creatorFirstNameInitials'), ];
-        $firstStyle = base64_decode($this->session->getVar($prefix . "_primaryCreatorFirstStyle"));
-        $otherStyle = base64_decode($this->session->getVar($prefix . "_primaryCreatorOtherStyle"));
-        $initials = base64_decode($this->session->getVar($prefix . "_primaryCreatorInitials"));
-        $firstName = base64_decode($this->session->getVar($prefix . "_primaryCreatorFirstName"));
+        $firstStyle = $this->session->getVar($prefix . "_primaryCreatorFirstStyle");
+        $otherStyle = $this->session->getVar($prefix . "_primaryCreatorOtherStyle");
+        $initials = $this->session->getVar($prefix . "_primaryCreatorInitials");
+        $firstName = $this->session->getVar($prefix . "_primaryCreatorFirstName");
         $td = HTML\strong($this->pluginmessages->text('primaryCreatorStyle')) . BR .
             FORM\selectedBoxValue(
                 $this->pluginmessages->text('creatorFirstStyle'),
@@ -1739,14 +1732,14 @@ class adminstyle_MODULE
             $firstName,
             2
         );
-        $uppercase = base64_decode($this->session->getVar($prefix . "_primaryCreatorUppercase")) ?
+        $uppercase = $this->session->getVar($prefix . "_primaryCreatorUppercase") ?
             TRUE : FALSE;
         $td .= HTML\P(FORM\checkbox(
             $this->pluginmessages->text('uppercaseCreator'),
             $prefix . "_primaryCreatorUppercase",
             $uppercase
         ));
-        $repeat = base64_decode($this->session->getVar($prefix . "_primaryCreatorRepeat"));
+        $repeat = $this->session->getVar($prefix . "_primaryCreatorRepeat");
         $exampleRepeat = [$this->pluginmessages->text('repeatCreators1'),
             $this->pluginmessages->text('repeatCreators2'),
             $this->pluginmessages->text('repeatCreators3'), ];
@@ -1757,18 +1750,16 @@ class adminstyle_MODULE
             $repeat,
             3
         ) . BR;
-        $repeatString = stripslashes(base64_decode(
-            $this->session->getVar($prefix . "_primaryCreatorRepeatString")
-        ));
+        $repeatString = stripslashes($this->session->getVar($prefix . "_primaryCreatorRepeatString"));
         $td .= FORM\textInput(FALSE, $prefix . "_primaryCreatorRepeatString", $repeatString, 15, 255);
         $pString .= HTML\td($td, 'padding5px');
         //		if (!$footnote)
         //		{
         // Other creators (editors, translators etc.)
-        $firstStyle = base64_decode($this->session->getVar($prefix . "_otherCreatorFirstStyle"));
-        $otherStyle = base64_decode($this->session->getVar($prefix . "_otherCreatorOtherStyle"));
-        $initials = base64_decode($this->session->getVar($prefix . "_otherCreatorInitials"));
-        $firstName = base64_decode($this->session->getVar($prefix . "_otherCreatorFirstName"));
+        $firstStyle = $this->session->getVar($prefix . "_otherCreatorFirstStyle");
+        $otherStyle = $this->session->getVar($prefix . "_otherCreatorOtherStyle");
+        $initials = $this->session->getVar($prefix . "_otherCreatorInitials");
+        $firstName = $this->session->getVar($prefix . "_otherCreatorFirstName");
         $td = HTML\strong($this->pluginmessages->text('otherCreatorStyle')) . BR .
                 FORM\selectedBoxValue(
                     $this->pluginmessages->text('creatorFirstStyle'),
@@ -1801,7 +1792,7 @@ class adminstyle_MODULE
             $firstName,
             2
         );
-        $uppercase = base64_decode($this->session->getVar($prefix . "_otherCreatorUppercase")) ?
+        $uppercase = $this->session->getVar($prefix . "_otherCreatorUppercase") ?
                 TRUE : FALSE;
         $td .= HTML\P(FORM\checkbox(
             $this->pluginmessages->text('uppercaseCreator'),
@@ -1817,16 +1808,10 @@ class adminstyle_MODULE
         // 2nd., creator delimiters
         $pString .= HTML\tableStart($prefix . 'Table borderStyleSolid');
         $pString .= HTML\trStart();
-        $twoCreatorsSep = stripslashes(base64_decode($this->session->getVar(
-            $prefix . "_primaryTwoCreatorsSep"
-        )));
-        $betweenFirst = stripslashes(base64_decode($this->session->getVar(
-            $prefix . "_primaryCreatorSepFirstBetween"
-        )));
-        $betweenNext = stripslashes(base64_decode($this->session->getVar(
-            $prefix . "_primaryCreatorSepNextBetween"
-        )));
-        $last = stripslashes(base64_decode($this->session->getVar($prefix . "_primaryCreatorSepNextLast")));
+        $twoCreatorsSep = stripslashes($this->session->getVar($prefix . "_primaryTwoCreatorsSep"));
+        $betweenFirst = stripslashes($this->session->getVar($prefix . "_primaryCreatorSepFirstBetween"));
+        $betweenNext = stripslashes($this->session->getVar($prefix . "_primaryCreatorSepNextBetween"));
+        $last = stripslashes($this->session->getVar($prefix . "_primaryCreatorSepNextLast"));
         $pString .= HTML\td(
             HTML\strong($this->pluginmessages->text('primaryCreatorSep')) .
             HTML\p($this->pluginmessages->text('ifOnlyTwoCreators') . "&nbsp;" .
@@ -1842,14 +1827,10 @@ class adminstyle_MODULE
             '',
             "bottom"
         );
-        $twoCreatorsSep = stripslashes(base64_decode($this->session->getVar($prefix . "_otherTwoCreatorsSep")));
-        $betweenFirst = stripslashes(base64_decode($this->session->getVar(
-            $prefix . "_otherCreatorSepFirstBetween"
-        )));
-        $betweenNext = stripslashes(base64_decode($this->session->getVar(
-            $prefix . "_otherCreatorSepNextBetween"
-        )));
-        $last = stripslashes(base64_decode($this->session->getVar($prefix . "_otherCreatorSepNextLast")));
+        $twoCreatorsSep = stripslashes($this->session->getVar($prefix . "_otherTwoCreatorsSep"));
+        $betweenFirst = stripslashes($this->session->getVar($prefix . "_otherCreatorSepFirstBetween"));
+        $betweenNext = stripslashes($this->session->getVar($prefix . "_otherCreatorSepNextBetween"));
+        $last = stripslashes($this->session->getVar($prefix . "_otherCreatorSepNextLast"));
         $pString .= HTML\td(
             HTML\strong($this->pluginmessages->text('otherCreatorSep')) .
             HTML\p($this->pluginmessages->text('ifOnlyTwoCreators') . "&nbsp;" .
@@ -1874,14 +1855,11 @@ class adminstyle_MODULE
         $pString .= HTML\trStart();
         $example = [$this->pluginmessages->text('creatorListFull'),
             $this->pluginmessages->text('creatorListLimit'), ];
-        $list = base64_decode($this->session->getVar($prefix . "_primaryCreatorList"));
-        $listMore = stripslashes(base64_decode($this->session->getVar($prefix . "_primaryCreatorListMore")));
-        $listLimit = stripslashes(base64_decode($this->session->getVar($prefix . "_primaryCreatorListLimit")));
-        $listAbbreviation = stripslashes(base64_decode($this->session->getVar(
-            $prefix . "_primaryCreatorListAbbreviation"
-        )));
-        $italic = base64_decode($this->session->getVar($prefix . "_primaryCreatorListAbbreviationItalic")) ?
-            TRUE : FALSE;
+        $list = $this->session->getVar($prefix . "_primaryCreatorList");
+        $listMore = stripslashes($this->session->getVar($prefix . "_primaryCreatorListMore"));
+        $listLimit = stripslashes($this->session->getVar($prefix . "_primaryCreatorListLimit"));
+        $listAbbreviation = stripslashes($this->session->getVar($prefix . "_primaryCreatorListAbbreviation"));
+        $italic = $this->session->getVar($prefix . "_primaryCreatorListAbbreviationItalic") ? TRUE : FALSE;
         $pString .= HTML\td(HTML\strong($this->pluginmessages->text('primaryCreatorList')) . BR .
             FORM\selectedBoxValue(
                 FALSE,
@@ -1898,14 +1876,11 @@ class adminstyle_MODULE
             FORM\textInput(FALSE, $prefix . "_primaryCreatorListAbbreviation", $listAbbreviation, 15) . ' ' .
             FORM\checkbox(FALSE, $prefix . "_primaryCreatorListAbbreviationItalic", $italic) . ' ' .
             $this->pluginmessages->text('italics'), 'padding5px');
-        $list = base64_decode($this->session->getVar($prefix . "_otherCreatorList"));
-        $listMore = stripslashes(base64_decode($this->session->getVar($prefix . "_otherCreatorListMore")));
-        $listLimit = stripslashes(base64_decode($this->session->getVar($prefix . "_otherCreatorListLimit")));
-        $listAbbreviation = stripslashes(base64_decode($this->session->getVar(
-            $prefix . "_otherCreatorListAbbreviation"
-        )));
-        $italic = base64_decode($this->session->getVar($prefix . "_otherCreatorListAbbreviationItalic")) ?
-            TRUE : FALSE;
+        $list = $this->session->getVar($prefix . "_otherCreatorList");
+        $listMore = stripslashes($this->session->getVar($prefix . "_otherCreatorListMore"));
+        $listLimit = stripslashes($this->session->getVar($prefix . "_otherCreatorListLimit"));
+        $listAbbreviation = stripslashes($this->session->getVar( $prefix . "_otherCreatorListAbbreviation"));
+        $italic = $this->session->getVar($prefix . "_otherCreatorListAbbreviationItalic") ? TRUE : FALSE;
         $pString .= HTML\td(HTML\strong($this->pluginmessages->text('otherCreatorList')) . BR .
             FORM\selectedBoxValue(
                 FALSE,
@@ -1957,9 +1932,9 @@ class adminstyle_MODULE
             $basicField = "style_" . $key . "_" . $creatorField;
             $field = HTML\td(HTML\p(HTML\em($value), "small"), 'padding5px', FALSE, "middle");
             $formString = $basicField . "_firstString";
-            $string = stripslashes(base64_decode($this->session->getVar($formString)));
+            $string = stripslashes($this->session->getVar($formString));
             $formCheckbox = $basicField . "_firstString_before";
-            $checkbox = base64_decode($this->session->getVar($formCheckbox)) ? TRUE : FALSE;
+            $checkbox = $this->session->getVar($formCheckbox) ? TRUE : FALSE;
             $firstCheckbox = BR . $this->pluginmessages->text('rewriteCreator4') .
                 "&nbsp;" . FORM\checkbox(FALSE, $formCheckbox, $checkbox);
             $first = HTML\td(HTML\p(FORM\textInput(
@@ -1970,13 +1945,13 @@ class adminstyle_MODULE
                 255
             ) . $firstCheckbox, "small"), 'padding5px', FALSE, "bottom");
             $formString = $basicField . "_remainderString";
-            $string = stripslashes(base64_decode($this->session->getVar($formString)));
+            $string = stripslashes($this->session->getVar($formString));
             $formCheckbox = $basicField . "_remainderString_before";
-            $checkbox = base64_decode($this->session->getVar($formCheckbox)) ? TRUE : FALSE;
+            $checkbox = $this->session->getVar($formCheckbox) ? TRUE : FALSE;
             $remainderCheckbox = BR . $this->pluginmessages->text('rewriteCreator4') .
                 "&nbsp;" . FORM\checkbox(FALSE, $formCheckbox, $checkbox);
             $formCheckbox = $basicField . "_remainderString_each";
-            $checkbox = base64_decode($this->session->getVar($formCheckbox)) ? TRUE : FALSE;
+            $checkbox = $this->session->getVar($formCheckbox) ? TRUE : FALSE;
             $remainderCheckbox .= ",&nbsp;&nbsp;&nbsp;" . $this->pluginmessages->text('rewriteCreator5') .
                 "&nbsp;" . FORM\checkbox(FALSE, $formCheckbox, $checkbox);
             $remainder = HTML\td(HTML\p(FORM\textInput(
@@ -3054,7 +3029,7 @@ class adminstyle_MODULE
         $types = array_keys($this->styleMap->types);
         if (trim($this->vars['styleLongName']))
         {
-            $this->session->setVar("style_longName", base64_encode(trim(htmlspecialchars($this->vars['styleLongName']))));
+            $this->session->setVar("style_longName", trim(htmlspecialchars($this->vars['styleLongName'])));
         }
         // other resource types
         foreach ($types as $key)
@@ -3066,7 +3041,7 @@ class adminstyle_MODULE
             $type = 'style_' . $key;
             if (trim($this->vars[$type]))
             {
-                $this->session->setVar($type, base64_encode(trim(htmlspecialchars($this->vars[$type]))));
+                $this->session->setVar($type, trim(htmlspecialchars($this->vars[$type])));
             }
             // Rewrite creator strings
             foreach ($this->creators as $creatorField)
@@ -3075,45 +3050,45 @@ class adminstyle_MODULE
                 $field = $basic . "_firstString";
                 if (array_key_exists($field, $this->vars) && trim($this->vars[$field]))
                 {
-                    $this->session->setVar($field, base64_encode(htmlspecialchars($this->vars[$field])));
+                    $this->session->setVar($field, htmlspecialchars($this->vars[$field]));
                 }
                 $field = $basic . "_firstString_before";
                 if (isset($this->vars[$field]))
                 {
-                    $this->session->setVar($field, base64_encode($this->vars[$field]));
+                    $this->session->setVar($field, $this->vars[$field]);
                 }
                 $field = $basic . "_remainderString";
                 if (array_key_exists($field, $this->vars) && trim($this->vars[$field]))
                 {
-                    $this->session->setVar($field, base64_encode(htmlspecialchars($this->vars[$field])));
+                    $this->session->setVar($field, htmlspecialchars($this->vars[$field]));
                 }
                 $field = $basic . "_remainderString_before";
                 if (isset($this->vars[$field]))
                 {
-                    $this->session->setVar($field, base64_encode($this->vars[$field]));
+                    $this->session->setVar($field, $this->vars[$field]);
                 }
                 $field = $basic . "_remainderString_each";
                 if (isset($this->vars[$field]))
                 {
-                    $this->session->setVar($field, base64_encode($this->vars[$field]));
+                    $this->session->setVar($field, $this->vars[$field]);
                 }
             }
             $field = "cite_" . $key . "_notInBibliography";
             if (isset($this->vars[$field]))
             {
-                $this->session->setVar($field, base64_encode(trim($this->vars[$field])));
+                $this->session->setVar($field, trim($this->vars[$field]));
             }
             $citationStringName = 'cite_' . $key . "Template";
             if (array_key_exists($citationStringName, $this->vars) &&
             ($input = $this->vars[$citationStringName]))
             {
-                $this->session->setVar($citationStringName, base64_encode(htmlspecialchars($input)));
+                $this->session->setVar($citationStringName, htmlspecialchars($input));
             }
             // Fallback styles
             if (($key != 'genericBook') && ($key != 'genericArticle') && ($key != 'genericMisc'))
             {
                 $name = $type . "_generic";
-                $this->session->setVar($name, base64_encode(trim($this->vars[$name])));
+                $this->session->setVar($name, trim($this->vars[$name]));
             }
         }
         // Other values. $array parameter is required, other optional input is added to the array
@@ -3222,7 +3197,7 @@ class adminstyle_MODULE
         {
             if (isset($this->vars[$input]))
             {
-                $this->session->setVar($input, base64_encode(htmlspecialchars($this->vars[$input])));
+                $this->session->setVar($input, htmlspecialchars($this->vars[$input]));
             }
             else
             {

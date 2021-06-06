@@ -14,7 +14,12 @@
  * @package wikindx\core\bibcitation
  */
 class PARSESTYLE
-{
+{    /**
+     * PARSESTYLE
+     */
+    public function __construct()
+    {
+    }
     /**
      * parse input into array
      *
@@ -292,8 +297,6 @@ class PARSESTYLE
                 }
             }
             $index++;
-            //			$final[$fieldName]['pre'] = $pre;
-//			$final[$fieldName]['post'] = $post;
         }
         if (isset($possiblePreliminaryText))
         {

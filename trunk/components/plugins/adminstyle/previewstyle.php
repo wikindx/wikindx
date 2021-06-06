@@ -34,8 +34,7 @@ class adminstyle_previewstyle
     public function display()
     {
         $map = FACTORY_STYLEMAP::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "bibcitation", "PARSESTYLE.php"]));
-        $adminstyle = new PARSESTYLE();
+        $adminstyle = FACTORY_PARSESTYLE::getInstance();
         $type = base64_decode($this->vars['templateName']);
         $templateString = preg_replace("/%u(\\d+)/u", "&#x$1;", base64_decode($this->vars['templateString']));
         $templateString = str_replace(['__WIKINDX__LESSTHAN__', '__WIKINDX__GREATERTHAN__'], ['&lt;', '&gt;'], $templateString);

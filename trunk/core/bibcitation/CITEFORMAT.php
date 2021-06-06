@@ -159,8 +159,7 @@ class CITEFORMAT
      */
     public function citationToArrayEndnoteStyle()
     {
-        include_once($this->dir . "PARSESTYLE.php");
-        $parseStyle = new PARSESTYLE();
+        $parseStyle = FACTORY_PARSESTYLE::getInstance();
         $temp = $parseStyle->parseStringToArray(
             'citationEndnoteInText',
             trim($this->style['templateEndnoteInText']),
@@ -245,8 +244,7 @@ class CITEFORMAT
      */
     public function citationToArrayInTextStyle()
     {
-        include_once($this->dir . "PARSESTYLE.php");
-        $parseStyle = new PARSESTYLE();
+        $parseStyle = FACTORY_PARSESTYLE::getInstance();
         $temp = $parseStyle->parseStringToArray('citation', trim($this->style['template']), $this->styleMap);
         // Ensure we have only valid fields.
         foreach ($temp as $field => $value)

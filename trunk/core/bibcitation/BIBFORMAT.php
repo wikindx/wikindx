@@ -125,8 +125,7 @@ class BIBFORMAT
                 }
             }
         }
-        include_once($this->dir . "PARSESTYLE.php");
-        $this->parsestyle = new PARSESTYLE();
+        $this->parsestyle = FACTORY_PARSESTYLE::getInstance();
     }
     /**
      * Initialise bibformat system

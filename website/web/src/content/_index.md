@@ -103,7 +103,6 @@ WIKINDX uses a components system to extend or alter its capabilities. All offica
 * Localization – easily create a new localization
 * AdminStyle – create and edit bibliographic/citation styles
 * LocalDescription – change the front-page description depending on the user-selected localization
-* UserWriteCategory – user administration of categories
 * Visualize – create various graphical visualizations from WIKINDX data with the JpGraph PHP library.X
 * RepairKit – fix corrupted character codes in imported data, missing rows, database integrity, and other fixes. The Swiss Army Knife for WIKINDX . . .
 * BackupMysql – back up the WIKINDX

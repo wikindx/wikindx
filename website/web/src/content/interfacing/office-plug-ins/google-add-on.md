@@ -13,6 +13,8 @@ With the Google Docs add-on you can:
 
 When co-authoring an academic article, all registered google users you share your document with will have access to the WIKINDX add-on.
 
+YouTube: <https://www.youtube.com/watch?v=g5GSZcZ_lOc>
+
 #### Search References
 ![Search References](../../../images/googleScreenshots/google-refSearch.jpg?width=50pc)
 
@@ -27,3 +29,4 @@ When co-authoring an academic article, all registered google users you share you
 
 #### Finalize MLA
 ![Search References](../../../images/googleScreenshots/google-finalizeMLA.jpg?width=50pc)
+

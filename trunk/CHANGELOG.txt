@@ -18,7 +18,7 @@ MAINTENANCE:
 1. The default db name become 'wikindx'.
 
 SECURITY:
-...
+1. Update PHPMailer (v6.5.0, CVE-2021-3603).
 
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

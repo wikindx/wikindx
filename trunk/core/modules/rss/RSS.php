@@ -53,7 +53,7 @@ class RSS
     public function rss20()
     {
         $item = $this->queryDb();
-        $numResults = count($item);
+        $numResults = count($item["title"] ?? []);
 
         // The tag language of RSS use an hyphen
         // cf. https://datatracker.ietf.org/doc/html/rfc3066

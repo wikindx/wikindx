@@ -174,7 +174,7 @@ class RSS
     public function atom10()
     {
         $item = $this->queryDb();
-        $numResults = count($item);
+        $numResults = count($item["title"] ?? []);
 
         // The tag language of Atom use an hyphen
         // cf. https://datatracker.ietf.org/doc/html/rfc3066

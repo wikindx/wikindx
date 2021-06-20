@@ -47,7 +47,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.10');
  *
  * @global float WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 69.0);
+define('WIKINDX_INTERNAL_VERSION', 70.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -71,7 +71,7 @@ define('WIKINDX_INTERNAL_VERSION_UPGRADE_MIN', 5.1);
  */
 define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
     'plugin'    => 12, // Must be an integer
-    'style'     =>  5, // Must be an integer
+    'style'     =>  6, // Must be an integer
     'template'  =>  1, // Must be an integer
     'vendor'    =>  WIKINDX_PUBLIC_VERSION, // Identical to the public version because this type of component is very closely linked to a version of the core
 ]);

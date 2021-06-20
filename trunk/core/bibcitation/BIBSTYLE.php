@@ -162,7 +162,7 @@ class BIBSTYLE
         $this->preProcess($type, $singleResource);
         // WIKINDX specific
         if ($this->shortOutput)
-        {
+        {$
             $pString = '';
             if ($this->row['creator1'])
             {

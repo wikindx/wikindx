@@ -30,11 +30,11 @@ class adminstyle_MODULE
     private $coremessages;
     private $errors;
     private $session;
-    private $osbibVersion;
     private $creators;
     private $styles;
     private $styleMap;
     private $badInput;
+    private $parseStyle;
 
     /**
      * Constructor
@@ -55,24 +55,19 @@ class adminstyle_MODULE
 
             return; // Need do nothing more as this is simply menu initialisation.
         }
-        $this->footnotePages = FALSE;
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
         if (!$authorize->isPluginExecutionAuthorised($this->authorize))
         { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
-
-        /**
-         * THE OSBIB Version number
-         */
-        $this->osbibVersion = WIKINDX_COMPONENTS_COMPATIBLE_VERSION["style"];
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
 
         $this->styleMap = FACTORY_STYLEMAP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
+        $this->parseStyle = FACTORY_PARSESTYLE::getInstance();
         $this->styles = LOADSTYLE\loadDir(TRUE);
         $this->creators = ['creator1', 'creator2', 'creator3', 'creator4', 'creator5'];
     }
@@ -127,7 +122,19 @@ class adminstyle_MODULE
         {
             $this->badInput->close($error, $this, 'addInit');
         }
-        $this->writeFile();
+        $return = $this->parseStyle->getSource('vars');
+        if ($return !== TRUE) {
+            $this->badInput->close($return, $this, 'display');
+        }
+        $return = $this->parseStyle->writeFile();
+        if ($return !== TRUE) {
+            $this->badInput->close($return, $this, 'display');
+        }
+        // Remove sessionvars
+        $this->session->clearArray("cite");
+        $this->session->clearArray("style");
+        $this->session->clearArray("footnote");
+        $this->session->clearArray("partial");
         
         \UTILS\createComponentMetadataFile("style", mb_strtolower(trim($this->vars['styleShortName'])));
         \UTILS\enableComponent("style", mb_strtolower(trim($this->vars['styleShortName'])));
@@ -198,7 +205,20 @@ class adminstyle_MODULE
         }
         $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, mb_strtolower(trim($this->vars['styleShortName']))]);
         $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, mb_strtolower(trim($this->vars['styleShortName'])) . ".xml"]);
-        $this->writeFile($fileName);
+        $return = $this->parseStyle->getSource('vars');
+        if ($return !== TRUE) {
+            $this->badInput->close($return, $this, 'display');
+        }
+        $return = $this->parseStyle->writeFile($fileName);
+        if ($return !== TRUE) {
+            $this->badInput->close($return, $this, 'display');
+        }
+        
+        // Remove sessionvars
+        $this->session->clearArray("cite");
+        $this->session->clearArray("style");
+        $this->session->clearArray("footnote");
+        $this->session->clearArray("partial");
         // Delete cache file
         @unlink($dirName);
         $pString = \HTML\p($this->pluginmessages->text('successEdit'), 'success');
@@ -252,7 +272,20 @@ class adminstyle_MODULE
         {
             $this->badInput->close($error, $this, 'copyDisplay');
         }
-        $this->writeFile();
+        $return = $this->parseStyle->getSource('vars');
+        if ($return !== TRUE) {
+            $this->badInput->close($return, $this, 'display');
+        }
+        $return = $this->parseStyle->writeFile();
+        if ($return !== TRUE) {
+            $this->badInput->close($return, $this, 'display');
+        }
+        
+        // Remove sessionvars
+        $this->session->clearArray("cite");
+        $this->session->clearArray("style");
+        $this->session->clearArray("footnote");
+        $this->session->clearArray("partial");
         
         \UTILS\createComponentMetadataFile("style", mb_strtolower(trim($this->vars['styleShortName'])));
         \UTILS\enableComponent("style", mb_strtolower(trim($this->vars['styleShortName'])));
@@ -354,6 +387,7 @@ class adminstyle_MODULE
         $this->session->clearArray("style");
         $this->session->clearArray("cite");
         $this->session->clearArray("footnote");
+        $this->session->clearArray("partial");
         $parseXML = FACTORY_PARSEXML::getInstance();
         $resourceTypes = array_keys($this->styleMap->types);
         $this->session->setVar("editStyleFile", $this->vars['editStyleFile']);
@@ -374,26 +408,10 @@ class adminstyle_MODULE
                 $this->session->setVar("style_shortName", $this->vars['editStyleFile']);
                 $this->session->setVar("style_longName", ($info['description']));
             }
-            foreach ($citation as $key => $value)
-            {
-                $this->session->setVar("cite_" . $key, htmlspecialchars($value));
-            }
-            $this->arrayToTemplate($footnote, TRUE);
-            foreach ($resourceTypes as $type)
-            {
-                $type = 'footnote_' . $type;
-                $sessionKey = $type . 'Template';
-                if (!empty($this->$type))
-                {
-                    $this->session->setVar($sessionKey, htmlspecialchars($this->$type));
-                }
-                unset($this->$type);
-            }
-            foreach ($common as $key => $value)
-            {
-                $this->session->setVar("style_" . $key, htmlspecialchars($value));
-            }
-            $this->arrayToTemplate($types);
+            $this->arrayToTemplate($citation, 'citation');
+            $this->arrayToTemplate($footnote, 'footnote');
+            $this->arrayToTemplate($common, 'common');
+            $this->arrayToTemplate($types, 'style');
             foreach ($resourceTypes as $type)
             {
                 $sessionKey = 'style_' . $type;
@@ -406,7 +424,7 @@ class adminstyle_MODULE
                     $sessionKey .= "_generic";
                     $this->session->setVar($sessionKey, $this->fallback[$type]);
                 }
-                $partialName = 'partial_' . $type . 'Template';
+                $partialName = 'partial_' . $type;
                 if (isset($this->$partialName) && $this->$partialName)
                 {
                     $this->session->setVar($partialName, htmlspecialchars($this->$partialName));
@@ -414,10 +432,7 @@ class adminstyle_MODULE
                 $partialReplace = 'partial_' . $type . 'Replace';
                 if (isset($this->$partialReplace) && $this->$partialReplace)
                 {
-                    $this->session->setVar(
-                        $partialReplace,
-                        htmlspecialchars($this->$partialReplace)
-                    );
+                    $this->session->setVar($partialReplace, htmlspecialchars($this->$partialReplace));
                 }
                 else
                 {
@@ -441,36 +456,43 @@ class adminstyle_MODULE
      * Transform XML nodal array to resource type template strings for loading into the style editor
      *
      * @param array $types
-     * @param bool $footnote
+     * @param string $templateType
      */
-    private function arrayToTemplate($types, $footnote = FALSE)
+    private function arrayToTemplate($types, $templateType)
     {
         $this->fallback = [];
-        foreach ($types as $key => $array)
+        foreach ($types as $key => $input)
         {
-            $temp = $tempArray = $newArray = $independent = [];
-            $ultimate = $preliminary = $partial = $partialReplace = FALSE;
+            $temp = [];
             /**
              * The resource type which will be our array name
              */
-            if (($key == 'fallback') && !$footnote)
+            if (($key == 'fallback') && ($templateType == 'style'))
             {
-                $this->fallback = $array;
+                $this->fallback = $input;
 
                 continue;
             }
-            if ($footnote)
+            if ($templateType == 'footnote')
             {
                 $type = "footnote_" . $key;
+            }
+            else if ($templateType == 'citation')
+            {
+                $type = "cite_" . $key;
+            }
+            else if ($templateType == 'common')
+            {
+                $type = "style_" . $key;
             }
             else
             {
                 $type = $key;
-                $this->writeSessionRewriteCreators($type, $array);
+                $this->writeSessionRewriteCreators($type, $input);
             }
-            if (is_array($array))
+            if (is_array($input))
             {
-                foreach ($array as $rKey => $value)
+                foreach ($input as $rKey => $value)
                 {
                     if ($rKey == 'fallback')
                     {
@@ -479,202 +501,23 @@ class adminstyle_MODULE
                     $temp[$rKey] = $value;
                 }
             }
-            /**
-             * Now parse the temp array into template strings
-             */
-            $alternates = [];
-            $index = 0;
-            foreach ($temp as $key => $value)
-            {
-                if (!is_array($value))
-                {
-                    if ($key == 'ultimate')
-                    {
-                        $ultimate = $value;
-                    }
-                    elseif ($key == 'preliminaryText')
-                    {
-                        $preliminary = $value;
-                    }
-                    elseif ($key == 'partial')
-                    {
-                        $partial = $value;
-                    }
-                    elseif (($key == 'partialReplace') && $value)
-                    {
-                        $partialReplace = $value;
-                    }
-
-                    continue;
-                }
-                if (($key == 'independent'))
-                {
-                    $independent = $value;
-
-                    continue;
-                }
-                $string = FALSE;
-                if (array_key_exists('alternatePreFirst', $value))
-                {
-                    $alternates[$key]['preFirst'] = $value['alternatePreFirst'];
-                }
-                if (array_key_exists('alternatePreSecond', $value))
-                {
-                    $alternates[$key]['preSecond'] = $value['alternatePreSecond'];
-                }
-                if (array_key_exists('alternatePostFirst', $value))
-                {
-                    $alternates[$key]['postFirst'] = $value['alternatePostFirst'];
-                }
-                if (array_key_exists('alternatePostSecond', $value))
-                {
-                    $alternates[$key]['postSecond'] = $value['alternatePostSecond'];
-                }
-                if (array_key_exists('pre', $value))
-                {
-                    $string .= $value['pre'];
-                }
-                $string .= $key;
-                if (array_key_exists('post', $value))
-                {
-                    $string .= $value['post'];
-                }
-                if (array_key_exists('dependentPre', $value))
-                {
-                    $replace = "%" . $value['dependentPre'] . "%";
-                    if (array_key_exists('dependentPreAlternative', $value))
-                    {
-                        $replace .= $value['dependentPreAlternative'] . "%";
-                    }
-                    $string = str_replace("__DEPENDENT_ON_PREVIOUS_FIELD__", $replace, $string);
-                }
-                if (array_key_exists('dependentPost', $value))
-                {
-                    $replace = "%" . $value['dependentPost'] . "%";
-                    if (array_key_exists('dependentPostAlternative', $value))
-                    {
-                        $replace .= $value['dependentPostAlternative'] . "%";
-                    }
-                    $string = str_replace("__DEPENDENT_ON_NEXT_FIELD__", $replace, $string);
-                }
-                if (array_key_exists('singular', $value) && array_key_exists('plural', $value))
-                {
-                    $replace = "^" . $value['singular'] . "^" . $value['plural'] . "^";
-                    $string = str_replace("__SINGULAR_PLURAL__", $replace, $string);
-                }
-                $tempArray[$key] = $string;
-                $fieldNames[$key] = $index;
-                ++$index;
+            else {
+            	$this->session->setVar($type, htmlspecialchars($input));
+            	continue;
             }
-            if (!empty($tempArray))
-            {
-                foreach ($alternates as $field => $altArray)
-                {
-                    $alternateFound = 0;
-                    if (array_key_exists('preFirst', $altArray) &&
-                        array_key_exists($altArray['preFirst'], $tempArray))
-                    {
-                        $final = '$' . $tempArray[$altArray['preFirst']] . '$';
-                        unset($tempArray[$altArray['preFirst']]);
-                        $alternateFound = TRUE;
-                    }
-                    else
-                    {
-                        $final = '$$';
-                    }
-                    if (array_key_exists('preSecond', $altArray) &&
-                        array_key_exists($altArray['preSecond'], $tempArray))
-                    {
-                        $final .= $tempArray[$altArray['preSecond']] . '$';
-                        unset($tempArray[$altArray['preSecond']]);
-                        $alternateFound = TRUE;
-                    }
-                    else
-                    {
-                        $final .= '$';
-                    }
-                    if ($alternateFound)
-                    {
-                        array_splice($tempArray, $fieldNames[$field] + 1, 0, $final);
-                    }
-                    $alternateFound = 0;
-                    if (array_key_exists('postFirst', $altArray) &&
-                        array_key_exists($altArray['postFirst'], $tempArray))
-                    {
-                        $final = '#' . $tempArray[$altArray['postFirst']] . '#';
-                        unset($tempArray[$altArray['postFirst']]);
-                        ++$alternateFound;
-                    }
-                    else
-                    {
-                        $final = '##';
-                    }
-                    if (array_key_exists('postSecond', $altArray) &&
-                        array_key_exists($altArray['postSecond'], $tempArray))
-                    {
-                        $final .= $tempArray[$altArray['postSecond']] . '#';
-                        unset($tempArray[$altArray['postSecond']]);
-                        ++$alternateFound;
-                    }
-                    else
-                    {
-                        $final .= '#';
-                    }
-                    if ($alternateFound)
-                    {
-                        array_splice($tempArray, $fieldNames[$field] - $alternateFound, 0, $final);
-                    }
-                }
-                $tempArray = array_values($tempArray); // i.e. remove named keys.
-            }
-            if (!empty($independent))
-            {
-                $firstOfPair = FALSE;
-                foreach ($tempArray as $index => $value)
-                {
-                    if (!$firstOfPair)
-                    {
-                        if (array_key_exists($index, $independent))
-                        {
-                            $newArray[] = $independent[$index] . '|' . $value;
-                            $firstOfPair = TRUE;
-
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        if (array_key_exists($index, $independent))
-                        {
-                            $newArray[] = $value . '|' . $independent[$index];
-                            $firstOfPair = FALSE;
-
-                            continue;
-                        }
-                    }
-                    $newArray[] = $value;
-                }
-            }
-            else
-            {
-                $newArray = $tempArray;
-            }
-            $tempString = implode('|', $newArray);
-            if ($ultimate && (mb_substr($tempString, -1, 1) != $ultimate))
-            {
-                $tempString .= '|' . $ultimate;
-            }
-            if ($preliminary)
-            {
-                $tempString = $preliminary . '|' . $tempString;
-            }
+            list($tempString, $partial, $partialReplace) = $this->parseStyle->arrayToTemplate($temp);
             $this->$type = $tempString;
-            if (!$footnote)
-            {
-                $partialName = 'partial_' . $type . 'Template';
-                $this->$partialName = $partial;
-                $partialReplaceName = 'partial_' . $type . 'Replace';
-                $this->$partialReplaceName = $partialReplace;
+            if ($templateType == 'style')
+			{
+				if (is_array($partial)) {
+					list($partial, $null1, $null2) = $this->parseStyle->arrayToTemplate($partial);
+				}
+				$partialName = 'partial_' . $type;
+				$partialReplaceName = 'partial_' . $type . 'Replace';
+				$this->$partialName = $partial;
+				$this->$partialReplaceName = $partialReplace;
+			} else {
+                $this->session->setVar($type, htmlspecialchars($tempString));
             }
         }
     }
@@ -1501,7 +1344,7 @@ class adminstyle_MODULE
                 $citationNotInBibliography = "cite_" . $key . "_notInBibliography";
                 $input = stripslashes($this->session->getVar($citationStringName));
                 $notAdd = $this->session->getVar($citationNotInBibliography) ? TRUE : FALSE;
-                $checkBox = ' ' . $this->pluginmessages->text('notInBibliography') .
+                $checkBox = BR . $this->pluginmessages->text('notInBibliography') .
                 "&nbsp;" . FORM\checkbox(FALSE, $citationNotInBibliography, $notAdd);
                 $citationString = HTML\p(FORM\textInput(
                     $this->pluginmessages->text('typeReplace'),
@@ -1514,7 +1357,7 @@ class adminstyle_MODULE
                     BR . $availableFieldsCitation, "small");
             }
             $keyName = 'style_' . $key;
-            $partialTemplateName = "partial_" . $key . "Template";
+            $partialTemplateName = "partial_" . $key;
             $partialReplaceName = "partial_" . $key . "Replace";
             $partialReplace = $this->session->getVar($partialReplaceName) ? TRUE : FALSE;
             $partialReplaceString = $this->pluginmessages->text('partialReplace') . ":&nbsp;&nbsp;" .
@@ -1528,7 +1371,7 @@ class adminstyle_MODULE
                 255
             ) . BR . $partialReplaceString);
             // Footnote template
-            $footnoteTemplateName = "footnote_" . $key . "Template";
+            $footnoteTemplateName = "footnote_" . $key;
             $input = stripslashes($this->session->getVar($footnoteTemplateName));
             $footnoteTemplate = BR . FORM\textareaInput(
                 $this->pluginmessages->text('footnoteTemplate'),
@@ -1966,348 +1809,7 @@ class adminstyle_MODULE
 
         return $heading . HTML\tableStart('styleTable borderStyleSolid') . $pString . HTML\tableEnd();
     }
-    /**
-     * write the styles to file
-     *
-     * If !$fileName, this is called from add() and we create folder/filename immediately before writing to file.
-     * If $fileName, this comes from edit()
-     *
-     * @param false|string $fileName
-     */
-    private function writeFile($fileName = FALSE)
-    {
-        $this->db = FACTORY_DB::getInstance();
-        $parseStyle = FACTORY_PARSESTYLE::getInstance();
-        $types = array_keys($this->styleMap->types);
-        // Grab any custom fields
-        $customFields = [];
-        $recordset = $this->db->select('custom', ['customId', 'customLabel']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            $customFields['custom_' . $row['customId']] = $row['customId'];
-        }
-        if (!empty($customFields))
-        {
-            foreach ($this->styleMap as $type => $typeArray)
-            {
-                foreach ($customFields as $key => $value)
-                {
-                    $this->styleMap->{$type}[$key] = $key;
-                }
-            }
-        }
-        // Start XML
-        $fileString = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" . LF;
-        $fileString .= "<style xml:lang=\"en\">" . LF;
-        // Main style information
-        $fileString .= TAB . "<info>" . LF;
-        $fileString .= TAB . TAB . "<name>" . trim(stripslashes($this->vars['styleShortName'])) . "</name>" . LF;
-        $fileString .= TAB . TAB . "<description>" . htmlspecialchars(trim(stripslashes($this->vars['styleLongName'])))
-             . "</description>" . LF;
-        // Temporary place holder
-        $fileString .= TAB . TAB . "<language>en_GB</language>" . LF;
-        $fileString .= TAB . TAB . "<osbibVersion>$this->osbibVersion</osbibVersion>" . LF;
-        $fileString .= TAB . "</info>" . LF;
-        // Start citation definition
-        $fileString .= TAB . "<citation>" . LF;
-        $inputArray = [
-            "cite_creatorStyle", "cite_creatorOtherStyle", "cite_creatorInitials",
-            "cite_creatorFirstName", "cite_twoCreatorsSep", "cite_creatorSepFirstBetween",
-            "cite_creatorListSubsequentAbbreviation", "cite_creatorSepNextBetween",
-            "cite_creatorSepNextLast", "cite_creatorList", "cite_creatorListMore",
-            "cite_creatorListLimit", "cite_creatorListAbbreviation", "cite_creatorUppercase",
-            "cite_creatorListSubsequentAbbreviationItalic", "cite_creatorListAbbreviationItalic",
-            "cite_creatorListSubsequent", "cite_creatorListSubsequentMore",
-            "cite_creatorListSubsequentLimit", "cite_consecutiveCreatorTemplate", "cite_consecutiveCreatorSep",
-            "cite_template", "cite_useInitials", "cite_consecutiveCitationSep", "cite_yearFormat",
-            "cite_pageFormat", "cite_titleCapitalization", "cite_ibid", "cite_idem",
-            "cite_opCit", "cite_followCreatorTemplate",
-            "cite_firstChars", "cite_lastChars", "cite_citationStyle", "cite_templateEndnoteInText",
-            "cite_templateEndnote", "cite_consecutiveCitationEndnoteInTextSep", "cite_firstCharsEndnoteInText",
-            "cite_lastCharsEndnoteInText", "cite_formatEndnoteInText", "cite_endnoteStyle",
-            "cite_ambiguous", "cite_ambiguousTemplate", "cite_order1", "cite_order2", "cite_order3",
-            "cite_order1desc", "cite_order2desc", "cite_order3desc", "cite_sameIdOrderBib",
-            "cite_firstCharsEndnoteID", "cite_lastCharsEndnoteID", "cite_subsequentCreatorRange",
-            "cite_followCreatorPageSplit", "cite_subsequentCreatorTemplate", "cite_replaceYear",
-            "cite_titleSubtitleSeparator", "cite_formatEndnoteID", "cite_removeTitle", "cite_subsequentFields",
-        ];
-        foreach ($inputArray as $input)
-        {
-            if (isset($this->vars[$input]))
-            {
-                $split = \UTF8\mb_explode("_", $input, 2);
-                $elementName = $split[1];
-                $fileString .= TAB . TAB . "<$elementName>" .
-                    htmlspecialchars(stripslashes($this->vars[$input])) . "</$elementName>" . LF;
-            }
-        }
-        // Resource types replacing citation templates
-        foreach ($types as $key)
-        {
-            $citationStringName = "cite_" . $key . "Template";
-            if (array_key_exists($citationStringName, $this->vars) &&
-            ($string = $this->vars[$citationStringName]))
-            {
-                $fileString .= TAB . TAB . "<" . $key . "Template>" . htmlspecialchars(stripslashes($string)) .
-                "</" . $key . "Template>" . LF;
-            }
-            $field = "cite_" . $key . "_notInBibliography";
-            $element = $key . "_notInBibliography";
-            if (isset($this->vars[$field]))
-            {
-                $fileString .= TAB . TAB . "<$element>" . $this->vars[$field] . "</$element>" . LF;
-            }
-        }
-        $fileString .= TAB . "</citation>" . LF;
-        // Footnote creator formatting
-        $fileString .= TAB . "<footnote>" . LF;
-        $inputArray = [
-            // foot note creator formatting
-            "footnote_primaryCreatorFirstStyle", "footnote_primaryCreatorOtherStyle",
-            "footnote_primaryCreatorList", "footnote_primaryCreatorFirstName",
-            "footnote_primaryCreatorListAbbreviationItalic", "footnote_primaryCreatorInitials",
-            "footnote_primaryCreatorListMore", "footnote_primaryCreatorListLimit",
-            "footnote_primaryCreatorListAbbreviation", "footnote_primaryCreatorUppercase",
-            "footnote_primaryCreatorRepeatString", "footnote_primaryCreatorRepeat",
-            "footnote_primaryCreatorSepFirstBetween",  "footnote_primaryTwoCreatorsSep",
-            "footnote_primaryCreatorSepNextBetween", "footnote_primaryCreatorSepNextLast",
-            "footnote_otherCreatorFirstStyle", "footnote_otherCreatorListAbbreviationItalic",
-            "footnote_otherCreatorOtherStyle", "footnote_otherCreatorInitials",
-            "footnote_otherCreatorFirstName", "footnote_otherCreatorList",
-            "footnote_otherCreatorUppercase", "footnote_otherCreatorListMore",
-            "footnote_otherCreatorListLimit", "footnote_otherCreatorListAbbreviation",
-            "footnote_otherCreatorSepFirstBetween", "footnote_otherCreatorSepNextBetween",
-            "footnote_otherCreatorSepNextLast", "footnote_otherTwoCreatorsSep",
-        ];
-        foreach ($inputArray as $input)
-        {
-            if (isset($this->vars[$input]))
-            {
-                $split = \UTF8\mb_explode("_", $input, 2);
-                $elementName = $split[1];
-                $fileString .= TAB . TAB . "<$elementName>" .
-                    htmlspecialchars(stripslashes($this->vars[$input])) . "</$elementName>" . LF;
-            }
-        }
-        $this->footnotePages = TRUE;
-        // Footnote templates for each resource type
-        foreach ($types as $key)
-        {
-            $type = 'footnote_' . $key . 'Template';
-            $name = 'footnote_' . $key;
-            $input = trim(stripslashes($this->vars[$type]));
-            // remove newlines etc.
-            $input = preg_replace("/\\R/u", "", $input);
-            $fileString .= TAB . TAB . "<resource name=\"$key\">";
-            $fileString .= $this->arrayToXML($parseStyle->parseStringToArray($key, $input, $this->styleMap), $name, TRUE);
-            $fileString .= LF . TAB . TAB . "</resource>" . LF;
-        }
-        $fileString .= TAB . "</footnote>" . LF;
-        $this->footnotePages = FALSE;
-        // Start bibliography
-        $fileString .= TAB . "<bibliography>" . LF;
-        // Common section defining how authors, titles etc. are formatted
-        $fileString .= TAB . TAB . "<common>" . LF;
-        $inputArray = [
-            // style
-            "style_titleCapitalization", "style_monthFormat", "style_editionFormat", "style_dateFormat",
-            "style_titleSubtitleSeparator",
-            "style_primaryCreatorFirstStyle", "style_primaryCreatorOtherStyle", "style_primaryCreatorInitials",
-            "style_primaryCreatorFirstName", "style_otherCreatorFirstStyle",
-            "style_otherCreatorOtherStyle", "style_otherCreatorInitials",
-            "style_otherCreatorFirstName", "style_primaryCreatorList", "style_otherCreatorList",
-            "style_primaryCreatorListAbbreviationItalic", "style_otherCreatorListAbbreviationItalic",
-            "style_primaryCreatorListMore", "style_primaryCreatorListLimit",
-            "style_primaryCreatorListAbbreviation", "style_otherCreatorListMore",
-            "style_primaryCreatorRepeatString", "style_primaryCreatorRepeat",
-            "style_otherCreatorListLimit", "style_otherCreatorListAbbreviation",
-            "style_primaryCreatorUppercase",
-            "style_otherCreatorUppercase", "style_primaryCreatorSepFirstBetween",
-            "style_primaryCreatorSepNextBetween", "style_primaryCreatorSepNextLast",
-            "style_otherCreatorSepFirstBetween", "style_otherCreatorSepNextBetween",
-            "style_otherCreatorSepNextLast", "style_primaryTwoCreatorsSep", "style_otherTwoCreatorsSep",
-            "style_userMonth_1", "style_userMonth_2", "style_userMonth_3", "style_userMonth_4",
-            "style_userMonth_5", "style_userMonth_6", "style_userMonth_7", "style_userMonth_8",
-            "style_userMonth_9", "style_userMonth_10", "style_userMonth_11", "style_userMonth_12",
-            "style_userMonth_13", "style_userMonth_14", "style_userMonth_15", "style_userMonth_16",
-            "style_dateRangeDelimit1", "style_dateRangeDelimit2", "style_dateRangeSameMonth",
-            "style_dateMonthNoDay", "style_dateMonthNoDayString", "style_dayLeadingZero", "style_dayFormat",
-            "style_localisation", "style_runningTimeFormat", "style_editorSwitch", "style_editorSwitchIfYes",
-            "style_pageFormat",
-        ];
-        foreach ($inputArray as $input)
-        {
-            if (isset($this->vars[$input]))
-            {
-                $split = \UTF8\mb_explode("_", $input, 2);
-                $elementName = $split[1];
-                $fileString .= TAB . TAB . TAB . "<$elementName>" .
-                    htmlspecialchars(stripslashes($this->vars[$input])) . "</$elementName>" . LF;
-            }
-        }
-        $fileString .= TAB . TAB . "</common>" . LF;
-        // Resource types
-        foreach ($types as $key)
-        {
-            $type = 'style_' . $key;
-            $input = trim(stripslashes($this->vars[$type]));
-            // remove newlines etc.
-            $input = preg_replace("/\\R/u", "", $input);
-            // Rewrite creator strings
-            $attributes = $this->creatorXMLAttributes($type);
-            $fileString .= TAB . TAB . "<resource name=\"$key\" $attributes>";
-            $fileString .= $this->arrayToXML($parseStyle->parseStringToArray($key, $input, $this->styleMap), $type);
-            if (($key != 'genericBook') && ($key != 'genericArticle') && ($key != 'genericMisc'))
-            {
-                $name = $type . "_generic";
-                if (!isset($this->vars[$name]))
-                {
-                    $name = "genericMisc";
-                }
-                else
-                {
-                    $name = $this->vars[$name];
-                }
-                $fileString .= LF . TAB . TAB . TAB . "<fallbackstyle>$name</fallbackstyle>";
-            }
-            // Partial templates for each resource type
-            $fileString .= LF . TAB . TAB . TAB . "<partial>";
-            $type = 'partial_' . $key . 'Template';
-            $input = stripslashes($this->vars[$type]);
-            // remove newlines etc.
-            $fileString .= preg_replace("/\\R/u", "", $input);
-            $fileString .= "</partial>" . LF;
-            $type = 'partial_' . $key . 'Replace';
-            $fileString .= TAB . TAB . TAB . "<partialReplace>";
-            if (array_key_exists($type, $this->vars))
-            {
-                $fileString .= 1;
-            }
-            else
-            {
-                $fileString .= 0;
-            }
-            $fileString .= "</partialReplace>" . LF;
-            // close resource node
-            $fileString .= TAB . TAB . "</resource>" . LF;
-        }
-        $fileString .= TAB . "</bibliography>" . LF;
-        $fileString .= "</style>" . LF;
-        if (!$fileName)
-        { // called from add()
-            // Create folder with lowercase styleShortName
-            $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES,
-            	mb_strtolower(trim($this->vars['styleShortName']))]);
-            if (!file_exists($dirName))
-            {
-                if (!mkdir($dirName, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
-                {
-                    $this->badInput->close($error = $this->errors->text("file", "folder"), $this, 'display');
-                }
-            }
-            $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, mb_strtolower(trim($this->vars['styleShortName'])) . ".xml"]);
-        }
-        if (!$fp = fopen("$fileName", "w"))
-        {
-            $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this, 'display');
-        }
-        if (!fwrite($fp, \UTF8\html_uentity_decode($fileString)))
-        {
-            $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this, 'display');
-        }
-        fclose($fp);
-        
-        // Remove sessionvars
-        $this->session->clearArray("cite");
-        $this->session->clearArray("style");
-    }
-    /**
-     * create attribute strings for XML <resource> element for creators
-     *
-     * @param string $type
-     *
-     * @return string
-     */
-    private function creatorXMLAttributes($type)
-    {
-        $attributes = FALSE;
-        foreach ($this->creators as $creatorField)
-        {
-            $basic = $type . "_" . $creatorField;
-            $field = $basic . "_firstString";
-            $name = $creatorField . "_firstString";
-            if (array_key_exists($field, $this->vars) && trim($this->vars[$field]))
-            {
-                $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
-            }
-            $field = $basic . "_firstString_before";
-            $name = $creatorField . "_firstString_before";
-            if (isset($this->vars[$field]))
-            {
-                $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
-            }
-            $field = $basic . "_remainderString";
-            $name = $creatorField . "_remainderString";
-            if (array_key_exists($field, $this->vars) && trim($this->vars[$field]))
-            {
-                $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
-            }
-            $field = $basic . "_remainderString_before";
-            $name = $creatorField . "_remainderString_before";
-            if (isset($this->vars[$field]))
-            {
-                $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
-            }
-            $field = $basic . "_remainderString_each";
-            $name = $creatorField . "_remainderString_each";
-            if (isset($this->vars[$field]))
-            {
-                $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
-            }
-        }
 
-        return $attributes;
-    }
-    /**
-     * Parse array to XML
-     *
-     * @param array $array
-     * @param array $type
-     * @parm bool $loop – default FALSE
-     *
-     * @return string
-     */
-    private function arrayToXML($array, $type, $loop = FALSE)
-    {
-        $fileString = '';
-        foreach ($array as $key => $value)
-        {
-        	if ($loop) {
-	            $fileString .= LF . TAB . TAB . TAB . TAB . "<$key>";
-	        } else {
-	            $fileString .= LF . TAB . TAB . TAB . "<$key>";
-	        }
-            if (is_array($value))
-            {
-                $fileString .= $this->arrayToXML($value, $type, TRUE);
-            }
-            else
-            {
-                $fileString .= htmlspecialchars($value);
-            }
-            if (!$loop) {
-            	if ($key != 'ultimate') {
-		            $fileString .= LF . TAB . TAB . TAB . "</$key>";
-            	} else {
-		            $fileString .= "</$key>";
-		        }
-	        } else {
-	            $fileString .= "</$key>";
-	        }
-        }
-
-        return $fileString;
-    }
     /**
      * validate input
      *
@@ -2392,8 +1894,7 @@ class adminstyle_MODULE
                     $types = array_keys($this->styleMap->types);
                     foreach ($types as $key)
                     {
-                        $type = 'footnote_' . $key . 'Template';
-                        $name = 'footnote_' . $key;
+                        $type = 'footnote_' . $key;
                         $input = trim(stripslashes($this->vars[$type]));
                         if ($input && !$this->vars['style_' . $key])
                         {
@@ -2568,9 +2069,9 @@ class adminstyle_MODULE
         foreach ($types as $key)
         {
             // Footnote templates
-            $array[] = 'footnote_' . $key . 'Template';
+            $array[] = 'footnote_' . $key;
             // Partial templates
-            $array[] = 'partial_' . $key . 'Template';
+            $array[] = 'partial_' . $key;
             $type = 'style_' . $key;
             if (trim($this->vars[$type]))
             {

@@ -17,6 +17,8 @@ FEATURE ENHANCEMENTS:
 
 MAINTENANCE:
 1. The default db name become 'wikindx'.
+2. Some rationalization of bibliographic style code moving a lot into the core from the adminstyle plugin.
+3. Upgrading of bibliographic styles.
 
 SECURITY:
 1. Update PHPMailer (v6.5.0, CVE-2021-3603).

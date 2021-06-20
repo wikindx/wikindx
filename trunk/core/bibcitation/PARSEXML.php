@@ -57,10 +57,11 @@ class PARSEXML
         $xmlString = simplexml_load_file($file);
         $this->info = $this->XMLToArray($xmlString->info);
         $this->getStyleTypes($xmlString);
-        $this->getFootnotes($xmlString);
         $this->common = $this->XMLToArray($xmlString->bibliography->common);
         $this->citation = $this->XMLToArray($xmlString->citation);
-        //		$this->footnote = $this->XMLToArray($xmlString->footnote);
+		$this->footnote = $this->XMLToArray($xmlString->footnote);
+		unset($this->footnote['resource']);
+        $this->getFootnoteResources($xmlString);
         unset($xmlString);
     }
     /**
@@ -206,7 +207,7 @@ class PARSEXML
      *
      * @param string $xmlString
      */
-    private function getFootnotes($xmlString)
+    private function getFootnoteResources($xmlString)
     {
         foreach ($xmlString->footnote->resource as $value)
         {

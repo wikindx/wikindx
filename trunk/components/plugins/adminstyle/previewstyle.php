@@ -34,7 +34,7 @@ class adminstyle_previewstyle
     public function display()
     {
         $map = FACTORY_STYLEMAP::getInstance();
-        $adminstyle = FACTORY_PARSESTYLE::getInstance();
+        $parsestyle = FACTORY_PARSESTYLE::getInstance();
         $type = base64_decode($this->vars['templateName']);
         $templateString = preg_replace("/%u(\\d+)/u", "&#x$1;", base64_decode($this->vars['templateString']));
         $templateString = str_replace(['__WIKINDX__LESSTHAN__', '__WIKINDX__GREATERTHAN__'], ['&lt;', '&gt;'], $templateString);
@@ -67,7 +67,7 @@ class adminstyle_previewstyle
             { // Use fallback style template instead
                 $templateString = $fallbackString;
             }
-            $templateArray = $adminstyle->parseStringToArray($type, $templateString, $map, TRUE);
+            $templateArray = $parsestyle->parseStringToArray($type, $templateString, $map, TRUE);
             if (!$templateArray)
             {
                 return FALSE;

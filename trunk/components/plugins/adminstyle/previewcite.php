@@ -65,11 +65,12 @@ class adminstyle_previewcite
     private function loadCiteformat($cite)
     {
         $this->citeformat->wikindx = TRUE;
-        if (!$cite['cite_template'])
-        {
+        if (!array_key_exists('cite_template', $cite)) {
             return FALSE;
         }
         $this->citeformat->loadArrays();
+        $parseStyle = FACTORY_PARSESTYLE::getInstance();
+        $styleMap = FACTORY_STYLEMAP::getInstance();
         foreach ($cite as $key => $value)
         {
             // Convert javascript unicode e.g. %u2014 to HTML entities
@@ -82,7 +83,18 @@ class adminstyle_previewcite
                     $value
                 )
             );
-            $this->citeformat->style[str_replace("cite_", "", $key)] = $value;
+            if (in_array($key, [
+					"cite_consecutiveCreatorTemplate", "cite_template", "cite_followCreatorTemplate", "cite_templateEndnote", 
+					"cite_templateEndnoteInText", "cite_ambiguousTemplate", "cite_subsequentCreatorTemplate", 
+					"cite_ibid", "cite_idem", "cite_opCit", 
+				])) {
+        		$value = $parseStyle->parseStringToArray('citation', $value, $styleMap);
+        		if (is_array($value) && count($value)) {
+        			$this->citeformat->style[str_replace("cite_", "", $key)] = $value;
+        		}
+        	} else {
+	        	$this->citeformat->style[str_replace("cite_", "", $key)] = $value;
+	        }
         }
         $this->citeformat->style['citationStyle'] = FALSE; // Set to in-text citations.
         $this->citeformat->citationToArrayInTextStyle();

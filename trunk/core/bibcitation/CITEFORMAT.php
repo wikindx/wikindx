@@ -159,95 +159,84 @@ class CITEFORMAT
      */
     public function citationToArrayEndnoteStyle()
     {
-        $parseStyle = FACTORY_PARSESTYLE::getInstance();
-        $temp = $parseStyle->parseStringToArray(
-            'citationEndnoteInText',
-            trim($this->style['templateEndnoteInText']),
-            $this->styleMap
-        );
         // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
+        foreach ($this->style['templateEndnoteInText'] as $field => $value) {
             if (array_key_exists($field, $this->styleMap->citationEndnoteInText) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
+                ($field == 'ultimate') || ($field == 'preliminaryText')) {
                 $this->templateEndnoteInText[$field] = $value;
             }
         }
-        if (isset($this->templateEndnoteInText))
-        {
+        if (isset($this->templateEndnoteInText)) {
             $this->parseIndependent($this->templateEndnoteInText);
         }
-        $temp = $parseStyle->parseStringToArray(
-            'citationEndnote',
-            trim($this->style['templateEndnote']),
-            $this->styleMap
-        );
-        // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
-            if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
-                $this->templateEndnote[$field] = $value;
-            }
-        }
-        if (isset($this->templateEndnote))
-        {
-            $this->parseIndependent($this->templateEndnote);
-        }
-        $temp = $parseStyle->parseStringToArray('citationEndnote', trim($this->style['ibid']), $this->styleMap);
-        // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
-            if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
-                $this->templateIbid[$field] = $value;
-            }
-        }
-        if (isset($this->templateIbid))
-        {
-            $this->parseIndependent($this->templateIbid);
-        }
-        $temp = $parseStyle->parseStringToArray('citationEndnote', trim($this->style['idem']), $this->styleMap);
-        // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
-            if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
-                $this->templateIdem[$field] = $value;
-            }
-        }
-        if (isset($this->templateIdem))
-        {
-            $this->parseIndependent($this->templateIdem);
-        }
-        $temp = $parseStyle->parseStringToArray('citationEndnote', trim($this->style['opCit']), $this->styleMap);
-        // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
-            if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
-                $this->templateOpCit[$field] = $value;
-            }
-        }
-        if (isset($this->templateOpCit))
-        {
-            $this->parseIndependent($this->templateOpCit);
-        }
+        if (array_key_exists('templateEndnote', $this->style) && is_array($this->style['templateEndnote'])) {
+			// Ensure we have only valid fields.
+			foreach ($this->style['templateEndnote'] as $field => $value)
+			{
+				if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
+					($field == 'ultimate') || ($field == 'preliminaryText'))
+				{
+					$this->templateEndnote[$field] = $value;
+				}
+			}
+			if (isset($this->templateEndnote))
+			{
+				$this->parseIndependent($this->templateEndnote);
+			}
+		}
+        if (array_key_exists('ibid', $this->style) && is_array($this->style['ibid'])) {
+			// Ensure we have only valid fields.
+			foreach ($this->style['ibid'] as $field => $value)
+			{
+				if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
+					($field == 'ultimate') || ($field == 'preliminaryText'))
+				{
+					$this->templateIbid[$field] = $value;
+				}
+			}
+			if (isset($this->templateIbid))
+			{
+				$this->parseIndependent($this->templateIbid);
+			}
+		}
+        if (array_key_exists('idem', $this->style) && is_array($this->style['idem'])) {
+			// Ensure we have only valid fields.
+			foreach ($this->style['idem'] as $field => $value)
+			{
+				if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
+					($field == 'ultimate') || ($field == 'preliminaryText'))
+				{
+					$this->templateIdem[$field] = $value;
+				}
+			}
+			if (isset($this->templateIdem))
+			{
+				$this->parseIndependent($this->templateIdem);
+			}
+		}
+        if (array_key_exists('opCit', $this->style) && is_array($this->style['opCit'])) {
+			// Ensure we have only valid fields.
+			foreach ($this->style['opCit'] as $field => $value)
+			{
+				if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
+					($field == 'ultimate') || ($field == 'preliminaryText'))
+				{
+					$this->templateOpCit[$field] = $value;
+				}
+			}
+			if (isset($this->templateOpCit))
+			{
+				$this->parseIndependent($this->templateOpCit);
+			}
+		}
     }
     /**
      * Reformat the array representation of citation into a more useable format - In-text style citations
      */
     public function citationToArrayInTextStyle()
     {
-        $parseStyle = FACTORY_PARSESTYLE::getInstance();
-        $temp = $parseStyle->parseStringToArray('citation', trim($this->style['template']), $this->styleMap);
         // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
+        foreach ($this->style['template'] as $field => $value)
         {
             if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
                 ($field == 'ultimate') || ($field == 'preliminaryText'))
@@ -260,14 +249,9 @@ class CITEFORMAT
             $this->parseIndependent($this->template);
             $this->storeOriginalTemplate = $this->template;
         }
-        if (trim($this->style['followCreatorTemplate']))
+        if (array_key_exists('followCreatorTemplate', $this->style) && is_array($this->style['followCreatorTemplate']))
         {
-            $temp = $parseStyle->parseStringToArray(
-                'citation',
-                trim($this->style['followCreatorTemplate']),
-                $this->styleMap
-            );
-            foreach ($temp as $field => $value)
+            foreach ($this->style['followCreatorTemplate'] as $field => $value)
             {
                 if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
                     ($field == 'ultimate') || ($field == 'preliminaryText'))
@@ -277,14 +261,9 @@ class CITEFORMAT
             }
             $this->parseIndependent($this->followCreatorTemplate);
         }
-        if (trim($this->style['consecutiveCreatorTemplate']))
+        if (array_key_exists('consecutiveCreatorTemplate', $this->style) && is_array($this->style['consecutiveCreatorTemplate']))
         {
-            $temp = $parseStyle->parseStringToArray(
-                'citation',
-                trim($this->style['consecutiveCreatorTemplate']),
-                $this->styleMap
-            );
-            foreach ($temp as $field => $value)
+            foreach ($this->style['consecutiveCreatorTemplate'] as $field => $value)
             {
                 if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
                     ($field == 'ultimate') || ($field == 'preliminaryText'))
@@ -294,14 +273,9 @@ class CITEFORMAT
             }
             $this->parseIndependent($this->consecutiveCreatorTemplate);
         }
-        if (trim($this->style['subsequentCreatorTemplate']))
+        if (array_key_exists('subsequentCreatorTemplate', $this->style) && is_array($this->style['subsequentCreatorTemplate']))
         {
-            $temp = $parseStyle->parseStringToArray(
-                'citation',
-                trim($this->style['subsequentCreatorTemplate']),
-                $this->styleMap
-            );
-            foreach ($temp as $field => $value)
+            foreach ($this->style['subsequentCreatorTemplate'] as $field => $value)
             {
                 if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
                     ($field == 'ultimate') || ($field == 'preliminaryText'))
@@ -311,36 +285,26 @@ class CITEFORMAT
             }
             $this->parseIndependent($this->subsequentCreatorTemplate);
         }
-        if (trim($this->style['ambiguousTemplate']))
+        if (array_key_exists('ambiguousTemplate', $this->style) && is_array($this->style['ambiguousTemplate']))
         {
-            $temp = $parseStyle->parseStringToArray(
-                'citation',
-                trim($this->style['ambiguousTemplate']),
-                $this->styleMap
-            );
             // Ensure we have only valid fields.
-            foreach ($temp as $field => $value)
+            foreach ($this->style['ambiguousTemplate'] as $field => $value)
             {
                 if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
                     ($field == 'ultimate') || ($field == 'preliminaryText'))
                 {
                     $this->ambiguousTemplate[$field] = $value;
                 }
-            }
+            }print_r($this->ambiguousTemplate); die;
             $this->parseIndependent($this->ambiguousTemplate);
         }
         // replacement citation templates for particular resource types
         foreach ($this->styleMap->types as $type => $value)
         {
             $key = $type . "Template";
-            if (array_key_exists($key, $this->style) && trim($this->style[$key]))
+            if (array_key_exists($key, $this->style) && is_array($this->style[$key]))
             {
-                $temp = $parseStyle->parseStringToArray(
-                    'citation',
-                    trim($this->style[$key]),
-                    $this->styleMap
-                );
-                foreach ($temp as $field => $value)
+                foreach ($this->style[$key] as $field => $value)
                 {
                     if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
                         ($field == 'ultimate') || ($field == 'preliminaryText'))

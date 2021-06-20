@@ -54,8 +54,6 @@ class BIBFORMAT
     private $bibtexParsePath;
     /** Previous creator */
     private $previousCreator = '';
-    /** Parse style */
-    private $parsestyle;
     /**
      * Switch editor and author positions in the style definition for a book in which there are only editors
      */
@@ -125,7 +123,6 @@ class BIBFORMAT
                 }
             }
         }
-        $this->parsestyle = FACTORY_PARSESTYLE::getInstance();
     }
     /**
      * Initialise bibformat system
@@ -253,11 +250,7 @@ class BIBFORMAT
         {
             $row['creator1'] = $row['creator2'];
             $row['creator2'] = FALSE;
-            $editorArray = $this->parsestyle->parseStringToArray(
-                $type,
-                $this->style['editorSwitchIfYes'],
-                $this->styleMap
-            );
+            $editorArray = $this->style['editorSwitchIfYes'];
             if (!empty($editorArray) && array_key_exists('editor', $editorArray))
             {
                 $this->{$type}['author'] = $editorArray['editor'];
@@ -268,12 +261,7 @@ class BIBFORMAT
         if ($this->style['dateMonthNoDay'] && array_key_exists('date', $this->styleMap->$type) &&
             array_key_exists('dateMonthNoDayString', $this->style) && $this->style['dateMonthNoDayString'])
         {
-            $this->dateArray = $this->parsestyle->parseStringToArray(
-                $type,
-                $this->style['dateMonthNoDayString'],
-                $this->styleMap,
-                TRUE
-            );
+            $this->dateArray = $this->style['dateMonthNoDayString'];
             $this->dateMonthNoDay = TRUE;
         }
         /**
@@ -1965,11 +1953,6 @@ class BIBFORMAT
         {
             return;
         }	// item key exists -- nothing to do
-        $this->{$type}['partial'] = $this->parsestyle->parseStringToArray(
-            $type,
-            $this->{$type}['partial'],
-            $this->styleMap
-        );
         // Replace the whole template with the partial template?
         if ($this->{$type}['partialReplace'])
         {

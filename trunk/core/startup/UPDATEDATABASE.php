@@ -2421,6 +2421,50 @@ END;
     }
     
     /**
+     * Upgrade database schema to version 70 (6.4.9)
+     *
+     * Not a database upgrade but an upgrade to citation styles from osbibversion 5 ––> 6.
+     */
+    private function upgradeTo70()
+    {
+    	$parseXML = FACTORY_PARSEXML::getInstance();
+    	$parseStyle = FACTORY_PARSESTYLE::getInstance();
+    	$styleMap = FACTORY_STYLEMAP::getInstance();
+        $types = array_keys($styleMap->types);
+    // Load styles
+        foreach (\LOADSTYLE\loadDir(TRUE) as $short => $long) {
+	    	$filePath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, $short, $short . ".xml"]);
+			if (is_readable($filePath))
+			{
+				$parseXML->extractEntries($filePath);
+				$style = $parseXML->info;
+				if ($style['osbibVersion'] >= WIKINDX_COMPONENTS_COMPATIBLE_VERSION["style"]) { // OK
+					continue;
+				} else {
+					$style['osbibVersion'] = WIKINDX_COMPONENTS_COMPATIBLE_VERSION["style"];
+				}
+				$style['styleShortName'] = $short;
+				$style['styleLongName'] = $long;
+				foreach ($parseXML->citation as $key => $value) {
+					$style['cite_' . $key] = $value;
+				}
+				foreach ($parseXML->footnote as $key => $value) {
+					$style['footnote_' . $key] = $value;
+				}
+				foreach ($parseXML->common as $key => $value) {
+					$style['style_' . $key] = $value;
+				}
+				foreach ($parseXML->types as $key => $value) {
+					$style['style_' . $key] = $value;
+				}
+			}
+			$parseStyle->getSource('array', $style);
+			$parseStyle->writeFile($filePath);
+    	}
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
      * Flush the temp_storage table
      */
     private function flushTempStorage()

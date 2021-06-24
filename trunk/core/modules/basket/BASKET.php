@@ -25,6 +25,7 @@ class BASKET
     private $browserTabID = FALSE;
     public $useDB = FALSE; // accessed elsewhere
     public $useDBnorow = FALSE; // accessed elsewhere
+    public $pagingObject;
 
     public function __construct()
     {
@@ -212,13 +213,10 @@ class BASKET
 			GLOBALS::setTempStorage(['setup_PagingTotalBasket' => $sizeOfbasket]);
 		}
         $this->pagingObject = FACTORY_PAGING::getInstance();
-/*        $this->pagingObject->basket = TRUE;
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
         $this->common->pagingObject = $this->pagingObject;
-        $this->common->pagingObject->basket = TRUE;
-        $this->common->pagingObject->queryString = $queryString;
-*/        GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basket'));
+        GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basket'));
         if (array_key_exists('list_Order', $this->vars))
         {
             $this->session->setVar("list_Order", $this->vars['list_Order']);

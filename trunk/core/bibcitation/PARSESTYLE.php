@@ -350,13 +350,13 @@ class PARSESTYLE
 					$value = $this->arrayToXML($this->parseStringToArray($key, $input, $styleMap));
 				}
 				if ($value) {
-					$fileString .= $value . LF . TAB . TAB . TAB . "</partial>";
+					$fileString .= $value . LF . TAB . TAB . TAB . "</partial>" . LF;
 				} else {
 					$fileString .= "</partial>" . LF;
 				}
 			}
 			$type = 'partial_' . $key . 'Replace';
-			$fileString .= LF . TAB . TAB . TAB . "<partialReplace>";
+			$fileString .= TAB . TAB . TAB . "<partialReplace>";
 			if (array_key_exists($type, $this->writeSource))
 			{
 				$fileString .= '1';

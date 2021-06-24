@@ -455,16 +455,16 @@
 			</publisherName>
 			<ultimate>.</ultimate>
 			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
 			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
@@ -551,16 +551,16 @@
 			</pages>
 			<ultimate>.</ultimate>
 			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
 			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
@@ -637,16 +637,16 @@
 			</type>
 			<ultimate>.</ultimate>
 			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
 			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
@@ -732,19 +732,19 @@
 				<post></post>
 			</publisherName>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="book_article" >
@@ -859,19 +859,19 @@
 				<post></post>
 			</publisherName>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>.</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="book_chapter" >
@@ -986,19 +986,19 @@
 				<post></post>
 			</publisherName>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>.</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="journal_article" >
@@ -1073,19 +1073,19 @@
 				<post></post>
 			</pages>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>.</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="newspaper_article" >
@@ -1150,19 +1150,19 @@
 				<post></post>
 			</pages>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>.</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="magazine_article" >
@@ -1237,19 +1237,19 @@
 				<post></post>
 			</pages>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>.</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="proceedings" >
@@ -1334,8 +1334,8 @@
 				<post></post>
 			</ISSN>
 			<ultimate>.</ultimate>
-			<partial>			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial></partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="conference_paper" >
@@ -1400,19 +1400,19 @@
 				<post></post>
 			</conferenceLocation>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="conference_poster" >
@@ -1477,19 +1477,19 @@
 				<post></post>
 			</conferenceLocation>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="proceedings_article" >
@@ -1554,19 +1554,19 @@
 				<post></post>
 			</conferenceLocation>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="thesis" >
@@ -1641,19 +1641,19 @@
 				<post></post>
 			</institutionLocation>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="web_site" >
@@ -1717,19 +1717,19 @@
 				<pre>from </pre>
 				<post></post>
 			</URL>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative>(n.d.). </dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>. __DEPENDENT_ON_NEXT_FIELD__</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative>(n.d.). </dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. __DEPENDENT_ON_NEXT_FIELD__</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="web_article" >
@@ -1823,19 +1823,19 @@
 				<pre>from </pre>
 				<post></post>
 			</URL>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative>(n.d.). </dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>. __DEPENDENT_ON_NEXT_FIELD__</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative>(n.d.). </dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. __DEPENDENT_ON_NEXT_FIELD__</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="web_encyclopedia" >
@@ -1900,19 +1900,19 @@
 				<post></post>
 			</URL>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative>(n.d.). </dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>. __DEPENDENT_ON_NEXT_FIELD__</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative>(n.d.). </dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. __DEPENDENT_ON_NEXT_FIELD__</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="web_encyclopedia_article" >
@@ -1987,19 +1987,19 @@
 				<post></post>
 			</URL>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative>(n.d.). </dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>. __DEPENDENT_ON_NEXT_FIELD__</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative>(n.d.). </dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. __DEPENDENT_ON_NEXT_FIELD__</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="film" >
@@ -2064,22 +2064,22 @@
 				<post></post>
 			</distributor>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i] [Film].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i] [Film].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
-		<resource name="broadcast" >
+		<resource name="broadcast" creator1_firstString="***   " >
 			<director>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -2151,20 +2151,19 @@
 				<post></post>
 			</channel>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
-			<creator1_firstString>***			</creator1_firstString>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="music_album" >
@@ -2249,19 +2248,19 @@
 				<post></post>
 			</ID>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="music_track" >
@@ -2356,19 +2355,19 @@
 				<post></post>
 			</ID>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>.</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="music_score" >
@@ -2443,19 +2442,19 @@
 				<post>. </post>
 			</publisherName>
 			<ultimate>ISBN</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="artwork" >
@@ -2500,19 +2499,19 @@
 				<post>]</post>
 			</medium>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="software" >
@@ -2587,19 +2586,19 @@
 				<post></post>
 			</publisherName>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>.</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="audiovisual" >
@@ -2684,19 +2683,19 @@
 				<post></post>
 			</publisherName>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>.</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="database" >
@@ -2791,19 +2790,19 @@
 				<post></post>
 			</ID>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="government_report" >
@@ -2918,19 +2917,19 @@
 				<post></post>
 			</ISSN>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="report" >
@@ -3005,19 +3004,19 @@
 				<post></post>
 			</institution>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="hearing" >
@@ -3072,19 +3071,19 @@
 				<post>)</post>
 			</hearingYear>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="statute" >
@@ -3129,19 +3128,19 @@
 				<post>)</post>
 			</statuteYear>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="brochure" >
@@ -3176,8 +3175,8 @@
 				<post>[/i]</post>
 			</title>
 			<ultimate>.</ultimate>
-			<partial>			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial></partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="legal_ruling" >
@@ -3301,19 +3300,19 @@
 				<pre></pre>
 				<post></post>
 			</resourceIsbn>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="case" >
@@ -3358,19 +3357,19 @@
 				<post></post>
 			</caseDecidedYear>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="bill" >
@@ -3435,19 +3434,19 @@
 				<post>)</post>
 			</sessionYear>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="patent" >
@@ -3632,19 +3631,19 @@
 				<post></post>
 			</ID>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="personal" >
@@ -3708,19 +3707,19 @@
 				<pre></pre>
 				<post></post>
 			</ID>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="unpublished" >
@@ -3794,19 +3793,19 @@
 				<pre></pre>
 				<post>.</post>
 			</ID>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="classical" >
@@ -3860,19 +3859,19 @@
 				<pre></pre>
 				<post></post>
 			</resourceIsbn>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="manuscript" >
@@ -3907,19 +3906,19 @@
 				<post>[/i]. Unpublished manuscript</post>
 			</title>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i]. Unpublished manuscript</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i]. Unpublished manuscript</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="map" >
@@ -3964,19 +3963,19 @@
 				<post>]</post>
 			</type>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="chart" >
@@ -4101,19 +4100,19 @@
 				<post></post>
 			</ID>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="miscellaneous" >
@@ -4188,19 +4187,19 @@
 				<post></post>
 			</ID>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre>[i]</pre>
-					<post>[/i].</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i].</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="miscellaneous_section" >
@@ -4285,19 +4284,19 @@
 				<post></post>
 			</ID>
 			<ultimate>.</ultimate>
-			<partial>
-				<title>
-					<dependentPre></dependentPre>
-					<dependentPost></dependentPost>
-					<dependentPreAlternative></dependentPreAlternative>
-					<dependentPostAlternative></dependentPostAlternative>
-					<singular></singular>
-					<plural></plural>
-					<pre></pre>
-					<post>.</post>
-				</title>
-			</partial>
 			<fallbackstyle>genericMisc</fallbackstyle>
+			<partial>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</title>
+			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
 	</bibliography>

@@ -214,6 +214,7 @@ class BASKET
 		}
         $this->pagingObject = FACTORY_PAGING::getInstance();
         $this->pagingObject->queryString = $queryString;
+        $this->pagingObject->basket = TRUE;
         $this->pagingObject->getPaging();
         $this->common->pagingObject = $this->pagingObject;
         GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basket'));

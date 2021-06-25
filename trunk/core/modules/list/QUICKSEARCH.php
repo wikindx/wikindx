@@ -440,14 +440,16 @@ class QUICKSEARCH
             $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
         }
         $patterns = [];
-        foreach ($searchTerms as $term)
-        {
-            if (trim($term))
-            {
-                $term = preg_quote($term, '/');
-                $patterns[] = "/($term)(?=[^>]*(<|$))/ui";
-            }
-        }
+        if (is_array($searchTerms)) {
+			foreach ($searchTerms as $term)
+			{
+				if (trim($term))
+				{
+					$term = preg_quote($term, '/');
+					$patterns[] = "/($term)(?=[^>]*(<|$))/ui";
+				}
+			}
+		}
         $this->common->patterns = $patterns;
         $this->session->setVar("search_Patterns", $patterns);
         if ($this->browserTabID)

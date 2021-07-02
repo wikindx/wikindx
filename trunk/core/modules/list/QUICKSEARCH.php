@@ -129,21 +129,20 @@ class QUICKSEARCH
         }
         $pString .= \HTML\trStart();
         $this->radioButtons = FALSE;
-        if (!$word)
-        {
-            if ($this->browserTabID && ($word = GLOBALS::getTempStorage('search_Word')))
-            {
+        if (!$word) {
+            if ($this->browserTabID && ($word = GLOBALS::getTempStorage('search_Word'))) {
                 $word = htmlspecialchars(stripslashes($word), ENT_QUOTES | ENT_HTML5);
-            }
-            elseif ($this->session->issetVar("search_Word"))
-            {
+            } elseif ($this->session->getVar("search_Word")) {
                 $word = htmlspecialchars(stripslashes($this->session->getVar("search_Word")), ENT_QUOTES | ENT_HTML5);
-            }
-            else
-            {
+            } else {
                 $word = FALSE;
             }
         }
+		if ($this->session->getVar("search_SearchAttachments")) {
+			$searchAttachments = TRUE;
+		} else {
+			$searchAttachments = FALSE;
+		}
         $hint = BR . \HTML\span(\HTML\aBrowse(
             'green',
             '',
@@ -152,33 +151,33 @@ class QUICKSEARCH
             "",
             $this->messages->text("hint", "wordLogic")
         ), 'hint') . BR;
-        if (!$this->insertCitation)
-        {
+        $sa = FORM\checkbox(
+            FALSE,
+            "search_SearchAttachments",
+            $searchAttachments
+        ) . '&nbsp;' . $this->messages->text('search', 'searchAttachments');
+        if (!$this->insertCitation) {
             $pString .= \HTML\td(\FORM\textInput(
                 $this->messages->text("search", "word"),
                 "search_Word",
                 $word,
                 40
-            ) . $hint . \FORM\formSubmit($this->messages->text("submit", "Search")), $tableBorder ? 'padding4px' : '');
-        }
-        else
-        {
+            ) . $hint . \FORM\formSubmit($this->messages->text("submit", "Search")) . $sa, $tableBorder ? 'padding4px' : '');
+        } else {
             $pString .= \HTML\td(\FORM\textInput(
                 $this->messages->text("search", "word"),
                 "search_Word",
                 $word,
                 60
-            ) . $hint . \FORM\formSubmit($this->messages->text("submit", "Search")), $tableBorder ? 'padding4px' : '');
+            ) . $hint . \FORM\formSubmit($this->messages->text("submit", "Search")) . $sa, $tableBorder ? 'padding4px' : '');
         }
+        
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \FORM\formEnd();
-        if ($returnString)
-        {
+        if ($returnString) {
             return $pString; // cf FRONT.php or process() below.
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', $pString);
         }
     }
@@ -248,9 +247,11 @@ class QUICKSEARCH
         $this->db->formatConditions($matchAgainst);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_text', [['resourcetextId' => 'rId']]));
         // resourceattachmentsText
-        $matchAgainst = $this->db->fulltextSearch('resourceattachmentsText', $searchFT);
-        $this->db->formatConditions($matchAgainst);
-        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_attachments', [['resourceattachmentsResourceId' => 'rId']]));
+        if ($this->session->getVar("search_SearchAttachments")) {
+			$matchAgainst = $this->db->fulltextSearch('resourceattachmentsText', $searchFT);
+			$this->db->formatConditions($matchAgainst);
+			$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_attachments', [['resourceattachmentsResourceId' => 'rId']]));
+		}
 
         $this->unions = $this->db->union($unions);
     }
@@ -623,6 +624,18 @@ class QUICKSEARCH
                 GLOBALS::setTempStorage(['search_Order' => $this->vars['search_Order']]);
             }
         }
+        if (array_key_exists('search_SearchAttachments', $this->vars)) {
+            $this->session->setVar('search_SearchAttachments', $this->vars['search_SearchAttachments']);
+            if ($this->browserTabID) {
+                GLOBALS::setTempStorage(['search_SearchAttachments' => $this->vars['search_SearchAttachments']]);
+            }
+        } else {
+        	$this->session->delVar('search_SearchAttachments');
+            if ($this->browserTabID) {
+            	GLOBALS::unsetTempStorage(['search_SearchAttachments']);
+            }
+        }
+        $this->common->updateTempStorage();
     }
     /**
      * validate user input - method, word and field are required

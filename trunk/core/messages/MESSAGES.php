@@ -1336,6 +1336,7 @@ class MESSAGES
 				"paraphraseComment" => dgettext($domain, "Paraphrase comment"),
 				"musing" => dgettext($domain, "Musing"),
 				"attachments" => dgettext($domain, "Attachments"),
+				"searchAttachments" => dgettext($domain, "Include attachments"),
 				"idea" => dgettext($domain, "Idea"),
 				"creator" => dgettext($domain, "Creator"),
 				"ideasFound" => dgettext($domain, "Ideas have been found"),

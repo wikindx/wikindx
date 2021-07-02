@@ -14,7 +14,7 @@ BUG FIXES:
 4. Fix an issue paging through a basket.
 
 FEATURE ENHANCEMENTS:
-...
+1. QUICKSEARCH: Add a check box to toggle searching of attachments.
 
 MAINTENANCE:
 1. The default db name become 'wikindx'.

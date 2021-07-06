@@ -157,7 +157,7 @@ class FILETOTEXT
         
         // Clean up the text a bit to improve the search for exact strings
         
-        // Replace by a single space:
+        // Replace Unicode characters classes by a single space:
         // - Control and format characters (C)
         // - Separator characters (Z)
         $text = preg_replace("/\p{C}|\p{Z}/u", " ", $text);

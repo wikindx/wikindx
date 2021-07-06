@@ -430,6 +430,7 @@ class FILETOTEXT
         if ($za->open($filepath) === TRUE)
         {
             // On macOS extractTo() doesn't work, so we emulate it
+            // and PHP bug #80863 (in PHP 7.4 and 8.0) not fixed before 7.4.20 and 8.0.7
             for ($k = 0; $k < $za->numFiles; $k++)
             {
                 // Get a stream from the original name
@@ -1281,6 +1282,7 @@ class FILETOTEXT
             if (count($string_catalog) > 0)
             {
                 // On macOS extractTo() doesn't work, so we emulate it
+                // and PHP bug #80863 (in PHP 7.4 and 8.0) not fixed before 7.4.20 and 8.0.7
                 for ($k = 0; $k < $za->numFiles; $k++)
                 {
                     // Get a stream from the original name

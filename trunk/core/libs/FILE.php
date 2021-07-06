@@ -788,6 +788,7 @@ namespace FILE
             if ($zip->open($ComponentPackageFile) === TRUE)
             {
                 // On macOS extractTo() doesn't work, so we emulate it
+                // and PHP bug #80863 (in PHP 7.4 and 8.0) not fixed before 7.4.20 and 8.0.7
                 for ($k = 0; $k < $zip->numFiles; $k++)
                 {
                     // Get a stream from the original name
@@ -915,6 +916,7 @@ namespace FILE
             $tarroot = str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $tarroot);
             
             // On macOS extractTo() doesn't work, so we emulate it
+            // and PHP bug #80863 (in PHP 7.4 and 8.0) not fixed before 7.4.20 and 8.0.7
             foreach (new \RecursiveIteratorIterator($tar) as $file)
             {
                 $fileorig = $file;

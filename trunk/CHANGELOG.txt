@@ -12,6 +12,7 @@ BUG FIXES:
 2. Fix missing message when authGate is enabled.
 3. Fix RSS/ATOM feed display.
 4. Fix an issue paging through a basket.
+5. Do not restore memory_limit configuration to work around PHP bug #81070 (in PHP 7.4 and 8.0).
 
 FEATURE ENHANCEMENTS:
 1. QUICKSEARCH: Add a check box to toggle searching of attachments.

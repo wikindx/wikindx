@@ -254,7 +254,10 @@ class FILETOTEXT
             }
             
             ini_set('display_errors', $errorDisplay);
-            ini_set('memory_limit', $mem);
+            
+            // Don't restore memory limit configuration
+            // Fix(LkpPo): from 6.4.10, do not restore memory_limit configuration to work around PHP bug #81070.
+            // PHP bug #81070 can crash the script (fixed in PHP 7.4.21 and 8.0.7)
         }
         return $text;
     }

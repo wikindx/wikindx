@@ -2,10 +2,7 @@ RELEASES:
 
 
 v6.4.10
-Focus: xxx
-
-IMPORTANT INFORMATION:
-...
+Focus: bug fixes, maintenance
 
 BUG FIXES:
 1. Correct display of resource icons in list view – 4 possibilities: resource only, resource with metadata, resource with attachment, resource with metadata and attachment. Update the latter icon.

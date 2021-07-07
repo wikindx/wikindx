@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <style xml:lang="en">
 	<info>
-		<name>chicago</name>
-		<description>Chicago (footnotes)</description>
+		<name>chicago-ad</name>
+		<description>Chicago (author-date)</description>
 		<language>en_GB</language>
 		<osbibVersion>6</osbibVersion>
 	</info>
@@ -11,32 +11,34 @@
 		<creatorOtherStyle>3</creatorOtherStyle>
 		<creatorInitials>0</creatorInitials>
 		<creatorFirstName>0</creatorFirstName>
-		<twoCreatorsSep></twoCreatorsSep>
-		<creatorSepFirstBetween></creatorSepFirstBetween>
-		<creatorListSubsequentAbbreviation></creatorListSubsequentAbbreviation>
-		<creatorSepNextBetween></creatorSepNextBetween>
-		<creatorSepNextLast></creatorSepNextLast>
-		<creatorList>0</creatorList>
-		<creatorListMore></creatorListMore>
-		<creatorListLimit></creatorListLimit>
-		<creatorListAbbreviation></creatorListAbbreviation>
-		<creatorListSubsequent>0</creatorListSubsequent>
-		<creatorListSubsequentMore></creatorListSubsequentMore>
-		<creatorListSubsequentLimit></creatorListSubsequentLimit>
+		<twoCreatorsSep> and </twoCreatorsSep>
+		<creatorSepFirstBetween>, </creatorSepFirstBetween>
+		<creatorListSubsequentAbbreviation>et al.</creatorListSubsequentAbbreviation>
+		<creatorSepNextBetween>, </creatorSepNextBetween>
+		<creatorSepNextLast>, and </creatorSepNextLast>
+		<creatorList>1</creatorList>
+		<creatorListMore>4</creatorListMore>
+		<creatorListLimit>1</creatorListLimit>
+		<creatorListAbbreviation>et al.</creatorListAbbreviation>
+		<creatorListSubsequentAbbreviationItalic>on</creatorListSubsequentAbbreviationItalic>
+		<creatorListAbbreviationItalic>on</creatorListAbbreviationItalic>
+		<creatorListSubsequent>1</creatorListSubsequent>
+		<creatorListSubsequentMore>4</creatorListSubsequentMore>
+		<creatorListSubsequentLimit>1</creatorListSubsequentLimit>
 		<consecutiveCreatorSep></consecutiveCreatorSep>
 		<useInitials>on</useInitials>
 		<consecutiveCitationSep></consecutiveCitationSep>
 		<yearFormat>0</yearFormat>
 		<pageFormat>0</pageFormat>
 		<titleCapitalization>0</titleCapitalization>
-		<firstChars></firstChars>
-		<lastChars></lastChars>
-		<citationStyle>1</citationStyle>
-		<consecutiveCitationEndnoteInTextSep>; </consecutiveCitationEndnoteInTextSep>
+		<firstChars>(</firstChars>
+		<lastChars>)</lastChars>
+		<citationStyle>0</citationStyle>
+		<consecutiveCitationEndnoteInTextSep></consecutiveCitationEndnoteInTextSep>
 		<firstCharsEndnoteInText></firstCharsEndnoteInText>
 		<lastCharsEndnoteInText></lastCharsEndnoteInText>
-		<formatEndnoteInText>1</formatEndnoteInText>
-		<endnoteStyle>2</endnoteStyle>
+		<formatEndnoteInText>0</formatEndnoteInText>
+		<endnoteStyle>0</endnoteStyle>
 		<ambiguous>0</ambiguous>
 		<order1>0</order1>
 		<order2>1</order2>
@@ -45,58 +47,13 @@
 		<order2desc>0</order2desc>
 		<order3desc>0</order3desc>
 		<firstCharsEndnoteID></firstCharsEndnoteID>
-		<lastCharsEndnoteID>.  </lastCharsEndnoteID>
+		<lastCharsEndnoteID></lastCharsEndnoteID>
 		<subsequentCreatorRange>0</subsequentCreatorRange>
 		<replaceYear></replaceYear>
 		<titleSubtitleSeparator>: </titleSubtitleSeparator>
 		<formatEndnoteID>0</formatEndnoteID>
 		<consecutiveCreatorTemplate></consecutiveCreatorTemplate>
-		<template></template>
-		<followCreatorTemplate></followCreatorTemplate>
-		<templateEndnote>
-			<citation>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</citation>
-		</templateEndnote>
-		<templateEndnoteInText>
-			<id>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</id>
-		</templateEndnoteInText>
-		<ambiguousTemplate></ambiguousTemplate>
-		<subsequentCreatorTemplate></subsequentCreatorTemplate>
-		<ibid>
-			<preliminaryText></preliminaryText>
-		</ibid>
-		<idem>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>,  </pre>
-				<post></post>
-			</pages>
-			<preliminaryText>Ibid</preliminaryText>
-			<ultimate>.</ultimate>
-		</idem>
-		<opCit>
+		<template>
 			<creator>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -104,9 +61,19 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>, </pre>
+				<pre></pre>
 				<post></post>
 			</creator>
+			<year>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre> </pre>
+				<post></post>
+			</year>
 			<pages>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -117,9 +84,89 @@
 				<pre>, </pre>
 				<post></post>
 			</pages>
-			<preliminaryText>op. cit.</preliminaryText>
-			<ultimate>.</ultimate>
-		</opCit>
+		</template>
+		<followCreatorTemplate></followCreatorTemplate>
+		<templateEndnote></templateEndnote>
+		<templateEndnoteInText></templateEndnoteInText>
+		<ambiguousTemplate></ambiguousTemplate>
+		<subsequentCreatorTemplate></subsequentCreatorTemplate>
+		<ibid></ibid>
+		<idem></idem>
+		<opCit></opCit>
+		<web_siteTemplate>
+			<URL>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post></post>
+			</URL>
+		</web_siteTemplate>
+		<web_site_notInBibliography>on</web_site_notInBibliography>
+		<web_encyclopediaTemplate>
+			<URL>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post></post>
+			</URL>
+		</web_encyclopediaTemplate>
+		<web_encyclopedia_notInBibliography>on</web_encyclopedia_notInBibliography>
+		<databaseTemplate>
+			<URL>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post></post>
+			</URL>
+		</databaseTemplate>
+		<database_notInBibliography>on</database_notInBibliography>
+		<brochureTemplate>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i]. </post>
+			</title>
+		</brochureTemplate>
+		<personalTemplate>
+			<creator>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>, personal communication</post>
+			</creator>
+			<year>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>, </pre>
+				<post></post>
+			</year>
+		</personalTemplate>
+		<personal_notInBibliography>on</personal_notInBibliography>
 	</citation>
 	<footnote>
 		<primaryCreatorFirstStyle>0</primaryCreatorFirstStyle>
@@ -148,1023 +195,24 @@
 		<otherCreatorSepNextBetween></otherCreatorSepNextBetween>
 		<otherCreatorSepNextLast></otherCreatorSepNextLast>
 		<otherTwoCreatorsSep></otherTwoCreatorsSep>
-		<resource name="genericBook">
-			<creator>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</creator>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>[i]</pre>
-				<post>[/i]</post>
-			</title>
-			<publisherLocation>
-				<dependentPre></dependentPre>
-				<dependentPost>: </dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative>. </dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>__DEPENDENT_ON_NEXT_FIELD__</post>
-			</publisherLocation>
-			<publisherName>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</publisherName>
-			<publicationYear>
-				<dependentPre>, </dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__</pre>
-				<post>.</post>
-			</publicationYear>
-			<ultimate>, pages</ultimate>
-		</resource>
-		<resource name="genericArticle">
-			<creator>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</creator>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>,&quot; </post>
-			</title>
-			<collection>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>[i]</pre>
-				<post>[/i]</post>
-			</collection>
-			<publicationYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre> (</pre>
-				<post>)</post>
-			</publicationYear>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>: </pre>
-				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
-		</resource>
-		<resource name="genericMisc">
-			<creator>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</creator>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>,&quot;</post>
-			</title>
-			<publisherLocation>
-				<dependentPre></dependentPre>
-				<dependentPost>: </dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative>. </dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>__DEPENDENT_ON_NEXT_FIELD__</post>
-			</publisherLocation>
-			<publisherName>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</publisherName>
-			<publicationYear>
-				<dependentPre>, </dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__</pre>
-				<post></post>
-			</publicationYear>
-			<ultimate>, pages</ultimate>
-		</resource>
-		<resource name="book">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>[i]</pre>
-				<post>[/i]</post>
-			</title>
-			<editor>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, ed. </pre>
-				<post></post>
-			</editor>
-			<translator>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, trans. </pre>
-				<post></post>
-			</translator>
-			<edition>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post> ed.</post>
-			</edition>
-			<volumeNumber>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, vol. </pre>
-				<post></post>
-			</volumeNumber>
-			<publisherLocation>
-				<dependentPre></dependentPre>
-				<dependentPost>: </dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative>. </dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>__DEPENDENT_ON_NEXT_FIELD__</post>
-			</publisherLocation>
-			<publisherName>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</publisherName>
-			<publicationYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post>.</post>
-			</publicationYear>
-			<ultimate>, pages</ultimate>
-		</resource>
-		<resource name="book_article">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>,&quot;</post>
-			</title>
-			<book>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre> in [i]</pre>
-				<post>[/i]</post>
-			</book>
-			<editor>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, ed. </pre>
-				<post></post>
-			</editor>
-			<edition>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post> ed.</post>
-			</edition>
-			<publisherLocation>
-				<dependentPre></dependentPre>
-				<dependentPost>: </dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative>. </dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>__DEPENDENT_ON_NEXT_FIELD__</post>
-			</publisherLocation>
-			<publisherName>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</publisherName>
-			<publicationYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post>.</post>
-			</publicationYear>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
-		</resource>
-		<resource name="book_chapter">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>,&quot;</post>
-			</title>
-			<book>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre> in [i]</pre>
-				<post>[/i]</post>
-			</book>
-			<editor>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, ed. </pre>
-				<post></post>
-			</editor>
-			<edition>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post> ed.</post>
-			</edition>
-			<publisherLocation>
-				<dependentPre></dependentPre>
-				<dependentPost>: </dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative>. </dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>__DEPENDENT_ON_NEXT_FIELD__</post>
-			</publisherLocation>
-			<publisherName>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</publisherName>
-			<publicationYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post>.</post>
-			</publicationYear>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
-		</resource>
-		<resource name="journal_article">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>,&quot; </post>
-			</title>
-			<journal>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>[i]</pre>
-				<post>[/i]</post>
-			</journal>
-			<volume>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre> </pre>
-				<post></post>
-			</volume>
-			<publicationYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre> (</pre>
-				<post>)</post>
-			</publicationYear>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>: </pre>
-				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
-		</resource>
-		<resource name="newspaper_article">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>,&quot; </post>
-			</title>
-			<newspaper>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>[i]</pre>
-				<post>[/i], </post>
-			</newspaper>
-			<issueDate>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post> </post>
-			</issueDate>
-			<issueYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</issueYear>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular>p.</singular>
-				<plural></plural>
-				<pre>, __SINGULAR_PLURAL__pp.^ </pre>
-				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
-		</resource>
-		<resource name="magazine_article">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>,&quot; </post>
-			</title>
-			<magazine>
-				<dependentPre></dependentPre>
-				<dependentPost> </dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative>, </dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>[i]</pre>
-				<post>[/i]__DEPENDENT_ON_NEXT_FIELD__</post>
-			</magazine>
-			<edition>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</edition>
-			<issueDate>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post> </post>
-			</issueDate>
-			<issueYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</issueYear>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular>p.</singular>
-				<plural></plural>
-				<pre>, __SINGULAR_PLURAL__pp.^ </pre>
-				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
-		</resource>
+		<resource name="genericBook"></resource>
+		<resource name="genericArticle"></resource>
+		<resource name="genericMisc"></resource>
+		<resource name="book"></resource>
+		<resource name="book_article"></resource>
+		<resource name="book_chapter"></resource>
+		<resource name="journal_article"></resource>
+		<resource name="newspaper_article"></resource>
+		<resource name="magazine_article"></resource>
 		<resource name="proceedings"></resource>
 		<resource name="conference_paper"></resource>
 		<resource name="conference_poster"></resource>
-		<resource name="proceedings_article">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<conferenceYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</conferenceYear>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</title>
-			<conference>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>Paper read at </pre>
-				<post></post>
-			</conference>
-			<conferenceDate>
-				<dependentPre>, </dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__</pre>
-				<post></post>
-			</conferenceDate>
-			<conferenceLocation>
-				<dependentPre>, </dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative> </dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__at </pre>
-				<post></post>
-			</conferenceLocation>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>: </pre>
-				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
-		</resource>
-		<resource name="thesis">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>&quot;</post>
-			</title>
-			<type>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</type>
-			<label>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre> </pre>
-				<post></post>
-			</label>
-			<institution>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</institution>
-			<awardYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</awardYear>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post>.</post>
-			</pages>
-		</resource>
-		<resource name="web_site">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>.&quot; [Available Online]</post>
-			</title>
-			<accessDate>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>cited </pre>
-				<post></post>
-			</accessDate>
-			<accessYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</accessYear>
-			<URL>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>Available from </pre>
-				<post></post>
-			</URL>
-			<ultimate>.</ultimate>
-		</resource>
-		<resource name="web_article">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>.&quot; [Available Online]</post>
-			</title>
-			<accessDate>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>cited </pre>
-				<post></post>
-			</accessDate>
-			<accessYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</accessYear>
-			<URL>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>Available from </pre>
-				<post></post>
-			</URL>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
-		</resource>
-		<resource name="web_encyclopedia">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>.&quot; [Available Online]</post>
-			</title>
-			<accessDate>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>cited </pre>
-				<post></post>
-			</accessDate>
-			<accessYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</accessYear>
-			<URL>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>Available from </pre>
-				<post></post>
-			</URL>
-			<ultimate>.</ultimate>
-		</resource>
-		<resource name="web_encyclopedia_article">
-			<author>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post>, </post>
-			</author>
-			<title>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>&quot;</pre>
-				<post>.&quot; [Available Online]</post>
-			</title>
-			<accessDate>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>cited </pre>
-				<post></post>
-			</accessDate>
-			<accessYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</accessYear>
-			<URL>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>Available from </pre>
-				<post></post>
-			</URL>
-			<pages>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
-		</resource>
+		<resource name="proceedings_article"></resource>
+		<resource name="thesis"></resource>
+		<resource name="web_site"></resource>
+		<resource name="web_article"></resource>
+		<resource name="web_encyclopedia"></resource>
+		<resource name="web_encyclopedia_article"></resource>
 		<resource name="film"></resource>
 		<resource name="broadcast"></resource>
 		<resource name="music_album"></resource>
@@ -1197,7 +245,7 @@
 			<titleCapitalization>0</titleCapitalization>
 			<monthFormat>1</monthFormat>
 			<editionFormat>2</editionFormat>
-			<dateFormat>1</dateFormat>
+			<dateFormat>0</dateFormat>
 			<titleSubtitleSeparator>: </titleSubtitleSeparator>
 			<primaryCreatorFirstStyle>1</primaryCreatorFirstStyle>
 			<primaryCreatorOtherStyle>0</primaryCreatorOtherStyle>
@@ -1206,24 +254,26 @@
 			<otherCreatorFirstStyle>0</otherCreatorFirstStyle>
 			<otherCreatorOtherStyle>0</otherCreatorOtherStyle>
 			<otherCreatorInitials>0</otherCreatorInitials>
-			<otherCreatorFirstName>1</otherCreatorFirstName>
-			<primaryCreatorList>0</primaryCreatorList>
-			<otherCreatorList>0</otherCreatorList>
-			<primaryCreatorListMore></primaryCreatorListMore>
-			<primaryCreatorListLimit></primaryCreatorListLimit>
-			<primaryCreatorListAbbreviation></primaryCreatorListAbbreviation>
-			<otherCreatorListMore></otherCreatorListMore>
+			<otherCreatorFirstName>0</otherCreatorFirstName>
+			<primaryCreatorList>1</primaryCreatorList>
+			<otherCreatorList>1</otherCreatorList>
+			<primaryCreatorListAbbreviationItalic>on</primaryCreatorListAbbreviationItalic>
+			<otherCreatorListAbbreviationItalic>on</otherCreatorListAbbreviationItalic>
+			<primaryCreatorListMore>4</primaryCreatorListMore>
+			<primaryCreatorListLimit>10</primaryCreatorListLimit>
+			<primaryCreatorListAbbreviation> et al</primaryCreatorListAbbreviation>
+			<otherCreatorListMore>4</otherCreatorListMore>
 			<primaryCreatorRepeatString>___</primaryCreatorRepeatString>
 			<primaryCreatorRepeat>2</primaryCreatorRepeat>
-			<otherCreatorListLimit></otherCreatorListLimit>
-			<otherCreatorListAbbreviation></otherCreatorListAbbreviation>
+			<otherCreatorListLimit>10</otherCreatorListLimit>
+			<otherCreatorListAbbreviation> et al</otherCreatorListAbbreviation>
 			<primaryCreatorSepFirstBetween>, </primaryCreatorSepFirstBetween>
 			<primaryCreatorSepNextBetween>, </primaryCreatorSepNextBetween>
 			<primaryCreatorSepNextLast>, and </primaryCreatorSepNextLast>
 			<otherCreatorSepFirstBetween>, </otherCreatorSepFirstBetween>
 			<otherCreatorSepNextBetween>, </otherCreatorSepNextBetween>
 			<otherCreatorSepNextLast> and </otherCreatorSepNextLast>
-			<primaryTwoCreatorsSep> and </primaryTwoCreatorsSep>
+			<primaryTwoCreatorsSep>, and </primaryTwoCreatorsSep>
 			<otherTwoCreatorsSep> and </otherTwoCreatorsSep>
 			<userMonth_1></userMonth_1>
 			<userMonth_2></userMonth_2>
@@ -1248,10 +298,21 @@
 			<dayFormat>0</dayFormat>
 			<localisation>en_GB</localisation>
 			<runningTimeFormat>1</runningTimeFormat>
-			<editorSwitch>0</editorSwitch>
+			<editorSwitch>1</editorSwitch>
 			<pageFormat>2</pageFormat>
 			<dateMonthNoDayString></dateMonthNoDayString>
-			<editorSwitchIfYes></editorSwitchIfYes>
+			<editorSwitchIfYes>
+			<editor>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular>ed</singular>
+				<plural>eds</plural>
+				<pre></pre>
+				<post> __SINGULAR_PLURAL__</post>
+			</editor>
+			</editorSwitchIfYes>
 		</common>
 		<resource name="genericBook" >
 			<creator>
@@ -1276,13 +337,13 @@
 			</publicationYear>
 			<title>
 				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
+				<dependentPost>, </dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
+				<dependentPostAlternative>. </dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
 				<pre>[i]</pre>
-				<post>[/i]. </post>
+				<post>[/i]__DEPENDENT_ON_NEXT_FIELD__</post>
 			</title>
 			<editor>
 				<dependentPre></dependentPre>
@@ -1291,7 +352,7 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Edited by </pre>
+				<pre>edited by </pre>
 				<post>. </post>
 			</editor>
 			<publisherLocation>
@@ -1352,13 +413,13 @@
 			</publicationYear>
 			<title>
 				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
+				<dependentPost>,</dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
+				<dependentPostAlternative>.</dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>&quot;</pre>
+				<post>__DEPENDENT_ON_NEXT_FIELD__&quot; </post>
 			</title>
 			<editor>
 				<dependentPre></dependentPre>
@@ -1367,8 +428,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Edited by </pre>
-				<post>. </post>
+				<pre>edited by </pre>
+				<post>.</post>
 			</editor>
 			<collection>
 				<dependentPre></dependentPre>
@@ -1534,13 +595,13 @@
 			</publicationYear>
 			<title>
 				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
+				<dependentPost>, </dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
+				<dependentPostAlternative>. </dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
 				<pre>[i]</pre>
-				<post>[/i]. </post>
+				<post>[/i]__DEPENDENT_ON_NEXT_FIELD__</post>
 			</title>
 			<editor>
 				<dependentPre></dependentPre>
@@ -1549,7 +610,7 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Edited by </pre>
+				<pre>edited by </pre>
 				<post>. </post>
 			</editor>
 			<translator>
@@ -1676,19 +737,9 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>&quot;</pre>
+				<post>.&quot; </post>
 			</title>
-			<editor>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>Edited by </pre>
-				<post>. </post>
-			</editor>
 			<book>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -1699,6 +750,26 @@
 				<pre>In [i]</pre>
 				<post>[/i], </post>
 			</book>
+			<editor>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>edited by </pre>
+				<post>, </post>
+			</editor>
+			<pages>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. </post>
+			</pages>
 			<publisherLocation>
 				<dependentPre></dependentPre>
 				<dependentPost>: </dependentPost>
@@ -1773,19 +844,9 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>&quot;</pre>
+				<post>.&quot; </post>
 			</title>
-			<editor>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>Edited by </pre>
-				<post>. </post>
-			</editor>
 			<book>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -1796,6 +857,26 @@
 				<pre>In [i]</pre>
 				<post>[/i], </post>
 			</book>
+			<editor>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>edited by </pre>
+				<post>, </post>
+			</editor>
+			<pages>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. </post>
+			</pages>
 			<publisherLocation>
 				<dependentPre></dependentPre>
 				<dependentPost>: </dependentPost>
@@ -1870,8 +951,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>&quot;</pre>
+				<post>.&quot; </post>
 			</title>
 			<journal>
 				<dependentPre></dependentPre>
@@ -1891,17 +972,17 @@
 				<singular></singular>
 				<plural></plural>
 				<pre></pre>
-				<post> </post>
+				<post></post>
 			</volume>
 			<issue>
-				<dependentPre></dependentPre>
+				<dependentPre>, </dependentPre>
 				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPreAlternative> </dependentPreAlternative>
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>(</pre>
-				<post>):</post>
+				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__no. </pre>
+				<post></post>
 			</issue>
 			<pages>
 				<dependentPre></dependentPre>
@@ -1910,9 +991,19 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
+				<pre>: </pre>
+				<post>. </post>
+			</pages>
+			<DOI>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
 				<pre></pre>
 				<post></post>
-			</pages>
+			</DOI>
 			<ultimate>.</ultimate>
 			<fallbackstyle>genericMisc</fallbackstyle>
 			<partial>
@@ -1957,8 +1048,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>&quot;</pre>
+				<post>.&quot; </post>
 			</title>
 			<newspaper>
 				<dependentPre></dependentPre>
@@ -1968,7 +1059,7 @@
 				<singular></singular>
 				<plural></plural>
 				<pre>[i]</pre>
-				<post>[/i] </post>
+				<post>[/i]</post>
 			</newspaper>
 			<issueDate>
 				<dependentPre></dependentPre>
@@ -1977,19 +1068,19 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>, </post>
+				<pre>, </pre>
+				<post></post>
 			</issueDate>
-			<pages>
+			<URL>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
+				<pre>. </pre>
 				<post></post>
-			</pages>
+			</URL>
 			<ultimate>.</ultimate>
 			<fallbackstyle>genericMisc</fallbackstyle>
 			<partial>
@@ -2034,19 +1125,9 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>&quot;</pre>
+				<post>.&quot; </post>
 			</title>
-			<magazine>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>[i]</pre>
-				<post>[/i] </post>
-			</magazine>
 			<issueDate>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -2054,20 +1135,23 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>, </post>
+				<pre>, </pre>
+				<post></post>
 			</issueDate>
-			<pages>
+			<URL>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
+				<pre>. </pre>
 				<post></post>
-			</pages>
-			<ultimate>.</ultimate>
+			</URL>
+			<independent>
+				<independent_3>[i]newspaper[/i]</independent_3>
+				<independent_4>.</independent_4>
+			</independent>
 			<fallbackstyle>genericMisc</fallbackstyle>
 			<partial>
 			<title>
@@ -2084,16 +1168,16 @@
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="proceedings" >
-			<editor>
+			<conferenceYear>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Edited by </pre>
+				<pre></pre>
 				<post>. </post>
-			</editor>
+			</conferenceYear>
 			<title>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -2101,40 +1185,30 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>[i]</pre>
+				<post>[/i]</post>
 			</title>
-			<publicationYear>
+			<editor>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
+				<pre>, edited by </pre>
 				<post>. </post>
-			</publicationYear>
-			<conferenceOrganiser>
+			</editor>
+			<publisherLocation>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre></pre>
-				<post></post>
-			</conferenceOrganiser>
-			<conferenceLocation>
-				<dependentPre>, </dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPreAlternative>. </dependentPreAlternative>
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
 				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__</pre>
-				<post></post>
-			</conferenceLocation>
-			<conferenceDate>
+				<post>: </post>
+			</publisherLocation>
+			<publisherName>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
@@ -2142,9 +1216,9 @@
 				<singular></singular>
 				<plural></plural>
 				<pre></pre>
-				<post></post>
-			</conferenceDate>
-			<conferenceYear>
+				<post>.</post>
+			</publisherName>
+			<URL>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
@@ -2153,7 +1227,8 @@
 				<plural></plural>
 				<pre> </pre>
 				<post></post>
-			</conferenceYear>
+			</URL>
+			<preliminaryText>author. </preliminaryText>
 			<ultimate>.</ultimate>
 			<fallbackstyle>genericMisc</fallbackstyle>
 			<partial>
@@ -2198,8 +1273,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>&quot;</pre>
+				<post>.&quot; </post>
 			</title>
 			<conference>
 				<dependentPre></dependentPre>
@@ -2208,29 +1283,9 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Unpublished paper read at </pre>
-				<post></post>
+				<pre>In [i]</pre>
+				<post>[/i]</post>
 			</conference>
-			<conferenceDate>
-				<dependentPre>, </dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__</pre>
-				<post></post>
-			</conferenceDate>
-			<conferenceLocation>
-				<dependentPre>, </dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative> </dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__at </pre>
-				<post></post>
-			</conferenceLocation>
 			<ultimate>.</ultimate>
 			<fallbackstyle>genericMisc</fallbackstyle>
 			<partial>
@@ -2275,8 +1330,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>&quot;</pre>
+				<post>.&quot; </post>
 			</title>
 			<conference>
 				<dependentPre></dependentPre>
@@ -2285,29 +1340,9 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Unpublished poster presented at </pre>
-				<post></post>
+				<pre>In [i]</pre>
+				<post>[/i]</post>
 			</conference>
-			<conferenceDate>
-				<dependentPre>, </dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__</pre>
-				<post></post>
-			</conferenceDate>
-			<conferenceLocation>
-				<dependentPre>, </dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative> </dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__at </pre>
-				<post></post>
-			</conferenceLocation>
 			<ultimate>.</ultimate>
 			<fallbackstyle>genericMisc</fallbackstyle>
 			<partial>
@@ -2352,8 +1387,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post>. </post>
+				<pre>&quot;</pre>
+				<post>.&quot; </post>
 			</title>
 			<conference>
 				<dependentPre></dependentPre>
@@ -2362,29 +1397,59 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Paper read at </pre>
-				<post></post>
+				<pre>In [i]</pre>
+				<post>[/i]</post>
 			</conference>
-			<conferenceDate>
-				<dependentPre>, </dependentPre>
+			<editor>
+				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
 				<dependentPreAlternative></dependentPreAlternative>
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__</pre>
+				<pre>, edited by </pre>
 				<post></post>
-			</conferenceDate>
-			<conferenceLocation>
-				<dependentPre>, </dependentPre>
+			</editor>
+			<pages>
+				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
-				<dependentPreAlternative> </dependentPreAlternative>
+				<dependentPreAlternative></dependentPreAlternative>
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>__DEPENDENT_ON_PREVIOUS_FIELD__at </pre>
+				<pre>, </pre>
+				<post>. </post>
+			</pages>
+			<publisherLocation>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>: </post>
+			</publisherLocation>
+			<publisherName>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>.</post>
+			</publisherName>
+			<URL>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre> </pre>
 				<post></post>
-			</conferenceLocation>
+			</URL>
 			<ultimate>.</ultimate>
 			<fallbackstyle>genericMisc</fallbackstyle>
 			<partial>
@@ -2527,7 +1592,7 @@
 				<singular></singular>
 				<plural></plural>
 				<pre>&quot;</pre>
-				<post>.&quot; [Available Online] </post>
+				<post>.&quot;</post>
 			</title>
 			<accessDate>
 				<dependentPre></dependentPre>
@@ -2536,19 +1601,9 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>cited </pre>
-				<post></post>
-			</accessDate>
-			<accessYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
 				<pre>, </pre>
 				<post></post>
-			</accessYear>
+			</accessDate>
 			<URL>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -2556,7 +1611,7 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Available from </pre>
+				<pre>, </pre>
 				<post></post>
 			</URL>
 			<ultimate>.</ultimate>
@@ -2604,7 +1659,7 @@
 				<singular></singular>
 				<plural></plural>
 				<pre>&quot;</pre>
-				<post>.&quot; [Available Online] </post>
+				<post>.&quot;</post>
 			</title>
 			<journal>
 				<dependentPre></dependentPre>
@@ -2613,8 +1668,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>[i]</pre>
-				<post>[/i] </post>
+				<pre> [i]</pre>
+				<post>[/i]</post>
 			</journal>
 			<volume>
 				<dependentPre></dependentPre>
@@ -2623,7 +1678,7 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
+				<pre>, </pre>
 				<post> </post>
 			</volume>
 			<issue>
@@ -2633,8 +1688,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>(</pre>
-				<post>). </post>
+				<pre> no. </pre>
+				<post>. </post>
 			</issue>
 			<accessDate>
 				<dependentPre></dependentPre>
@@ -2643,19 +1698,9 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>cited </pre>
+				<pre>Accessed </pre>
 				<post></post>
 			</accessDate>
-			<accessYear>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
-				<pre>, </pre>
-				<post></post>
-			</accessYear>
 			<URL>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -2663,7 +1708,7 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Available from </pre>
+				<pre>, </pre>
 				<post></post>
 			</URL>
 			<ultimate>.</ultimate>
@@ -2711,7 +1756,7 @@
 				<singular></singular>
 				<plural></plural>
 				<pre>&quot;</pre>
-				<post>.&quot; [Available Online] </post>
+				<post>.&quot; </post>
 			</title>
 			<accessDate>
 				<dependentPre></dependentPre>
@@ -2720,7 +1765,7 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>cited </pre>
+				<pre>Accessed </pre>
 				<post></post>
 			</accessDate>
 			<accessYear>
@@ -2731,7 +1776,7 @@
 				<singular></singular>
 				<plural></plural>
 				<pre>, </pre>
-				<post></post>
+				<post>, </post>
 			</accessYear>
 			<URL>
 				<dependentPre></dependentPre>
@@ -2740,7 +1785,7 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Available from </pre>
+				<pre></pre>
 				<post></post>
 			</URL>
 			<ultimate>.</ultimate>
@@ -2788,7 +1833,7 @@
 				<singular></singular>
 				<plural></plural>
 				<pre>&quot;</pre>
-				<post>.&quot; [Available Online] </post>
+				<post>.&quot; </post>
 			</title>
 			<encyclopedia>
 				<dependentPre></dependentPre>
@@ -2807,7 +1852,7 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>cited </pre>
+				<pre>Accessed </pre>
 				<post></post>
 			</accessDate>
 			<accessYear>
@@ -2818,7 +1863,7 @@
 				<singular></singular>
 				<plural></plural>
 				<pre>, </pre>
-				<post></post>
+				<post>, </post>
 			</accessYear>
 			<URL>
 				<dependentPre></dependentPre>
@@ -2827,7 +1872,7 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>Available from </pre>
+				<pre></pre>
 				<post></post>
 			</URL>
 			<ultimate>.</ultimate>
@@ -2923,7 +1968,7 @@
 			</partial>
 			<partialReplace>0</partialReplace>
 		</resource>
-		<resource name="broadcast" >
+		<resource name="broadcast" creator1_firstString="***   " >
 			<director>
 				<dependentPre></dependentPre>
 				<dependentPost></dependentPost>
@@ -3590,8 +2635,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post> </post>
+				<pre>Accessed </pre>
+				<post></post>
 			</accessDate>
 			<accessYear>
 				<dependentPre></dependentPre>
@@ -3600,8 +2645,8 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre></pre>
-				<post></post>
+				<pre>, </pre>
+				<post>, </post>
 			</accessYear>
 			<URL>
 				<dependentPre></dependentPre>
@@ -3610,19 +2655,9 @@
 				<dependentPostAlternative></dependentPostAlternative>
 				<singular></singular>
 				<plural></plural>
-				<pre>from: &lt;</pre>
-				<post>&gt;. </post>
-			</URL>
-			<ID>
-				<dependentPre></dependentPre>
-				<dependentPost></dependentPost>
-				<dependentPreAlternative></dependentPreAlternative>
-				<dependentPostAlternative></dependentPostAlternative>
-				<singular></singular>
-				<plural></plural>
 				<pre></pre>
 				<post></post>
-			</ID>
+			</URL>
 			<ultimate>.</ultimate>
 			<fallbackstyle>genericMisc</fallbackstyle>
 			<partial>
@@ -4897,6 +3932,87 @@
 			<partialReplace>0</partialReplace>
 		</resource>
 		<resource name="miscellaneous_section" >
+			<creator>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. </post>
+			</creator>
+			<publicationYear>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. </post>
+			</publicationYear>
+			<title>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. </post>
+			</title>
+			<collection>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[i]</pre>
+				<post>[/i]. </post>
+			</collection>
+			<publisherLocation>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>: </post>
+			</publisherLocation>
+			<publisherName>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post>. </post>
+			</publisherName>
+			<medium>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre>[</pre>
+				<post>] </post>
+			</medium>
+			<ID>
+				<dependentPre></dependentPre>
+				<dependentPost></dependentPost>
+				<dependentPreAlternative></dependentPreAlternative>
+				<dependentPostAlternative></dependentPostAlternative>
+				<singular></singular>
+				<plural></plural>
+				<pre></pre>
+				<post></post>
+			</ID>
+			<ultimate>.</ultimate>
 			<fallbackstyle>genericMisc</fallbackstyle>
 			<partial>
 			<title>

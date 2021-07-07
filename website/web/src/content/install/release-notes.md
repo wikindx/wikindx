@@ -4,51 +4,28 @@ weight = 4
 disableToc = false
 +++
 
-***Focus**: bug fixes, maintenance, feature enhancements*
-
-## Important information
-
-The attachment cache is completely rebuilt to take advantage of new supported formats and fixes.
+***Focus**: bug fixes, maintenance*
 
 ## Bug fixes
 
-- The default value configBrowserTabID option was wrong in the configuration screen.
-- Restore the migration of config options of from 5.3.1 (this code should not change).
-- RSS language tag was not compliant with the spec when the country part is added.
-- Don’t crash when opening a non Zip Archive.
-- Fix the mimetype detection of attachments.
+- Correct display of resource icons in list view – 4 possibilities: resource only, resource with metadata, resource with attachment, resource with metadata and attachment. Update the latter icon.
+- Fix missing message when authGate is enabled.
+- Fix RSS/ATOM feed display.
+- Fix an issue paging through a basket.
+- Do not restore memory_limit configuration to work around PHP bug #81070 (in PHP 7.4 and 8.0).
 
 ## Feature enhancements
 
-- Option to disable Google Scholar indexing (indexing is enabled by default now).
-- Option to disable the RSS Feed (the RSS Feed is enabled by default now).
-- Option to disable the sitemap for search engines indexation (the sitemap is enabled by default now).
-- Syndication Feed in Atom 1.0 and RSS 2.0 formats [#282].
-- Better name and description of syndication options.
-- Add the resource abstract to RSS feeds [#393].
-- Better parsing of ODT documents for attachment caching [#380].
-- Support FODT (Flat ODT) text extraction (attachments) [#380].
-- Support ODP/OTP/FODP presentation extraction (attachments) [#383].
-- Support STI/SXI presentation extraction (attachments) [#384].
-- Support STW/SXW text extraction (attachments) [#385].
-- Support POTM/POTX/PPTM/PPTX Powerpoint extraction (attachments) [#386].
-- Support FB1/2 FictionBook extraction (attachments) [#387].
-- Support XPS text extraction (attachments) [#361].
-- Support SLA Scribus text extraction (attachments) [#388].
-- Support PostScript text extraction (attachments) [#367].
-- Support DjVu text extraction (attachments) [#389].
-- Support DVI text extraction (attachments) [#390].
-- Support reStructured text extraction (attachment) [#391].
-- Support markdown text extraction (attachments) [#356].
-- Support AbiWord documents text extraction (attachment) [#392].
-- Fix the mimetype of attachments in db and rebuild the cache of attachments with a wrong mimetype [#394].
-- Add a switch in Admin|Configure|Users to allow registered users to edit categories and subcategories. This replaces the userwritecategories plugin which is now retired.
+- QUICKSEARCH: Add a check box to toggle searching of attachments.
 
 ## Maintenance
 
-- Better hints for the sitemap option.
-- Set a higher limit to the RSS feed (50 resources displayed).
-- Remove the custom style of RSS (use the global style now).
-- Fix the type of the default SMTP port value.
-- Rename option configRssDisplay to configRssDisplayEditedResources.
-- Bump component compatibility version of plugins to 12.
+- The default db name become 'wikindx'.
+- Some rationalization of bibliographic style code moving a lot into the core from the adminstyle plugin.
+- Upgrading of bibliographic styles.
+- Split Chicago bibliographic style into two styles, one for footnote version and one for author-date version.
+- Bump component compatibility version of plugins to 13 (style editor change for v6 style components).
+
+## Security
+
+- Update PHPMailer (v6.5.0, CVE-2021-3603).

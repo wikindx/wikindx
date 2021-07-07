@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "abnt",
-    "component_version": "363",
+    "component_version": "542",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "ABNT",
@@ -16,5 +16,5 @@
             "author_website": "https://ruialao.blogspot.com/"
         }
     ],
-    "component_sha256": "174c4f5f948f6b6b11bfee2ca4d2120a8e6e57f11cfc0247888bbc346dd2a761"
+    "component_sha256": "5695dfbc048f2998e5660ddb069d0a82e50409864b16ac26842d7c9c17c276a0"
 }

@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "cfb",
-    "component_version": "363",
+    "component_version": "542",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "CFB",
@@ -24,5 +24,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "0fdae1ef98f441d3e9539258bed18c7849d5232440f6a67cf6e729ce84d434d6"
+    "component_sha256": "10e46c7d633bb6cec4d10d8b91884164ba8139cd58be76eaca53c0dc492635fb"
 }

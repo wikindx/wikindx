@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "ieee",
-    "component_version": "363",
+    "component_version": "542",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "IEEE",
@@ -22,5 +22,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "96de6e3e1793dfd71fe21e6c6558c204ed0d90dde64c04ff7272b089dcb422fb"
+    "component_sha256": "e5d6a365431768520e6c734222eaeda4e2b0886944c9fabb7d564efe53a34d23"
 }

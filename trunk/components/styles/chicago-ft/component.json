@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "chicago-ft",
-    "component_version": "363",
+    "component_version": "542",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Chicago (footnotes)",
@@ -17,5 +17,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "7b5a6abef8e85a515400218f7dd9b1879b20a99a8114fb36898a8a612dd3cc97"
+    "component_sha256": "e7dc15d92dee3463dc86907328644861ed9ee193593baac504e501e6ca5ac426"
 }

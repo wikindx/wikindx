@@ -1,0 +1,35 @@
+{
+    "component_sha256": "10e46c7d633bb6cec4d10d8b91884164ba8139cd58be76eaca53c0dc492635fb",
+    "component_version": "542",
+    "component_name": "CFB",
+    "component_description": "Comicforschung-Bibliographie Stil (CFB)",
+    "component_licence": "ISC License",
+    "component_id": "cfb",
+    "component_builtin": "false",
+    "component_website": "http://www.bobc.uni-bonn.de",
+    "component_type": "style",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Dr. Joachim Trinkwitz",
+            "author_role": "Compiler",
+            "author_copyright": "2016",
+            "author_email": "jtr@uni-bonn.de",
+            "author_website": "http://www.bobc.uni-bonn.de"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Editor",
+            "author_copyright": "2016, 2020-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/trunk/wikindx_style_cfb_542.zip",
+            "package_sha256": "031729c764afdf3587e63a885df17801de6196743e928aa13c9f24ee3dfe3776",
+            "package_size": 6065
+        }
+    ]
+}

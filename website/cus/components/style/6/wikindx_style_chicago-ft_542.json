@@ -1,0 +1,28 @@
+{
+    "component_version": "542",
+    "component_name": "Chicago (footnotes)",
+    "component_description": "Chicago Style. Turabian and Chicago are two separate styles but are very similar, just like Harvard and APA. These are widely used for history and economics. Chicago has two styles: this is the footnotes version.",
+    "component_licence": "ISC License",
+    "component_id": "chicago-ft",
+    "component_sha256": "e7dc15d92dee3463dc86907328644861ed9ee193593baac504e501e6ca5ac426",
+    "component_builtin": "false",
+    "component_website": "https://www.chicagomanualofstyle.org/home.html",
+    "component_type": "style",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Compiler",
+            "author_copyright": "2005, 2020-2021",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/6/wikindx_style_chicago-ft_542.zip",
+            "package_sha256": "2e5f9f9c4c592ba0ad997cd07f2b7ff6e34b72e50382f57a3b837079ba8d40b2",
+            "package_size": 6446
+        }
+    ]
+}

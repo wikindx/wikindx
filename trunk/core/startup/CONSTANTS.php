@@ -70,7 +70,7 @@ define('WIKINDX_INTERNAL_VERSION_UPGRADE_MIN', 5.1);
  * @global int[] WIKINDX_COMPONENTS_COMPATIBLE_VERSION
  */
 define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
-    'plugin'    => 12, // Must be an integer
+    'plugin'    => 13, // Must be an integer
     'style'     =>  6, // Must be an integer
     'template'  =>  1, // Must be an integer
     'vendor'    =>  WIKINDX_PUBLIC_VERSION, // Identical to the public version because this type of component is very closely linked to a version of the core

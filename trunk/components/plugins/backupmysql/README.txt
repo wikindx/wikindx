@@ -41,6 +41,7 @@ http://www.phpclasses.org/package/2779-PHP-Backup-MySQL-databases-to-files-with-
 
 CHANGELOG:
 
+2021-07-07 : CHG : change of the compatibility version (13) (style editor change for v6 style components).
 2021-07-06 : FIX : Do not restore memory_limit configuration to work around PHP bug #81070 (in PHP 7.4 and 8.0).
 2021-05-28 : CHG : change of the compatibility version (12) (removal of userwritecategory plugin).
 2021-05-18 : CHG : cleaning.

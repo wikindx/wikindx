@@ -14,5 +14,5 @@ class debugtools_CONFIG
     /** int */
     public $authorize = 2;
     /** float */
-    public $wikindxVersion = 12;
+    public $wikindxVersion = 13;
 }

@@ -24,6 +24,7 @@ Papers can be imported from earlier versions by using the 'Import paper' functio
 
 CHANGELOG:
 
+2021-07-07 : CHG : change of the compatibility version (13) (style editor change for v6 style components).
 2021-05-28 : CHG : change of the compatibility version (12) (removal of userwritecategory plugin).
 2021-05-16 : CHG : change of the compatibility version (11) (removal of importexportbib plugin).
 2021-04-18 : CHG : change of the compatibility version (10) (removal of the database prefix).

@@ -20,6 +20,7 @@ Thus, plugins/visualize/index.php etc.
 
 CHANGELOG:
 
+2021-07-07 : CHG : change of the compatibility version (13) (style editor change for v6 style components).
 2021-06-03 : FIX : resource views: maintain order when paging.
 2021-05-28 : CHG : change of the compatibility version (12) (removal of userwritecategory plugin).
 2021-05-20 : CHG : add ordering to total resource views per month or year.

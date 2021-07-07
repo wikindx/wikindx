@@ -22,6 +22,7 @@ MAINTENANCE:
 2. Some rationalization of bibliographic style code moving a lot into the core from the adminstyle plugin.
 3. Upgrading of bibliographic styles.
 4. Split Chicago bibliographic style into two styles, one for footnote version and one for author-date version.
+5. Bump component compatibility version of plugins to 13 (style editor change for v6 style components).
 
 SECURITY:
 1. Update PHPMailer (v6.5.0, CVE-2021-3603).

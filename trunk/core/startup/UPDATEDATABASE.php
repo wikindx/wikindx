@@ -891,6 +891,8 @@ END;
     {
         if ($version == WIKINDX_INTERNAL_VERSION)
             return WIKINDX_PUBLIC_VERSION;
+        elseif ($version >= 70)
+            return "6.4.10";
         elseif ($version >= 65)
             return "6.4.9";
         elseif ($version >= 59)
@@ -2417,7 +2419,7 @@ END;
         //$attachment->checkAttachmentRows();
         $this->db->updateNull("resource_attachments", ["resourceattachmentsText"]);
         
-        $this->upgradeToTargetVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -2461,7 +2463,20 @@ END;
 			$parseStyle->getSource('array', $style);
 			$parseStyle->writeFile($filePath);
     	}
-        $this->upgradeToTargetVersion();
+    	
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 71 (6.4.10)
+     *
+     * Switch the old chicago style to chicago-ft (rename, no feature change)
+     */
+    private function upgradeTo71()
+    {
+        $this->updateDbSchema('71');
+        
+        $this->updateCoreInternalVersion();
     }
     
     /**

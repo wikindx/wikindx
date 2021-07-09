@@ -197,7 +197,7 @@ function build_manual($dirsrc, $dirdst, $APIVersion, $ManualTitle)
         \FILE\recurse_rmdir($dirdst);
     }
 
-    $cmd = 'php "' . BIN_PHPDOC . '" -vvv --config=' . $dirsrc . '/phpdoc.xml --directory=' . $dirsrc . ' --target=' . $dirdst . ' --cache-folder=' . DIR_PHPDOC_CACHE . ' --title="' . $ManualTitle . '" 2>&1';
+    $cmd = 'php "' . BIN_PHPDOC . '" -vv --config=' . $dirsrc . '/phpdoc.xml --directory=' . $dirsrc . ' --target=' . $dirdst . ' --cache-folder=' . DIR_PHPDOC_CACHE . ' --title="' . $ManualTitle . '" 2>&1';
     echo $cmd;
     
     $fp = popen($cmd, 'r');

@@ -138,11 +138,6 @@ class QUICKSEARCH
                 $word = FALSE;
             }
         }
-		if ($this->session->getVar("search_SearchAttachments")) {
-			$searchAttachments = TRUE;
-		} else {
-			$searchAttachments = FALSE;
-		}
         $hint = BR . \HTML\span(\HTML\aBrowse(
             'green',
             '',
@@ -151,11 +146,21 @@ class QUICKSEARCH
             "",
             $this->messages->text("hint", "wordLogic")
         ), 'hint') . BR;
-        $sa = FORM\checkbox(
-            FALSE,
-            "search_SearchAttachments",
-            $searchAttachments
-        ) . '&nbsp;' . $this->messages->text('search', 'searchAttachments');
+		if ($this->session->getVar("search_SearchAttachments")) {
+			$searchAttachments = TRUE;
+		} else {
+			$searchAttachments = FALSE;
+		}
+		$resultSet = $this->db->select('resource_attachments', 'resourceattachmentsId');
+		if ($this->db->numRows($resultSet)) {
+			$sa = FORM\checkbox(
+				FALSE,
+				"search_SearchAttachments",
+				$searchAttachments
+			) . '&nbsp;' . $this->messages->text('search', 'searchAttachments');
+        } else {
+        	$sa = '';
+        }
         if (!$this->insertCitation) {
             $pString .= \HTML\td(\FORM\textInput(
                 $this->messages->text("search", "word"),
